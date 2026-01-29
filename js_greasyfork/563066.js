@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      2.1.5
-// @description  Allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Refined for Faction Armory and City Shops with enhanced SPA support.
+// @version      2.2.5
+// @description  Allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Refined for Faction Armory, City Shops, Bazaar, and Item Market with enhanced SPA support.
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
 // @match        https://www.torn.com/bazaar.php*
@@ -23,12 +23,17 @@
     const STORAGE_KEY = 'torn_locked_items';
     const SETTINGS_KEY = 'torn_locked_settings';
     const DEBUG = false; // Disable debug logging for production
+    const DEBUG_ITEM_MARKET = true; // Enable item market debugging to diagnose issues
 
     const getSettings = () => JSON.parse(localStorage.getItem(SETTINGS_KEY)) || { padlockTransparent: true, showActionToasts: true, showInfoToasts: true, showUnlockButton: true };
     const getLockedItems = () => JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
     function log(...args) {
         if (DEBUG) console.log('[LOCKED ITEMS]', ...args);
+    }
+
+    function logItemMarket(...args) {
+        if (DEBUG_ITEM_MARKET) console.log('[ITEM MARKET]', ...args);
     }
 
     // ========== STYLES ========== //
@@ -81,6 +86,17 @@
         body:not(.item-php) .torn-padlock, body:not(.item-php) .lock-icon { display: none !important; }
 
         .torn-bazaar-force-hide {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            pointer-events: none !important;
+            overflow: hidden !important;
+        }
+
+        .torn-itemmarket-force-hide {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
@@ -173,18 +189,214 @@
         return hash === '#/add';
     }
 
+    // ========== CHECK IF ON ITEM MARKET ADD LISTING PAGE ========== //
+    function isOnItemMarketAddPage() {
+        const url = window.location.href;
+        if (!url.includes('sid=ItemMarket')) return false;
+
+        const hash = window.location.hash;
+        return hash === '#/addListing';
+    }
+
+    // ========== ITEM MARKET PRECISE CSS HIDING ========== //
+    function injectItemMarketHidingCSS() {
+        const locked = getLockedItems();
+        const ids = Object.keys(locked);
+        
+        if (ids.length === 0) {
+            const styleEl = document.getElementById('torn-itemmarket-immediate-hide');
+            if (styleEl) styleEl.remove();
+            return;
+        }
+        
+        // Create PRECISE CSS that distinguishes between base item ID and armory ID
+        let css = "/* Item Market Precise Hiding */\n";
+        ids.forEach(id => {
+            const isLongId = id.length >= 10; // Armory IDs are typically 11+ digits
+            
+            if (isLongId) {
+                // This is an ARMORY ID - hide items ending with this ID
+                // Matches: wai-addListing-itemInfo-XXX-16690604803 (where 16690604803 is locked)
+                css += `[aria-controls$="-${id}"],\n`;
+                css += `.virtualListing___jl0JE:has([aria-controls$="-${id}"]) { display: none !important; visibility: hidden !important; }\n`;
+            } else {
+                // This is a BASE ITEM ID - only hide if armory ID is 0 or blank
+                // Matches: wai-addListing-itemInfo-614-0 (not wai-addListing-itemInfo-614-16690604803)
+                css += `[aria-controls="wai-addListing-itemInfo-${id}-0"],\n`;
+                css += `.virtualListing___jl0JE:has([aria-controls="wai-addListing-itemInfo-${id}-0"]) { display: none !important; visibility: hidden !important; }\n`;
+            }
+        });
+        
+        // Inject or update the style
+        let styleEl = document.getElementById('torn-itemmarket-immediate-hide');
+        if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = 'torn-itemmarket-immediate-hide';
+            document.head.appendChild(styleEl);
+        }
+        styleEl.textContent = css;
+    }
+
+    function removeItemMarketHidingCSS() {
+        const styleEl = document.getElementById('torn-itemmarket-immediate-hide');
+        if (styleEl) {
+            styleEl.remove();
+        }
+    }
+
+    // ========== ITEM MARKET HANDLER ========== //
+    let itemMarketObserver = null;
+    let itemMarketProcessTimeout = null;
+
+    function stopItemMarketObserver() {
+        if (itemMarketObserver) {
+            itemMarketObserver.disconnect();
+            itemMarketObserver = null;
+        }
+        if (itemMarketProcessTimeout) {
+            clearTimeout(itemMarketProcessTimeout);
+            itemMarketProcessTimeout = null;
+        }
+    }
+
+    function handleItemMarketPage() {
+        if (!isOnItemMarketAddPage()) {
+            logItemMarket('Not on item market add listing page, stopping observer');
+            stopItemMarketObserver();
+            removeItemMarketHidingCSS(); // Remove CSS when leaving page
+            document.querySelectorAll('.torn-itemmarket-force-hide').forEach(el => {
+                el.classList.remove('torn-itemmarket-force-hide');
+            });
+            return;
+        }
+
+        logItemMarket('On item market add listing page, starting item hiding');
+
+        // INJECT CSS IMMEDIATELY to prevent flash
+        injectItemMarketHidingCSS();
+
+        // NOTE: We use BOTH CSS and JS for best results:
+        // - CSS hides items INSTANTLY (prevents flash) using length-based detection:
+        //   * Short IDs (< 10 chars) = Base Items: Only hide if aria-controls="...{id}-0" (exact match)
+        //   * Long IDs (>= 10 chars) = Armory Items: Hide if aria-controls ends with "-{id}"
+        // - JS processes items and validates, handling edge cases
+        // This prevents false positives (e.g., base item 614 won't hide armory item 16690604803)
+
+        function extractIDsFromAriaControls(ariaControls) {
+            // Extract IDs from format: wai-addListing-itemInfo-653-16814162905
+            // First number is base item ID, second is armory ID (or 0/blank if none)
+            if (!ariaControls || !ariaControls.startsWith('wai-addListing-itemInfo-')) {
+                return { baseItemId: null, armoryId: null };
+            }
+
+            const remaining = ariaControls.replace('wai-addListing-itemInfo-', '');
+            const parts = remaining.split('-');
+            
+            // Always get the base item ID (first part)
+            const baseItemId = parts[0] || null;
+            
+            // Get armory ID (second part) - only if it exists and is not 0 or empty
+            let armoryId = null;
+            if (parts.length >= 2) {
+                const secondPart = parts[1];
+                if (secondPart && secondPart !== '0' && secondPart !== '') {
+                    armoryId = secondPart;
+                }
+            }
+
+            logItemMarket(`Extracted from ${ariaControls}: baseItemId=${baseItemId}, armoryId=${armoryId || 'none'}`);
+            return { baseItemId, armoryId };
+        }
+
+        function processItemMarketItems() {
+            // Find all item elements - they have aria-controls starting with wai-addListing-itemInfo-
+            const items = document.querySelectorAll('[aria-controls^="wai-addListing-itemInfo-"]');
+            const locked = getLockedItems();
+            let hiddenCount = 0;
+
+            logItemMarket(`\n=== PROCESSING ITEM MARKET ITEMS ===`);
+            logItemMarket(`Total items found: ${items.length}`);
+            logItemMarket(`Locked items in storage:`, locked);
+
+            items.forEach((itemElement, index) => {
+                const ariaControls = itemElement.getAttribute('aria-controls');
+                const { baseItemId, armoryId } = extractIDsFromAriaControls(ariaControls);
+
+                // Get item name for logging
+                const nameEl = itemElement.querySelector('.name___XmQWk, [class*="name"]');
+                const itemName = nameEl ? nameEl.textContent.trim() : 'Unknown';
+
+                if (!baseItemId) {
+                    logItemMarket(`❌ Item #${index} (${itemName}): NO ID EXTRACTED from ${ariaControls}`);
+                    return;
+                }
+
+                // Find the parent container to hide (usually .virtualListing or .itemRowWrapper)
+                const containerToHide = itemElement.closest('.virtualListing___jl0JE, [class*="virtualListing"], [class*="itemRowWrapper"]') || itemElement.parentElement;
+
+                // Hide if EITHER the base item ID OR the armory ID matches a locked item
+                // IMPORTANT: Check if the key exists in the locked object with a truthy value
+                const isBaseItemLocked = locked.hasOwnProperty(baseItemId) && locked[baseItemId];
+                const isArmoryLocked = armoryId && locked.hasOwnProperty(armoryId) && locked[armoryId];
+
+                logItemMarket(`Checking item #${index} (${itemName}): baseID=${baseItemId} (locked=${isBaseItemLocked}), armoryID=${armoryId || 'none'} (locked=${isArmoryLocked})`);
+
+                if (isBaseItemLocked || isArmoryLocked) {
+                    containerToHide.classList.add('torn-itemmarket-force-hide');
+                    containerToHide.setAttribute('data-locked-item', armoryId || baseItemId);
+                    hiddenCount++;
+
+                    const reason = isArmoryLocked ? `armory ID ${armoryId}` : `base item ID ${baseItemId}`;
+                    logItemMarket(`🔒 Item #${index} (${itemName}): HIDING (locked via ${reason})`);
+                } else {
+                    containerToHide.classList.remove('torn-itemmarket-force-hide');
+                    containerToHide.removeAttribute('data-locked-item');
+                    logItemMarket(`✅ Item #${index} (${itemName}): baseID=${baseItemId}, armoryID=${armoryId || 'none'} - VISIBLE`);
+                }
+            });
+
+            logItemMarket(`\n=== ITEM MARKET SUMMARY ===`);
+            logItemMarket(`Hidden: ${hiddenCount} / ${items.length}`);
+        }
+
+        // Initial process - run IMMEDIATELY and multiple times very quickly to minimize flash
+        processItemMarketItems(); // Immediate (0ms)
+        
+        // Run multiple times in quick succession to catch items as they render
+        setTimeout(processItemMarketItems, 1);    // Almost immediate
+        setTimeout(processItemMarketItems, 10);   // Very quick
+        setTimeout(processItemMarketItems, 50);   // Quick
+        setTimeout(processItemMarketItems, 100);  // Still quick
+        setTimeout(processItemMarketItems, 200);  // Catching stragglers
+        setTimeout(processItemMarketItems, 400);  // Final catch
+        
+        stopItemMarketObserver();
+
+        // Set up mutation observer with minimal debouncing for faster response
+        itemMarketObserver = new MutationObserver(() => {
+            if (itemMarketProcessTimeout) {
+                clearTimeout(itemMarketProcessTimeout);
+            }
+            itemMarketProcessTimeout = setTimeout(() => {
+                processItemMarketItems();
+            }, 100); // Faster debounce: only 100ms wait
+        });
+
+        itemMarketObserver.observe(document.body, { childList: true, subtree: true });
+    }
+
     // ========== BAZAAR HANDLER ========== //
     let bazaarObserver = null;
-    let bazaarProcessInterval = null;
+    let bazaarProcessTimeout = null;
 
     function stopBazaarObserver() {
         if (bazaarObserver) {
             bazaarObserver.disconnect();
             bazaarObserver = null;
         }
-        if (bazaarProcessInterval) {
-            clearInterval(bazaarProcessInterval);
-            bazaarProcessInterval = null;
+        if (bazaarProcessTimeout) {
+            clearTimeout(bazaarProcessTimeout);
+            bazaarProcessTimeout = null;
         }
     }
 
@@ -312,15 +524,30 @@
             log(`Hidden: ${hiddenCount} / ${items.length} (${equippedCount} equipped, ${hiddenCount - equippedCount} locked)`);
         }
 
-        processBazaarItems();
+        // Initial process - run IMMEDIATELY and multiple times very quickly to minimize flash
+        processBazaarItems(); // Immediate (0ms)
+        
+        // Run multiple times in quick succession to catch items as they render
+        setTimeout(processBazaarItems, 1);    // Almost immediate
+        setTimeout(processBazaarItems, 10);   // Very quick
+        setTimeout(processBazaarItems, 50);   // Quick
+        setTimeout(processBazaarItems, 100);  // Still quick
+        setTimeout(processBazaarItems, 200);  // Catching stragglers
+        setTimeout(processBazaarItems, 400);  // Final catch
+        
         stopBazaarObserver();
 
+        // Set up mutation observer with minimal debouncing for faster response
         bazaarObserver = new MutationObserver(() => {
-            processBazaarItems();
+            if (bazaarProcessTimeout) {
+                clearTimeout(bazaarProcessTimeout);
+            }
+            bazaarProcessTimeout = setTimeout(() => {
+                processBazaarItems();
+            }, 100); // Faster debounce: only 100ms wait
         });
 
         bazaarObserver.observe(document.body, { childList: true, subtree: true });
-        bazaarProcessInterval = setInterval(processBazaarItems, 500);
     }
 
     // ========== DYNAMIC CSS HIDING ========== //
@@ -329,9 +556,10 @@
         const ids = Object.keys(locked);
         const url = window.location.href;
 
+        // Don't use CSS hiding on pages with dedicated handlers
         if (url.includes('item.php') ||
-            url.includes('sid=ItemMarket#/market') ||
-            url.includes('bazaar.php') ||
+            url.includes('sid=ItemMarket') || // Exclude entire Item Market (has its own handler)
+            url.includes('bazaar.php') ||     // Exclude bazaar (has its own handler)
             ids.length === 0) {
             hidingStyle.textContent = "";
             return;
@@ -414,6 +642,9 @@
                         if (isOnBazaarAddPage()) {
                             setTimeout(handleBazaarPage, 100);
                         }
+                        if (isOnItemMarketAddPage()) {
+                            setTimeout(handleItemMarketPage, 100);
+                        }
                     };
                     const target = el.querySelector('.name-wrap');
                     if (target) target.insertBefore(lock, target.firstChild);
@@ -489,6 +720,9 @@
                 if (isOnBazaarAddPage()) {
                     setTimeout(handleBazaarPage, 100);
                 }
+                if (isOnItemMarketAddPage()) {
+                    setTimeout(handleItemMarketPage, 100);
+                }
             }
         };
         document.body.appendChild(btn);
@@ -502,6 +736,7 @@
                 runLogic();
                 updateHidingCSS();
                 handleBazaarPage();
+                handleItemMarketPage();
             }, delay);
         });
     }
@@ -541,6 +776,7 @@
     updateHidingCSS();
     runLogic();
     handleBazaarPage();
+    handleItemMarketPage();
 
     log('Script initialized');
 })();

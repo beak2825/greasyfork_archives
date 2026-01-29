@@ -1,7 +1,36 @@
 // ==UserScript==
-// @name         MathOverflow/MSE Citation Helper
-// @version      2.2.2
-// @description  Improved citation finder for MathOverflow.
+// @name                MathOverflow & Math.SE Citation Helper
+// @name:en             MathOverflow & Math.SE Citation Helper
+// @name:ja             MathOverflow/MSE 引用ヘルパー
+// @name:zh             MathOverflow/MSE 引用助手
+// @name:zh-TW          MathOverflow/MSE 參考文獻助手
+// @name:fr             Assistant de citations MathOverflow/MSE
+// @name:de             MathOverflow/MSE Zitierungshelfer
+// @name:es             Asistente de citas MathOverflow y MSE
+// @name:pt             Assistente de Citações MathOverflow/MSE
+// @name:ru             Помощник цитирования MathOverflow и MSE
+// @name:ko             MathOverflow/MSE 인용 도우미
+// @name:uk             Помічник цитування MathOverflow та MSE
+// @name:sv             MathOverflow/MSE Referenshjälp
+// @name:fi             MathOverflow ja MSE viittausapuri
+// @name:pl             Pomocnik cytowań MathOverflow/MSE
+// @name                MathOverflow Citation Booster
+// @description         Improved citation finder and quick inserter for MathOverflow and Mathematics Stack Exchange
+// @description:en      Improved citation finder and quick inserter for MathOverflow and Mathematics Stack Exchange
+// @description:ja      MathOverflow と Mathematics Stack Exchange 向けの引用検索・挿入支援ツール
+// @description:zh      MathOverflow 和数学 Stack Exchange 的改进型引用查找与插入工具
+// @description:zh-TW   MathOverflow 與數學 Stack Exchange 的參考文獻快速查找與插入工具
+// @description:fr      Outil amélioré de recherche et d'insertion de citations pour MathOverflow et Math.SE
+// @description:de      Verbesserter Zitations-Finder und Einfügehelfer für MathOverflow und Math.SE
+// @description:es      Buscador y ayudante mejorado de citas para MathOverflow y Mathematics Stack Exchange
+// @description:pt      Ferramenta aprimorada para buscar e inserir citações no MathOverflow e Math.SE
+// @description:ru      Улучшенный инструмент поиска и вставки цитирований для MathOverflow и MSE
+// @description:ko      MathOverflow와 Mathematics Stack Exchange를 위한 향상된 인용 검색 및 삽입 도구
+// @description:uk      Покращений помічник пошуку та вставки цитат для MathOverflow та Mathematics Stack Exchange
+// @description:sv      Förbättrat verktyg för att hitta och infoga referenser på MathOverflow och Math.SE
+// @description:fi      Parannettu viittaushaku- ja lisäystyökalu MathOverflowlle ja Math.SE:lle
+// @description:pl      Ulepszone narzędzie do wyszukiwania i wstawiania cytowań na MathOverflow i MSE
+// @version      2.2.3
 // @author       Asaf Karagila, aspen138
 // @match        https://mathoverflow.net/*
 // @match        https://math.stackexchange.com/*
@@ -9,8 +38,8 @@
 // @inject-into  page
 // @icon         data:image/png;base64,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
 // @namespace https://greasyfork.org/users/1177387
-// @downloadURL https://update.greasyfork.org/scripts/561098/MathOverflowMSE%20Citation%20Helper.user.js
-// @updateURL https://update.greasyfork.org/scripts/561098/MathOverflowMSE%20Citation%20Helper.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561098/MathOverflow%20%20MathSE%20Citation%20Helper.user.js
+// @updateURL https://update.greasyfork.org/scripts/561098/MathOverflow%20%20MathSE%20Citation%20Helper.meta.js
 // ==/UserScript==
 
 const $ = window.jQuery;

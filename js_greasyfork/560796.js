@@ -1,25 +1,25 @@
 // ==UserScript==
-// @name         LMArena | Model Manager: Pin, Reorder & Persistent Auto-Select
+// @name         Arena.ai | Model Manager: Pin, Reorder & Persistent Auto-Select
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      2.0.0
+// @version      2.1
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Pin favorite models to the top of the model selection dropdown with persistent memory
-// @match        *://*lmarena.ai/*
-// @icon         https://lmarena.ai/favicon.ico
+// @match        *://*arena.ai/*
+// @icon         https://arena.ai/favicon.ico
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/560796/LMArena%20%7C%20Model%20Manager%3A%20Pin%2C%20Reorder%20%20Persistent%20Auto-Select.user.js
-// @updateURL https://update.greasyfork.org/scripts/560796/LMArena%20%7C%20Model%20Manager%3A%20Pin%2C%20Reorder%20%20Persistent%20Auto-Select.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560796/Arenaai%20%7C%20Model%20Manager%3A%20Pin%2C%20Reorder%20%20Persistent%20Auto-Select.user.js
+// @updateURL https://update.greasyfork.org/scripts/560796/Arenaai%20%7C%20Model%20Manager%3A%20Pin%2C%20Reorder%20%20Persistent%20Auto-Select.meta.js
 // ==/UserScript==
 
 /**
  * ============================================================================
- * LMArena Model Manager
+ * Arena Model Manager
  * ============================================================================
  *
- * This script enhances LMArena's model selection dropdown with:
+ * This script enhances Arena's model selection dropdown with:
  *   - Pin favorite models to the top (persisted per mode/modality)
  *   - Drag-and-drop reordering of pinned models
  *   - Auto-restore last selected model on page load/navigation
@@ -43,6 +43,13 @@
  * ============================================================================
  */
 
+// ═══════════════════════════════════════════════════════════════════════
+// CHANGELOG
+// ═══════════════════════════════════════════════════════════════════════
+// 
+// v2.1
+// - Renamed LMArena to Arena.ai
+
 (function() {
     'use strict';
 
@@ -56,9 +63,9 @@
      */
     const CONFIG = {
         // Base storage keys (suffixed with mode/modality at runtime)
-        STORAGE_KEY_PINS: 'lmarena_pinned_models_v1',
-        STORAGE_KEY_LAST_SELECTED: 'lmarena_last_selected_v2',
-        STORAGE_KEY_AUTO_RESTORE: 'lmarena_auto_restore_enabled_v2',
+        STORAGE_KEY_PINS: 'arena_pinned_models_v1',
+        STORAGE_KEY_LAST_SELECTED: 'arena_last_selected_v2',
+        STORAGE_KEY_AUTO_RESTORE: 'arena_auto_restore_enabled_v2',
 
         // CSS flexbox order base for pinned items (negative to appear first)
         PIN_ORDER_BASE: -10000,
@@ -73,13 +80,11 @@
         ENFORCE_THROTTLE: 1500,
         DRAG_CLICK_THRESHOLD: 150,
 
-        // Script version for logging
-        VERSION: '2.0.2'
     };
 
     /**
      * DOM Selectors for both UI variants.
-     * LMArena is running A/B tests with different UI structures.
+     * Arena is running A/B tests with different UI structures.
      * These selectors work across both variants.
      */
     const SELECTORS = {
@@ -847,7 +852,7 @@
         /* ================================================================
            DROPDOWN LAYOUT FIXES
            ================================================================
-           These rules fix LMArena's dropdown to use full viewport height
+           These rules fix Arena's dropdown to use full viewport height
            and prevent content truncation. Supports both UI variants.
         */
 
@@ -1982,7 +1987,7 @@
 
         /**
          * Enforcement state for post-navigation model persistence.
-         * LMArena may override model selection ~1.1s after SPA navigation.
+         * Arena may override model selection ~1.1s after SPA navigation.
          * We "enforce" the user's choice for a window after navigation.
          */
         _enforce: {
@@ -2317,7 +2322,7 @@
 
         /**
          * Start enforcement period after SPA navigation.
-         * Monitors and re-applies model selection if LMArena overrides it.
+         * Monitors and re-applies model selection if Arena overrides it.
          * @param {string} [reason] - Reason for logging
          */
         async startEnforcement(reason) {
@@ -2524,7 +2529,7 @@
 
     /**
      * Handles SPA (Single Page Application) navigation detection.
-     * LMArena uses React Router, so we intercept history methods.
+     * Arena uses React Router, so we intercept history methods.
      */
     const Navigation = {
         /** @type {string} */
@@ -2601,7 +2606,7 @@
 
         // Log startup
         console.log(
-            `[Model Pinner] v${CONFIG.VERSION} Loaded — ` +
+            `[Model Pinner] Loaded — ` +
             'Mode-aware + Slot-aware (SbS left/right independent) | Drag to reorder'
         );
     }

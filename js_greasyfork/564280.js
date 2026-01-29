@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         驼人云学堂战略规划题库-V1.0
+// @name         驼人云学堂战略规划题库-V1.0.1
 // @namespace    czy
-// @version      1.0
-// @description  云学堂视频自动播放-2024-08-05新增自动2倍速
+// @version      1.0.1
+// @description  驼人云学堂战略规划题库
 // @author       czy
 // @icon         https://picobd.yxt.com/orgs/yxt_malladmin/mvcpic/image/201811/71672740d9524c53ac3d60b6a4123bca.png
 // @match        http://*.yunxuetang.cn/plan/*.html
@@ -42,8 +42,8 @@
 // @license      MIT
 // @connect      none
 // @require      http://code.jquery.com/jquery-1.11.0.min.js
-// @downloadURL https://update.greasyfork.org/scripts/564280/%E9%A9%BC%E4%BA%BA%E4%BA%91%E5%AD%A6%E5%A0%82%E6%88%98%E7%95%A5%E8%A7%84%E5%88%92%E9%A2%98%E5%BA%93-V10.user.js
-// @updateURL https://update.greasyfork.org/scripts/564280/%E9%A9%BC%E4%BA%BA%E4%BA%91%E5%AD%A6%E5%A0%82%E6%88%98%E7%95%A5%E8%A7%84%E5%88%92%E9%A2%98%E5%BA%93-V10.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/564280/%E9%A9%BC%E4%BA%BA%E4%BA%91%E5%AD%A6%E5%A0%82%E6%88%98%E7%95%A5%E8%A7%84%E5%88%92%E9%A2%98%E5%BA%93-V101.user.js
+// @updateURL https://update.greasyfork.org/scripts/564280/%E9%A9%BC%E4%BA%BA%E4%BA%91%E5%AD%A6%E5%A0%82%E6%88%98%E7%95%A5%E8%A7%84%E5%88%92%E9%A2%98%E5%BA%93-V101.meta.js
 // ==/UserScript==
 
 /***********************
@@ -7651,56 +7651,71 @@
 ];
 
 
-// 左上角悬浮查答案面板（手动点击+1秒自动更新，带开关）
+// 严格优先级版：原文本题干→清空格题干→选项匹配 + 拖拽 + 1秒自动更新
 (function() {
-    // 全局定时器变量，控制自动更新（初始关闭）
+    // 全局变量：定时器、拖拽状态、面板节点缓存
     let autoAnswerTimer = null;
-    // 面板DOM节点缓存
-    let panel = null;
-    let btnManual = null;
-    let btnAuto = null;
-    let answerBox = null;
+    let isDragging = false;
+    let startX, startY, panelLeft, panelTop;
+    let panel, dragHeader, btnManual, btnAuto, answerBox;
 
-    // 第一步：判断是否已创建面板，避免重复生成
+    // 第一步：防重复创建面板，已有则直接显示
     const existingPanel = document.getElementById('quesAnswerPanel');
     if (existingPanel) {
         panel = existingPanel;
+        dragHeader = document.getElementById('dragHeader');
         btnManual = document.getElementById('getAnswerBtn');
         btnAuto = document.getElementById('toggleAutoBtn');
         answerBox = document.getElementById('answerDisplay');
-        console.log('✅ 答案面板已存在，直接显示');
         panel.style.display = 'block';
+        console.log('✅ 答案面板已存在，直接显示（严格优先级匹配）');
         return;
     }
 
-    // 第二步：创建悬浮面板DOM结构（左上角固定，双按钮布局）
+    // 第二步：创建可拖拽面板DOM（保留双按钮、美观样式）
     panel = document.createElement('div');
     panel.id = 'quesAnswerPanel';
     panel.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 99999; /* 最高层级，不被遮挡 */
+        z-index: 99999;
         background: #fff;
-        padding: 15px;
         border: 2px solid #1890ff;
-        border-radius: 0 0 8px 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        min-width: 320px;
+        border-radius: 4px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        min-width: 380px;
         font-family: sans-serif;
-        opacity: 0.8;
+        box-sizing: border-box;
     `;
 
-    // 按钮容器（适配双按钮布局）
+    // 拖拽头部（专属拖动区，光标提示）
+    dragHeader = document.createElement('div');
+    dragHeader.id = 'dragHeader';
+    dragHeader.style.cssText = `
+        width: 100%;
+        padding: 8px 15px;
+        background: #e6f7ff;
+        border-bottom: 1px solid #e8e8e8;
+        cursor: move;
+        font-size: 14px;
+        font-weight: bold;
+        color: #1890ff;
+        box-sizing: border-box;
+        border-radius: 2px 2px 0 0;
+    `;
+    dragHeader.innerText = '📌 拖拽移动 | 三级严格匹配 | 1秒自动更新';
+
+    // 按钮容器（手动+自动更新双按钮）
     const btnContainer = document.createElement('div');
     btnContainer.style.cssText = `
         display: flex;
         gap: 8px;
-        margin-bottom: 10px;
-        width: 100%;
+        margin: 12px 15px;
+        width: calc(100% - 30px);
     `;
 
-    // 1. 手动获取答案按钮
+    // 手动获取答案按钮
     btnManual = document.createElement('button');
     btnManual.id = 'getAnswerBtn';
     btnManual.innerText = '手动获取答案';
@@ -7718,7 +7733,7 @@
     btnManual.onmouseover = () => btnManual.style.background = '#40a9ff';
     btnManual.onmouseout = () => btnManual.style.background = '#1890ff';
 
-    // 2. 自动更新开关按钮（初始关闭状态）
+    // 自动更新开关按钮
     btnAuto = document.createElement('button');
     btnAuto.id = 'toggleAutoBtn';
     btnAuto.innerText = '开启自动更新';
@@ -7733,16 +7748,15 @@
         font-size: 14px;
         font-weight: bold;
     `;
-    btnAuto.onmouseover = () => btnAuto.style.background = '#ffc53d';
-    btnAuto.onmouseout = () => {
-        btnAuto.style.background = autoAnswerTimer ? '#52c41a' : '#faad14';
-    };
+    btnAuto.onmouseover = () => btnAuto.style.background = autoAnswerTimer ? '#389e0d' : '#ffc53d';
+    btnAuto.onmouseout = () => btnAuto.style.background = autoAnswerTimer ? '#52c41a' : '#faad14';
 
     // 答案展示区域
     answerBox = document.createElement('div');
     answerBox.id = 'answerDisplay';
     answerBox.style.cssText = `
-        padding: 10px;
+        margin: 0 15px 15px;
+        padding: 12px;
         border: 1px solid #e8e8e8;
         border-radius: 4px;
         min-height: 80px;
@@ -7751,48 +7765,135 @@
         color: #333;
         white-space: pre-wrap;
     `;
-    answerBox.innerText = '👉 可选：手动点击按钮获取答案\n👉 可选：点击开启自动更新（1秒/次）\n💡 仅匹配listQuestion中的题目内容';
+    answerBox.innerText = '👉 三级严格匹配（优先级从高到低）\n1. 原文本题干直接匹配\n2. 清空格后题干匹配\n3. 第一个选项兜底匹配\n👉 拖拽头部可移动，切换题目自动更新';
 
     // 组装面板
+    panel.appendChild(dragHeader);
+    panel.appendChild(btnContainer);
     btnContainer.appendChild(btnManual);
     btnContainer.appendChild(btnAuto);
-    panel.appendChild(btnContainer);
     panel.appendChild(answerBox);
     document.body.appendChild(panel);
 
-    // 第三步：核心逻辑 - 匹配题目并显示答案（手动/自动共用）
+    // 第三步：实现面板拖拽移动功能（流畅不卡顿，防误操作）
+    dragHeader.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        panelLeft = panel.offsetLeft;
+        panelTop = panel.offsetTop;
+        e.preventDefault(); // 防止拖动时选中页面文字
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const offsetX = e.clientX - startX;
+        const offsetY = e.clientY - startY;
+        panel.style.left = `${panelLeft + offsetX}px`;
+        panel.style.top = `${panelTop + offsetY}px`;
+    });
+    document.addEventListener('mouseup', () => isDragging = false);
+
+    // 工具函数1：彻底清除所有空格/&nbsp;/空白符（无任何残留）
+    function clearAllSpace(text) {
+        if (!text) return '';
+        return text
+            .replace(/\u00A0/g, '') // 替换&nbsp;（非断行空格）为空
+            .replace(/\s+/g, '')    // 替换所有空白符（空格/制表/换行）为空
+            .trim();               // 兜底删除首尾残留空白
+    }
+
+    // 工具函数2：精准提取页面【纯题干】和【第一个选项】（适配你的页面格式，无提取失败）
+    function extractQuesAndOption(pageText) {
+        if (!pageText) return { pureQues: '', firstOption: '' };
+        // 提取纯题干：从题型后到选项/上一题前，自动过滤题号、无关内容
+        const quesReg = /(单选题|多选题|判断题|填空题)\s*\d+[.、]\s*(.*?)(?=A\.|上一题|下一题|进度|答题卡)/s;
+        // 提取第一个选项：精准获取A.后的内容，到B.前结束
+        const optionReg = /A\.\s*(.*?)(?=B\.|C\.|D\.|上一题|下一题|进度)/s;
+
+        const quesMatch = pageText.match(quesReg);
+        const optionMatch = pageText.match(optionReg);
+
+        return {
+            pureQues: quesMatch && quesMatch[2] ? quesMatch[2].trim() : '',
+            firstOption: optionMatch && optionMatch[1] ? optionMatch[1].trim() : ''
+        };
+    }
+
+    // 🔴 核心：严格按你的要求实现「三级优先级匹配」
+    // 规则：前一级成功则直接返回，不执行后续步骤；每一步仅做指定对比
     function getCurrentAnswer() {
-        // 1. 获取页面题目文本并预处理
+        // 1. 基础校验：获取页面容器，提取题干和选项
         const mainEl = document.querySelectorAll('.main')[0];
         if (!mainEl) {
             answerBox.innerHTML = `<span style="color: #ff4d4f;">❌ 未找到题目容器(.main)</span>`;
             return;
         }
-        const pageText = mainEl.innerText.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
-        if (!pageText) {
-            answerBox.innerHTML = `<span style="color: #ff4d4f;">❌ 题目容器无内容</span>`;
+        const pageOriginText = mainEl.innerText;
+        const { pureQues, firstOption } = extractQuesAndOption(pageOriginText);
+
+        // 校验提取结果，确保有题干/选项可匹配
+        if (!pureQues) {
+            answerBox.innerHTML = `<span style="color: #ff4d4f;">❌ 未提取到题干，请检查页面</span>`;
+            console.log('页面原始文本：', pageOriginText.slice(0, 200));
             return;
         }
 
-        // 2. 匹配listQuestion（页面文本包含题目内容即匹配，核心逻辑）
         let currentQues = null;
+        let matchType = ''; // 记录匹配类型，用于展示
+
+        // 🔹 第一级：最高优先级 - 原文本题干直接对比（不做任何处理，找到直接给答案）
         for (const ques of listQuestion) {
-            const quesContent = ques.content.replace(/\s+/g, ' ').trim();
-            if (pageText.includes(quesContent)) {
+            if (pureQues === ques.content || pureQues.includes(ques.content)) {
                 currentQues = ques;
+                matchType = '原文本题干直接匹配（最高优先级）';
                 break;
             }
         }
 
-        // 3. 匹配失败处理
+        // 🔹 第二级：第一级失败 - 双端清空格后题干对比（仅处理空格，找到给答案）
         if (!currentQues) {
-            answerBox.innerHTML = `<span style="color: #ff4d4f;">❌ 未匹配到对应题目！</span><br>💡 确认listQuestion包含当前题`;
+            const pageQuesClear = clearAllSpace(pureQues);
+            for (const ques of listQuestion) {
+                const quesQuesClear = clearAllSpace(ques.content);
+                if (pageQuesClear === quesQuesClear || pageQuesClear.includes(quesQuesClear)) {
+                    currentQues = ques;
+                    matchType = '清空格后题干匹配（第二优先级）';
+                    break;
+                }
+            }
+        }
+
+        // 🔹 第三级：前两级失败 - 第一个选项兜底对比（最后保障，找到给答案）
+        if (!currentQues && firstOption) {
+            const pageOptionClear = clearAllSpace(firstOption);
+            for (const ques of listQuestion) {
+                // 遍历题库题目的所有选项，清空格后对比
+                const quesOptions = (ques.choiceItems || []).map(item => clearAllSpace(item.itemContent));
+                if (quesOptions.some(opt => opt === pageOptionClear || opt.includes(pageOptionClear))) {
+                    currentQues = ques;
+                    matchType = '第一个选项兜底匹配（最后优先级）';
+                    break;
+                }
+            }
+        }
+
+        // 匹配失败处理：打印排查信息，方便定位
+        if (!currentQues) {
+            answerBox.innerHTML = `
+                <span style="color: #ff4d4f; font-weight: bold;">❌ 三级匹配均失败！</span><br>
+                💡 题干：${pureQues.slice(0, 60)}...<br>
+                📌 第一个选项：${firstOption.slice(0, 60)}...
+            `;
+            console.log('===== 匹配排查信息 =====');
+            console.log('提取的纯题干：', pureQues);
+            console.log('清空格后题干：', clearAllSpace(pureQues));
+            console.log('提取的第一个选项：', firstOption);
             return;
         }
 
-        // 4. 题型映射+提取正确答案（适配所有题型）
+        // 匹配成功：提取正确答案（适配单选/多选/判断/填空所有题型）
         const quesTypeMap = {0: '单选题', 1: '多选题', 2: '判断题', 3: '填空题'};
-        const showType = quesTypeMap[currentQues.quesType] || '未知题型';
+        const quesType = quesTypeMap[currentQues.quesType] || '未知题型';
         let correctAnswer = '';
 
         switch (currentQues.quesType) {
@@ -7800,54 +7901,54 @@
                 correctAnswer = currentQues.choiceItems?.find(item => item.answer === 1)?.itemContent || '未找到答案';
                 break;
             case 1: // 多选题：顿号拼接所有正确选项
-                const multiItems = currentQues.choiceItems?.filter(item => item.answer === 1)?.map(item => item.itemContent);
-                correctAnswer = multiItems?.length ? multiItems.join('、') : '未找到答案';
+                const multiRightItems = currentQues.choiceItems?.filter(item => item.answer === 1)?.map(item => item.itemContent);
+                correctAnswer = multiRightItems?.length ? multiRightItems.join('、') : '未找到答案';
                 break;
-            case 2: // 判断题：转换为正确/错误
+            case 2: // 判断题：转换为「正确/错误」
                 correctAnswer = currentQues.judgeAnswer === 1 ? '正确' : '错误';
                 break;
-            case 3: // 填空题：兼容多字段命名
-                correctAnswer = currentQues.fillinAnswers?.[0]?.itemAnswer 
-                    || currentQues.fillInItems?.[0]?.itemAnswer 
-                    || currentQues.itemAnswer 
+            case 3: // 填空题：兼容多字段命名，兜底获取
+                correctAnswer = currentQues.fillinAnswers?.[0]?.itemAnswer
+                    || currentQues.fillInItems?.[0]?.itemAnswer
+                    || currentQues.itemAnswer
                     || '未找到答案';
                 break;
             default:
                 correctAnswer = '未知题型，无法提取答案';
         }
 
-        // 5. 格式化显示答案（彩色高亮，排版清晰）
+        // 格式化展示结果（彩色高亮，显示匹配类型）
         answerBox.innerHTML = `
-            <div><span style="color: #52c41a; font-weight: bold;">✅ 匹配成功 | ${showType}</span></div>
-            <div><span style="font-weight: bold;">📝 题目：</span>${currentQues.content}</div>
+            <div><span style="color: #52c41a; font-weight: bold;">✅ 匹配成功 | ${quesType}</span></div>
+            <div><span style="color: #666; font-size: 12px;">💡 匹配方式：${matchType}</span></div>
+            <div style="margin-top: 4px; word-break: break-all;"><span style="font-weight: bold;">📝 题干：</span>${pureQues}</div>
             <div style="margin-top: 6px;"><span style="font-weight: bold; color: #1890ff; font-size: 14px;">🎯 正确答案：</span>${correctAnswer}</div>
         `;
+        console.log(`✅ 匹配成功 | ${matchType} | 题干：${pureQues.slice(0, 40)}...`);
     }
 
-    // 第四步：自动更新开关逻辑（1秒/次，防重复开启）
+    // 第四步：自动更新开关逻辑（1秒/次，立即执行，防重复开启）
     function toggleAutoAnswer() {
         if (!autoAnswerTimer) {
-            // 开启自动更新：1000ms执行一次，立即执行一次避免等待
-            getCurrentAnswer();
+            getCurrentAnswer(); // 开启立即执行，无需等待1秒
             autoAnswerTimer = setInterval(getCurrentAnswer, 1000);
             btnAuto.innerText = '关闭自动更新';
-            btnAuto.style.background = '#52c41a'; // 绿色标识开启状态
-            answerBox.innerHTML = `<span style="color: #52c41a; font-weight: bold;">⚡ 已开启自动更新（1秒/次），切换题目自动刷新答案！</span>`;
-            console.log('✅ 自动更新已开启，每隔1秒获取一次答案');
+            btnAuto.style.background = '#52c41a'; // 绿色标识开启
+            answerBox.innerHTML = `<span style="color: #52c41a; font-weight: bold;">⚡ 已开启自动更新（1秒/次），严格三级匹配生效！</span>`;
+            console.log('✅ 自动更新已开启，每1秒自动匹配一次答案');
         } else {
-            // 关闭自动更新：清除定时器，重置状态
             clearInterval(autoAnswerTimer);
             autoAnswerTimer = null;
             btnAuto.innerText = '开启自动更新';
-            btnAuto.style.background = '#faad14'; // 黄色标识关闭状态
-            answerBox.innerHTML = `<span style="color: #faad14; font-weight: bold;">⏸ 已关闭自动更新，可手动点击按钮获取答案</span>`;
+            btnAuto.style.background = '#faad14'; // 黄色标识关闭
+            answerBox.innerHTML = `<span style="color: #faad14; font-weight: bold;">⏸ 已关闭自动更新，可手动点击获取答案</span>`;
             console.log('✅ 自动更新已关闭');
         }
     }
 
     // 第五步：绑定按钮点击事件
-    btnManual.onclick = getCurrentAnswer; // 手动获取
+    btnManual.onclick = getCurrentAnswer; // 手动触发匹配
     btnAuto.onclick = toggleAutoAnswer;   // 切换自动更新
 
-    console.log('✅ 答案面板创建成功，左上角悬浮显示（支持手动/自动获取答案）！');
+    console.log('✅ 严格优先级匹配面板创建成功！完全按你的要求实现三级匹配～');
 })();

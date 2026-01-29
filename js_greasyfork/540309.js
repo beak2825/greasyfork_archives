@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Chrome Dino Mod Menu [15.2]
+// @name         Chrome Dino Mod Menu [15.3]
 // @namespace    http://tampermonkey.net/
-// @version      15.2
+// @version      15.3
 // @description  Best Chrome Dino Mod Menu
 // @author       Jadob Lane
 // @match        https://chromedino.com/
 // @match        https://dino-chrome.com/
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/540309/Chrome%20Dino%20Mod%20Menu%20%5B152%5D.user.js
-// @updateURL https://update.greasyfork.org/scripts/540309/Chrome%20Dino%20Mod%20Menu%20%5B152%5D.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/540309/Chrome%20Dino%20Mod%20Menu%20%5B153%5D.user.js
+// @updateURL https://update.greasyfork.org/scripts/540309/Chrome%20Dino%20Mod%20Menu%20%5B153%5D.meta.js
 // ==/UserScript==
 
 (function () {
@@ -131,10 +131,17 @@
         if (inst?.setSpeed) inst.setSpeed(enabled ? 1000 : 6);
     }
 
-    function toggleSuperJump(enabled) {
-        const trex = Runner.instance_?.tRex;
-        if (trex?.setJumpVelocity) trex.setJumpVelocity(enabled ? 100 : -10.5);
+   function toggleSuperJump(enabled) {
+    const trex = Runner.instance_?.tRex;
+    if (!trex?.setJumpVelocity) return;
+
+    if (enabled) {
+        trex.setJumpVelocity(100); // super jump
+    } else {
+        trex.setJumpVelocity(10); // reduced / normal jump height
     }
+}
+
 
    function toggleFlyHack(enabled) {
   const FLY_SPEED = 5;
@@ -756,4 +763,3 @@
     }, 500);
 
 })();
-

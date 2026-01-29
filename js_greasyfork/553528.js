@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         iTalent 在线考试自动答题助手
 // @namespace    https://yangtaoer.com.cn/
-// @version      3.5
+// @version      3.7
 // @description  点击上传题库粘贴JSON即可上传，高亮答案保留，显示检测率和解析率，支持窗口最小化和拖动吸附
 // @author       yang
 // @match        https://*.italent.cn/*
@@ -17,23 +17,22 @@
 (function () {
     'use strict';
 
-	["visibilitychange","blur","focus","focusin","focusout"].forEach(e=>{
-		window.addEventListener(e, e => {
-			e.stopImmediatePropagation();
-			e.stopPropagation();
-			e.preventDefault();
-			return false
-		},true)
-	});
+    ["visibilitychange","blur","focus","focusin","focusout"].forEach(e=>{
+        window.addEventListener(e, e => {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            e.preventDefault();
+            return false
+        },true)
+    });
 
     const CONFIG = {
         apiUrl: 'https://yangtaoer.com.cn/exam/api/parse',
         uploadUrl: 'https://yangtaoer.com.cn/exam/api/upload',
         checkInterval: 1000,
-        version: 'v3.5'
+        version: 'v3.7'
     };
 
-    let knownQuestions = new Set();
     let paused = false;
     let cachedResultJson = null;
     let totalQuestions = 0;
@@ -196,7 +195,6 @@
 
         document.getElementById('exam-helper-clear').onclick = () => {
             document.querySelectorAll('.exam-highlight').forEach(e => e.classList.remove('exam-highlight'));
-            knownQuestions.clear();
             totalQuestions = 0;
             parsedQuestions = 0;
             updateStats();
@@ -259,10 +257,10 @@
         function extractQuestions() {
             const titles = Array.from(document.getElementsByClassName('exam-topic-item-title-name'));
             const result = [];
+            if(totalQuestions === titles.length) return result;
             titles.forEach(el => {
                 const text = el.innerText.trim();
-                if(text && !knownQuestions.has(text)){
-                    knownQuestions.add(text);
+                if(text){
                     result.push(text);
                 }
             });
@@ -314,8 +312,8 @@
 
         setInterval(()=>{
             if(paused) return;
-            const newQuestions= extractQuestions();
-            if(newQuestions.length>0) queryAnswers(newQuestions);
+            const newQuestions = extractQuestions();
+            if(newQuestions.length > 0) queryAnswers(newQuestions);
         }, CONFIG.checkInterval);
 
         console.log(`✅ [iTalent 答题助手 ${CONFIG.version}] 已启动`);

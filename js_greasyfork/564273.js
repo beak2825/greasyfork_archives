@@ -178,3 +178,28 @@
     createPanel();
     startAdBlock();
 })();
+
+(function() {
+    'use strict';
+
+    const style = document.createElement('style');
+    style.textContent = `
+        .offline-recommendations-video-card strong.CoreText-sc-1txzju1-0.hXnRiV {
+            white-space: normal !important;       
+            overflow: hidden !important;          
+            text-overflow: ellipsis !important;   
+            display: -webkit-box !important;      
+            -webkit-line-clamp: 2 !important;     
+            -webkit-box-orient: vertical !important;
+            word-break: break-word !important;    
+            line-height: 1.2em !important;        
+        }
+    `;
+    document.head.appendChild(style);
+
+   
+    const observer = new MutationObserver(() => {
+        
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();

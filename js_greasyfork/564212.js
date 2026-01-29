@@ -2,7 +2,7 @@
 // @name         AI对话窗口侧边导航栏 (完美导出)
 // @name:en      AI Chat Navigation Sidebar (Export Plus)
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  为 ChatGPT 和 Gemini 提供侧边悬浮目录。支持拖拽、收藏重点、一键换肤、精准导出、搜索过滤。采用 MO 性能优化，适配深色模式。
 // @description:en Adds a floating navigation sidebar to ChatGPT and Gemini. Features include drag-and-drop, bookmarking, theme switching, precise export, and search filtering. Optimized with MutationObserver for performance and supports dark mode.
 // @author       RenZhe0228

@@ -21,7 +21,7 @@
 // @description:es     Redirige automáticamente YouTube Shorts al reproductor normal sin recargar la página
 // @description:de     Leitet YouTube Shorts automatisch zum normalen Videoplayer um, ohne die Seite neu zu laden
 // @description:ru     Автоматически перенаправляет YouTube Shorts в обычный видеоплеер без перезагрузки страницы
-// @version            3.0.0
+// @version            3.1.0
 // @run-at             document-start
 // @inject-into        page
 // @match              https://www.youtube.com/*
@@ -108,12 +108,12 @@
      */
     function redirectShorts(id) {
         for (const element of document.querySelectorAll(`a[href*="${id}"]`)) {
-            element.href = "/watch?v=" + id;
             replaceState(findData(element, id), id);
+            element.href = "/watch?v=" + id;
         }
     }
 
-    /**F
+    /**
      * @param {string} url
      */
     function redirectShortsMobile(url) {
@@ -147,8 +147,10 @@
                 replaceState(endpoint, id);
                 const originalState = target.data;
                 target.data = endpoint;
+                target.href = "/watch?v=" + id;
                 target.click();
                 target.data = originalState;
+                target.href = "/";
             }
         }
     }

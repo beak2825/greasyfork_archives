@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         导航面板
 // @namespace    http://tampermonkey.net/
-// @version      7.4
+// @version      7.5
 // @description  多功能导航面板，支持侧边栏/顶栏/底栏显示，可自定义位置、颜色、搜索引擎。支持收藏管理、镜像站点数据共享、拖拽排序等功能。默认关闭，可在油猴菜单中为任意网站启用。
 // @author       You
 // @match        *://*/*
@@ -1966,7 +1966,7 @@
 
         // 添加共享域名
         settingsPanel.querySelector('#add-shared-domain-btn').onclick = () => {
-            const domain = prompt('请输入要共享数据的域名:\n\n例如: jable.tv 或 fs1.app\n\n添加后,该域名的数据将与当前网站共享。');
+            const domain = prompt('请输入要共享数据的域名:\n\n例如: example.com 或 github.com\n\n添加后,该域名的数据将与当前网站共享。');
             if (!domain) return;
 
             // 验证域名格式
@@ -2088,51 +2088,7 @@
             });
         }
 
-        // 添加共享域名按钮（双向镜像）
-        const addSharedDomainBtn = settingsPanel.querySelector('#add-shared-domain-btn');
-        if (addSharedDomainBtn) {
-            addSharedDomainBtn.addEventListener('click', () => {
-                const domain = prompt('请输入要添加的镜像域名:');
-                if (!domain || !domain.trim()) return;
 
-                const trimmedDomain = domain.trim();
-
-                // 验证域名格式
-                if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(trimmedDomain)) {
-                    alert('无效的域名格式');
-                    return;
-                }
-
-                // 检查是否已存在
-                if (siteConfig.sharedDomains.includes(trimmedDomain)) {
-                    alert('该域名已在镜像列表中');
-                    return;
-                }
-
-                // 添加到当前站点的镜像列表
-                siteConfig.sharedDomains.push(trimmedDomain);
-                saveSiteConfig();
-
-                // 【双向添加】在镜像站点也添加当前域名
-                const mirrorPlatform = trimmedDomain.replace(/\./g, '_');
-                const mirrorConfigKey = `${mirrorPlatform}_config`;
-                const mirrorConfig = GM_getValue(mirrorConfigKey, {
-                    sharedDomains: [trimmedDomain]
-                });
-
-                if (!mirrorConfig.sharedDomains) {
-                    mirrorConfig.sharedDomains = [trimmedDomain];
-                }
-
-                if (!mirrorConfig.sharedDomains.includes(currentHost)) {
-                    mirrorConfig.sharedDomains.push(currentHost);
-                    GM_setValue(mirrorConfigKey, mirrorConfig);
-                }
-
-                alert(`已添加镜像域名: ${trimmedDomain}\n双向镜像关系已建立，页面将刷新。`);
-                location.reload();
-            });
-        }
 
         // 迁移镜像数据按钮
         const migrateMirrorDataBtn = settingsPanel.querySelector('#migrate-mirror-data-btn');

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         YouTube Full Dates (v3)
+// @name         YouTube Full Dates (v4)
 // @namespace    YouTube Full Dates
-// @version      3
-// @description  Replace "1 year ago" with exact dates. Now with full day/month names and multi-language support (English, French, Spanish, German, etc.)
+// @version      4
+// @description  Replace "1 year ago" with exact dates. Full day/month names, multi-language support, works on ALL YouTube pages including Grid Subscriptions, Watch History, Channel tabs, and more!
 // @author       Solomon (improved from InMirrors)
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/814d40a6/img/favicon_144x144.png
@@ -11,8 +11,8 @@
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v3%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v3%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v4%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v4%29.meta.js
 // ==/UserScript==
 
 /*
@@ -20,7 +20,7 @@
  * 📋 CHANGELOG
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * Previous Features (Preserved):
+ * Previous Features (Preserved from v3):
  * ✅ Replace relative dates with exact dates
  * ✅ Works on all YouTube pages (home, search, channels, playlists, sidebar)
  * ✅ Custom date format templates
@@ -28,14 +28,23 @@
  * ✅ API response caching for performance
  * ✅ Settings panel with live preview
  * ✅ Debug mode for troubleshooting
+ * ✅ Full day names: wwww token (Monday, Tuesday, etc.)
+ * ✅ Full month names: MMMM token (January, February, etc.)
+ * ✅ Multi-language support: English, French, Spanish, German, Italian, Portuguese, etc.
+ * ✅ Language selector in settings panel
  *
- * 🆕 NEW in v3:
- * ✨ Full day names: wwww token (Monday, Tuesday, etc.)
- * ✨ Full month names: MMMM token (January, February, etc.)
- * ✨ Multi-language support: English, French, Spanish, German, Italian, Portuguese
- * ✨ Language selector in settings panel
- * ✨ Custom language keywords for non-English YouTube interfaces
- * ✨ Improved format preview with selected language
+ * 🆕 NEW in v4 (Bug Fixes from User Feedback):
+ * ✨ FIX: Subscriptions "Grid View" page now works (/feed/subscriptions)
+ * ✨ FIX: Watch History page now works (/feed/history)
+ * ✨ FIX: Channel Streams tab now works (/@channel/streams)
+ * ✨ FIX: Channel Shorts tab now works (/@channel/shorts)
+ * ✨ FIX: Channel Posts tab now works (/@channel/community)
+ * ✨ FIX: Channel Search now works (/@channel/search)
+ * ✨ FIX: Long dates now wrap properly instead of being cut off
+ * ✨ NEW: Added CSS for proper text wrapping on 5-row display
+ * ✨ NEW: Improved selector coverage for all YouTube page types
+ * ✨ NEW: Better handling of dynamically loaded content
+ * ✨ NEW: Universal date element detection (catches edge cases)
  *
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -128,6 +137,24 @@
             daysFull: ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
             agoKeywords: ['назад'],
             dateKeywords: ['секунд', 'минут', 'час', 'день', 'дней', 'недел', 'месяц', 'год', 'лет']
+        },
+        ko: {
+            name: '한국어',
+            monthsShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            monthsFull: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            daysShort: ['일', '월', '화', '수', '목', '금', '토'],
+            daysFull: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+            agoKeywords: ['전'],
+            dateKeywords: ['초', '분', '시간', '일', '주', '개월', '년']
+        },
+        ar: {
+            name: 'العربية',
+            monthsShort: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+            monthsFull: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+            daysShort: ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'],
+            daysFull: ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
+            agoKeywords: ['قبل', 'منذ'],
+            dateKeywords: ['ثانية', 'دقيقة', 'ساعة', 'يوم', 'أسبوع', 'شهر', 'سنة']
         }
     };
 
@@ -169,19 +196,17 @@
     // 🛠️ UTILITY FUNCTIONS
     // ═══════════════════════════════════════════════════════════════════════════
 
-    const log = (...args) => SETTINGS.debugMode && console.log('📅 [YT Dates v3]', ...args);
+    const log = (...args) => SETTINGS.debugMode && console.log('📅 [YT Dates v4]', ...args);
 
     /**
      * Format date with custom template
-     * 🆕 v3: Added wwww (full day) and MMMM (full month) tokens
-     *
      * Tokens:
      * - yyyy: Full year (2024)
      * - yy: Short year (24)
-     * - MMMM: Full month name (November) 🆕
+     * - MMMM: Full month name (November)
      * - MMM: Short month name (Nov)
      * - MM: Month number padded (11)
-     * - wwww: Full day name (Monday) 🆕
+     * - wwww: Full day name (Monday)
      * - ww: Short day name (Mon)
      * - dd: Day padded (08)
      * - HH: 24-hour padded (14)
@@ -200,10 +225,10 @@
         const tokens = {
             yyyy: d.getFullYear(),
             yy: String(d.getFullYear()).slice(-2),
-            MMMM: lang.monthsFull[d.getMonth()],  // 🆕 v3: Full month name
+            MMMM: lang.monthsFull[d.getMonth()],
             MMM: lang.monthsShort[d.getMonth()],
             MM: pad(d.getMonth() + 1),
-            wwww: lang.daysFull[d.getDay()],      // 🆕 v3: Full day name
+            wwww: lang.daysFull[d.getDay()],
             ww: lang.daysShort[d.getDay()],
             dd: pad(d.getDate()),
             HH: pad(d.getHours()),
@@ -240,18 +265,18 @@
 
     /**
      * Check if element contains relative date text
-     * 🆕 v3: Now uses language-specific keywords
+     * Uses all supported languages for better detection
      */
     function hasRelativeDate(text) {
         if (!text) return false;
-        const lang = getLang();
 
         // Check all supported languages for better detection
         const allAgoKeywords = Object.values(LANGUAGES).flatMap(l => l.agoKeywords);
         const allDateKeywords = Object.values(LANGUAGES).flatMap(l => l.dateKeywords);
 
-        const hasAgo = allAgoKeywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
-        const hasDate = allDateKeywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
+        const textLower = text.toLowerCase();
+        const hasAgo = allAgoKeywords.some(kw => textLower.includes(kw.toLowerCase()));
+        const hasDate = allDateKeywords.some(kw => textLower.includes(kw.toLowerCase()));
 
         return hasAgo && hasDate;
     }
@@ -396,6 +421,9 @@
             } else {
                 element.textContent = displayText;
             }
+
+            // 🆕 v4: Add class for CSS styling (text wrapping)
+            element.classList.add('ytfd-processed');
         });
 
         processQueue();
@@ -431,10 +459,13 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 📋 PAGE CONFIGURATIONS
+    // 📋 PAGE CONFIGURATIONS - 🆕 v4: EXPANDED FOR ALL PAGES
     // ═══════════════════════════════════════════════════════════════════════════
 
     const PAGE_CONFIGS = [
+        // ═══════════════════════════════════════════════════════════════════════
+        // 🎬 WATCH PAGE (Video Sidebar Recommendations)
+        // ═══════════════════════════════════════════════════════════════════════
         {
             id: 'watch-sidebar',
             urlPattern: /watch\?v=/,
@@ -443,6 +474,17 @@
             linkSelector: '.yt-lockup-view-model__content-image'
         },
         {
+            id: 'watch-sidebar-compact',
+            urlPattern: /watch\?v=/,
+            containerSelector: 'ytd-compact-video-renderer',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'a#thumbnail'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 🏠 HOMEPAGE
+        // ═══════════════════════════════════════════════════════════════════════
+        {
             id: 'homepage',
             urlPattern: /youtube\.com\/?$/,
             containerSelector: 'ytd-rich-item-renderer',
@@ -450,26 +492,170 @@
             linkSelector: '.yt-lockup-view-model__content-image'
         },
         {
+            id: 'homepage-grid',
+            urlPattern: /youtube\.com\/?$/,
+            containerSelector: 'ytd-rich-grid-media',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'h3 > a, a#video-title-link'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 🔍 SEARCH RESULTS
+        // ═══════════════════════════════════════════════════════════════════════
+        {
             id: 'search',
             urlPattern: /results\?search_query=/,
             containerSelector: 'ytd-video-renderer',
             dateSelector: '.inline-metadata-item',
             linkSelector: '#thumbnail'
         },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 📬 SUBSCRIPTIONS - 🆕 v4: FIXED GRID VIEW
+        // ═══════════════════════════════════════════════════════════════════════
         {
-            id: 'subscriptions',
+            id: 'subscriptions-list',
             urlPattern: /feed\/subscriptions/,
             containerSelector: '#dismissible',
             dateSelector: '#metadata-line > span',
             linkSelector: 'h3 > a'
         },
         {
+            // 🆕 v4: Grid view subscriptions
+            id: 'subscriptions-grid',
+            urlPattern: /feed\/subscriptions/,
+            containerSelector: 'ytd-rich-item-renderer',
+            dateSelector: '#metadata-line > span, .yt-core-attributed-string--link-inherit-color',
+            linkSelector: 'a#video-title-link, h3 > a, .yt-lockup-view-model__content-image'
+        },
+        {
+            // 🆕 v4: Rich grid media in subscriptions
+            id: 'subscriptions-rich-grid',
+            urlPattern: /feed\/subscriptions/,
+            containerSelector: 'ytd-rich-grid-media',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'a#video-title-link, h3 > a'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 📜 WATCH HISTORY - 🆕 v4: NEW
+        // ═══════════════════════════════════════════════════════════════════════
+        {
+            id: 'history',
+            urlPattern: /feed\/history/,
+            containerSelector: 'ytd-video-renderer',
+            dateSelector: '.inline-metadata-item, #metadata-line > span',
+            linkSelector: '#thumbnail, a#video-title'
+        },
+        {
+            id: 'history-compact',
+            urlPattern: /feed\/history/,
+            containerSelector: 'ytd-compact-video-renderer',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'a#thumbnail'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 📺 CHANNEL PAGES - VIDEOS TAB
+        // ═══════════════════════════════════════════════════════════════════════
+        {
             id: 'channel-videos',
             urlPattern: /@[^/]+\/videos/,
             containerSelector: 'ytd-rich-grid-media',
             dateSelector: '#metadata-line > span',
-            linkSelector: 'h3 > a'
+            linkSelector: 'h3 > a, a#video-title-link'
         },
+        {
+            id: 'channel-videos-item',
+            urlPattern: /@[^/]+\/videos/,
+            containerSelector: 'ytd-rich-item-renderer',
+            dateSelector: '#metadata-line > span, .yt-core-attributed-string--link-inherit-color',
+            linkSelector: 'h3 > a, a#video-title-link'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 🎥 CHANNEL STREAMS - 🆕 v4: NEW
+        // ═══════════════════════════════════════════════════════════════════════
+        {
+            id: 'channel-streams',
+            urlPattern: /@[^/]+\/streams/,
+            containerSelector: 'ytd-rich-grid-media',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'h3 > a, a#video-title-link'
+        },
+        {
+            id: 'channel-streams-item',
+            urlPattern: /@[^/]+\/streams/,
+            containerSelector: 'ytd-rich-item-renderer',
+            dateSelector: '#metadata-line > span, .yt-core-attributed-string--link-inherit-color',
+            linkSelector: 'h3 > a, a#video-title-link'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 📱 CHANNEL SHORTS - 🆕 v4: NEW
+        // ═══════════════════════════════════════════════════════════════════════
+        {
+            id: 'channel-shorts',
+            urlPattern: /@[^/]+\/shorts/,
+            containerSelector: 'ytd-rich-grid-media',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'h3 > a, a#video-title-link, a#thumbnail'
+        },
+        {
+            id: 'channel-shorts-item',
+            urlPattern: /@[^/]+\/shorts/,
+            containerSelector: 'ytd-rich-item-renderer',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'h3 > a, a#video-title-link, a#thumbnail'
+        },
+        {
+            id: 'channel-shorts-reel',
+            urlPattern: /@[^/]+\/shorts/,
+            containerSelector: 'ytd-reel-item-renderer',
+            dateSelector: '#metadata-line > span, .ytd-reel-item-renderer span',
+            linkSelector: 'a#thumbnail, a'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 💬 CHANNEL COMMUNITY/POSTS - 🆕 v4: NEW
+        // ═══════════════════════════════════════════════════════════════════════
+        {
+            id: 'channel-community',
+            urlPattern: /@[^/]+\/community/,
+            containerSelector: 'ytd-backstage-post-renderer',
+            dateSelector: '#published-time-text a, #published-time-text',
+            linkSelector: '#published-time-text a'
+        },
+        {
+            // Also handle "posts" URL variant
+            id: 'channel-posts',
+            urlPattern: /@[^/]+\/posts/,
+            containerSelector: 'ytd-backstage-post-renderer',
+            dateSelector: '#published-time-text a, #published-time-text',
+            linkSelector: '#published-time-text a'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 🔎 CHANNEL SEARCH - 🆕 v4: NEW
+        // ═══════════════════════════════════════════════════════════════════════
+        {
+            id: 'channel-search',
+            urlPattern: /@[^/]+\/search/,
+            containerSelector: 'ytd-video-renderer',
+            dateSelector: '.inline-metadata-item, #metadata-line > span',
+            linkSelector: '#thumbnail, a#video-title'
+        },
+        {
+            id: 'channel-search-grid',
+            urlPattern: /@[^/]+\/search/,
+            containerSelector: 'ytd-rich-grid-media',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'h3 > a, a#video-title-link'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 🏠 CHANNEL FEATURED/HOME
+        // ═══════════════════════════════════════════════════════════════════════
         {
             id: 'channel-featured',
             urlPattern: /@[^/]+\/?$/,
@@ -478,8 +664,51 @@
             linkSelector: 'a#thumbnail'
         },
         {
+            id: 'channel-featured-rich',
+            urlPattern: /@[^/]+\/?$/,
+            containerSelector: 'ytd-rich-grid-media',
+            dateSelector: '#metadata-line > span',
+            linkSelector: 'h3 > a, a#video-title-link'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 📝 PLAYLISTS
+        // ═══════════════════════════════════════════════════════════════════════
+        {
             id: 'playlist',
             urlPattern: /playlist\?list=/,
+            containerSelector: 'ytd-playlist-video-renderer',
+            dateSelector: 'span.yt-formatted-string',
+            linkSelector: 'a#thumbnail'
+        },
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // 📚 OTHER FEED PAGES - 🆕 v4: ADDED
+        // ═══════════════════════════════════════════════════════════════════════
+        {
+            id: 'trending',
+            urlPattern: /feed\/trending/,
+            containerSelector: 'ytd-video-renderer',
+            dateSelector: '.inline-metadata-item, #metadata-line > span',
+            linkSelector: '#thumbnail'
+        },
+        {
+            id: 'library',
+            urlPattern: /feed\/library/,
+            containerSelector: 'ytd-video-renderer',
+            dateSelector: '.inline-metadata-item, #metadata-line > span',
+            linkSelector: '#thumbnail'
+        },
+        {
+            id: 'watch-later',
+            urlPattern: /playlist\?list=WL/,
+            containerSelector: 'ytd-playlist-video-renderer',
+            dateSelector: 'span.yt-formatted-string',
+            linkSelector: 'a#thumbnail'
+        },
+        {
+            id: 'liked-videos',
+            urlPattern: /playlist\?list=LL/,
             containerSelector: 'ytd-playlist-video-renderer',
             dateSelector: 'span.yt-formatted-string',
             linkSelector: 'a#thumbnail'
@@ -501,35 +730,106 @@
         const containers = document.querySelectorAll(config.containerSelector);
 
         containers.forEach(container => {
-            // Find date elements
-            const dateElements = container.querySelectorAll(config.dateSelector);
+            // Find date elements (support multiple selectors separated by comma)
+            const dateSelectors = config.dateSelector.split(',').map(s => s.trim());
+            let dateEl = null;
+            let originalText = '';
 
-            // Find the one with relative date text
-            const dateEl = Array.from(dateElements).find(el => {
-                const text = el.textContent;
-                return hasRelativeDate(text) && !text.includes(PROCESSED);
-            });
+            for (const selector of dateSelectors) {
+                const dateElements = container.querySelectorAll(selector);
+
+                // Find the one with relative date text
+                dateEl = Array.from(dateElements).find(el => {
+                    const text = el.textContent;
+                    return hasRelativeDate(text) && !text.includes(PROCESSED);
+                });
+
+                if (dateEl) {
+                    originalText = dateEl.textContent.trim();
+                    break;
+                }
+            }
 
             if (!dateEl) return;
-
-            const originalText = dateEl.textContent.trim();
 
             // Mark as processing
             if (dateEl.firstChild) {
                 dateEl.firstChild.nodeValue = originalText + PROCESSED;
             }
 
-            // Get video link
-            const linkEl = container.querySelector(config.linkSelector);
-            const href = linkEl?.getAttribute('href');
+            // Get video link (support multiple selectors)
+            const linkSelectors = config.linkSelector.split(',').map(s => s.trim());
+            let href = null;
+
+            for (const selector of linkSelectors) {
+                const linkEl = container.querySelector(selector);
+                href = linkEl?.getAttribute('href');
+                if (href) break;
+            }
+
             const videoId = getVideoId(href);
 
             if (!videoId) {
-                log('⚠️ No video ID for:', config.id);
+                log('⚠️ No video ID for:', config.id, href);
                 return;
             }
 
             queueDateUpdate(videoId, dateEl, originalText);
+        });
+    }
+
+    /**
+     * 🆕 v4: Universal fallback processor
+     * Catches any date elements that might be missed by specific configs
+     */
+    function processUniversalFallback() {
+        // Find all potential date elements across the page
+        const potentialDateSelectors = [
+            '#metadata-line > span',
+            '.inline-metadata-item',
+            '.yt-core-attributed-string--link-inherit-color',
+            'span.yt-formatted-string',
+            '#published-time-text',
+            '#published-time-text a'
+        ];
+
+        potentialDateSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+
+            elements.forEach(el => {
+                const text = el.textContent;
+                if (!hasRelativeDate(text) || text.includes(PROCESSED)) return;
+
+                // Already processed by a specific config?
+                if (el.classList.contains('ytfd-processed')) return;
+
+                // Try to find associated video link
+                const container = el.closest(
+                    'ytd-rich-item-renderer, ytd-video-renderer, ytd-compact-video-renderer, ' +
+                    'ytd-grid-video-renderer, ytd-playlist-video-renderer, ytd-rich-grid-media, ' +
+                    'yt-lockup-view-model, ytd-reel-item-renderer, #dismissible'
+                );
+
+                if (!container) return;
+
+                const linkEl = container.querySelector(
+                    'a#thumbnail, a#video-title-link, h3 > a, .yt-lockup-view-model__content-image, a[href*="watch"], a[href*="shorts"]'
+                );
+
+                const href = linkEl?.getAttribute('href');
+                const videoId = getVideoId(href);
+
+                if (!videoId) return;
+
+                const originalText = text.trim();
+
+                // Mark as processing
+                if (el.firstChild) {
+                    el.firstChild.nodeValue = originalText + PROCESSED;
+                }
+
+                queueDateUpdate(videoId, el, originalText);
+            });
         });
     }
 
@@ -546,9 +846,13 @@
                 processVideoDescription();
             }
 
-            // Process video lists
+            // Process video lists with specific configs
             const configs = getActiveConfigs();
             configs.forEach(processVideos);
+
+            // 🆕 v4: Run universal fallback to catch any missed elements
+            processUniversalFallback();
+
         } catch (error) {
             log('❌ Processing error:', error);
         }
@@ -557,7 +861,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🎨 STYLES
+    // 🎨 STYLES - 🆕 v4: ADDED TEXT WRAPPING FIX
     // ═══════════════════════════════════════════════════════════════════════════
 
     GM_addStyle(`
@@ -581,6 +885,66 @@
         .ytfd-live #info > b.ytfd-date {
             margin-left: 0 !important;
             margin-right: 6px !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+         * 🆕 v4: TEXT WRAPPING FIX FOR LONG DATES
+         * ═══════════════════════════════════════════════════════════════════════ */
+
+        /* Allow text wrapping on processed date elements */
+        .ytfd-processed,
+        #metadata-line,
+        #metadata-line > span,
+        .inline-metadata-item {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        /* Ensure metadata line can expand for long dates */
+        #metadata-line {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+            line-height: 1.4 !important;
+        }
+
+        /* Fix for grid view cards - allow multi-line metadata */
+        ytd-rich-grid-media #metadata-line,
+        ytd-rich-item-renderer #metadata-line,
+        ytd-video-renderer .inline-metadata-item {
+            overflow: visible !important;
+            text-overflow: unset !important;
+            -webkit-line-clamp: unset !important;
+        }
+
+        /* Ensure the container doesn't clip the date */
+        ytd-rich-grid-media #meta,
+        ytd-rich-item-renderer #meta,
+        ytd-video-renderer #meta {
+            overflow: visible !important;
+        }
+
+        /* Fix for 5-row display - ensure dates wrap properly */
+        ytd-rich-grid-renderer[grid-row="5"] #metadata-line > span,
+        ytd-rich-grid-renderer #metadata-line > span {
+            display: inline !important;
+            white-space: normal !important;
+        }
+
+        /* Subscriptions grid view fix */
+        ytd-rich-item-renderer[items-per-row] #metadata-line {
+            flex-wrap: wrap !important;
+        }
+
+        /* Watch history page fix */
+        ytd-video-renderer[use-prominent-thumbs] .inline-metadata-item {
+            white-space: normal !important;
+        }
+
+        /* Channel pages metadata fix */
+        ytd-rich-grid-media[is-channel-page] #metadata-line > span {
+            white-space: normal !important;
         }
 
         /* Settings Panel */
@@ -777,6 +1141,17 @@
             background: #d4edda;
             color: #155724;
         }
+
+        .ytfd-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #ff6b6b;
+            color: white;
+            font-size: 10px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
     `);
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -794,7 +1169,7 @@
 
         panel.innerHTML = `
             <div class="ytfd-header">
-                <h2>📅 YouTube Full Dates v3 Settings</h2>
+                <h2>📅 YouTube Full Dates v4 Settings</h2>
                 <button class="ytfd-close" title="Close">✕</button>
             </div>
             <div class="ytfd-body">
@@ -825,10 +1200,10 @@
                         <span class="ytfd-token">yy</span>
                         <span class="ytfd-token">MM</span>
                         <span class="ytfd-token">MMM</span>
-                        <span class="ytfd-token ytfd-token-new">MMMM 🆕</span>
+                        <span class="ytfd-token">MMMM</span>
                         <span class="ytfd-token">dd</span>
                         <span class="ytfd-token">ww</span>
-                        <span class="ytfd-token ytfd-token-new">wwww 🆕</span>
+                        <span class="ytfd-token">wwww</span>
                         <span class="ytfd-token">HH</span>
                         <span class="ytfd-token">hh</span>
                         <span class="ytfd-token">mm</span>
@@ -865,6 +1240,18 @@
                         → ${formatDate(new Date(), 'MMMM dd, yyyy', 'en')}<br><br>
                         <strong>ISO:</strong> <code>yyyy-MM-dd</code><br>
                         → ${formatDate(new Date(), 'yyyy-MM-dd', 'en')}
+                    </div>
+                </div>
+
+                <div class="ytfd-section">
+                    <div class="ytfd-section-title">✨ What's New in v4<span class="ytfd-badge">NEW</span></div>
+                    <div class="ytfd-help" style="font-size: 12px; line-height: 1.6;">
+                        ✅ Fixed: Subscriptions Grid View<br>
+                        ✅ Fixed: Watch History page<br>
+                        ✅ Fixed: Channel Streams, Shorts, Posts<br>
+                        ✅ Fixed: Channel Search results<br>
+                        ✅ Fixed: Long dates now wrap properly<br>
+                        ✅ Added: Korean and Arabic languages
                     </div>
                 </div>
             </div>
@@ -969,7 +1356,20 @@
                 // Check if relevant elements were added
                 for (const node of mutation.addedNodes) {
                     if (node.nodeType === 1) {
-                        const selectors = PAGE_CONFIGS.map(c => c.containerSelector).join(', ');
+                        // 🆕 v4: Expanded selector list
+                        const selectors = [
+                            'ytd-rich-item-renderer',
+                            'ytd-video-renderer',
+                            'ytd-compact-video-renderer',
+                            'ytd-grid-video-renderer',
+                            'ytd-playlist-video-renderer',
+                            'ytd-rich-grid-media',
+                            'yt-lockup-view-model',
+                            'ytd-reel-item-renderer',
+                            'ytd-backstage-post-renderer',
+                            '#dismissible'
+                        ].join(', ');
+
                         if (node.matches?.(selectors) || node.querySelector?.(selectors)) {
                             shouldRun = true;
                             break;
@@ -997,6 +1397,9 @@
     // Initial run
     setTimeout(runProcessors, 1000);
 
-    console.log('📅 YouTube Full Dates v3 loaded! Language:', SETTINGS.language);
+    // 🆕 v4: Additional delayed run to catch lazy-loaded content
+    setTimeout(runProcessors, 3000);
+
+    console.log('📅 YouTube Full Dates v4 loaded! Language:', SETTINGS.language);
 
 })();

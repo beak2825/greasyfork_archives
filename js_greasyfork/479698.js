@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GGn Get Languages From Steam
-// @version      7
+// @version      8
 // @description  Easily get languages from Steam. Edited from "GGn Steam Language BBCode quick copy".
 // @author       lucianjp, ingts
 // @match        https://gazellegames.net/torrents.php?action=editgroup*
@@ -222,7 +222,6 @@ globals.parseSteamLanguage = function (supported_languages) {
         for (let r = 0; r < table.rows.length; r++) {
             for (let c = 0; c < table.rows[r].cells.length; c++) {
                 const cell = table.rows[r].cells[c]
-                debugger
                 if (cell.textContent.trim() === '✔' || cell.firstElementChild?.nodeName === 'IMG') {
                     let header = table.rows[0].cells[c].textContent.trim()
                     if (!languages[header]) {
@@ -238,7 +237,6 @@ globals.parseSteamLanguage = function (supported_languages) {
     let textLanguages = languages['Subtitles']?.length > 0 ? languages['Subtitles'] : languages['Interface']
     let audioLanguages = languages['Full Audio']
 
-    debugger
     const textMulti = textLanguages.length > 1 ? 's' : ''
     const audioMulti = audioLanguages && audioLanguages.length > 1 ? 's' : ''
 

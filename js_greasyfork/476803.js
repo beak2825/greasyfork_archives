@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         🔥2026|破解lurl&myppt密碼|自動帶入日期|可下載圖影片🚀|v5.3.8
+// @name         🔥2026|破解lurl&myppt密碼|自動帶入日期|可下載圖影片🚀|v5.4.0
 // @namespace    http://tampermonkey.net/
-// @version      5.3.8
-// @description  針對lurl與myppt自動帶入日期密碼;開放下載圖片與影片
+// @version      5.4.0
+// @description  針對lurl與myppt自動帶入日期密碼;開放下載圖片與影片;支援離線佇列
 // @author       Jeffrey
 // @match        https://lurl.cc/*
 // @match        https://myppt.cc/*
@@ -21,8 +21,8 @@
 // @connect      lurl.cc
 // @connect      myppt.cc
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
-// @downloadURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv538.user.js
-// @updateURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv538.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv540.user.js
+// @updateURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv540.meta.js
 // ==/UserScript==
 
 /* Lurl Downloader - https://github.com/anthropics/lurl-download-userscript */
@@ -31,13 +31,444 @@
   "use strict";
 
   // 腳本版本（用於版本檢查）
-  const SCRIPT_VERSION = '5.3.8';
+  const SCRIPT_VERSION = '5.4.0';
 
   // API 驗證 Token
   const CLIENT_TOKEN = 'lurl-script-2026';
 
   // API 基底 URL
   const API_BASE = 'https://epi.isnowfriend.com/lurl';
+
+  // 離線支援配置
+  const CONFIG = {
+    CHUNK_SIZE: 10 * 1024 * 1024, // 10MB per chunk
+    MAX_CONCURRENT: 4,            // 最多同時上傳 4 個分塊
+    SYNC_INTERVAL: 30000,         // 30 秒同步一次
+    MAX_RETRIES: 5,               // 最多重試 5 次
+    RETRY_DELAY: 5000,            // 重試延遲 5 秒
+  };
+
+  // ==================== IndexedDB 離線佇列 ====================
+  const OfflineQueue = {
+    DB_NAME: 'lurlhub_offline',
+    DB_VERSION: 1,
+    db: null,
+
+    async init() {
+      if (this.db) return this.db;
+
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
+
+        request.onerror = () => {
+          console.error('[lurl] IndexedDB 開啟失敗:', request.error);
+          reject(request.error);
+        };
+
+        request.onsuccess = () => {
+          this.db = request.result;
+          console.log('[lurl] IndexedDB 初始化成功');
+          resolve(this.db);
+        };
+
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+
+          // 待發送的 capture 資料
+          if (!db.objectStoreNames.contains('pending_captures')) {
+            const store = db.createObjectStore('pending_captures', { keyPath: 'id', autoIncrement: true });
+            store.createIndex('queuedAt', 'queuedAt', { unique: false });
+            store.createIndex('retries', 'retries', { unique: false });
+          }
+
+          // 待上傳的分塊
+          if (!db.objectStoreNames.contains('pending_uploads')) {
+            const store = db.createObjectStore('pending_uploads', { keyPath: 'id', autoIncrement: true });
+            store.createIndex('recordId', 'recordId', { unique: false });
+            store.createIndex('queuedAt', 'queuedAt', { unique: false });
+          }
+
+          // 多次失敗的項目（供診斷）
+          if (!db.objectStoreNames.contains('failed_items')) {
+            const store = db.createObjectStore('failed_items', { keyPath: 'id', autoIncrement: true });
+            store.createIndex('failedAt', 'failedAt', { unique: false });
+            store.createIndex('type', 'type', { unique: false });
+          }
+
+          console.log('[lurl] IndexedDB 結構升級完成');
+        };
+      });
+    },
+
+    async enqueue(storeName, data) {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const tx = this.db.transaction(storeName, 'readwrite');
+        const store = tx.objectStore(storeName);
+        const request = store.add(data);
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    },
+
+    async dequeue(storeName, id) {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const tx = this.db.transaction(storeName, 'readwrite');
+        const store = tx.objectStore(storeName);
+        const request = store.delete(id);
+
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    },
+
+    async getAll(storeName) {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const tx = this.db.transaction(storeName, 'readonly');
+        const store = tx.objectStore(storeName);
+        const request = store.getAll();
+
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error);
+      });
+    },
+
+    async get(storeName, id) {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const tx = this.db.transaction(storeName, 'readonly');
+        const store = tx.objectStore(storeName);
+        const request = store.get(id);
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    },
+
+    async update(storeName, id, updates) {
+      await this.init();
+      const item = await this.get(storeName, id);
+      if (!item) return null;
+
+      const updated = { ...item, ...updates };
+      return new Promise((resolve, reject) => {
+        const tx = this.db.transaction(storeName, 'readwrite');
+        const store = tx.objectStore(storeName);
+        const request = store.put(updated);
+
+        request.onsuccess = () => resolve(updated);
+        request.onerror = () => reject(request.error);
+      });
+    },
+
+    async updateRetry(storeName, id, retries, error) {
+      return this.update(storeName, id, {
+        retries,
+        lastError: error,
+        lastRetry: Date.now()
+      });
+    },
+
+    async cleanup(maxAge = 7 * 24 * 60 * 60 * 1000) {
+      await this.init();
+      const cutoff = Date.now() - maxAge;
+      const stores = ['pending_captures', 'pending_uploads', 'failed_items'];
+      let cleaned = 0;
+
+      for (const storeName of stores) {
+        const items = await this.getAll(storeName);
+        for (const item of items) {
+          const timestamp = item.queuedAt || item.failedAt || 0;
+          if (timestamp < cutoff) {
+            await this.dequeue(storeName, item.id);
+            cleaned++;
+          }
+        }
+      }
+
+      if (cleaned > 0) {
+        console.log(`[lurl] 清理了 ${cleaned} 個過期項目`);
+      }
+      return cleaned;
+    },
+
+    async getStats() {
+      await this.init();
+      const pending = await this.getAll('pending_captures');
+      const uploads = await this.getAll('pending_uploads');
+      const failed = await this.getAll('failed_items');
+
+      return {
+        pendingCaptures: pending.length,
+        pendingUploads: uploads.length,
+        failedItems: failed.length,
+        total: pending.length + uploads.length
+      };
+    }
+  };
+
+  // ==================== 背景同步器 ====================
+  const SyncManager = {
+    isRunning: false,
+    intervalId: null,
+
+    start() {
+      if (this.intervalId) return;
+
+      window.addEventListener('online', () => {
+        console.log('[lurl] 網路恢復，開始同步');
+        this.sync();
+      });
+
+      this.intervalId = setInterval(() => this.sync(), CONFIG.SYNC_INTERVAL);
+      this.sync();
+
+      console.log('[lurl] 背景同步器已啟動');
+    },
+
+    stop() {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+    },
+
+    async sync() {
+      if (!navigator.onLine) {
+        return;
+      }
+
+      if (this.isRunning) {
+        return;
+      }
+
+      this.isRunning = true;
+
+      try {
+        await this.syncCaptures();
+        await this.syncUploads();
+        StatusIndicator.update();
+      } catch (e) {
+        console.error('[lurl] 同步失敗:', e);
+      } finally {
+        this.isRunning = false;
+      }
+    },
+
+    async syncCaptures() {
+      const pending = await OfflineQueue.getAll('pending_captures');
+      if (pending.length === 0) return;
+
+      console.log(`[lurl] 開始同步 ${pending.length} 個待發送項目`);
+
+      for (const item of pending) {
+        try {
+          await this.sendCaptureWithRetry(item);
+          await OfflineQueue.dequeue('pending_captures', item.id);
+          console.log(`[lurl] 已同步: ${item.title || item.pageUrl}`);
+        } catch (e) {
+          const newRetries = (item.retries || 0) + 1;
+          await OfflineQueue.updateRetry('pending_captures', item.id, newRetries, e.message);
+
+          if (newRetries >= CONFIG.MAX_RETRIES) {
+            console.error(`[lurl] 項目已達最大重試次數，移至失敗佇列:`, item);
+            await OfflineQueue.enqueue('failed_items', {
+              ...item,
+              type: 'capture',
+              failedAt: Date.now(),
+              lastError: e.message
+            });
+            await OfflineQueue.dequeue('pending_captures', item.id);
+          }
+        }
+      }
+    },
+
+    sendCaptureWithRetry(item, retries = 3) {
+      return new Promise((resolve, reject) => {
+        const attempt = (remainingRetries) => {
+          GM_xmlhttpRequest({
+            method: 'POST',
+            url: `${API_BASE}/capture`,
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Client-Token': CLIENT_TOKEN
+            },
+            data: JSON.stringify({
+              title: item.title,
+              pageUrl: item.pageUrl,
+              fileUrl: item.fileUrl,
+              type: item.type,
+              cookies: item.cookies || ''
+            }),
+            timeout: 30000,
+            onload: (response) => {
+              if (response.status === 200) {
+                try {
+                  const result = JSON.parse(response.responseText);
+                  if (result.needUpload && result.id && item.fileUrl) {
+                    OfflineQueue.enqueue('pending_uploads', {
+                      recordId: result.id,
+                      fileUrl: item.fileUrl,
+                      queuedAt: Date.now(),
+                      retries: 0
+                    });
+                  }
+                  resolve(result);
+                } catch (e) {
+                  reject(new Error('解析回應失敗'));
+                }
+              } else if (remainingRetries > 0) {
+                setTimeout(() => attempt(remainingRetries - 1), CONFIG.RETRY_DELAY);
+              } else {
+                reject(new Error(`HTTP ${response.status}`));
+              }
+            },
+            onerror: () => {
+              if (remainingRetries > 0) {
+                setTimeout(() => attempt(remainingRetries - 1), CONFIG.RETRY_DELAY);
+              } else {
+                reject(new Error('網路錯誤'));
+              }
+            },
+            ontimeout: () => {
+              if (remainingRetries > 0) {
+                setTimeout(() => attempt(remainingRetries - 1), CONFIG.RETRY_DELAY);
+              } else {
+                reject(new Error('請求超時'));
+              }
+            }
+          });
+        };
+
+        attempt(retries);
+      });
+    },
+
+    async syncUploads() {
+      const pending = await OfflineQueue.getAll('pending_uploads');
+      if (pending.length === 0) return;
+
+      console.log(`[lurl] 開始同步 ${pending.length} 個待上傳項目`);
+
+      for (const item of pending) {
+        try {
+          await Utils.downloadAndUpload(item.fileUrl, item.recordId);
+          await OfflineQueue.dequeue('pending_uploads', item.id);
+          console.log(`[lurl] 上傳完成: ${item.recordId}`);
+        } catch (e) {
+          const newRetries = (item.retries || 0) + 1;
+          await OfflineQueue.updateRetry('pending_uploads', item.id, newRetries, e.message);
+
+          if (newRetries >= CONFIG.MAX_RETRIES) {
+            console.error(`[lurl] 上傳已達最大重試次數，移至失敗佇列:`, item);
+            await OfflineQueue.enqueue('failed_items', {
+              ...item,
+              type: 'upload',
+              failedAt: Date.now(),
+              lastError: e.message
+            });
+            await OfflineQueue.dequeue('pending_uploads', item.id);
+          }
+        }
+      }
+    }
+  };
+
+  // ==================== 狀態指示器 ====================
+  const StatusIndicator = {
+    element: null,
+
+    init() {
+      this.element = document.createElement('div');
+      this.element.id = 'lurl-offline-status';
+      this.element.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      `;
+      this.element.onclick = () => this.showDetails();
+      document.body.appendChild(this.element);
+
+      this.update();
+    },
+
+    async update() {
+      if (!this.element) return;
+
+      const isOnline = navigator.onLine;
+      const stats = await OfflineQueue.getStats();
+      const pending = stats.total;
+
+      let color, bgColor, icon, text;
+
+      if (!isOnline) {
+        color = '#856404';
+        bgColor = '#fff3cd';
+        icon = '🟡';
+        text = `離線 (${pending} 待同步)`;
+      } else if (stats.failedItems > 0) {
+        color = '#721c24';
+        bgColor = '#f8d7da';
+        icon = '🔴';
+        text = `${stats.failedItems} 項失敗`;
+      } else if (pending > 0) {
+        color = '#0c5460';
+        bgColor = '#d1ecf1';
+        icon = '🔵';
+        text = `${pending} 待同步`;
+      } else {
+        color = '#155724';
+        bgColor = '#d4edda';
+        icon = '🟢';
+        text = '已連線';
+      }
+
+      this.element.style.color = color;
+      this.element.style.background = bgColor;
+      this.element.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+
+      if (isOnline && pending === 0 && stats.failedItems === 0) {
+        setTimeout(() => {
+          if (this.element) this.element.style.opacity = '0.3';
+        }, 5000);
+      } else {
+        this.element.style.opacity = '1';
+      }
+    },
+
+    async showDetails() {
+      const stats = await OfflineQueue.getStats();
+      const failed = await OfflineQueue.getAll('failed_items');
+
+      let details = `離線佇列狀態:\n- 待發送: ${stats.pendingCaptures}\n- 待上傳: ${stats.pendingUploads}\n- 失敗項目: ${stats.failedItems}`;
+
+      if (failed.length > 0) {
+        details += '\n\n最近失敗的項目:';
+        failed.slice(-3).forEach(item => {
+          details += `\n- ${item.type}: ${item.lastError || '未知錯誤'}`;
+        });
+      }
+
+      if (confirm(details + '\n\n是否要立即嘗試同步？')) {
+        SyncManager.sync();
+      }
+    }
+  };
 
   const Utils = {
     extractMMDD: (dateText) => {
@@ -129,45 +560,45 @@
       });
     },
 
-    sendToAPI: (data) => {
-      const API_URL = `${API_BASE}/capture`;
-
-      const payload = {
-        ...data,
-        cookies: document.cookie
+    sendToAPI: async (data) => {
+      const item = {
+        title: data.title,
+        pageUrl: data.pageUrl,
+        fileUrl: data.fileUrl,
+        type: data.type,
+        source: data.source,
+        ref: data.ref,
+        thumbnail: data.thumbnail,
+        cookies: document.cookie,
+        queuedAt: Date.now(),
+        retries: 0
       };
 
-      GM_xmlhttpRequest({
-        method: "POST",
-        url: API_URL,
-        headers: {
-          "Content-Type": "application/json",
-          "X-Client-Token": CLIENT_TOKEN
-        },
-        data: JSON.stringify(payload),
-        onload: (response) => {
-          if (response.status === 200) {
-            const result = JSON.parse(response.responseText);
-            console.log("API 回報成功:", data.title);
+      // 先存入 IndexedDB（保證不丟失）
+      const id = await OfflineQueue.enqueue('pending_captures', item);
+      console.log(`[lurl] 已加入離線佇列: ${item.title || item.pageUrl}`);
 
-            // 如果需要上傳，下載 blob 並上傳（不管是否重複，只要檔案不存在就要傳）
-            if (result.needUpload && result.id) {
-              console.log("[lurl] 開始下載檔案並上傳...", data.fileUrl);
-              Utils.downloadAndUpload(data.fileUrl, result.id);
-            }
-          } else {
-            console.error("API 回報失敗:", response.status);
-          }
-        },
-        onerror: (error) => {
-          console.error("API 連線失敗:", error);
-        },
-      });
+      // 如果在線，嘗試立即發送
+      if (navigator.onLine) {
+        try {
+          await SyncManager.sendCaptureWithRetry(item, 3);
+          // 成功後刪除
+          await OfflineQueue.dequeue('pending_captures', id);
+          console.log(`[lurl] 已成功發送: ${item.title || item.pageUrl}`);
+        } catch (e) {
+          // 失敗就留著，背景同步會處理
+          console.log(`[lurl] 發送失敗，稍後同步: ${e.message}`);
+        }
+      } else {
+        console.log('[lurl] 離線中，已加入佇列等待同步');
+      }
+
+      // 更新狀態指示器
+      StatusIndicator.update();
     },
 
     downloadAndUpload: async (fileUrl, recordId) => {
       const UPLOAD_URL = `${API_BASE}/api/upload`;
-      const CHUNK_SIZE = 10 * 1024 * 1024; // 10MB per chunk
 
       console.log("[lurl] 開始下載並上傳:", fileUrl, "recordId:", recordId);
 
@@ -178,8 +609,7 @@
         console.log("[lurl] fetch 回應:", response.status);
 
         if (!response.ok) {
-          console.error("[lurl] fetch 下載失敗:", response.status);
-          return;
+          throw new Error(`下載失敗: ${response.status}`);
         }
 
         const blob = await response.blob();
@@ -187,19 +617,17 @@
         console.log(`[lurl] 檔案下載完成: ${(size / 1024 / 1024).toFixed(2)} MB`);
 
         if (size < 1000) {
-          console.error("[lurl] 檔案太小，可能是錯誤頁面");
-          return;
+          throw new Error("檔案太小，可能是錯誤頁面");
         }
 
         // 計算分塊數量
-        const totalChunks = Math.ceil(size / CHUNK_SIZE);
-        const CONCURRENCY = 4; // 同時上傳 4 塊
-        console.log(`[lurl] 分塊上傳: ${totalChunks} 塊 (併發: ${CONCURRENCY})`);
+        const totalChunks = Math.ceil(size / CONFIG.CHUNK_SIZE);
+        console.log(`[lurl] 分塊上傳: ${totalChunks} 塊 (併發: ${CONFIG.MAX_CONCURRENT})`);
 
         // 上傳單個分塊的函數
         const uploadChunk = async (i) => {
-          const start = i * CHUNK_SIZE;
-          const end = Math.min(start + CHUNK_SIZE, size);
+          const start = i * CONFIG.CHUNK_SIZE;
+          const end = Math.min(start + CONFIG.CHUNK_SIZE, size);
           const chunk = blob.slice(start, end);
           const arrayBuffer = await chunk.arrayBuffer();
 
@@ -215,29 +643,32 @@
                 "X-Total-Chunks": String(totalChunks),
               },
               data: arrayBuffer,
+              timeout: 60000,
               onload: (uploadRes) => {
                 if (uploadRes.status === 200) {
                   console.log(`[lurl] 分塊 ${i + 1}/${totalChunks} 完成`);
                   resolve();
                 } else {
-                  reject(new Error(`Chunk ${i + 1} failed: ${uploadRes.status}`));
+                  reject(new Error(`分塊 ${i + 1} 失敗: ${uploadRes.status}`));
                 }
               },
-              onerror: (err) => reject(err),
+              onerror: (err) => reject(new Error(`分塊 ${i + 1} 網路錯誤`)),
+              ontimeout: () => reject(new Error(`分塊 ${i + 1} 超時`)),
             });
           });
         };
 
         // 併發上傳（控制同時數量）
         const chunks = Array.from({ length: totalChunks }, (_, i) => i);
-        for (let i = 0; i < chunks.length; i += CONCURRENCY) {
-          const batch = chunks.slice(i, i + CONCURRENCY);
+        for (let i = 0; i < chunks.length; i += CONFIG.MAX_CONCURRENT) {
+          const batch = chunks.slice(i, i + CONFIG.MAX_CONCURRENT);
           await Promise.all(batch.map(uploadChunk));
         }
 
         console.log("[lurl] 所有分塊上傳完成!");
       } catch (error) {
         console.error("[lurl] 下載/上傳過程錯誤:", error);
+        throw error; // 重新拋出錯誤，讓 SyncManager 處理重試
       }
     },
   };
@@ -2020,14 +2451,56 @@
   };
 
   const Main = {
-    init: () => {
-      ResourceLoader.init();
-      VersionChecker.check();
-      Router.dispatch();
+    init: async () => {
+      try {
+        // 初始化資源載入器
+        ResourceLoader.init();
+
+        // 初始化離線支援
+        await OfflineQueue.init();
+        await OfflineQueue.cleanup();
+        StatusIndicator.init();
+        SyncManager.start();
+
+        // 監聽離線/上線事件
+        window.addEventListener('offline', () => {
+          console.log('[lurl] 網路已斷開');
+          StatusIndicator.update();
+          Utils.showToast('網路已斷開，資料將暫存於本地', 'info');
+        });
+
+        window.addEventListener('online', () => {
+          console.log('[lurl] 網路已恢復');
+          StatusIndicator.update();
+          Utils.showToast('網路已恢復，開始同步', 'success');
+        });
+
+        // 版本檢查
+        VersionChecker.check();
+
+        // 路由分發
+        Router.dispatch();
+
+        console.log('[lurl] 離線支援模組初始化完成');
+      } catch (e) {
+        console.error('[lurl] 初始化失敗:', e);
+        // 即使離線支援初始化失敗，仍然嘗試執行基本功能
+        ResourceLoader.init();
+        VersionChecker.check();
+        Router.dispatch();
+      }
     },
   };
 
   $(document).ready(() => {
     Main.init();
   });
+
+  // 暴露給 Console 用於診斷
+  unsafeWindow._lurlhub = {
+    ...unsafeWindow._lurlhub,
+    OfflineQueue,
+    SyncManager,
+    StatusIndicator,
+  };
 })(jQuery);

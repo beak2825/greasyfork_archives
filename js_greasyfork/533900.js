@@ -2,8 +2,8 @@
 // @name        妖火夜间模式
 // @namespace   http://yaohuo.me/
 // @supportURL  http://zgcwkj.cn
-// @version     20260124.01
-// @description 妖火论坛黑色主题样式。
+// @version     20260128.02
+// @description 妖火论坛黑色主题样式
 // @author      zgcwkj
 // @match       *://yaohuo.me/*
 // @match       *://www.yaohuo.me/*
@@ -18,43 +18,43 @@
   var myCss = `
 @media screen and (prefers-color-scheme: dark) {
   * {
-    color: #e0e0e0;
+    color: #d8d8d8;
     background: #00000000 !important;
-    border-color: #464646 !important;
+    border-color: #3a3a3a !important;
   }
   html, body {
-    background: #000000 !important;
+    background: #121212 !important;
   }
   img {
-    opacity: 0.4 !important;
+    opacity: 0.65 !important;
   }
   a {
-    color: #7ea4e9 !important;
+    color: #8ab4f8 !important;
   }
   h1, h2, h3, h4, h5, h6, div, label, input, code, span, button, .triangle-alert {
-    color: #e0e0e0 !important;
+    color: #d8d8d8 !important;
   }
   .file-header-url*, .mod-list* {
-    color: #e0e0e0 !important;
+    color: #d8d8d8 !important;
   }
   .title {
-    color: #e0e0e0;
-    background: #1e2925 !important;
+    color: #d8d8d8;
+    background: #1a2420 !important;
   }
   .welcome {
-    background: #4ba0a0 !important;
+    background: #2d5c5c !important;
   }
   .toggle-container, .aui-flexView, .ui-switcher-menu {
-    background: #3d3d3d !important;
+    background: #1e1e1e !important;
   }
   .settings-popup-styled-container, .toggle-container {
-    background: #3d3d3d !important;
+    background: #1e1e1e !important;
   }
   .active {
-    color: #fff000 !important;
+    color: #ffc107 !important;
   }
   .retime, .footer, .welcome > a, .text-gray-800, .tg-list-item > h4 {
-    color: #e0e0e0 !important;
+    color: #d8d8d8 !important;
   }
 }
 `;

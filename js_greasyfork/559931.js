@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Behandeling FR
 // @namespace    http://tampermonkey.net/
-// @version      1.1.19
+// @version      1.1.21
 // @description  Behandeling inladen voor FR
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
@@ -168,32 +168,42 @@
                     const complicatie = data.response.behandeling_complicatie;
 
 
-                    const subjectiefeEl = document.getElementById('frm_input_subjective');
+                    const subjectiefeEl = document.querySelector('textarea[name="subjective"]');
 
-                    if (subjectiefeEl && subjectiefeEl.innerHTML == '' ){
+                    if (subjectiefeEl && subjectiefeEl.value == '' ){
 
                         if (subjectiefeEl && subjectief) {
-                            subjectiefeEl.innerHTML = subjectief;
+                            subjectiefeEl.value = subjectief;
+                            subjectiefeEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            subjectiefeEl.dispatchEvent(new Event('change', { bubbles: true }));
                         }
 
-                        const journaaltekstEl = document.getElementById('frm_input_journal');
+                        const journaaltekstEl = document.querySelector('textarea[name="journal"]');
                         if (journaaltekstEl && journaaltekst) {
-                            journaaltekstEl.innerHTML = journaaltekst;
+                            journaaltekstEl.value = journaaltekst;
+                            journaaltekstEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            journaaltekstEl.dispatchEvent(new Event('change', { bubbles: true }));
                         }
 
-                        const objectiefeEl = document.getElementById('frm_input_objective');
+                        const objectiefeEl = document.querySelector('textarea[name="objective"]');
                         if (objectiefeEl && objectief) {
-                            objectiefeEl.innerHTML = objectief;
+                            objectiefeEl.value = objectief;
+                            objectiefeEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            objectiefeEl.dispatchEvent(new Event('change', { bubbles: true }));
                         }
 
-                        const evaluatieEl = document.getElementById('frm_input_evaluation');
+                        const evaluatieEl = document.querySelector('textarea[name="evaluation"]');
                         if (evaluatieEl && evaluatie) {
-                            evaluatieEl.innerHTML = evaluatie;
+                            evaluatieEl.value = evaluatie;
+                            evaluatieEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            evaluatieEl.dispatchEvent(new Event('change', { bubbles: true }));
                         }
 
-                        const planEl = document.getElementById('frm_input_action_plan');
+                        const planEl = document.querySelector('textarea[name="action_plan"]');
                         if (planEl && plan) {
-                            planEl.innerHTML = plan;
+                            planEl.value = plan;
+                            planEl.dispatchEvent(new Event('input', { bubbles: true }));
+                            planEl.dispatchEvent(new Event('change', { bubbles: true }));
                         }
 
                         const complicatieJa = document.getElementById("form_input_has_complication_data_1")

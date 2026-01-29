@@ -4,7 +4,7 @@
 // @version      2.9.2
 // @description:en Automatically translates MyAnimeList anime and manga descriptions.
 // @description:es Traduce automáticamente las descripciones de anime y manga en MyAnimeList.
-// @author       Shu2Ouma
+// @author       Moebius
 // @icon         https://cdn.myanimelist.net/images/favicon.ico
 // @match        https://myanimelist.net/anime/*
 // @match        https://myanimelist.net/manga/*

@@ -40,47 +40,47 @@
 // @name:ug             مېنىڭ پرومپتۇم
 // @name:vi             Lời nhắc của tôi
 // @namespace           https://github.com/0H4S
-// @version             4.1
-// @description         Save and use custom prompts in your personal library. Use Dynamic Prompt mode for interactive commands. Attach and use files whenever you want. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image, and Whisk.
-// @description:pt-BR   Salve e use prompts personalizados em sua biblioteca pessoal. Use o modo Prompt Dinâmico para comandos interativos. Anexe e use arquivos sempre que quiser. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA, Copilot, GLM-Image e Whisk.
-// @description:zh-CN   在个人库中保存并使用自定义提示词。使用动态提示词模式进行交互式命令。随时随地附加并使用文件。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通义千问, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI 模式, Copilot, GLM-Image 和 Whisk。
-// @description:zh-TW   在個人庫中儲存並使用自定義提示詞。使用動態提示詞模式進行互動式命令。隨時隨地附加並使用檔案。相容於：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 騰訊元寶, ChatGLM, Google AI 模式, Copilot, GLM-Image 和 Whisk。
-// @description:fr-CA   Enregistrez et utilisez des invites personnalisées dans votre bibliothèque personnelle. Utilisez le mode Invite dynamique pour des commandes interactives. Joignez et utilisez des fichiers à tout moment. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Mode Google IA, Copilot, GLM-Image et Whisk.
-// @description:ckb     پڕۆمپتە تایبەتەکانت لە کتێبخانەی کەسی خۆتدا پاشەکەوت بکە و بەکاریان بهێنە. مۆدی پڕۆمپتی داینامیکی بۆ فەرمانە کارلێکەرەکان بەکاربهێنە. فایلەکان هاوپێچ بکە و هەر کاتێک ویستت بەکاریان بهێنە. گونجاوە لەگەڵ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image و Whisk.
-// @description:ar      احفظ واستخدم مطالبات مخصصة في مكتبتك الشخصية. استخدم وضع المطالبة الديناميكية للأوامر التفاعلية. قم بإرفاق واستخدام الملفات في أي وقت. متوافق مع: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image و Whisk.
-// @description:be      Захоўвайце і выкарыстоўвайце ўласныя падказкі ў асабістай бібліятэцы. Выкарыстоўвайце рэжым дынамічных падказак для інтэрактыўных каманд. Далучайце і выкарыстоўвайце файлы ў любы час. Сумяшчальны з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image і Whisk.
-// @description:bg      Запазвайте и използвайте персонализирани подкани в личната си библиотека. Използвайте режим "Динамична подкана" за интерактивни команди. Прикачвайте и използвайте файлове по всяко време. Съвместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image и Whisk.
-// @description:cs      Ukládejte a používejte vlastní prompty ve své osobní knihovně. Pro interaktivní příkazy použijte režim dynamického promptu. Připojujte a používejte soubory, kdykoli chcete. Kompatibilní s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image a Whisk.
-// @description:da      Gem og brug brugerdefinerede prompts i dit personlige bibliotek. Brug Dynamic Prompt-tilstand til interaktive kommandoer. Vedhæft og brug filer, når du vil. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-tilstand, Copilot, GLM-Image og Whisk.
-// @description:de      Speichern und verwenden Sie benutzerdefinierte Prompts in Ihrer persönlichen Bibliothek. Nutzen Sie den Dynamic Prompt-Modus für interaktive Befehle. Dateien jederzeit anhängen und verwenden. Kompatibel mit: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-Modus, Copilot, GLM-Image und Whisk.
-// @description:el      Αποθηκεύστε και χρησιμοποιήστε προσαρμοσμένα prompts στην προσωπική σας βιβλιοθήκη. Χρησιμοποιήστε τη λειτουργία Dynamic Prompt για διαδραστικές εντολές. Επισυνάψτε και χρησιμοποιήστε αρχεία ανά πάσα στιγμή. Συμβατό με: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image και Whisk.
-// @description:en      Save and use custom prompts in your personal library. Use Dynamic Prompt mode for interactive commands. Attach and use files whenever you want. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image, and Whisk.
-// @description:eo      Konservu kaj uzu proprajn instigojn en via persona biblioteko. Uzu la reĝimon Dinamika Instigo por interagaj komandoj. Alonĝu kaj uzu dosierojn kiam ajn vi volas. Kongrua kun: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image kaj Whisk.
-// @description:es      Guarde y use prompts personalizados en su biblioteca personal. Use el modo de Prompt Dinámico para comandos interactivos. Adjunte y use archivos en cualquier momento. Compatible con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA, Copilot, GLM-Image y Whisk.
-// @description:fi      Tallenna ja käytä mukautettuja kehotteita henkilökohtaisessa kirjastossasi. Käytä Dynaaminen kehote -tilaa vuorovaikutteisiin komentoihin. Liitä ja käytä tiedostoja milloin tahansa. Yhteensopiva: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI -tila, Copilot, GLM-Image ja Whisk.
-// @description:fr      Enregistrez et utilisez des invites personnalisées dans votre bibliothèque personnelle. Utilisez le mode Invite dynamique pour des commandes interactives. Joignez et utilisez des fichiers à tout moment. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Mode Google IA, Copilot, GLM-Image et Whisk.
-// @description:he      שמור והשתמש בפרומפטים מותאמים אישית בספרייה האישית שלך. השתמש במצב 'פרומפט דינמי' עבור פקודות אינטראקטיביות. צרף והשתמש בקבצים בכל עת. תואם ל: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image ו-Whisk.
-// @description:hr      Spremite i koristite prilagođene upute u svojoj osobnoj knjižnici. Koristite način rada dinamičkog upita za interaktivne naredbe. Priložite i koristite datoteke bilo kada. Kompatibilno s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image i Whisk.
-// @description:hu      Mentse és használja az egyéni promptokat személyes könyvtárában. Használja a Dinamikus Prompt módot az interaktív parancsokhoz. Csatoljon és használjon fájlokat bármikor. Kompatibilis: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI mód, Copilot, GLM-Image és Whisk.
-// @description:id      Simpan dan gunakan perintah (prompt) khusus di perpustakaan pribadi Anda. Gunakan mode Prompt Dinamis para perintah interaktif. Lampirkan dan gunakan file kapan saja. Kompatibel dengan: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image, dan Whisk.
-// @description:it      Salva e utilizza prompt personalizzati nella tua libreria personale. Usa la modalità Prompt Dinamico per comandi interattivi. Allega e usa i file in qualsiasi momento. Compatibile con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image e Whisk.
-// @description:ja      カスタムプロンプトを個人ライブラリに保存して使用します。対話型コマンドには動的プロンプトモードを使用してください。いつでもファイルを添付して使用できます。対応：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 騰訊元宝, ChatGLM, Google AI モード, Copilot, GLM-Image, Whisk。
-// @description:ka      შეინახეთ და გამოიყენეთ პერსონალური პრომპტები თქვენს პირად ბიბლიოთეკაში. გამოიყენეთ დინამიური პრომპტის რეჟიმი ინტერაქტიული ბრძანებებისთვის. მიამაგრეთ და გამოიყენეთ ფაილები ნებისმიერ დროს. თავსებადია: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image და Whisk.
-// @description:ko      사용자 정의 프롬프트를 개인 라이브러리에 저장하고 사용하세요. 대화형 명령을 위해 동적 프롬프트 모드를 사용하십시오. 언제든지 파일을 첨부하고 사용하십시오. 호환: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI 모드, Copilot, GLM-Image, Whisk.
-// @description:mr      तुमच्या वैयक्तिक लायब्ररीमध्ये सानुकूल प्रॉम्प्ट्स जतन करा आणि वापरा. परस्परसंवादी कमांडसाठी डायनॅमिक प्रॉम्प्ट मोड वापरा. कधीही फाइल्स जोडा आणि वापरा. सुसंगत: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image आणि Whisk.
-// @description:nb      Lagre og bruk egendefinerte ledetekster i ditt personlige bibliotek. Bruk Dynamisk ledetekst-modus for interaktive kommandoer. Legg ved og bruk filer når som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-modus, Copilot, GLM-Image og Whisk.
-// @description:nl      Bewaar en gebruik aangepaste prompts in uw persoonlijke bibliotheek. Gebruik de Dynamische Prompt-modus voor interactieve commando's. Voeg bestanden toe en gebruik ze wanneer u maar wilt. Compatibel met: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-modus, Copilot, GLM-Image en Whisk.
-// @description:pl      Zapisuj i używaj niestandardowych promptów w swojej osobistej bibliotece. Używaj trybu dynamicznego promptu dla interaktywnych poleceń. Załączaj i używaj plików w dowolnym momencie. Kompatybilny z: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, tryb Google AI, Copilot, GLM-Image i Whisk.
-// @description:ro      Salvați și utilizați prompturi personalizate în biblioteca personală. Utilizați modul Prompt Dinamic pentru comenzi interactive. Atașați și utilizați fișiere oricând. Compatibil cu: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image și Whisk.
-// @description:ru      Сохраняйте и используйте собственные подсказки (промпты) в личной библиотеке. Используйте режим динамических подсказок для интерактивных команд. Прикрепляйте и используйте файлы в любое время. Совместимость с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image и Whisk.
-// @description:sk      Ukladajte a používajte vlastné prompty vo svojej osobnej knižnici. Pre interaktívne príkazy použite režim dynamického promptu. Pripájajte a používajte súbory kedykoľvek. Kompatibilné s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image a Whisk.
-// @description:sr      Сачувајте и користите прилагођене упите у својој личној библиотеци. Користите режим динамичког упита за интерактивне команде. Приложите и користите датотеке било када. Компатибилно са: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image и Whisk.
-// @description:sv      Spara och använd anpassade prompts i ditt personlige bibliotek. Använd Dynamic Prompt-läget för interaktiva kommandon. Bifoga och använd filer när som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-läge, Copilot, GLM-Image och Whisk.
-// @description:th      บันทึกและใช้พรอมต์ที่กำหนดเองในคลังส่วนตัวของคุณ ใช้โหมด Dynamic Prompt สำหรับคำสั่งโต้ตอบ แนบและใช้ไฟล์ได้ทุกเมื่อ เข้ากันได้กับ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image และ Whisk.
-// @description:tr      Özel istemleri (prompt) kişisel kitaplığınıza kaydedin ve kullanın. Etkileşimli komutlar için Dinamik İstem modunu kullanın. Dosyaları istediğiniz zaman ekleyin ve kullanın. Şunlarla uyumludur: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Modu, Copilot, GLM-Image ve Whisk.
-// @description:uk      Зберігайте та використовуйте власні підказки (промпти) в особистій бібліотеці. Використовуйте режим динамічних підказок для інтерактивних команд. Додавайте та використовуйте файли в будь-який час. Сумісність з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image та Whisk.
-// @description:ug      شەخسىي ئامبىرىڭىزغا ئىختىيارى ئەسكەرتمىلەرنى ساقلاڭ ۋە ئىشلىتىڭ. ئۆز-ئارا تەسىر كۆرسىتىدىغان بۇيرۇقلار ئۈچۈن ھەرىكەتچان ئەسكەرتمە ھالىتىنى ئىشلىتىڭ. خالىغان ۋاقىتتا ھۆججەت قوشۇڭ ۋە ئىشلىتىڭ. ماس كېلىدىغانلار: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image ۋە Whisk.
-// @description:vi      Lưu và sử dụng các câu lệnh (prompt) tùy chỉnh trong thư viện cá nhân của bạn. Sử dụng chế độ Prompt Năng động cho các lệnh tương tác. Đính kèm và sử dụng tệp bất cứ lúc nào. Tương thích với: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Chế độ Google AI, Copilot, GLM-Image và Whisk.
+// @version             4.3
+// @description         Save and use custom prompts in your personal library. Use Dynamic Prompt mode for interactive commands. Attach and use files whenever you want. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image, and Whisk.
+// @description:pt-BR   Salve e use prompts personalizados em sua biblioteca pessoal. Use o modo Prompt Dinâmico para comandos interativos. Anexe e use arquivos sempre que quiser. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA, Copilot, Ernie, GLM-Image e Whisk.
+// @description:zh-CN   在个人库中保存并使用自定义提示词。使用动态提示词模式进行交互式命令。随时随地附加并使用文件。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通义千问, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI 模式, Copilot, Ernie, GLM-Image 和 Whisk。
+// @description:zh-TW   在個人庫中儲存並使用自定義提示詞。使用動態提示詞模式進行互動式命令。隨時隨地附加並使用檔案。相容於：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, 騰訊元寶, ChatGLM, Google AI 模式, Copilot, Ernie, GLM-Image 和 Whisk。
+// @description:fr-CA   Enregistrez et utilisez des invites personnalisées dans votre bibliothèque personnelle. Utilisez le mode Invite dynamique pour des commandes interactives. Joignez et utilisez des fichiers à tout moment. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Mode Google IA, Copilot, Ernie, GLM-Image et Whisk.
+// @description:ckb     پڕۆمپتە تایبەتەکانت لە کتێبخانەی کەسی خۆتدا پاشەکەوت بکە و بەکاریان بهێنە. مۆدی پڕۆمپتی داینامیکی بۆ فەرمانە کارلێکەرەکان بەکاربهێنە. فایلەکان هاوپێچ بکە و هەر کاتێک ویستت بەکاریان بهێنە. گونجاوە لەگەڵ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image و Whisk.
+// @description:ar      احفظ واستخدم مطالبات مخصصة في مكتبتك الشخصية. استخدم وضع المطالبة الديناميكية للأوامر التفاعلية. قم بإرفاق واستخدام الملفات في أي وقت. متوافق مع: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image و Whisk.
+// @description:be      Захоўвайце і выкарыстоўвайце ўласныя падказкі ў асабістай бібліятэцы. Выкарыстоўвайце рэжым дынамічных падказак для інтэрактыўных каманд. Далучайце і выкарыстоўвайце файлы ў любы час. Сумяшчальны з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image і Whisk.
+// @description:bg      Запазвайте и използвайте персонализирани подкани в личната си библиотека. Използвайте режим "Динамична подкана" за интерактивни команди. Прикачвайте и използвайте файлове по всяко време. Съвместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image и Whisk.
+// @description:cs      Ukládejte a používejte vlastní prompty ve své osobní knihovně. Pro interaktivní příkazy použijte režim dynamického promptu. Připojujte a používejte soubory, kdykoli chcete. Kompatibilní s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image a Whisk.
+// @description:da      Gem og brug brugerdefinerede prompts i dit personlige bibliotek. Brug Dynamic Prompt-tilstand til interaktive kommandoer. Vedhæft og brug filer, når du vil. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-tilstand, Copilot, Ernie, GLM-Image og Whisk.
+// @description:de      Speichern und verwenden Sie benutzerdefinierte Prompts in Ihrer persönlichen Bibliothek. Nutzen Sie den Dynamic Prompt-Modus für interaktive Befehle. Dateien jederzeit anhängen und verwenden. Kompatibel mit: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-Modus, Copilot, Ernie, GLM-Image und Whisk.
+// @description:el      Αποθηκεύστε και χρησιμοποιήστε προσαρμοσμένα prompts στην προσωπική σας βιβλιοθήκη. Χρησιμοποιήστε τη λειτουργία Dynamic Prompt για διαδραστικές εντολές. Επισυνάψτε και χρησιμοποιήστε αρχεία ανά πάσα στιγμή. Συμβατό με: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image και Whisk.
+// @description:en      Save and use custom prompts in your personal library. Use Dynamic Prompt mode for interactive commands. Attach and use files whenever you want. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image, and Whisk.
+// @description:eo      Konservu kaj uzu proprajn instigojn en via persona biblioteko. Uzu la reĝimon Dinamika Instigo por interagaj komandoj. Alonĝu kaj uzu dosierojn kiam ajn vi volas. Kongrua kun: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image kaj Whisk.
+// @description:es      Guarde y use prompts personalizados en su biblioteca personal. Use el modo de Prompt Dinámico para comandos interactivos. Adjunte y use archivos en cualquier momento. Compatible con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA, Copilot, Ernie, GLM-Image y Whisk.
+// @description:fi      Tallenna ja käytä mukautettuja kehotteita henkilökohtaisessa kirjastossasi. Käytä Dynaaminen kehote -tilaa vuorovaikutteisiin komentoihin. Liitä ja käytä tiedostoja milloin tahansa. Yhteensopiva: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI -tila, Copilot, Ernie, GLM-Image ja Whisk.
+// @description:fr      Enregistrez et utilisez des invites personnalisées dans votre bibliothèque personnelle. Utilisez le mode Invite dynamique pour des commandes interactives. Joignez et utilisez des fichiers à tout moment. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Mode Google IA, Copilot, Ernie, GLM-Image et Whisk.
+// @description:he      שמור והשתמש בפרומפטים מותאמים אישית בספרייה האישית שלך. השתמש במצב 'פרומפט דינמי' עבור פקודות אינטראקטיביות. צרף והשתמש בקבצים בכל עת. תואם ל: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image ו-Whisk.
+// @description:hr      Spremite i koristite prilagođene upute u svojoj osobnoj knjižnici. Koristite način rada dinamičkog upita za interaktivne naredbe. Priložite i koristite datoteke bilo kada. Kompatibilno s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image i Whisk.
+// @description:hu      Mentse és használja az egyéni promptokat személyes könyvtárában. Használja a Dinamikus Prompt módot az interaktív parancsokhoz. Csatoljon és használjon fájlokat bármikor. Kompatibilis: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI mód, Copilot, Ernie, GLM-Image és Whisk.
+// @description:id      Simpan dan gunakan perintah (prompt) khusus di perpustakaan pribadi Anda. Gunakan mode Prompt Dinamis para perintah interaktif. Lampirkan dan gunakan file kapan saja. Kompatibel dengan: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image, dan Whisk.
+// @description:it      Salva e utilizza prompt personalizzati nella tua libreria personale. Usa la modalità Prompt Dinamico per comandi interattivi. Allega e usa i file in qualsiasi momento. Compatibile con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image e Whisk.
+// @description:ja      カスタムプロンプトを個人ライブラリに保存して使用します。対話型コマンドには動的プロンプトモードを使用してください。いつでもファイルを添付して使用できます。対応：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, 騰訊元宝, ChatGLM, Google AI モード, Copilot, Ernie, GLM-Image, Whisk。
+// @description:ka      შეინახეთ და გამოიყენეთ პერსონალური პრომპტები თქვენს პირად ბიბლიოთეკაში. გამოიყენეთ დინამიური პრომპტის რეჟიმი ინტერაქტიული ბრძანებებისთვის. მიამაგრეთ და გამოიყენეთ ფაილები ნებისმიერ დროს. თავსებადია: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image და Whisk.
+// @description:ko      사용자 정의 프롬프트를 개인 라이브러리에 저장하고 사용하세요. 대화형 명령을 위해 동적 프롬프트 모드를 사용하십시오. 언제든지 파일을 첨부하고 사용하십시오. 호환: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI 모드, Copilot, Ernie, GLM-Image, Whisk.
+// @description:mr      तुमच्या वैयक्तिक लायब्ररीमध्ये सानुकूल प्रॉम्प्ट्स जतन करा आणि वापरा. परस्परसंवादी कमांडसाठी डायनॅमिक प्रॉम्प्ट मोड वापरा. कधीही फाइल्स जोडा आणि वापरा. सुसंगत: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image आणि Whisk.
+// @description:nb      Lagre og bruk egendefinerte ledetekster i ditt personlige bibliotek. Bruk Dynamisk ledetekst-modus for interaktive kommandoer. Legg ved og bruk filer når som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-modus, Copilot, Ernie, GLM-Image og Whisk.
+// @description:nl      Bewaar en gebruik aangepaste prompts in uw persoonlijke bibliotheek. Gebruik de Dynamische Prompt-modus voor interactieve commando's. Voeg bestanden toe en gebruik ze wanneer u maar wilt. Compatibel met: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-modus, Copilot, Ernie, GLM-Image en Whisk.
+// @description:pl      Zapisuj i używaj niestandardowych promptów w swojej osobistej bibliotece. Używaj trybu dynamicznego promptu dla interaktywnych poleceń. Załączaj i używaj plików w dowolnym momencie. Kompatybilny z: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, tryb Google AI, Copilot, Ernie, GLM-Image i Whisk.
+// @description:ro      Salvați și utilizați prompturi personalizate în biblioteca personală. Utilizați modul Prompt Dinamic pentru comenzi interactive. Atașați și utilizați fișiere oricând. Compatibil cu: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image și Whisk.
+// @description:ru      Сохраняйте и используйте собственные подсказки (промпты) в личной библиотеке. Используйте режим динамических подсказок для интерактивных команд. Прикрепляйте и используйте файлы в любое время. Совместимость с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image и Whisk.
+// @description:sk      Ukladajte a používajte vlastné prompty vo svojej osobnej knižnici. Pre interaktívne príkazy použite režim dynamického promptu. Pripájajte a používajte súbory kedykoľvek. Kompatibilné s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image a Whisk.
+// @description:sr      Сачувајте и користите прилагођене упите у својој личној библиотеци. Користите режим динамичког упита за интерактивне команде. Приложите и користите датотеке било када. Компатибилно са: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image и Whisk.
+// @description:sv      Spara och använd anpassade prompts i ditt personlige bibliotek. Använd Dynamic Prompt-läget för interaktiva kommandon. Bifoga och använd filer när som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-läge, Copilot, Ernie, GLM-Image och Whisk.
+// @description:th      บันทึกและใช้พรอมต์ที่กำหนดเองในคลังส่วนตัวของคุณ ใช้โหมด Dynamic Prompt สำหรับคำสั่งโต้ตอบ แนบและใช้ไฟล์ได้ทุกเมื่อ เข้ากันได้กับ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image และ Whisk.
+// @description:tr      Özel istemleri (prompt) kişisel kitaplığınıza kaydedin ve kullanın. Etkileşimli komutlar için Dinamik İstem modunu kullanın. Dosyaları istediğiniz zaman ekleyin ve kullanın. Şunlarla uyumludur: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Modu, Copilot, Ernie, GLM-Image ve Whisk.
+// @description:uk      Зберігайте та використовуйте власні підказки (промпти) в особистій бібліотеці. Використовуйте режим динамічних підказок для інтерактивних команд. Додавайте та використовуйте файли в будь-який час. Сумісність з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image та Whisk.
+// @description:ug      شەخسىي ئامبىرىڭىزغا ئىختىيارى ئەسكەرتمىلەرنى ساقلاڭ ۋە ئىشلىتىڭ. ئۆز-ئارا تەسىر كۆرسىتىدىغان بۇيرۇقلار ئۈچۈن ھەرىكەتچان ئەسكەرتمە ھالىتىنى ئىشلىتىڭ. خالىغان ۋاقىتتا ھۆججەت قوشۇڭ ۋە ئىشلىتىڭ. ماس كېلىدىغانلار: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, Ernie, GLM-Image ۋە Whisk.
+// @description:vi      Lưu và sử dụng các câu lệnh (prompt) tùy chỉnh trong thư viện cá nhân của bạn. Sử dụng chế độ Prompt Năng động cho các lệnh tương tác. Đính kèm và sử dụng tệp bất cứ lúc nào. Tương thích với: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, Arena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Chế độ Google AI, Copilot, Ernie, GLM-Image và Whisk.
 // @author              OHAS
 // @homepage            https://github.com/0H4S
 // @icon                https://files.catbox.moe/1nriwc.svg
@@ -88,17 +88,18 @@
 // @copyright           2026 OHAS. All Rights Reserved.
 // @match               *://poe.com/*
 // @match               *://grok.com/*
+// @match               *://arena.ai/*
 // @match               *://claude.ai/*
 // @match               *://chat.z.ai/*
 // @match               *://image.z.ai/*
 // @match               *://chatglm.cn/*
-// @match               *://lmarena.ai/*
 // @match               *://labs.google/*
 // @match               *://chatgpt.com/*
 // @match               *://longcat.chat/*
 // @match               *://chat.qwen.ai/*
 // @match               *://www.kimi.com/*
 // @match               *://www.doubao.com/*
+// @match               *://ernie.baidu.com/*
 // @match               *://chat.mistral.ai/*
 // @match               *://www.perplexity.ai/*
 // @match               *://chat.deepseek.com/*
@@ -108,13 +109,20 @@
 // @match               *://copilot.microsoft.com/*
 // @match               *://notebooklm.google.com/*
 // @match               *://www.google.com/search?*udm=50*
+// @require             https://update.greasyfork.org/scripts/564164.js
 // @require             https://update.greasyfork.org/scripts/549920.js
+// @resource            CSS https://cdn.jsdelivr.net/gh/0H4S/My-Prompt@1.1/Files/style.css
+// @resource            IDIOMAS https://cdn.jsdelivr.net/gh/0H4S/My-Prompt@1.1/Files/languages.json
+// @connect             fonts.googleapis.com
+// @connect             fonts.gstatic.com
 // @connect             files.catbox.moe
+// @connect             cdn.jsdelivr.net
 // @connect             gist.github.com
 // @connect             i.imgur.com
 // @grant               GM_getValue
 // @grant               GM_setValue
 // @grant               GM_xmlhttpRequest
+// @grant               GM_getResourceText
 // @grant               GM_registerMenuCommand
 // @run-at              document-end
 // @noframes
@@ -135,11 +143,6 @@
     'use strict';
     /*eslint-disable*/
 
-    // =================
-    // #region GLOBAL
-    // =================
-
-    // --- CHAVES E CONSTANTES ---
     const LANG_STORAGE_KEY          = 'UserScriptLang';
     const GLOBAL_FILES_KEY          = 'GlobalFiles';
     const PROMPT_STORAGE_KEY        = 'Prompts';
@@ -174,23 +177,39 @@
     let macroMemory                 = { active: false, text: '', startIndex: 0, hashCount: 0 };
     let varMemory                   = { active: false, list: [], index: 0, startPos: 0, typed: '' };
 
-    // --- TRUSTED TYPES ---
-    const scriptPolicy = window.trustedTypes
-        ? window.trustedTypes.createPolicy('MyPromptPolicy', { createHTML: (input) => input })
-        : null;
-
-    function setSafeInnerHTML(element, html) {
-        if   (!element) return;
-        if   (scriptPolicy) {element.innerHTML = scriptPolicy.createHTML(html);}
-        else {element.innerHTML = html;}
+    let scriptPolicy = null;
+    const policyNames = ['MyPromptPolicy', 'dompurify', 'default', 'cwm-policy'];
+    if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        for (const name of policyNames) {
+            try {
+                scriptPolicy = window.trustedTypes.createPolicy(name, {
+                    createHTML: (input) => input
+                });
+                break;
+            } catch (e) {}
+        }
     }
 
-    // --- NOTIFICADOR ---
-    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '4.1',};
+    function setSafeInnerHTML(element, html) {
+        if (!element) return;
+        if (scriptPolicy) {
+            element.innerHTML = scriptPolicy.createHTML(html);
+        } else {
+            element.innerHTML = html;
+        }
+    }
+
+    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '4.3', runtimePolicy: scriptPolicy};
     const notifier      = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
 
-    // --- CAMPO DE TEXTO ---
+    window.addEventListener('load', () => {
+        const lista = [
+            { url: 'https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap' }
+        ];
+        lista.forEach(item => {FontLoaderBypass.load(item.url, item.nome, item.peso);});
+    });
+
     const platformSelectors = {
         chatgpt:        '#prompt-textarea',
         deepseek:       'textarea.ds-scroll-area',
@@ -198,7 +217,7 @@
         qwen:           'textarea#chat-input',
         zai:            'textarea#chat-input',
         gemini:         'div.ql-editor[contenteditable="true"]',
-        lmarena:        'textarea[name="message"]',
+        arena:          'textarea[name="message"]',
         kimi:           'div.chat-input-editor[contenteditable="true"]',
         claude:         'div.ProseMirror[contenteditable="true"]',
         grok:           'div.tiptap.ProseMirror[contenteditable="true"], textarea',
@@ -214,673 +233,18 @@
         copilot:        '#userInput, textarea[data-testid="composer-input"]',
         glmimage:       'textarea.flex.w-full',
         whisk:          'textarea.sc-18deeb1d-8, textarea.DwQls, textarea',
+        ernie:          'div[contenteditable="true"][role="textbox"].editable__QRoAFgYA',
     };
 
-    // =================
-    // #region IDIOMAS
-    // =================
+    let translations = {};
+    try {const rawJson = GM_getResourceText("IDIOMAS");if (rawJson) {translations = JSON.parse(rawJson);}} catch (e) {}
 
-    // --- IDIOMAS SUPORTADOS ---
-    const translations = {
-    'pt-BR': {
-            langName:           'Português (BR)',
-            languageSettings:   'Idioma',
-            searchLanguage:     'Procurar idioma...',
-            prompt:             'Prompt',
-            prompts:            'Prompts',
-            newPrompt:          'Novo Prompt',
-            editPrompt:         'Editar Prompt',
-            basic:              'Básico',
-            advanced:           'Avançado',
-            colorMode:          'Modo de Cor',
-            default:            'Padrão',
-            auto:               'Auto',
-            light:              'Claro',
-            dark:               'Escuro',
-            theme:              'Tema',
-            settings:           'Configurações',
-            title:              'Título',
-            save:               'Salvar',
-            close:              'Fechar',
-            edit:               'Editar',
-            delete:             'Excluir',
-            clickDelete:        'Botão direito: Excluir',
-            import:             'Importar',
-            export:             'Exportar',
-            insert:             'Inserir',
-            addPrompt:          'Adicionar Prompt',
-            addTheme:           'Adicionar Tema',
-            selectAll:          'Selecionar Tudo',
-            expand:             'Expandir',
-            collapse:           'Contrair',
-            noSavedPrompts:     'Nenhum prompt salvo.',
-            confirmDelete:      'Excluir prompt "{title}"?',
-            noPromptsToExport:  'Não há prompts para exportar.',
-            promptsImported:    '{count} prompts importados com sucesso!',
-            errorImporting:     'Erro ao importar o arquivo: {error}',
-            requiredFields:     'Título e prompt são obrigatórios.',
-            editorNotFound:     'Não foi possível encontrar a área de texto para {platform}.',
-            noSearchResults:    'Nenhum prompt corresponde à pesquisa.',
-            confirmDownloads:   'Você está prestes a baixar {count} arquivos de texto individuais. Continuar?',
-            countPrompts:       '{count} prompts',
-            fillPlaceholders:   'Preencha as Informações',
-            enablePlaceholders: 'Prompt Dinâmico',
-            autoExecute:        'Envio Automático',
-            search:             'Procurar prompt...',
-            select:             'Selecione uma opção:',
-            context:            'Contexto',
-            idGroup:            'Grupo ID',
-            uniqueSelection:    'Seleção Única',
-            filesLabel:         'Arquivos',
-            addCardTitle:       'Adicionar Arquivos',
-            addCards:           'clique para selecionar ou arraste para adicionar',
-            confirmDeleteFile:  'Apagar arquivo da memória?',
-            confirmLargeFile:   'Arquivo grande ({fileSizeMB}MB). Deseja continuar mesmo assim?',
-            successThemeImport: 'Sucesso! {count} tema(s) importado(s).',
-            noValidThemesFound: 'Nenhum tema válido encontrado no arquivo.',
-            errorLoadingThemes: 'Erro ao carregar temas importados:',
-            errorReadingJSON:   'Erro ao ler o arquivo JSON. Verifique a formatação.',
-            confirmDeleteTheme: 'Deseja apagar o tema "{name}"?',
-            sendingFiles:       'Enviando {fileCount} arquivo(s)...',
-            filesCounter:       'Arquivos ({active}/{total})',
-            infoTitle:          'Ajuda',
-            infoDPDesc:         'Acesse o guia de uso completo:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Envia o prompt para o chat instantaneamente após ser inserido, sem necessidade de ação manual.',
-            getMoreThemes:      "Obter novos temas",
-            editorSettings:     'Configurações do Editor',
-            smartPredict:       'Previsão de Texto Inteligente',
-            smartPredictDesc:   'Fecha parênteses, expande macros #start e sugere variáveis.',
-            getMorePrompts:     'Obtenha Novos Prompts',
-            pin:                'Fixar',
-            unpin:              'Desafixar',
-            move:               'Mover',
-            saveAndExit:        'Salvar e Sair',
-            shortcutsSettings:  'Atalhos de Teclado',
-            restoreShortcuts:   'Restaurar Padrão',
-            pressKeyToRecord:   'Pressione uma tecla...',
-            altN:               'Abre a janela de criação de Novo Prompt',
-            altP:               'Abre a Lista de Prompts',
-            ctrlEnter:          'Salvar e Enviar o prompt atual',
-            shiftEnter:         'Adiciona Quebra de Linha no modal de Prompt Dinâmico'
-
-        },
-    'en': {
-            langName:           'English',
-            languageSettings:   'Language',
-            searchLanguage:     'Search language...',
-            prompt:             'Prompt',
-            prompts:            'Prompts',
-            newPrompt:          'New Prompt',
-            editPrompt:         'Edit Prompt',
-            basic:              'Basic',
-            advanced:           'Advanced',
-            colorMode:          'Color Mode',
-            default:            'Default',
-            auto:               'Auto',
-            light:              'Light',
-            dark:               'Dark',
-            theme:              'Theme',
-            settings:           'Settings',
-            title:              'Title',
-            save:               'Save',
-            close:              'Close',
-            edit:               'Edit',
-            delete:             'Delete',
-            clickDelete:        'Right-click: Delete',
-            import:             'Import',
-            export:             'Export',
-            insert:             'Insert',
-            addPrompt:          'Add prompt',
-            addTheme:           'Add Theme',
-            selectAll:          'Select All',
-            expand:             'Expand',
-            collapse:           'Collapse',
-            noSavedPrompts:     'No saved prompts.',
-            confirmDelete:      'Delete prompt "{title}"?',
-            noPromptsToExport:  'No prompts to export.',
-            promptsImported:    '{count} prompts imported successfully!',
-            errorImporting:     'Error importing file: {error}',
-            requiredFields:     'Title and prompt are required.',
-            editorNotFound:     'Could not find text area for {platform}.',
-            noSearchResults:    'No prompts match the search.',
-            confirmDownloads:   'You are about to download {count} individual text files. Continue?',
-            countPrompts:       '{count} prompts',
-            fillPlaceholders:   'Fill in Information',
-            enablePlaceholders: 'Dynamic Prompt',
-            autoExecute:        'Auto Send',
-            search:             'Search prompt...',
-            select:             'Select an option:',
-            context:            'Context',
-            idGroup:            'ID Group',
-            uniqueSelection:    'Unique Selection',
-            filesLabel:         'Files',
-            addCardTitle:       'Add Files',
-            addCards:           'click to select or drag to add',
-            confirmDeleteFile:  'Delete file from memory?',
-            confirmLargeFile:   'Large file ({fileSizeMB}MB). Do you want to continue anyway?',
-            successThemeImport: 'Success! {count} theme(s) imported.',
-            noValidThemesFound: 'No valid themes found in the file.',
-            errorLoadingThemes: 'Error loading imported themes:',
-            errorReadingJSON:   'Error reading JSON file. Check the formatting.',
-            confirmDeleteTheme: 'Delete theme "{name}"?',
-            sendingFiles:       'Sending {fileCount} file(s)...',
-            filesCounter:       'Files ({active}/{total})',
-            infoTitle:          'Help',
-            infoDPDesc:         'Access the full usage guide:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Sends the prompt to the chat instantly after being inserted, without the need for manual action.',
-            getMoreThemes:      "Get more themes",
-            editorSettings:     'Editor Settings',
-            smartPredict:       'Smart Text Prediction',
-            smartPredictDesc:   'Closes parentheses, expands #start macros, and suggests variables.',
-            getMorePrompts:     'Get More Prompts',
-            pin:                'Pin',
-            unpin:              'Unpin',
-            move:               'Move',
-            saveAndExit:        'Save and Exit',
-            shortcutsSettings:  'Keyboard Shortcuts',
-            restoreShortcuts:   'Restore Defaults',
-            pressKeyToRecord:   'Press a key...',
-            altN:               'Opens the New Prompt creation window',
-            altP:               'Opens the Prompt List',
-            ctrlEnter:          'Save and Send current prompt',
-            shiftEnter:         'Adds a Line Break in the Dynamic Prompt modal'
-        },
-    'zh-CN': {
-            langName:           '简体中文',
-            languageSettings:   '语言',
-            searchLanguage:     '搜索语言...',
-            prompt:             '提示词',
-            prompts:            '提示词库',
-            newPrompt:          '新提示词',
-            editPrompt:         '编辑提示词',
-            basic:              '基础',
-            advanced:           '高级',
-            colorMode:          '颜色模式',
-            default:            '默认',
-            auto:               '自动',
-            light:              '浅色',
-            dark:               '深色',
-            theme:              '主题',
-            settings:           '设置',
-            title:              '标题',
-            save:               '保存',
-            close:              '关闭',
-            edit:               '编辑',
-            delete:             '删除',
-            clickDelete:        '右键: 删除',
-            import:             '导入',
-            export:             '导出',
-            insert:             '插入',
-            addPrompt:          '添加提示词',
-            addTheme:           '添加主题',
-            selectAll:          '全选',
-            expand:             '展开',
-            collapse:           '收起',
-            noSavedPrompts:     '没有保存的提示词。',
-            confirmDelete:      '确认删除提示词 "{title}"？',
-            noPromptsToExport:  '没有可导出的提示词。',
-            promptsImported:    '成功导入 {count} 个提示词！',
-            errorImporting:     '导入文件出错: {error}',
-            requiredFields:     '标题和提示词是必填项。',
-            editorNotFound:     '无法找到 {platform} 的文本区域。',
-            noSearchResults:    '没有匹配搜索的提示词。',
-            confirmDownloads:   '您即将下载 {count} 个单独的文本文件。是否继续？',
-            countPrompts:       '{count} 个提示词',
-            fillPlaceholders:   '填写信息',
-            enablePlaceholders: '动态提示词',
-            autoExecute:        '自动发送',
-            search:             '搜索提示词...',
-            select:             '选择一个选项：',
-            context:            '上下文',
-            idGroup:            'ID 组',
-            uniqueSelection:    '单选',
-            filesLabel:         '文件',
-            addCardTitle:       '添加文件',
-            addCards:           '点击选择或拖拽添加',
-            confirmDeleteFile:  '从内存中删除文件？',
-            confirmLargeFile:   '文件过大 ({fileSizeMB}MB)。是否继续？',
-            successThemeImport: '成功! 导入了 {count} 个主题。',
-            noValidThemesFound: '文件中没有找到有效的主题。',
-            errorLoadingThemes: '加载导入的主题出错：',
-            errorReadingJSON:   '读取 JSON 文件出错。请检查格式。',
-            confirmDeleteTheme: '确认删除主题 "{name}"？',
-            sendingFiles:       '正在发送 {fileCount} 个文件...',
-            filesCounter:       '文件 ({active}/{total})',
-            infoTitle:          '帮助',
-            infoDPDesc:         '访问完整使用指南：<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         '插入提示词后立即发送到聊天框，无需手动操作。',
-            getMoreThemes:      "获取更多主题",
-            editorSettings:     '编辑器设置',
-            smartPredict:       '智能文本预测',
-            smartPredictDesc:   '自动闭合括号，展开 #start 宏并建议变量。',
-            getMorePrompts:     '获取更多提示词',
-            pin:                '固定',
-            unpin:              '取消固定',
-            move:               '移动',
-            saveAndExit:        '保存并退出',
-            shortcutsSettings:  '键盘快捷键',
-            restoreShortcuts:   '恢复默认值',
-            pressKeyToRecord:   '按下一个键...',
-            altN:               '打开新建提示词窗口',
-            altP:               '打开提示词列表',
-            ctrlEnter:          '保存并发送当前提示词',
-            shiftEnter:         '在动态提示词模态框中添加换行'
-        },
-    'es': {
-            langName:           'Español',
-            languageSettings:   'Idioma',
-            searchLanguage:     'Buscar idioma...',
-            prompt:             'Prompt',
-            prompts:            'Prompts',
-            newPrompt:          'Nuevo Prompt',
-            editPrompt:         'Editar Prompt',
-            basic:              'Básico',
-            advanced:           'Avanzado',
-            colorMode:          'Modo de Color',
-            default:            'Predeterminado',
-            auto:               'Auto',
-            light:              'Claro',
-            dark:               'Oscuro',
-            theme:              'Tema',
-            settings:           'Ajustes',
-            title:              'Título',
-            save:               'Guardar',
-            close:              'Cerrar',
-            edit:               'Editar',
-            delete:             'Eliminar',
-            clickDelete:        'Click der: Eliminar',
-            import:             'Importar',
-            export:             'Exportar',
-            insert:             'Insertar',
-            addPrompt:          'Añadir Prompt',
-            addTheme:           'Añadir Tema',
-            selectAll:          'Seleccionar Todo',
-            expand:             'Expandir',
-            collapse:           'Contraer',
-            noSavedPrompts:     'No hay prompts guardados.',
-            confirmDelete:      '¿Eliminar prompt "{title}"?',
-            noPromptsToExport:  'No hay prompts para exportar.',
-            promptsImported:    '¡{count} prompts importados con éxito!',
-            errorImporting:     'Error al importar el archivo: {error}',
-            requiredFields:     'El título y el prompt son obligatorios.',
-            editorNotFound:     'No se pudo encontrar el área de texto para {platform}.',
-            noSearchResults:    'Ningún prompt coincide con la búsqueda.',
-            confirmDownloads:   'Estás a punto de descargar {count} archivos de texto individuales. ¿Continuar?',
-            countPrompts:       '{count} prompts',
-            fillPlaceholders:   'Completa la Información',
-            enablePlaceholders: 'Prompt Dinámico',
-            autoExecute:        'Envío Automático',
-            search:             'Buscar prompt...',
-            select:             'Seleccione una opción:',
-            context:            'Contexto',
-            idGroup:            'Grupo ID',
-            uniqueSelection:    'Selección Única',
-            filesLabel:         'Archivos',
-            addCardTitle:       'Añadir Archivos',
-            addCards:           'haz clic para seleccionar o arrastra para añadir',
-            confirmDeleteFile:  '¿Eliminar archivo de la memoria?',
-            confirmLargeFile:   'Archivo grande ({fileSizeMB}MB). ¿Deseas continuar de todos modos?',
-            successThemeImport: '¡Éxito! {count} tema(s) importado(s).',
-            noValidThemesFound: 'No se encontraron temas válidos en el archivo.',
-            errorLoadingThemes: 'Error al cargar temas importados:',
-            errorReadingJSON:   'Error al leer el archivo JSON. Verifique el formato.',
-            confirmDeleteTheme: '¿Eliminar tema "{name}"?',
-            sendingFiles:       'Enviando {fileCount} archivo(s)...',
-            filesCounter:       'Archivos ({active}/{total})',
-            infoTitle:          'Ayuda',
-            infoDPDesc:         'Accede a la guía de uso completa:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Envía el prompt al chat instantáneamente después de ser insertado, sin necesidad de acción manual.',
-            getMoreThemes:      "Obtener más temas",
-            editorSettings:     'Configuraciones del Editor',
-            smartPredict:       'Predicción de Texto Inteligente',
-            smartPredictDesc:   'Cierra paréntesis, expande macros #start y sugiere variables.',
-            getMorePrompts:     'Obtener más prompts',
-            pin:                'Fijar',
-            unpin:              'Desfijar',
-            move:               'Mover',
-            saveAndExit:        'Guardar y salir',
-            shortcutsSettings:  'Atajos de Teclado',
-            restoreShortcuts:   'Restaurar Valores Predeterminados',
-            pressKeyToRecord:   'Presiona una tecla...',
-            altN:               'Abre la ventana de creación de Nuevo Prompt',
-            altP:               'Abre la Lista de Prompts',
-            ctrlEnter:          'Guardar y Enviar el prompt actual',
-            shiftEnter:         'Añade un Salto de Línea en el modal de Prompt Dinámico'
-        },
-    'fr': {
-            langName:           'Français',
-            languageSettings:   'Langue',
-            searchLanguage:     'Rechercher une langue...',
-            prompt:             'Prompt',
-            prompts:            'Prompts',
-            newPrompt:          'Nouveau Prompt',
-            editPrompt:         'Modifier le Prompt',
-            basic:              'Basique',
-            advanced:           'Avancé',
-            colorMode:          'Mode de Couleur',
-            default:            'Par défaut',
-            auto:               'Auto',
-            light:              'Clair',
-            dark:               'Sombre',
-            theme:              'Thème',
-            settings:           'Paramètres',
-            title:              'Titre',
-            save:               'Enregistrer',
-            close:              'Fermer',
-            edit:               'Modifier',
-            delete:             'Supprimer',
-            clickDelete:        'Clic droit : Supprimer',
-            import:             'Importer',
-            export:             'Exporter',
-            insert:             'Insérer',
-            addPrompt:          'Ajouter un prompt',
-            addTheme:           'Ajouter un thème',
-            selectAll:          'Tout Sélectionner',
-            expand:             'Développer',
-            collapse:           'Réduire',
-            noSavedPrompts:     'Aucun prompt enregistré.',
-            confirmDelete:      'Supprimer le prompt "{title}" ?',
-            noPromptsToExport:  'Aucun prompt à exporter.',
-            promptsImported:    '{count} prompts importés avec succès !',
-            errorImporting:     'Erreur lors de l’importation du fichier : {error}',
-            requiredFields:     'Le titre et le prompt sont obligatoires.',
-            editorNotFound:     'Impossible de trouver la zone de texte pour {platform}.',
-            noSearchResults:    'Aucun prompt ne correspond à la recherche.',
-            confirmDownloads:   'Vous allez télécharger {count} fichiers texte individuels. Continuer ?',
-            countPrompts:       '{count} prompts',
-            fillPlaceholders:   'Remplir les informations',
-            enablePlaceholders: 'Prompt Dynamique',
-            autoExecute:        'Envoi Automatique',
-            search:             'Rechercher un prompt...',
-            select:             'Sélectionnez une option :',
-            context:            'Contexte',
-            idGroup:            'Groupe ID',
-            uniqueSelection:    'Sélection Unique',
-            filesLabel:         'Fichiers',
-            addCardTitle:       'Ajouter des Fichiers',
-            addCards:           'cliquez para sélectionner ou glissez pour ajouter',
-            confirmDeleteFile:  'Supprimer le fichier de la mémoire ?',
-            confirmLargeFile:   'Fichier volumineux ({fileSizeMB} Mo). Voulez-vous continuer quand même ?',
-            successThemeImport: 'Succès! {count} thème(s) importé(s).',
-            noValidThemesFound: 'Aucun thème valide trouvé dans le fichier.',
-            errorLoadingThemes: 'Erreur lors du chargement des thèmes importés:',
-            errorReadingJSON:   'Erreur lors de la lecture du fichier JSON. Vérifiez le format.',
-            confirmDeleteTheme: 'Supprimer le thème "{name}" ?',
-            sendingFiles:       'Envoi de {fileCount} fichier(s)...',
-            filesCounter:       'Fichiers ({active}/{total})',
-            infoTitle:          'Aide',
-            infoDPDesc:         'Accédez au guide d’utilisation complet :<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Envoie le prompt au chat instantanément après l’insertion, sans action manuelle.',
-            getMoreThemes:      "Obtenir plus de thèmes",
-            editorSettings:     'Paramètres de l’éditeur',
-            smartPredict:       'Prédiction de texte intelligente',
-            smartPredictDesc:   'Ferme les parenthèses, développe les macros #start et suggère des variables.',
-            getMorePrompts:     'Obtenir plus de prompts',
-            pin:                'Épingler',
-            unpin:              'Désépingler',
-            move:               'Déplacer',
-            saveAndExit:        'Enregistrer et quitter',
-            shortcutsSettings:  'Raccourcis Clavier',
-            restoreShortcuts:   'Restaurer les Valeurs par Défaut',
-            pressKeyToRecord:   'Appuyez sur une touche...',
-            altN:               'Ouvre la fenêtre de création de Nouveau Prompt',
-            altP:               'Ouvre la Liste des Prompts',
-            ctrlEnter:          'Enregistrer et Envoyer le prompt actuel',
-            shiftEnter:         'Ajoute um Saut de Ligne dans le modal de Prompt Dynamique'
-        },
-    'ru': {
-            langName:           'Русский',
-            languageSettings:   'Язык',
-            searchLanguage:     'Поиск языка...',
-            prompt:             'Промпт',
-            prompts:            'Промпты',
-            newPrompt:          'Новый промпт',
-            editPrompt:         'Редактировать промпт',
-            basic:              'Базовый',
-            advanced:           'Расширенный',
-            colorMode:          'Цветовой режим',
-            default:            'По умолчанию',
-            auto:               'Авто',
-            light:              'Светлый',
-            dark:               'Темный',
-            theme:              'Тема',
-            settings:           'Настройки',
-            title:              'Заголовок',
-            save:               'Сохранить',
-            close:              'Закрыть',
-            edit:               'Редактировать',
-            delete:             'Удалить',
-            clickDelete:        'Правка: Удалить',
-            import:             'Импорт',
-            export:             'Экспорт',
-            insert:             'Вставить',
-            addPrompt:          'Добавить промпт',
-            addTheme:           'Добавить тему',
-            selectAll:          'Выбрать все',
-            expand:             'Развернуть',
-            collapse:           'Свернуть',
-            noSavedPrompts:     'Нет сохраненных промптов.',
-            confirmDelete:      'Удалить промпт "{title}"?',
-            noPromptsToExport:  'Нет промптов для экспорта.',
-            promptsImported:    '{count} промптов успешно импортировано!',
-            errorImporting:     'Ошибка при импорте файла: {error}',
-            requiredFields:     'Заголовок и промпт обязательны для заполнения.',
-            editorNotFound:     'Не удалось найти текстовое поле для {platform}.',
-            noSearchResults:    'Промпты не найдены.',
-            confirmDownloads:   'Вы собираетесь скачать {count} отдельных текстовых файлов. Продолжить?',
-            countPrompts:       '{count} промптов',
-            fillPlaceholders:   'Заполните информацию',
-            enablePlaceholders: 'Динамический промпт',
-            autoExecute:        'Автоотправка',
-            search:             'Поиск промпта...',
-            select:             'Выберите вариант:',
-            context:            'Контекст',
-            idGroup:            'ID группы',
-            uniqueSelection:    'Одиночный выбор',
-            filesLabel:         'Файлы',
-            addCardTitle:       'Добавить Файлы',
-            addCards:           'нажмите, чтобы выбрать, или перетащите, чтобы добавить',
-            confirmDeleteFile:  'Удалить файл из памяти?',
-            confirmLargeFile:   'Файл слишком большой ({fileSizeMB}МБ). Все равно продолжить?',
-            successThemeImport: 'Успешно! {count} тема(ы) импортирована(ы).',
-            noValidThemesFound: 'В файле не найдены действительные темы.',
-            errorLoadingThemes: 'Ошибка при загрузке импортированных тем:',
-            errorReadingJSON:   'Ошибка при чтении JSON файла. Проверьте формат.',
-            confirmDeleteTheme: 'Удалить тему "{name}"?',
-            sendingFiles:       'Отправка {fileCount} файл(ов)...',
-            filesCounter:       'Файлы ({active}/{total})',
-            infoTitle:          'Помощь',
-            infoDPDesc:         'Полное руководство пользователя:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Мгновенно отправляет промпт в чат после вставки, без необходимости подтверждения.',
-            getMoreThemes:      "Получить больше тем",
-            editorSettings:     'Настройки редактора',
-            smartPredict:       'Интеллектуальное предсказание текста',
-            smartPredictDesc:   'Закрывает скобки, разворачивает макросы #start и предлагает переменные.',
-            getMorePrompts:     'Получить больше промптов',
-            pin:                'Закрепить',
-            unpin:              'Открепить',
-            move:               'Переместить',
-            saveAndExit:        'Сохранить и выйти',
-            shortcutsSettings:  'Горячие клавиши',
-            restoreShortcuts:   'Восстановить настройки',
-            pressKeyToRecord:   'Нажмите клавишу...',
-            altN:               'Открыть окно создания нового промпта',
-            altP:               'Открыть список промптов',
-            ctrlEnter:          'Сохранить и отправить текущий промпт',
-            shiftEnter:         'Добавить перенос строки в модальном окне промпта',
-        },
-    'ja': {
-            langName:           '日本語',
-            languageSettings:   '言語',
-            searchLanguage:     '言語を検索...',
-            prompt:             'プロンプト',
-            prompts:            'プロンプト一覧',
-            newPrompt:          '新規プロンプト',
-            editPrompt:         'プロンプトを編集',
-            basic:              '基本',
-            advanced:           '詳細設定',
-            colorMode:          'カラーモード',
-            default:            'デフォルト',
-            auto:               '自動',
-            light:              'ライト',
-            dark:               'ダーク',
-            theme:              'テーマ',
-            settings:           '設定',
-            title:              'タイトル',
-            save:               '保存',
-            close:              '閉じる',
-            edit:               '編集',
-            delete:             '削除',
-            clickDelete:        '右クリック：削除',
-            import:             'インポート',
-            export:             'エクスポート',
-            insert:             '挿入',
-            addPrompt:          'プロンプトを追加',
-            addTheme:           'テーマを追加',
-            selectAll:          'すべて選択',
-            expand:             '展開',
-            collapse:           '折りたたむ',
-            noSavedPrompts:     '保存されたプロンプトはありません。',
-            confirmDelete:      'プロンプト "{title}" を削除しますか？',
-            noPromptsToExport:  'エクスポートするプロンプトがありません。',
-            promptsImported:    '{count} 件のプロンプトをインポートしました！',
-            errorImporting:     'ファイルのインポート中にエラーが発生しました: {error}',
-            requiredFields:     'タイトルとプロンプトは必須です。',
-            editorNotFound:     '{platform} のテキストエリアが見つかりませんでした。',
-            noSearchResults:    '検索に一致するプロンプトはありません。',
-            confirmDownloads:   '{count} 個の個別テキストファイルをダウンロードします。続行しますか？',
-            countPrompts:       '{count} 件のプロンプト',
-            fillPlaceholders:   '情報を入力',
-            enablePlaceholders: 'ダイナミックプロンプト',
-            autoExecute:        '自動送信',
-            search:             'プロンプトを検索...',
-            select:             'オプションを選択:',
-            context:            'コンテキスト',
-            idGroup:            'グループID',
-            uniqueSelection:    '単一選択',
-            filesLabel:         'ファイル',
-            addCardTitle:       'ファイルを追加',
-            addCards:           'クリックして選択、またはドラッグして追加',
-            confirmDeleteFile:  'メモリからファイルを削除しますか？',
-            confirmLargeFile:   '大容量ファイル ({fileSizeMB}MB) です。続行しますか？',
-            successThemeImport: '成功! {count} 個のテーマがインポートされました。',
-            noValidThemesFound: 'ファイルに有効なテーマが見つかりません。',
-            errorLoadingThemes: 'インポートされたテーマの読み込みエラー：',
-            errorReadingJSON:   'JSON ファイルの読み取りエラー。形式を確認してください。',
-            confirmDeleteTheme: 'テーマ "{name}" を削除しますか？',
-            sendingFiles:       '{fileCount} 個のファイルを送信中...',
-            filesCounter:       'ファイル ({active}/{total})',
-            infoTitle:          'ヘルプ',
-            infoDPDesc:         'フルガイドにアクセス:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         '挿入後、手動操作なしで即座にチャットに送信します。',
-            getMoreThemes:      "テーマをもっと入手",
-            editorSettings:     'エディター設定',
-            smartPredict:       'スマートテキスト予測',
-            smartPredictDesc:   '括弧を閉じ、#start マクロを展開し、変数を提案します。',
-            getMorePrompts:     'もっとプロンプトを取得',
-            pin:                '固定する',
-            unpin:              '固定を解除',
-            move:               '移動',
-            saveAndExit:        '保存して終了',
-            shortcutsSettings:  'キーボードショートカット',
-            restoreShortcuts:   'デフォルトに戻す',
-            pressKeyToRecord:   'キーを押してください...',
-            altN:               '新規プロンプト作成ウィンドウを開く',
-            altP:               'プロンプト一覧を開く',
-            ctrlEnter:          '現在のプロンプトを保存して送信',
-            shiftEnter:         'ダイナミックプロンプトのモーダルで改行を追加'
-        },
-    'ko': {
-            langName:           '한국어',
-            languageSettings:   '언어',
-            searchLanguage:     '언어 검색...',
-            prompt:             '프롬프트',
-            prompts:            '프롬프트 목록',
-            newPrompt:          '새 프롬프트',
-            editPrompt:         '프롬프트 편집',
-            basic:              '기본',
-            advanced:           '고급',
-            colorMode:          '색상 모드',
-            default:            '기본값',
-            auto:               '자동',
-            light:              '라이트',
-            dark:               '다크',
-            theme:              '테마',
-            settings:           '설정',
-            title:              '제목',
-            save:               '저장',
-            close:              '닫기',
-            edit:               '편집',
-            delete:             '삭제',
-            clickDelete:        '우클릭: 삭제',
-            import:             '가져오기',
-            export:             '내보내기',
-            insert:             '삽입',
-            addPrompt:          '프롬프트 추가',
-            addTheme:           '테마 추가',
-            selectAll:          '전체 선택',
-            expand:             '펼치기',
-            collapse:           '접기',
-            noSavedPrompts:     '저장된 프롬프트가 없습니다.',
-            confirmDelete:      '"{title}" 프롬프트를 삭제하시겠습니까?',
-            noPromptsToExport:  '내보낼 프롬프트가 없습니다.',
-            promptsImported:    '{count}개의 프롬프트를 성공적으로 가져왔습니다!',
-            errorImporting:     '파일 가져오기 오류: {error}',
-            requiredFields:     '제목과 프롬프트는 필수 항목입니다.',
-            editorNotFound:     '{platform}의 텍스트 영역을 찾을 수 없습니다.',
-            noSearchResults:    '검색 결과와 일치하는 프롬프트가 없습니다.',
-            confirmDownloads:   '{count}개의 개별 텍스트 파일을 다운로드합니다. 계속하시겠습니까?',
-            countPrompts:       '{count}개의 프롬프트',
-            fillPlaceholders:   '정보 입력',
-            enablePlaceholders: '동적 프롬프트',
-            autoExecute:        '자동 전송',
-            search:             '프롬프트 검색...',
-            select:             '옵션 선택:',
-            context:            '컨텍스트',
-            idGroup:            '그룹 ID',
-            uniqueSelection:    '단일 선택',
-            filesLabel:         '파일',
-            addCardTitle:       '파일 추가',
-            addCards:           '클릭하여 선택하거나 드래그하여 추가',
-            confirmDeleteFile:  '메모리에서 파일을 삭제하시겠습니까?',
-            confirmLargeFile:   '대용량 파일({fileSizeMB}MB)입니다. 계속하시겠습니까?',
-            successThemeImport: '성공! {count}개 테마가 가져왔습니다.',
-            noValidThemesFound: '파일에서 유효한 테마를 찾을 수 없습니다.',
-            errorLoadingThemes: '가져온 테마를 로드하는 중 오류 발생:',
-            errorReadingJSON:   'JSON 파일을 읽는 중 오류 발생. 형식을 확인하세요.',
-            confirmDeleteTheme: '테마 "{name}"을(를) 삭제하시겠습니까?',
-            sendingFiles:       '{fileCount}개의 파일 전송 중...',
-            filesCounter:       '파일 ({active}/{total})',
-            infoTitle:          '도움말',
-            infoDPDesc:         '전체 사용 가이드:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         '프롬프트가 삽입된 후 수동 작업 없이 즉시 채팅으로 전송합니다.',
-            getMoreThemes:      "더 많은 테마 가져오기",
-            editorSettings:     '편집기 설정',
-            smartPredict:       '스마트 텍스트 예측',
-            smartPredictDesc:   '괄호를 닫고, #start 매크로를 확장하며, 변수를 제안합니다.',
-            getMorePrompts:     '프롬프트 더 가져오기',
-            pin:                '고정',
-            unpin:              '고정 해제',
-            move:               '이동',
-            saveAndExit:        '저장 및 종료',
-            shortcutsSettings:  '키보드 단축키',
-            restoreShortcuts:   '기본값 복원',
-            pressKeyToRecord:   '키를 누르세요...',
-            altN:               '새 프롬프트 생성 창 열기',
-            altP:               '프롬프트 목록 열기',
-            ctrlEnter:          '현재 프롬프트 저장 및 전송',
-            shiftEnter:         '동적 프롬프트 모달에서 줄 바꿈 추가'
-        },
-    };
-
-    // --- DEFINIÇÃO DE IDIOMA ---
     function getTranslation(key, replacements = {}) {
         let text = translations[currentLang]?.[key] || translations.en[key];
         Object.entries(replacements).forEach(([p, v]) => text = text.replace(`{${p}}`, v));
         return text;
     }
 
-    // --- DETERMINAR IDIOMA ---
     async function determineLanguage() {
         const savedLang = await GM_getValue(LANG_STORAGE_KEY);
         if (savedLang && translations[savedLang]) {
@@ -899,20 +263,10 @@
         else currentLang = 'en';
     }
 
-    // =================
-    // #endregion IDIOMAS
-    // =================
-
-    // =================
-    // #region GERENCIAMENTO DE ARQUIVOS/ANEXOS
-    // =================
-
-    // --- GERENCIAMENTO DE ARQUIVOS/ANEXOS ---
     async function getGlobalFiles() {
         return await GM_getValue(GLOBAL_FILES_KEY, []);
     }
 
-    // --- SALVAR ---
     async function saveGlobalFile(fileObj) {
         const files = await getGlobalFiles();
         if (!files.find(f => f.name === fileObj.name && f.size === fileObj.size)) {
@@ -922,14 +276,12 @@
         return files;
     }
 
-    // --- DELETAR ---
     async function deleteGlobalFile(id) {
         let files = await getGlobalFiles();
         files = files.filter(f => f.id !== id);
         await GM_setValue(GLOBAL_FILES_KEY, files);
     }
 
-    // --- CONVERTER DATA URL PARA ARQUIVO ---
     function dataURLtoFile(dataurl, filename) {
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -937,15 +289,6 @@
         return new File([u8arr], filename, {type:mime});
     }
 
-    // =================
-    // #endregion GERENCIAMENTO DE ARQUIVOS/ANEXOS
-    // =================
-
-    // =================
-    // #region GERENCIAMENTO DE PROMPTS
-    // =================
-
-    // --- ESPERAR ELEMENTO ---
     function waitFor(selector, timeout = 8000) {
         return new Promise((resolve, reject) => {
             const el = document.querySelector(selector);
@@ -960,7 +303,6 @@
         });
     }
 
-    // --- DEBOUNCE ---
     const debounce = (func, wait) => {
         let timeout;
         return (...args) => {
@@ -969,12 +311,10 @@
         };
     };
 
-    // --- OBTER TODOS ---
     async function getAll() {
         return await GM_getValue(PROMPT_STORAGE_KEY, []);
     }
 
-    // --- ADICIONAR ---
     async function addItem(item) {
         let prompts = await getAll();
         let nonFixedItems = prompts.filter(p => !p.isFixed);
@@ -995,7 +335,6 @@
         await GM_setValue(PROMPT_STORAGE_KEY, newPrompts);
     }
 
-    // --- ATUALIZAR ---
     async function update(index, item) {
         let prompts = await getAll();
         if (prompts[index]) {
@@ -1004,303 +343,40 @@
         }
     }
 
-    // --- REMOVER ---
     async function remove(index) {
         let prompts = await getAll();
         prompts.splice(index, 1);
         await GM_setValue(PROMPT_STORAGE_KEY, prompts);
     }
 
-    // =================
-    // #endregion GERENCIAMENTO DE PROMPTS
-    // =================
-
-    // =================
-    // #region ESTILOS GLOBAIS
-    // =================
-
-    // =================
-    // #region LÓGICA DE TEMAS
-    // =================
-
-    // --- DEFINIÇÃO DE TEMAS ---
     const themeDefinitions = {
         'default': {
             name: 'default',
-            light: {
-                '--mp-bg-primary': '#ffffff',
-                '--mp-bg-secondary': '#f8f9fa',
-                '--mp-bg-tertiary': '#f1f3f5',
-                '--mp-bg-overlay': 'rgba(10, 10, 10, 0.5)',
-                '--mp-bg-disabled': '#e9ecef',
-                '--mp-text-primary': '#212529',
-                '--mp-text-secondary': '#495057',
-                '--mp-text-tertiary': '#868e96',
-                '--mp-text-buttons': '#ffffff',
-                '--mp-text-disabled': '#adb5bd',
-                '--mp-border-primary': '#dee2e6',
-                '--mp-border-secondary': '#ced4da',
-                '--mp-focus-ring': 'rgba(112, 113, 252, 0.4)',
-                '--mp-accent-primary': '#7071fc',
-                '--mp-accent-primary-hover': '#595ac9',
-                '--mp-success': '#28a745',
-                '--mp-warning': '#ffc107',
-                '--mp-error': '#dc3545',
-                '--mp-info': '#17a2b8',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.04)',
-                '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.1)'
-            },
-            dark: {
-                '--mp-bg-primary': '#212529',
-                '--mp-bg-secondary': '#2c2c30',
-                '--mp-bg-tertiary': '#343a40',
-                '--mp-bg-overlay': 'rgba(0, 0, 0, 0.7)',
-                '--mp-bg-disabled': '#3d4248',
-                '--mp-text-primary': '#f8f9fa',
-                '--mp-text-secondary': '#e9ecef',
-                '--mp-text-tertiary': '#adb5bd',
-                '--mp-text-buttons': '#ffffff',
-                '--mp-text-disabled': '#6c757d',
-                '--mp-border-primary': '#495057',
-                '--mp-border-secondary': '#868e96',
-                '--mp-focus-ring': 'rgba(112, 113, 252, 0.6)',
-                '--mp-accent-primary': '#7071fc',
-                '--mp-accent-primary-hover': '#595ac9',
-                '--mp-success': '#34c759',
-                '--mp-warning': '#ff9f0a',
-                '--mp-error': '#ff4d4f',
-                '--mp-info': '#5ac8fa',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.15)',
-                '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.25)'
-            }
+            light: { '--mp-bg-primary': '#ffffff', '--mp-bg-secondary': '#f8f9fa', '--mp-bg-tertiary': '#f1f3f5', '--mp-bg-overlay': 'rgba(10, 10, 10, 0.5)', '--mp-bg-disabled': '#e9ecef', '--mp-text-primary': '#212529', '--mp-text-secondary': '#495057', '--mp-text-tertiary': '#868e96', '--mp-text-buttons': '#ffffff', '--mp-text-disabled': '#adb5bd', '--mp-border-primary': '#dee2e6', '--mp-border-secondary': '#ced4da', '--mp-focus-ring': 'rgba(112, 113, 252, 0.4)', '--mp-accent-primary': '#7071fc', '--mp-accent-primary-hover': '#595ac9', '--mp-success': '#28a745', '--mp-warning': '#ffc107', '--mp-error': '#dc3545', '--mp-info': '#17a2b8', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.04)', '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.1)' },
+            dark: { '--mp-bg-primary': '#212529', '--mp-bg-secondary': '#2c2c30', '--mp-bg-tertiary': '#343a40', '--mp-bg-overlay': 'rgba(0, 0, 0, 0.7)', '--mp-bg-disabled': '#3d4248', '--mp-text-primary': '#f8f9fa', '--mp-text-secondary': '#e9ecef', '--mp-text-tertiary': '#adb5bd', '--mp-text-buttons': '#ffffff', '--mp-text-disabled': '#6c757d', '--mp-border-primary': '#495057', '--mp-border-secondary': '#868e96', '--mp-focus-ring': 'rgba(112, 113, 252, 0.6)', '--mp-accent-primary': '#7071fc', '--mp-accent-primary-hover': '#595ac9', '--mp-success': '#34c759', '--mp-warning': '#ff9f0a', '--mp-error': '#ff4d4f', '--mp-info': '#5ac8fa', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.15)', '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.25)' }
         },
         'dracula': {
             name: 'Dracula',
-            light: {
-                '--mp-bg-primary': '#f8f8f2',
-                '--mp-bg-secondary': '#e2e2e2',
-                '--mp-bg-tertiary': '#d6d6d6',
-                '--mp-bg-overlay': 'rgba(40, 42, 54, 0.5)',
-                '--mp-text-primary': '#282a36',
-                '--mp-text-secondary': '#44475a',
-                '--mp-text-tertiary': '#6272a4',
-                '--mp-border-primary': '#bd93f9',
-                '--mp-border-secondary': '#6272a4',
-                '--mp-accent-primary': '#ff79c6',
-                '--mp-accent-primary-hover': '#ff92d0',
-                '--mp-accent-edit': '#f1fa8c',
-                '--mp-accent-edit-hover': '#e6ee82',
-                '--mp-accent-close': '#ff5555',
-                '--mp-accent-close-hover': '#ff6e6e',
-                '--mp-btn-export-background': 'rgba(139, 233, 253, 0.1)',
-                '--mp-btn-export-color': '#8be9fd',
-                '--mp-btn-add-background': 'rgba(80, 250, 123, 0.1)',
-                '--mp-btn-add-color': '#50fa7b',
-                '--mp-btn-import-background': 'rgba(255, 184, 108, 0.1)',
-                '--mp-btn-import-color': '#ffb86c',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(98, 114, 164, 0.2)',
-                '--mp-shadow-md': '0 4px 12px rgba(98, 114, 164, 0.2)'
-            },
-            dark: {
-                '--mp-bg-primary': '#282a36',
-                '--mp-bg-secondary': '#44475a',
-                '--mp-bg-tertiary': '#6272a4',
-                '--mp-bg-overlay': 'rgba(0, 0, 0, 0.7)',
-                '--mp-text-primary': '#f8f8f2',
-                '--mp-text-secondary': '#bfbfbf',
-                '--mp-text-tertiary': '#6272a4',
-                '--mp-border-primary': '#6272a4',
-                '--mp-border-secondary': '#44475a',
-                '--mp-accent-primary': '#bd93f9',
-                '--mp-accent-primary-hover': '#caa9fa',
-                '--mp-accent-edit': '#f1fa8c',
-                '--mp-accent-edit-hover': '#ffffa5',
-                '--mp-accent-close': '#ff5555',
-                '--mp-accent-close-hover': '#ff6e6e',
-                '--mp-btn-export-background': 'rgba(139, 233, 253, 0.15)',
-                '--mp-btn-export-color': '#8be9fd',
-                '--mp-btn-add-background': 'rgba(80, 250, 123, 0.15)',
-                '--mp-btn-add-color': '#50fa7b',
-                '--mp-btn-import-background': 'rgba(255, 184, 108, 0.15)',
-                '--mp-btn-import-color': '#ffb86c',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.3)',
-                '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.4)'
-            }
+            light: { '--mp-bg-primary': '#f8f8f2', '--mp-bg-secondary': '#e2e2e2', '--mp-bg-tertiary': '#d6d6d6', '--mp-bg-overlay': 'rgba(40, 42, 54, 0.5)', '--mp-text-primary': '#282a36', '--mp-text-secondary': '#44475a', '--mp-text-tertiary': '#6272a4', '--mp-border-primary': '#bd93f9', '--mp-border-secondary': '#6272a4', '--mp-accent-primary': '#ff79c6', '--mp-accent-primary-hover': '#ff92d0', '--mp-accent-edit': '#f1fa8c', '--mp-accent-edit-hover': '#e6ee82', '--mp-accent-close': '#ff5555', '--mp-accent-close-hover': '#ff6e6e', '--mp-btn-export-background': 'rgba(139, 233, 253, 0.1)', '--mp-btn-export-color': '#8be9fd', '--mp-btn-add-background': 'rgba(80, 250, 123, 0.1)', '--mp-btn-add-color': '#50fa7b', '--mp-btn-import-background': 'rgba(255, 184, 108, 0.1)', '--mp-btn-import-color': '#ffb86c', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(98, 114, 164, 0.2)', '--mp-shadow-md': '0 4px 12px rgba(98, 114, 164, 0.2)' },
+            dark: { '--mp-bg-primary': '#282a36', '--mp-bg-secondary': '#44475a', '--mp-bg-tertiary': '#6272a4', '--mp-bg-overlay': 'rgba(0, 0, 0, 0.7)', '--mp-text-primary': '#f8f8f2', '--mp-text-secondary': '#bfbfbf', '--mp-text-tertiary': '#6272a4', '--mp-border-primary': '#6272a4', '--mp-border-secondary': '#44475a', '--mp-accent-primary': '#bd93f9', '--mp-accent-primary-hover': '#caa9fa', '--mp-accent-edit': '#f1fa8c', '--mp-accent-edit-hover': '#ffffa5', '--mp-accent-close': '#ff5555', '--mp-accent-close-hover': '#ff6e6e', '--mp-btn-export-background': 'rgba(139, 233, 253, 0.15)', '--mp-btn-export-color': '#8be9fd', '--mp-btn-add-background': 'rgba(80, 250, 123, 0.15)', '--mp-btn-add-color': '#50fa7b', '--mp-btn-import-background': 'rgba(255, 184, 108, 0.15)', '--mp-btn-import-color': '#ffb86c', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.3)', '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.4)' }
         },
         'coffee': {
             name: 'Coffee',
-            light: {
-                '--mp-bg-primary': '#fffbf0',
-                '--mp-bg-secondary': '#f3e5d0',
-                '--mp-bg-tertiary': '#e6d0b3',
-                '--mp-bg-overlay': 'rgba(67, 40, 24, 0.3)',
-                '--mp-text-primary': '#432818',
-                '--mp-text-secondary': '#6f4e37',
-                '--mp-text-tertiary': '#9c6644',
-                '--mp-border-primary': '#d4a373',
-                '--mp-border-secondary': '#e6ccb2',
-                '--mp-accent-primary': '#bb9457',
-                '--mp-accent-primary-hover': '#997b46',
-                '--mp-accent-edit': '#e9c46a',
-                '--mp-accent-edit-hover': '#deb045',
-                '--mp-accent-close': '#bc4749',
-                '--mp-accent-close-hover': '#a3393b',
-                '--mp-btn-export-background': 'rgba(69, 123, 157, 0.1)',
-                '--mp-btn-export-color': '#457b9d',
-                '--mp-btn-add-background': 'rgba(106, 153, 78, 0.1)',
-                '--mp-btn-add-color': '#6a994e',
-                '--mp-btn-import-background': 'rgba(231, 111, 81, 0.1)',
-                '--mp-btn-import-color': '#e76f51',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(67, 40, 24, 0.1)',
-                '--mp-shadow-md': '0 4px 12px rgba(67, 40, 24, 0.15)'
-            },
-            dark: {
-                '--mp-bg-primary': '#1a1412',
-                '--mp-bg-secondary': '#2b211e',
-                '--mp-bg-tertiary': '#3e312b',
-                '--mp-bg-overlay': 'rgba(0, 0, 0, 0.8)',
-                '--mp-text-primary': '#ede0d4',
-                '--mp-text-secondary': '#ddb892',
-                '--mp-text-tertiary': '#b08968',
-                '--mp-border-primary': '#7f5539',
-                '--mp-border-secondary': '#5c3d2e',
-                '--mp-accent-primary': '#d4a373',
-                '--mp-accent-primary-hover': '#e6ccb2',
-                '--mp-accent-edit': '#f4a261',
-                '--mp-accent-edit-hover': '#fbc492',
-                '--mp-accent-close': '#e76f51',
-                '--mp-accent-close-hover': '#ff8a6e',
-                '--mp-btn-export-background': 'rgba(168, 218, 220, 0.15)',
-                '--mp-btn-export-color': '#a8dadc',
-                '--mp-btn-add-background': 'rgba(144, 190, 109, 0.15)',
-                '--mp-btn-add-color': '#90be6d',
-                '--mp-btn-import-background': 'rgba(244, 162, 97, 0.15)',
-                '--mp-btn-import-color': '#f4a261',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.5)',
-                '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.6)'
-            }
+            light: { '--mp-bg-primary': '#fffbf0', '--mp-bg-secondary': '#f3e5d0', '--mp-bg-tertiary': '#e6d0b3', '--mp-bg-overlay': 'rgba(67, 40, 24, 0.3)', '--mp-text-primary': '#432818', '--mp-text-secondary': '#6f4e37', '--mp-text-tertiary': '#9c6644', '--mp-border-primary': '#d4a373', '--mp-border-secondary': '#e6ccb2', '--mp-accent-primary': '#bb9457', '--mp-accent-primary-hover': '#997b46', '--mp-accent-edit': '#e9c46a', '--mp-accent-edit-hover': '#deb045', '--mp-accent-close': '#bc4749', '--mp-accent-close-hover': '#a3393b', '--mp-btn-export-background': 'rgba(69, 123, 157, 0.1)', '--mp-btn-export-color': '#457b9d', '--mp-btn-add-background': 'rgba(106, 153, 78, 0.1)', '--mp-btn-add-color': '#6a994e', '--mp-btn-import-background': 'rgba(231, 111, 81, 0.1)', '--mp-btn-import-color': '#e76f51', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(67, 40, 24, 0.1)', '--mp-shadow-md': '0 4px 12px rgba(67, 40, 24, 0.15)' },
+            dark: { '--mp-bg-primary': '#1a1412', '--mp-bg-secondary': '#2b211e', '--mp-bg-tertiary': '#3e312b', '--mp-bg-overlay': 'rgba(0, 0, 0, 0.8)', '--mp-text-primary': '#ede0d4', '--mp-text-secondary': '#ddb892', '--mp-text-tertiary': '#b08968', '--mp-border-primary': '#7f5539', '--mp-border-secondary': '#5c3d2e', '--mp-accent-primary': '#d4a373', '--mp-accent-primary-hover': '#e6ccb2', '--mp-accent-edit': '#f4a261', '--mp-accent-edit-hover': '#fbc492', '--mp-accent-close': '#e76f51', '--mp-accent-close-hover': '#ff8a6e', '--mp-btn-export-background': 'rgba(168, 218, 220, 0.15)', '--mp-btn-export-color': '#a8dadc', '--mp-btn-add-background': 'rgba(144, 190, 109, 0.15)', '--mp-btn-add-color': '#90be6d', '--mp-btn-import-background': 'rgba(244, 162, 97, 0.15)', '--mp-btn-import-color': '#f4a261', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.5)', '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.6)' }
         },
         'cyberpunk': {
             name: 'Cyberpunk',
-            light: {
-                '--mp-bg-primary': '#f0f0f5',
-                '--mp-bg-secondary': '#e2e2ea',
-                '--mp-bg-tertiary': '#d1d1db',
-                '--mp-bg-overlay': 'rgba(10, 10, 35, 0.4)',
-                '--mp-text-primary': '#050505',
-                '--mp-text-secondary': '#2e2e38',
-                '--mp-text-tertiary': '#5a5a66',
-                '--mp-border-primary': '#b8b8c2',
-                '--mp-border-secondary': '#d1d1db',
-                '--mp-accent-primary': '#b000b0',
-                '--mp-accent-primary-hover': '#8a008a',
-                '--mp-accent-edit': '#e6b800',
-                '--mp-accent-edit-hover': '#c29b00',
-                '--mp-accent-close': '#d90429',
-                '--mp-accent-close-hover': '#a1031f',
-                '--mp-btn-export-background': 'rgba(0, 168, 181, 0.1)',
-                '--mp-btn-export-color': '#0097a7',
-                '--mp-btn-add-background': 'rgba(0, 184, 92, 0.1)',
-                '--mp-btn-add-color': '#008f47',
-                '--mp-btn-import-background': 'rgba(245, 124, 0, 0.1)',
-                '--mp-btn-import-color': '#ef6c00',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.15)',
-                '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.2)'
-            },
-            dark: {
-                '--mp-bg-primary': '#09090b',
-                '--mp-bg-secondary': '#121217',
-                '--mp-bg-tertiary': '#1c1c24',
-                '--mp-bg-overlay': 'rgba(0, 0, 0, 0.85)',
-                '--mp-text-primary': '#ffffff',
-                '--mp-text-secondary': '#e0e0e0',
-                '--mp-text-tertiary': '#a1a1aa',
-                '--mp-border-primary': '#272730',
-                '--mp-border-secondary': '#3f3f46',
-                '--mp-accent-primary': '#f700ff',
-                '--mp-accent-primary-hover': '#d900df',
-                '--mp-accent-edit': '#fcee0a',
-                '--mp-accent-edit-hover': '#e6d805',
-                '--mp-accent-close': '#ff2a6d',
-                '--mp-accent-close-hover': '#e01655',
-                '--mp-btn-export-background': 'rgba(0, 243, 255, 0.15)',
-                '--mp-btn-export-color': '#00f3ff',
-                '--mp-btn-add-background': 'rgba(0, 255, 65, 0.15)',
-                '--mp-btn-add-color': '#00ff41',
-                '--mp-btn-import-background': 'rgba(255, 153, 0, 0.15)',
-                '--mp-btn-import-color': '#ff9900',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 4px rgba(0, 243, 255, 0.1)',
-                '--mp-shadow-md': '0 4px 12px rgba(247, 0, 255, 0.15)'
-            }
+            light: { '--mp-bg-primary': '#f0f0f5', '--mp-bg-secondary': '#e2e2ea', '--mp-bg-tertiary': '#d1d1db', '--mp-bg-overlay': 'rgba(10, 10, 35, 0.4)', '--mp-text-primary': '#050505', '--mp-text-secondary': '#2e2e38', '--mp-text-tertiary': '#5a5a66', '--mp-border-primary': '#b8b8c2', '--mp-border-secondary': '#d1d1db', '--mp-accent-primary': '#b000b0', '--mp-accent-primary-hover': '#8a008a', '--mp-accent-edit': '#e6b800', '--mp-accent-edit-hover': '#c29b00', '--mp-accent-close': '#d90429', '--mp-accent-close-hover': '#a1031f', '--mp-btn-export-background': 'rgba(0, 168, 181, 0.1)', '--mp-btn-export-color': '#0097a7', '--mp-btn-add-background': 'rgba(0, 184, 92, 0.1)', '--mp-btn-add-color': '#008f47', '--mp-btn-import-background': 'rgba(245, 124, 0, 0.1)', '--mp-btn-import-color': '#ef6c00', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.15)', '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.2)' },
+            dark: { '--mp-bg-primary': '#09090b', '--mp-bg-secondary': '#121217', '--mp-bg-tertiary': '#1c1c24', '--mp-bg-overlay': 'rgba(0, 0, 0, 0.85)', '--mp-text-primary': '#ffffff', '--mp-text-secondary': '#e0e0e0', '--mp-text-tertiary': '#a1a1aa', '--mp-border-primary': '#272730', '--mp-border-secondary': '#3f3f46', '--mp-accent-primary': '#f700ff', '--mp-accent-primary-hover': '#d900df', '--mp-accent-edit': '#fcee0a', '--mp-accent-edit-hover': '#e6d805', '--mp-accent-close': '#ff2a6d', '--mp-accent-close-hover': '#e01655', '--mp-btn-export-background': 'rgba(0, 243, 255, 0.15)', '--mp-btn-export-color': '#00f3ff', '--mp-btn-add-background': 'rgba(0, 255, 65, 0.15)', '--mp-btn-add-color': '#00ff41', '--mp-btn-import-background': 'rgba(255, 153, 0, 0.15)', '--mp-btn-import-color': '#ff9900', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 4px rgba(0, 243, 255, 0.1)', '--mp-shadow-md': '0 4px 12px rgba(247, 0, 255, 0.15)' }
         },
         'full-dark': {
             name: 'Full Dark',
-            light: {
-                '--mp-bg-primary': '#ffffff',
-                '--mp-bg-secondary': '#f5f5f5',
-                '--mp-bg-tertiary': '#e6e6e6',
-                '--mp-bg-overlay': 'rgba(0, 0, 0, 0.2)',
-                '--mp-text-primary': '#000000',
-                '--mp-text-secondary': '#404040',
-                '--mp-text-tertiary': '#737373',
-                '--mp-text-buttons': '#ffffff',
-                '--mp-border-primary': '#000000',
-                '--mp-border-secondary': '#cccccc',
-                '--mp-accent-primary': '#000000',
-                '--mp-accent-primary-hover': '#333333',
-                '--mp-accent-edit': '#eab308',
-                '--mp-accent-edit-hover': '#ca8a04',
-                '--mp-accent-close': '#dc2626',
-                '--mp-accent-close-hover': '#b91c1c',
-                '--mp-btn-export-background': 'rgba(37, 99, 235, 0.1)',
-                '--mp-btn-export-color': '#2563eb',
-                '--mp-btn-add-background': 'rgba(5, 150, 105, 0.1)',
-                '--mp-btn-add-color': '#059669',
-                '--mp-btn-import-background': 'rgba(234, 88, 12, 0.1)',
-                '--mp-btn-import-color': '#ea580c',
-                '--mp-switch-knob': '#ffffff',
-                '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.1)',
-                '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.15)'
-            },
-            dark: {
-                '--mp-bg-primary': '#000000',
-                '--mp-bg-secondary': '#0a0a0a',
-                '--mp-bg-tertiary': '#141414',
-                '--mp-bg-overlay': 'rgba(255, 255, 255, 0.05)',
-                '--mp-text-primary': '#ffffff',
-                '--mp-text-secondary': '#e5e5e5',
-                '--mp-text-tertiary': '#a3a3a3',
-                '--mp-text-buttons': '#000000',
-                '--mp-border-primary': '#333333',
-                '--mp-border-secondary': '#262626',
-                '--mp-accent-primary': '#ffffff',
-                '--mp-accent-primary-hover': '#d4d4d4',
-                '--mp-accent-edit': '#facc15',
-                '--mp-accent-edit-hover': '#fde047',
-                '--mp-accent-close': '#f87171',
-                '--mp-accent-close-hover': '#fca5a5',
-                '--mp-btn-export-background': 'rgba(59, 130, 246, 0.2)',
-                '--mp-btn-export-color': '#3b82f6',
-                '--mp-btn-add-background': 'rgba(34, 197, 94, 0.2)',
-                '--mp-btn-add-color': '#22c55e',
-                '--mp-btn-import-background': 'rgba(249, 115, 22, 0.2)',
-                '--mp-btn-import-color': '#f97316',
-                '--mp-switch-knob': '#000000',
-                '--mp-shadow-sm': 'none',
-                '--mp-shadow-md': '0 0 0 1px #333333'
-            }
+            light: { '--mp-bg-primary': '#ffffff', '--mp-bg-secondary': '#f5f5f5', '--mp-bg-tertiary': '#e6e6e6', '--mp-bg-overlay': 'rgba(0, 0, 0, 0.2)', '--mp-text-primary': '#000000', '--mp-text-secondary': '#404040', '--mp-text-tertiary': '#737373', '--mp-text-buttons': '#ffffff', '--mp-border-primary': '#000000', '--mp-border-secondary': '#cccccc', '--mp-accent-primary': '#000000', '--mp-accent-primary-hover': '#333333', '--mp-accent-edit': '#eab308', '--mp-accent-edit-hover': '#ca8a04', '--mp-accent-close': '#dc2626', '--mp-accent-close-hover': '#b91c1c', '--mp-btn-export-background': 'rgba(37, 99, 235, 0.1)', '--mp-btn-export-color': '#2563eb', '--mp-btn-add-background': 'rgba(5, 150, 105, 0.1)', '--mp-btn-add-color': '#059669', '--mp-btn-import-background': 'rgba(234, 88, 12, 0.1)', '--mp-btn-import-color': '#ea580c', '--mp-switch-knob': '#ffffff', '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.1)', '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.15)' },
+            dark: { '--mp-bg-primary': '#000000', '--mp-bg-secondary': '#0a0a0a', '--mp-bg-tertiary': '#141414', '--mp-bg-overlay': 'rgba(255, 255, 255, 0.05)', '--mp-text-primary': '#ffffff', '--mp-text-secondary': '#e5e5e5', '--mp-text-tertiary': '#a3a3a3', '--mp-text-buttons': '#000000', '--mp-border-primary': '#333333', '--mp-border-secondary': '#262626', '--mp-accent-primary': '#ffffff', '--mp-accent-primary-hover': '#d4d4d4', '--mp-accent-edit': '#facc15', '--mp-accent-edit-hover': '#fde047', '--mp-accent-close': '#f87171', '--mp-accent-close-hover': '#fca5a5', '--mp-btn-export-background': 'rgba(59, 130, 246, 0.2)', '--mp-btn-export-color': '#3b82f6', '--mp-btn-add-background': 'rgba(34, 197, 94, 0.2)', '--mp-btn-add-color': '#22c55e', '--mp-btn-import-background': 'rgba(249, 115, 22, 0.2)', '--mp-btn-import-color': '#f97316', '--mp-switch-knob': '#000000', '--mp-shadow-sm': 'none', '--mp-shadow-md': '0 0 0 1px #333333' }
         },
     };
 
-    // --- APLICA O TEMA ---
     function applyTheme(configData) {
         if (!configData) return;
         const themeDef = importedThemes[configData.themeId] || themeDefinitions[configData.themeId] || themeDefinitions['default'];
@@ -1319,39 +395,50 @@
             targetMode = mediaQueryList.matches ? 'dark' : 'light';
         }
         const modeColors = themeDef[targetMode] || themeDefinitions['default'][targetMode];
+        const fontsToLoad = [];
+        const addFontConfig = (val) => {
+            if (Array.isArray(val)) {
+                val.forEach(item => fontsToLoad.push(item));
+            } else if (val) {
+                fontsToLoad.push(val);
+            }
+        };
+        if (themeDef['@import']) addFontConfig(themeDef['@import']);
+        Object.keys(themeDef).forEach(key => {
+            if (key.startsWith('@import') && key !== '@import') addFontConfig(themeDef[key]);
+        });
+        Object.entries(modeColors).forEach(([key, value]) => {
+            if (key.startsWith('@import')) {
+                addFontConfig(value);
+            }
+        });
+        const processedUrls = new Set();
+        fontsToLoad.forEach(item => {
+            if (typeof item === 'string') {
+                if (!processedUrls.has(item)) {
+                    FontLoaderBypass.load(item);
+                    processedUrls.add(item);
+                }
+            }
+            else if (typeof item === 'object' && item.url) {
+                if (!processedUrls.has(item.url)) {
+                    FontLoaderBypass.load(item.url, item.name, item.peso);
+                    processedUrls.add(item.url);
+                }
+            }
+        });
         const existingThemeStyle = document.getElementById('mp-theme-override');
         if (existingThemeStyle) existingThemeStyle.remove();
         const themeStyleElement = document.createElement('style');
         themeStyleElement.id = 'mp-theme-override';
-        let themeCSS = '';
-        const globalFontImports = [];
-        if (themeDef['@import']) {
-            if (typeof themeDef['@import'] === 'string') {
-                globalFontImports.push(themeDef['@import']);
-            } else if (Array.isArray(themeDef['@import'])) {
-                globalFontImports.push(...themeDef['@import']);
-            }
-        }
-        const modeFontImports = [];
-        Object.entries(modeColors).forEach(([key, value]) => {
-            if (key === '@import' && typeof value === 'string') {
-                modeFontImports.push(value);
-            } else if (key.startsWith('@import') && typeof value === 'string') {
-                modeFontImports.push(value);
-            }
-        });
-        const allImports = [...new Set([...globalFontImports, ...modeFontImports])];
-        allImports.forEach(importStr => {
-            themeCSS += `@import url("${importStr}");\n`;
-        });
-        themeCSS += ':root {';
+        let themeCSS = ':root {';
         Object.entries(themeDef).forEach(([key, value]) => {
             if (!key.startsWith('@import') && typeof value !== 'object') {
                 themeCSS += `${key}: ${value} !important;`;
             }
         });
         Object.entries(modeColors).forEach(([key, value]) => {
-            if (!key.startsWith('@import') && typeof value === 'string') {
+            if (!key.startsWith('@import') && typeof value !== 'object') {
                 themeCSS += `${key}: ${value} !important;`;
             }
         });
@@ -1361,7 +448,6 @@
         document.documentElement.setAttribute('data-mp-theme', targetMode);
     }
 
-    // --- CARREGA CONFIGURAÇÃO ---
     async function loadThemeConfig() {
         const saved = await GM_getValue(THEME_STORAGE_KEY);
         if (saved) {
@@ -1371,14 +457,12 @@
         applyTheme(currentThemeConfig);
     }
 
-    // --- SALVA CONFIGURAÇÃO ---
     async function saveThemeConfig(newConfig) {
         currentThemeConfig = { ...currentThemeConfig, ...newConfig };
         await GM_setValue(THEME_STORAGE_KEY, JSON.stringify(currentThemeConfig));
         applyTheme(currentThemeConfig);
     }
 
-    // --- CARREGAR TEMAS IMPORTADOS ---
     async function loadImportedThemes() {
         const stored = await GM_getValue(IMPORTED_THEMES_KEY, '{}');
         try {
@@ -1389,12 +473,10 @@
         }
     }
 
-    // --- SALVAR TEMAS IMPORTADOS ---
     async function saveImportedThemesData() {
         await GM_setValue(IMPORTED_THEMES_KEY, JSON.stringify(importedThemes));
     }
 
-    // --- IMPORTAR JSON COM TEMAS ---
     async function importThemesFromFile(file, callbackRefresh) {
         if (!file) return;
         const reader = new FileReader();
@@ -1427,7 +509,6 @@
         reader.readAsText(file);
     }
 
-    // --- APAGAR TEMA IMPORTADO ---
     async function deleteImportedTheme(themeId, callbackRefresh) {
         if (confirm(getTranslation('confirmDeleteTheme', { name: importedThemes[themeId]?.name || themeId }))) {
             delete importedThemes[themeId];
@@ -1440,1915 +521,16 @@
         }
     }
 
-    // =================
-    // #endregion LÓGICA DE TEMAS
-    // =================
-
-    // --- CSS ---
     function injectGlobalStyles() {
         const styleId = 'my-prompt-styles';
         if (document.getElementById(styleId)) return;
+        const cssContent = GM_getResourceText("CSS");
         const styleElement = document.createElement('style');
         styleElement.id = styleId;
-        setSafeInnerHTML(styleElement, `
-            /* ===================== */
-            /*   VARIÁVEIS E TEMAS   */
-            /* ===================== */
-            @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700&display=swap');
-            :root {
-                /* --- STACK UNIVERSAL --- */
-                --mp-font-stack-i18n: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Apple SD Gothic Neo", "Noto Sans CJK SC", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-
-                /* --- VARIÁVEL BASE --- */
-                --mp-font-family-base: var(--mp-font-stack-i18n);
-
-                /* --- TÍTULOS E CABEÇALHOS --- */
-                --mp-font-family-heading: var(--mp-font-stack-i18n);
-
-                /* --- ÁREA DE EDIÇÃO E INPUTS --- */
-                --mp-font-family-editor: var(--mp-font-stack-i18n);
-
-                /* --- BOTÕES E ELEMENTOS DE AÇÃO --- */
-                --mp-font-family-button: var(--mp-font-stack-i18n);
-
-
-                /* --- CORES BASE (MODO CLARO) --- */
-                --mp-bg-primary: #ffffff;
-                --mp-bg-secondary: #f8f9fa;
-                --mp-bg-tertiary: #f1f3f5;
-                --mp-bg-overlay: rgba(10, 10, 10, 0.5);
-
-                /* --- TEXTO --- */
-                --mp-text-primary: #212529;
-                --mp-text-secondary: #495057;
-                --mp-text-tertiary: #868e96;
-                --mp-text-buttons: #ffffff;
-
-                /* --- BORDAS --- */
-                --mp-border-primary: #dee2e6;
-                --mp-border-secondary: #ced4da;
-
-                /* --- CORES DE AÇÃO --- */
-                --mp-accent-primary: #7071fc;
-                --mp-accent-primary-hover: #595ac9;
-                --mp-accent-edit: #fab005;
-                --mp-accent-edit-hover: #f08c00;
-                --mp-accent-close: #f03e3e;
-                --mp-accent-close-hover: #c92a2a;
-                --mp-btn-export-background: rgba(34, 129, 207, 0.1);
-                --mp-btn-export-color: #2281cfff;
-                --mp-btn-add-background: rgba(32, 201, 97, 0.1);
-                --mp-btn-add-color: #20c961ff;
-                --mp-btn-import-background: rgba(253, 126, 20, 0.1);
-                --mp-btn-import-color: #fd7e14;
-
-                /* --- CONTROLE DO TOGGLE (SWITCH) --- */
-                --mp-switch-knob: #ffffff;
-
-                /* --- SOMBRAS E BORDAS --- */
-                --mp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-                --mp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-                --mp-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
-                --mp-border-radius-sm: 4px;
-                --mp-border-radius-md: 8px;
-                --mp-border-radius-lg: 16px;
-
-                /* --- TRANSIÇÕES --- */
-                --mp-transition-fast: 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-            }
-
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    /* --- CORES BASE (MODO ESCURO) --- */
-                    --mp-bg-primary: #212529;
-                    --mp-bg-secondary: #2c2c30;
-                    --mp-bg-tertiary: #343a40;
-                    --mp-bg-overlay: rgba(0, 0, 0, 0.7);
-
-                    /* --- TEXTO --- */
-                    --mp-text-primary: #f8f9fa;
-                    --mp-text-secondary: #e9ecef;
-                    --mp-text-tertiary: #adb5bd;
-                    --mp-text-buttons: #ffffff;
-
-                    /* --- BORDAS --- */
-                    --mp-border-primary: #495057;
-                    --mp-border-secondary: #868e96;
-
-                    /* --- CORES DE AÇÃO --- */
-                    --mp-accent-primary: #8586ff;
-                    --mp-accent-primary-hover: #9fa0ff;
-                    --mp-accent-edit: #fcc419;
-                    --mp-accent-edit-hover: #ffe066;
-                    --mp-accent-close: #ff6b6b;
-                    --mp-accent-close-hover: #ff8787;
-                    --mp-btn-export-background: rgba(116, 192, 252, 0.15);
-                    --mp-btn-export-color: #74c0fc;
-                    --mp-btn-add-background: rgba(105, 219, 124, 0.15);
-                    --mp-btn-add-color: #69db7c;
-                    --mp-btn-import-background: rgba(255, 169, 77, 0.15);
-                    --mp-btn-import-color: #ffa94d;
-
-                    /* --- CONTROLE DO TOGGLE (SWITCH) --- */
-                    --mp-switch-knob: #ffffff;
-
-                    /* --- SOMBRAS --- */
-                    --mp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-                    --mp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-                    --mp-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-                }
-            }
-
-            /* ===================== */
-            /*  UTILITÁRIOS E SCROLL */
-            /* ===================== */
-
-            .mp-hidden {
-                display: none !important;
-            }
-
-            .mp-scroll-invisible {
-                overflow-y: auto !important;
-                scrollbar-width: none !important;
-                -ms-overflow-style: none !important;
-                scroll-behavior: smooth;
-            }
-
-            .mp-scroll-invisible::-webkit-scrollbar {
-                display: none;
-                width: 0;
-                height: 0;
-            }
-
-            .mp-scroll-wrapper {
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                flex: 1;
-                overflow: hidden;
-                min-height: 0;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-
-            .mp-scroll-arrow {
-                position: absolute;
-                left: 0;
-                right: 0;
-                height: 28px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--mp-text-tertiary);
-                cursor: pointer;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.2s ease, color 0.2s ease;
-                z-index: 10;
-            }
-
-            .mp-scroll-arrow.up {
-                top: 0;
-                background: linear-gradient(
-                    to bottom,
-                    color-mix(in srgb, var(--mp-scroll-bg, var(--mp-bg-primary)), transparent 40%) 30%,
-                    transparent
-                );
-            }
-
-            .mp-scroll-arrow.down {
-                bottom: 0;
-                background: linear-gradient(
-                    to top,
-                    color-mix(in srgb, var(--mp-scroll-bg, var(--mp-bg-primary)), transparent 40%) 30%,
-                    transparent
-                );
-            }
-
-            .mp-scroll-arrow:hover {
-                color: var(--mp-accent-primary);
-            }
-
-            .mp-scroll-arrow.visible {
-                opacity: 1;
-                pointer-events: auto;
-            }
-
-            .mp-scroll-arrow svg {
-                width: 20px;
-                height: 20px;
-                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-            }
-
-            /* ===================== */
-            /*   MODAL E EDITOR UI   */
-            /* ===================== */
-
-            #AB_modal_box_el #__ap_text,
-            #prompt-menu-container #__ap_text,
-            .mp-modal-box .form-group:has(#__ap_text) .form-textarea {
-                border: none !important;
-                box-shadow: none !important;
-                background-color: transparent !important;
-                padding: 10px;
-                width: 100%;
-                height: 100%;
-                font-family: var(--mp-font-family-editor) !important;
-            }
-
-            .mp-modal-box .form-group:has(#__ap_text) .mp-scroll-wrapper {
-                border: 1px solid var(--mp-border-primary);
-                border-radius: var(--mp-border-radius-md);
-                background-color: var(--mp-bg-secondary);
-                transition: border-color 0.2s, box-shadow 0.2s;
-                overflow: hidden !important;
-                display: flex;
-                flex-direction: column;
-                height: 300px;
-            }
-
-            .mp-modal-box .form-group:has(#__ap_text) .mp-scroll-wrapper:focus-within {
-                border-color: var(--mp-accent-primary);
-                box-shadow: 0 0 0 3px color-mix(in srgb, var(--mp-accent-primary) 25%, transparent);
-            }
-
-            .mp-modal-box.mp-expanded .form-group:has(#__ap_text) .mp-scroll-wrapper {
-                height: 100% !important;
-            }
-
-            .mp-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: var(--mp-bg-overlay);
-                z-index: 2147483647;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                backdrop-filter: blur(4px);
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity var(--mp-transition-fast), visibility var(--mp-transition-fast);
-            }
-
-            .mp-overlay.visible {
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .mp-modal-box {
-                font-family: var(--mp-font-family-base) !important;
-                background-color: var(--mp-bg-primary);
-                color: var(--mp-text-primary);
-                border-radius: var(--mp-border-radius-lg);
-                padding: 24px;
-                box-shadow: var(--mp-shadow-lg);
-                width: min(90vw, 600px);
-                border: 1px solid var(--mp-border-primary);
-                transform: scale(0.95) translateY(10px);
-                opacity: 0;
-                transition: transform var(--mp-transition-fast), opacity var(--mp-transition-fast), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                max-height: 85vh;
-            }
-
-            .mp-modal-box.mp-expanded {
-                width: 1120px !important;
-                max-width: 95vw !important;
-                height: 85vh !important;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .mp-modal-box.mp-expanded .modal-title {
-                display: block !important;
-                visibility: visible !important;
-                text-align: center;
-                margin-bottom: 20px;
-                flex-shrink: 0;
-            }
-
-            .mp-modal-box.mp-expanded .form-group:has(.form-textarea) {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                min-height: 0;
-                margin-bottom: 24px;
-            }
-
-            .mp-modal-box.mp-expanded .mp-scroll-wrapper {
-                flex: 1;
-                height: 100% !important;
-            }
-
-            .mp-modal-box.mp-expanded .form-textarea {
-                height: 100% !important;
-            }
-
-            .mp-modal-box.mp-expanded .mp-switch-container {
-                padding-top: 10px;
-            }
-
-            .mp-overlay.visible .mp-modal-box {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
-
-            .modal-title {
-                font-family: var(--mp-font-family-heading) !important;
-                font-size: 18px;
-                font-weight: 600;
-                margin: 0 0 20px;
-                text-align: center;
-                color: var(--mp-text-primary);
-                flex-shrink: 0;
-            }
-
-            .modal-footer {
-                display: flex;
-                justify-content: center;
-                margin-top: 16px;
-                flex-shrink: 0;
-            }
-
-            .mp-modal-close-btn,
-            .mp-modal-info-btn,
-            .mp-modal-shop-btn {
-                position: absolute;
-                top: 12px;
-                background: none;
-                border: none;
-                color: var(--mp-text-tertiary);
-                cursor: pointer;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 0;
-                z-index: 20;
-            }
-
-            .mp-modal-close-btn {
-                right: 12px;
-            }
-
-            .mp-modal-info-btn {
-                right: 88px;
-            }
-
-            .mp-modal-shop-btn {
-                right: 126px;
-            }
-
-            .mp-modal-close-btn:hover {
-                transform: rotate(90deg);
-                color: var(--mp-accent-close);
-                background-color: color-mix(in srgb, var(--mp-accent-close) 15%, transparent);
-            }
-
-            .mp-modal-shop-btn:hover,
-            .mp-modal-info-btn:hover {
-                transform: scale(1.1);
-                color: var(--mp-accent-primary);
-                background-color: color-mix(in srgb, var(--mp-accent-primary) 15%, transparent);
-            }
-
-            .mp-modal-close-btn svg,
-            .mp-modal-info-btn svg,
-            .mp-modal-shop-btn svg {
-                width: 20px;
-                height: 20px;
-                stroke: currentColor;
-                stroke-width: 2.5;
-                fill: none;
-            }
-
-            .mp-modal-info-btn svg {
-                stroke-width: 0;
-                fill: currentColor;
-            }
-
-            .mp-modal-expand-btn {
-                position: absolute;
-                top: 12px;
-                right: 50px;
-                background: none;
-                border: none;
-                color: var(--mp-text-tertiary);
-                cursor: pointer;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 0;
-                z-index: 20;
-            }
-
-            .mp-modal-expand-btn:hover {
-                transform: scale(1.1);
-                color: var(--mp-accent-primary);
-                background-color: color-mix(in srgb, var(--mp-accent-primary) 15%, transparent);
-            }
-
-            .mp-modal-expand-btn svg,
-            .mp-modal-shop-btn svg {
-                width: 20px;
-                height: 20px;
-                stroke: currentColor;
-                stroke-width: 2;
-                fill: none;
-            }
-
-            /* ===================== */
-            /*   SISTEMA DE ANEXOS   */
-            /* ===================== */
-
-            .mp-files-accordion {
-                border: 1px solid var(--mp-border-primary);
-                border-radius: var(--mp-border-radius-md);
-                background-color: var(--mp-bg-secondary);
-                overflow: hidden;
-                margin-top: 10px;
-                margin-bottom: 20px;
-                flex-shrink: 0;
-                transition: border-color 0.2s;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .mp-files-accordion:hover {
-                border-color: var(--mp-accent-primary);
-            }
-
-            .mp-accordion-header {
-                padding: 10px 12px;
-                background-color: var(--mp-bg-secondary);
-                cursor: pointer;
-                font-size: 13px;
-                font-weight: 600;
-                color: var(--mp-text-secondary);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                user-select: none;
-                transition: background 0.2s;
-                border-bottom: 1px solid transparent;
-                flex-shrink: 0;
-            }
-
-            .mp-accordion-header:hover {
-                color: var(--mp-text-primary);
-                background-color: var(--mp-bg-tertiary);
-            }
-
-            .mp-acc-arrow {
-                width: 16px;
-                height: 16px;
-                transition: transform 0.2s ease;
-                opacity: 0.6;
-            }
-
-            .mp-files-accordion.open .mp-accordion-header {
-                border-bottom: 1px solid var(--mp-border-primary);
-                background-color: var(--mp-bg-tertiary);
-            }
-
-            .mp-files-accordion.open .mp-acc-arrow {
-                transform: rotate(180deg);
-                opacity: 1;
-                color: var(--mp-accent-primary);
-            }
-
-            .mp-accordion-content {
-                display: none;
-                background-color: var(--mp-bg-primary);
-                position: relative;
-            }
-
-            .mp-files-accordion.open .mp-accordion-content {
-                display: block;
-            }
-
-            .mp-file-scroll-wrapper {
-                max-height: 140px;
-                overflow-y: auto;
-                padding: 12px 10px;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-                box-sizing: border-box;
-            }
-
-            .mp-file-scroll-wrapper.empty-state {
-                max-height: 140px;
-                display: flex;
-                justify-content: center;
-                cursor: pointer;
-                background: linear-gradient(135deg, color-mix(in srgb, var(--mp-accent-primary) 8%, transparent) 0%, color-mix(in srgb, var(--mp-accent-primary) 3%, transparent) 100%);
-                backdrop-filter: blur(10px);
-                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
-            }
-
-            .mp-file-scroll-wrapper.empty-state:hover {
-                background: linear-gradient(135deg, color-mix(in srgb, var(--mp-accent-primary) 12%, transparent) 0%, color-mix(in srgb, var(--mp-accent-primary) 5%, transparent) 100%);
-                border-color: var(--mp-accent-primary);
-                box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
-            }
-
-            .mp-file-grid.empty-state {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 5px;
-                width: 100%;
-                pointer-events: none;
-            }
-
-            .mp-file-empty-icon {
-                width: 48px;
-                height: 48px;
-                color: var(--mp-accent-primary);
-                opacity: 0.8;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .mp-file-empty-text {
-                color: var(--mp-text-primary);
-                font-size: 14px;
-                font-weight: 600;
-                text-align: center;
-            }
-
-            .mp-file-empty-subtext {
-                color: var(--mp-text-secondary);
-                font-size: 12px;
-                text-align: center;
-            }
-
-            .mp-file-scroll-wrapper::-webkit-scrollbar {
-                display: none;
-            }
-
-            .mp-file-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, 70px);
-                justify-content: center;
-                gap: 10px;
-                width: 100%;
-            }
-
-            .mp-file-card,
-            .mp-add-file-card {
-                position: relative;
-                width: 100%;
-                height: 70px;
-                border-radius: 6px;
-                flex-shrink: 0;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                box-sizing: border-box;
-            }
-
-            .mp-file-card {
-                background: var(--mp-bg-secondary);
-                border: 1px solid var(--mp-border-primary);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-            }
-
-            .mp-add-file-card {
-                border: 2px dashed var(--mp-border-primary);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--mp-text-tertiary);
-                background: transparent;
-            }
-
-            .mp-add-file-card:hover {
-                border-color: var(--mp-accent-primary);
-                color: var(--mp-accent-primary);
-                background-color: color-mix(in srgb, var(--mp-accent-primary) 5%, transparent);
-            }
-
-            .mp-add-icon {
-                width: 24px;
-                height: 24px;
-                stroke: currentColor;
-                stroke-width: 2;
-            }
-
-            .mp-file-card.inactive {
-                opacity: 0.5;
-                filter: grayscale(100%);
-            }
-
-            .mp-file-card.inactive:hover {
-                opacity: 0.9;
-                filter: grayscale(0%);
-                border-color: var(--mp-text-tertiary);
-            }
-
-            .mp-file-card.active {
-                opacity: 1;
-                border-color: var(--mp-accent-primary);
-                box-shadow: 0 0 0 2px color-mix(in srgb, var(--mp-accent-primary) 20%, transparent);
-            }
-
-            .mp-file-thumb {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            .mp-file-icon-gen {
-                width: 28px;
-                height: 28px;
-                color: var(--mp-text-secondary);
-            }
-
-            .mp-file-delete-perm {
-                position: absolute;
-                top: 2px;
-                right: 2px;
-                width: 16px;
-                height: 16px;
-                background: rgba(0, 0, 0, 0.6);
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 10px;
-                opacity: 0;
-                transition: opacity 0.2s;
-                z-index: 10;
-            }
-
-            .mp-file-delete-perm:hover {
-                background-color: var(--mp-accent-close);
-            }
-
-            .mp-file-card:hover .mp-file-delete-perm {
-                opacity: 1;
-            }
-
-            .mp-file-card::after {
-                content: attr(title);
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background: rgba(0, 0, 0, 0.7);
-                color: white;
-                font-size: 9px;
-                padding: 2px 0;
-                text-align: center;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                transform: translateY(100%);
-                transition: transform 0.2s;
-            }
-
-            .mp-file-card:hover::after {
-                transform: translateY(0);
-            }
-
-            /* ===================== */
-            /*  HELPERS E CONTEXTO   */
-            /* ===================== */
-
-            .mp-label-wrapper {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                margin-bottom: 6px;
-                width: 100%;
-            }
-
-            .mp-help-icon {
-                color: var(--mp-accent-primary);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                transition: transform 0.2s;
-                opacity: 0.8;
-            }
-
-            .mp-help-icon:hover {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-
-            .mp-help-icon svg {
-                width: 15px;
-                height: 15px;
-                fill: currentColor;
-            }
-
-            .mp-context-bubble {
-                display: none;
-                background-color: var(--mp-bg-tertiary);
-                border-left: 3px solid var(--mp-accent-primary);
-                padding: 8px 12px;
-                border-radius: 0 var(--mp-border-radius-sm) var(--mp-border-radius-sm) 0;
-                margin-bottom: 12px;
-                font-size: 13px;
-                color: var(--mp-text-secondary);
-                line-height: 1.4;
-                animation: mp-fade-in-down 0.2s ease-out forwards;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .mp-context-bubble.visible {
-                display: block;
-            }
-
-            .mp-context-bubble strong {
-                color: var(--mp-text-primary);
-                font-weight: 600;
-            }
-
-            @keyframes mp-fade-in-down {
-                from {
-                    opacity: 0;
-                    transform: translateY(-5px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            /* ===================== */
-            /* MENU FLUTUANTE PROMPT */
-            /* ===================== */
-
-            .prompt-menu {
-                position: fixed;
-                min-width: 320px;
-                max-width: 420px;
-                background-color: var(--mp-bg-primary);
-                border: 1px solid var(--mp-border-primary);
-                border-radius: var(--mp-border-radius-lg);
-                box-shadow: var(--mp-shadow-lg);
-                z-index: 2147483647;
-                display: flex;
-                flex-direction: column;
-                user-select: none;
-                color: var(--mp-text-primary) !important;
-                font-family: var(--mp-font-family-base) !important;
-                overflow: hidden;
-                opacity: 0;
-                visibility: hidden;
-                transform: scale(0.95);
-                transform-origin: top left;
-                transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
-            }
-
-            .prompt-menu.visible {
-                opacity: 1;
-                visibility: visible;
-                transform: scale(1);
-                transition-delay: 0s;
-            }
-
-            .prompt-menu-list {
-                max-height: 220px;
-                padding: 4px;
-                overflow-y: auto;
-                overflow-x: hidden;
-                position: relative;
-            }
-
-            .prompt-item-row {
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 12px;
-                border-radius: var(--mp-border-radius-md);
-                cursor: pointer;
-                transition: background-color 0.15s ease-in-out;
-                overflow: hidden;
-            }
-
-            .prompt-item-row:hover {
-                background-color: var(--mp-bg-tertiary);
-            }
-
-            /* MODO ARRASTE ATIVO */
-            .prompt-item-row.drag-mode {
-                background-color: var(--mp-bg-tertiary);
-                border: 1px dashed var(--mp-accent-primary);
-                cursor: move;
-            }
-
-            .prompt-item-row.drag-mode:active {
-                cursor: grabbing;
-            }
-
-            .prompt-title {
-                font-family: var(--mp-font-family-heading) !important;
-                font-size: 14px;
-                font-weight: 500;
-                flex: 1;
-                padding-right: 12px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                color: var(--mp-text-secondary);
-                transition: opacity 0.2s;
-            }
-
-            .prompt-item-row:hover .prompt-title {
-                color: var(--mp-text-primary);
-                mask-image: linear-gradient(to right, black 60%, transparent 100%);
-                -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
-            }
-
-            .prompt-item-row.nav-selected {
-                background-color: var(--mp-bg-tertiary);
-            }
-
-            .prompt-actions {
-                position: absolute;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                padding-left: 20px;
-                padding-right: 8px;
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                background: linear-gradient(to right, transparent 0%, var(--mp-bg-tertiary) 20%, var(--mp-bg-tertiary) 100%);
-                transform: translateX(110%);
-                transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
-                z-index: 2;
-            }
-
-            .prompt-item-row:hover .prompt-actions,
-            .prompt-item-row.drag-mode .prompt-actions {
-                transform: translateX(0);
-            }
-
-            .action-btn {
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                width: 28px;
-                height: 28px;
-                border-radius: var(--mp-border-radius-sm);
-                transition: all 0.15s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                line-height: 0;
-                color: var(--mp-text-secondary);
-                font-family: var(--mp-font-family-button) !important;
-            }
-
-            .action-btn svg {
-                width: 16px;
-                height: 16px;
-                display: block;
-            }
-
-            .action-btn:hover {
-                background-color: rgba(0, 0, 0, 0.05);
-                transform: scale(1.1);
-            }
-
-            .action-btn.edit:hover {
-                color: var(--mp-accent-edit);
-            }
-
-            .action-btn.delete:hover {
-                color: var(--mp-accent-close);
-            }
-
-            .action-btn.pin:hover {
-                color: var(--mp-accent-edit);
-            }
-
-            .action-btn.restore:hover {
-                color: var(--mp-btn-add-color);
-            }
-
-            .action-btn.unpin {
-                color: var(--mp-accent-primary);
-            }
-
-            .action-btn.drag:hover {
-                color: var(--mp-btn-export-color);
-            }
-
-            .menu-footer-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                border-top: 1px solid var(--mp-border-primary);
-                background-color: var(--mp-bg-secondary);
-                flex-shrink: 0;
-            }
-
-            .menu-footer-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                padding: 12px 0;
-                color: var(--mp-text-secondary);
-                transition: all 0.2s ease;
-                height: auto;
-                font-family: var(--mp-font-family-button) !important;
-            }
-
-            .menu-footer-btn:not(:last-child) {
-                border-right: 1px solid var(--mp-border-primary);
-            }
-
-            .menu-footer-btn svg {
-                width: 20px;
-                height: 20px;
-                transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            }
-
-            .menu-footer-btn:hover svg {
-                transform: scale(1.2);
-            }
-
-            .menu-footer-btn.btn-export:hover {
-                background-color: var(--mp-btn-export-background);
-                color: var(--mp-btn-export-color);
-            }
-
-            .menu-footer-btn.btn-add:hover {
-                background-color: var(--mp-btn-add-background);
-                color: var(--mp-btn-add-color);
-                transform: none;
-            }
-
-            .menu-footer-btn.btn-add:hover svg {
-                transform: scale(1.4);
-            }
-
-            .menu-footer-btn.btn-import:hover {
-                background-color: var(--mp-btn-import-background);
-                color: var(--mp-btn-import-color);
-            }
-
-            /* ===================== */
-            /*  FORMULÁRIOS E INPUTS */
-            /* ===================== */
-
-            .form-group {
-                display: flex;
-                flex-direction: column;
-                margin-bottom: 16px;
-                flex-shrink: 0;
-            }
-
-            .form-label {
-                margin-bottom: 8px;
-                font-size: 13px !important;
-                font-weight: 500 !important;
-                color: var(--mp-text-secondary);
-                display: block;
-            }
-
-            .form-input,
-            .form-textarea {
-                background-color: var(--mp-bg-secondary) !important;
-                color: var(--mp-text-primary) !important;
-                border: 1px solid var(--mp-border-primary) !important;
-                border-radius: var(--mp-border-radius-md);
-                padding: 10px;
-                width: 100%;
-                box-sizing: border-box;
-                transition: border-color 0.2s, box-shadow 0.2s;
-                outline: 0 !important;
-                font-family: var(--mp-font-family-editor) !important;
-                font-size: 14px !important;
-            }
-
-            .form-textarea {
-                height: 300px !important;
-                resize: none !important;
-                display: block;
-            }
-
-            .form-input:focus,
-            .form-textarea:focus {
-                border-color: var(--mp-accent-primary) !important;
-                box-shadow: 0 0 0 3px color-mix(in srgb, var(--mp-accent-primary) 25%, transparent) !important;
-            }
-
-            .form-input::placeholder,
-            .form-textarea::placeholder,
-            .mp-search-input::placeholder,
-            .menu-search-input::placeholder,
-            .lang-search-input::placeholder {
-                color: var(--mp-text-tertiary) !important;
-                opacity: 0.7;
-            }
-
-            .mp-switch-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px 4px 0 4px;
-                margin: -8px 0 24px;
-                flex-shrink: 0;
-            }
-
-            .mp-switch {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .mp-switch input[type="checkbox"] {
-                height: 0;
-                width: 0;
-                visibility: hidden;
-                position: absolute;
-            }
-
-            .mp-switch label {
-                cursor: pointer;
-                text-indent: -9999px;
-                width: 40px;
-                height: 22px;
-                background: var(--mp-bg-tertiary);
-                display: block;
-                border-radius: 100px;
-                position: relative;
-                transition: background-color var(--mp-transition-fast);
-            }
-
-            .mp-switch label:after {
-                content: '';
-                position: absolute;
-                top: 3px;
-                left: 3px;
-                width: 16px;
-                height: 16px;
-                background: var(--mp-switch-knob);
-                border-radius: 90px;
-                transition: 0.3s cubic-bezier(.25, 1, .5, 1);
-                box-shadow: var(--mp-shadow-sm);
-            }
-
-            .mp-switch input:checked+label {
-                background: var(--mp-accent-primary);
-            }
-
-            .mp-switch input:checked+label:after {
-                left: calc(100% - 3px);
-                transform: translateX(-100%);
-            }
-
-            .mp-switch .switch-text {
-                font-size: 13px;
-                font-weight: 500;
-                color: var(--mp-text-secondary);
-                cursor: pointer;
-                user-select: none;
-            }
-
-            .mp-checkbox, .mp-option-item input[type="checkbox"] {
-                -webkit-appearance: none !important;
-                appearance: none !important;
-                width: 18px !important;
-                height: 18px !important;
-                border: 1px solid var(--mp-border-primary) !important;
-                border-radius: var(--mp-border-radius-sm) !important;
-                background-color: var(--mp-bg-secondary) !important;
-                cursor: pointer !important;
-                margin: 0 !important;
-                display: grid !important;
-                place-content: center !important;
-                transition: all 0.2s ease;
-            }
-
-            .mp-checkbox:checked, .mp-option-item input[type="checkbox"]:checked {
-                background-color: var(--mp-accent-primary) !important;
-                border-color: var(--mp-accent-primary) !important;
-            }
-
-            .mp-checkbox::before, .mp-option-item input[type="checkbox"]::before {
-                content: "";
-                width: 10px;
-                height: 10px;
-                clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-                background-color: var(--mp-text-buttons);
-                transform: scale(0);
-                transition: 0.15s transform ease-in-out;
-            }
-
-            .mp-checkbox:checked::before, .mp-option-item input[type="checkbox"]:checked::before {
-                transform: scale(1);
-            }
-
-            /* ===================== */
-            /*   SISTEMA DE BUSCA    */
-            /* ===================== */
-
-            .mp-search-container,
-            .menu-search-container {
-                position: sticky;
-                top: 0;
-                z-index: 10;
-                display: flex;
-                flex-direction: column;
-                flex-shrink: 0;
-            }
-
-            .menu-search-container {
-                padding: 10px 12px;
-                background-color: var(--mp-bg-secondary);
-                border-bottom: 1px solid var(--mp-border-primary);
-            }
-
-            .mp-search-input,
-            .menu-search-input,
-            .lang-search-input {
-                width: 100%;
-                padding: 10px 12px;
-                border-radius: var(--mp-border-radius-md);
-                border: 1px solid var(--mp-border-primary);
-                background-color: var(--mp-bg-secondary);
-                color: var(--mp-text-primary);
-                font-family: var(--mp-font-family-editor) !important;
-                font-size: 13px;
-                box-sizing: border-box;
-                outline: none;
-                transition: border-color 0.2s;
-            }
-
-            .menu-search-input {
-                background-color: var(--mp-bg-primary) !important;
-            }
-
-            .lang-search-input {
-                margin-bottom: 12px;
-            }
-
-            .mp-search-input:focus,
-            .menu-search-input:focus,
-            .lang-search-input:focus {
-                border-color: var(--mp-accent-primary);
-            }
-
-            /* ===================== */
-            /* EXPORTAÇÃO E DINÂMICO */
-            /* ===================== */
-
-            .mp-export-actions {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-top: 20px;
-                margin-bottom: 20px;
-                font-size: 13px;
-                color: var(--mp-text-secondary);
-                border-bottom: 1px solid var(--mp-border-primary);
-                padding-bottom: 16px;
-            }
-
-            .mp-checkbox-wrapper {
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                user-select: none;
-            }
-
-            .mp-export-list {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                margin: 0 -8px;
-                padding: 0 8px;
-            }
-
-            .mp-export-item {
-                display: flex;
-                align-items: center;
-                padding: 8px;
-                border-radius: var(--mp-border-radius-md);
-                transition: background 0.15s;
-                cursor: pointer;
-                border: 1px solid transparent;
-            }
-
-            .mp-export-item:hover {
-                background-color: var(--mp-bg-tertiary);
-                border-color: var(--mp-border-primary);
-            }
-
-            .mp-item-content {
-                display: flex;
-                flex-direction: column;
-                overflow: hidden;
-                margin-left: 12px;
-            }
-
-            .mp-item-title {
-                font-size: 14px;
-                font-weight: 500;
-                color: var(--mp-text-primary);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .mp-item-preview {
-                font-size: 12px;
-                color: var(--mp-text-tertiary);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                margin-top: 2px;
-            }
-
-            .mp-export-buttons {
-                display: flex;
-                gap: 10px;
-                margin-top: 20px;
-                justify-content: flex-end;
-                border-top: 1px solid var(--mp-border-primary);
-                padding-top: 16px;
-                flex-shrink: 0;
-                font-family: var(--mp-font-family-button) !important;
-            }
-
-            #__ap_placeholders_container {
-                padding: 4px;
-                margin-top: 15px;
-                box-sizing: border-box;
-                transition: padding-top 0.2s ease;
-            }
-
-            .mp-option-group {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                margin-bottom: 12px;
-                padding: 8px;
-                border: 1px solid var(--mp-border-primary);
-                border-radius: var(--mp-border-radius-md);
-                background-color: var(--mp-bg-tertiary);
-                max-height: none !important;
-                overflow: visible !important;
-            }
-
-            .mp-option-item {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                font-size: 13px;
-                cursor: pointer;
-                padding: 8px 8px 8px 12px !important;
-                border-radius: var(--mp-border-radius-sm);
-                background-color: var(--mp-bg-primary);
-                transition: background-color 0.2s;
-                user-select: none;
-                border-left: 5px solid transparent;
-                position: relative;
-            }
-
-            .mp-option-item:hover {
-                background-color: var(--mp-bg-secondary);
-            }
-
-            .mp-modal-box.mp-expanded #__ap_placeholders_container {
-                max-height: none !important;
-                height: 100% !important;
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                min-height: 0;
-            }
-
-            .mp-modal-box.mp-expanded #__ap_placeholders_container .mp-scroll-wrapper {
-                height: 100% !important;
-                flex: 1;
-            }
-
-            .dynamic-input {
-                min-height: 45px !important;
-                line-height: 1.5;
-                font-family: var(--mp-font-family-editor) !important;
-            }
-
-            /* ===================== */
-            /*   SELETOR DE IDIOMAS  */
-            /* ===================== */
-
-            .lang-box {
-                width: min(90vw, 320px);
-            }
-
-            .lang-button {
-                all: unset;
-                box-sizing: border-box;
-                display: block;
-                width: 100%;
-                padding: 12px 20px;
-                border-radius: var(--mp-border-radius-md);
-                background-color: var(--mp-bg-secondary);
-                color: var(--mp-text-primary);
-                border: 1px solid var(--mp-border-primary);
-                font-weight: 500;
-                cursor: pointer;
-                text-align: center;
-                transition: all 0.2s ease;
-                font-family: var(--mp-font-family-button) !important;
-                flex-shrink: 0;
-            }
-
-            .lang-button:hover {
-                transform: translateY(-2px);
-                box-shadow: var(--mp-shadow-sm);
-                background-color: var(--mp-bg-tertiary);
-            }
-
-            .lang-button.selected {
-                border-color: var(--mp-accent-primary);
-                color: var(--mp-accent-primary);
-                background-color: color-mix(in srgb, var(--mp-accent-primary) 5%, transparent);
-                font-weight: 600;
-            }
-
-            /* ===================== */
-            /*    BOTÕES GERAIS      */
-            /* ===================== */
-
-            .save-button {
-                padding: 10px 28px;
-                border-radius: var(--mp-border-radius-md);
-                background-color: var(--mp-accent-primary);
-                color: var(--mp-text-buttons);
-                border: none;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.2s ease-in-out;
-                font-family: var(--mp-font-family-button) !important;
-            }
-
-            .save-button:hover {
-                background-color: var(--mp-accent-primary-hover);
-                transform: translateY(-1px);
-            }
-
-            .mp-btn-secondary {
-                background: transparent;
-                border: 1px solid var(--mp-border-secondary);
-                color: var(--mp-text-secondary);
-            }
-
-            .mp-btn-secondary:hover {
-                background-color: var(--mp-bg-tertiary);
-                color: var(--mp-text-primary);
-            }
-
-            /* ===================== */
-            /* TABELA DE INFORMAÇÕES */
-            /* ===================== */
-
-            .mp-info-table {
-                display: flex;
-                flex-direction: column;
-                border: 1px solid var(--mp-border-primary);
-                border-radius: var(--mp-border-radius-md);
-                overflow: hidden;
-                margin-top: 8px;
-            }
-
-            .mp-info-row {
-                display: flex;
-                text-align: center;
-            }
-
-            .mp-info-row:not(:last-child) {
-                border-bottom: 1px solid var(--mp-border-primary);
-            }
-
-            .mp-info-col {
-                padding: 16px;
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .mp-info-col:not(:last-child) {
-                border-right: 1px solid var(--mp-border-primary);
-            }
-
-            .mp-info-col h3 {
-                font-size: 14px;
-                font-weight: 600;
-                color: var(--mp-text-primary);
-                margin: 0 0 8px;
-                font-family: var(--mp-font-family-heading) !important;
-            }
-
-            .mp-info-col p {
-                font-size: 13px;
-                color: var(--mp-text-secondary);
-                line-height: 1.5;
-                margin: 0;
-            }
-
-            /* ===================== */
-            /*      MENU INLINE      */
-            /* ===================== */
-
-            .mp-inline-menu {
-                position: fixed;
-                width: 300px;
-                max-height: 250px;
-                background-color: var(--mp-bg-primary) !important;
-                border: 1px solid var(--mp-border-primary);
-                border-radius: var(--mp-border-radius-md);
-                box-shadow: var(--mp-shadow-lg);
-                z-index: 2147483647 !important;
-                display: flex;
-                flex-direction: column;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(10px);
-                transition: opacity 0.1s, transform 0.1s, visibility 0s linear 0.1s;
-                overflow: hidden;
-                font-family: var(--mp-font-family-base) !important;
-            }
-
-            .mp-inline-menu.visible {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-                transition-delay: 0s;
-            }
-
-            .mp-inline-list {
-                display: flex;
-                flex-direction: column;
-                padding: 4px;
-                pointer-events: auto;
-            }
-
-            .mp-inline-item {
-                padding: 8px 12px;
-                cursor: pointer;
-                border-radius: var(--mp-border-radius-sm);
-                font-size: 13px;
-                color: var(--mp-text-primary);
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                transition: background-color 0.1s;
-            }
-
-            .mp-inline-item:hover {
-                background-color: var(--mp-bg-tertiary);
-            }
-
-            .mp-inline-item.selected {
-                background-color: var(--mp-accent-primary);
-                color: var(--mp-text-buttons) !important;
-            }
-
-            .mp-inline-title {
-                font-weight: 500;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-                font-family: var(--mp-font-family-heading) !important;
-            }
-
-            /* ===================== */
-            /*   EXTRAS E ANIMAÇÕES  */
-            /* ===================== */
-
-            .mp-tooltip {
-                position: fixed;
-                z-index: 2147483647;
-                pointer-events: none;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                width: max-content;
-                opacity: 0;
-                transform: scale(0.95) translateY(4px);
-                transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            .mp-tooltip.visible {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-
-            .mp-tooltip-left,
-            .mp-tooltip-right {
-                flex-direction: row;
-                align-items: center;
-            }
-
-            .mp-tooltip-content {
-                font-family: var(--mp-font-family-button) !important;
-                background-color: var(--mp-text-primary);
-                color: var(--mp-bg-primary);
-                padding: 5px 10px;
-                border-radius: var(--mp-border-radius-sm);
-                white-space: nowrap;
-                font-size: 12px;
-                font-weight: 500;
-                box-shadow: var(--mp-shadow-md);
-                line-height: 1.2;
-            }
-
-            .mp-tooltip-arrow {
-                width: 0;
-                height: 0;
-                margin: 0;
-            }
-
-            .mp-tooltip-top .mp-tooltip-arrow {
-                border-left: 5px solid transparent;
-                border-right: 5px solid transparent;
-                border-top: 5px solid var(--mp-text-primary);
-            }
-
-            .mp-tooltip-bottom .mp-tooltip-arrow {
-                border-left: 5px solid transparent;
-                border-right: 5px solid transparent;
-                border-bottom: 5px solid var(--mp-text-primary);
-                order: -1;
-            }
-
-            .mp-tooltip-left .mp-tooltip-arrow {
-                border-top: 5px solid transparent;
-                border-bottom: 5px solid transparent;
-                border-left: 5px solid var(--mp-text-primary);
-            }
-
-            .mp-tooltip-right .mp-tooltip-arrow {
-                border-top: 5px solid transparent;
-                border-bottom: 5px solid transparent;
-                border-right: 5px solid var(--mp-text-primary);
-                order: -1;
-            }
-
-            .empty-state {
-                padding: 10px;
-                text-align: center;
-                color: var(--mp-text-tertiary);
-                font-size: 14px;
-            }
-
-            @keyframes mp-fade-in-up {
-                from {
-                    opacity: 0;
-                    transform: translateY(10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            /* ===================== */
-            /* MENU DE CONFIGURAÇÕES */
-            /* ===================== */
-
-            .mp-settings-container {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                overflow: hidden;
-                font-family: var(--mp-font-family-base) !important;
-            }
-
-            .mp-tabs-header {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border-bottom: 1px solid var(--mp-border-primary);
-                padding: 0 16px;
-                margin-bottom: 16px;
-                flex-shrink: 0;
-                gap: 8px;
-            }
-
-            .mp-tab-btn {
-                font-family: var(--mp-font-family-button) !important;
-                flex: 1;
-                background: none;
-                border: none;
-                padding: 12px 4px;
-                font-size: 14px;
-                font-weight: 600;
-                color: var(--mp-text-secondary);
-                cursor: pointer;
-                border-bottom: 2px solid transparent;
-                transition: all 0.2s;
-                text-align: center;
-                border-radius: 4px 4px 0 0;
-            }
-
-            .mp-tab-btn:hover {
-                color: var(--mp-text-primary);
-                background-color: var(--mp-bg-tertiary);
-            }
-
-            .mp-tab-btn.active {
-                color: var(--mp-accent-primary);
-                border-bottom-color: var(--mp-accent-primary);
-            }
-
-            .mp-tab-content {
-                display: none !important;
-                flex-direction: column;
-                gap: 4px;
-                animation: mp-fade-in-up 0.2s ease;
-            }
-
-            .mp-tab-content.active {
-                display: flex !important;
-            }
-
-            .mp-form-group {
-                margin-bottom: 16px;
-            }
-
-            .mp-label {
-                font-size: 13px;
-                font-weight: 600;
-                color: var(--mp-text-primary);
-                margin-bottom: 10px;
-                display: block;
-            }
-
-            .mp-action-btn-full {
-                width: 100%;
-                padding: 12px 16px;
-                background-color: var(--mp-bg-secondary);
-                border: 1px solid var(--mp-border-primary);
-                border-radius: var(--mp-border-radius-md);
-                color: var(--mp-text-primary);
-                font-weight: 500;
-                cursor: pointer;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                transition: all 0.2s;
-                font-family: var(--mp-font-family-button) !important;
-            }
-
-            .mp-action-btn-full:hover {
-                background-color: var(--mp-bg-tertiary);
-                border-color: var(--mp-text-tertiary);
-                transform: translateY(-1px);
-            }
-
-            .mp-btn-icon {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--mp-text-tertiary);
-            }
-
-            .mp-segmented-control {
-                display: flex;
-                background-color: var(--mp-bg-tertiary);
-                border-radius: var(--mp-border-radius-md);
-                padding: 4px;
-                gap: 4px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .mp-segment-opt {
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                padding: 8px 4px;
-                font-size: 13px;
-                font-weight: 500;
-                color: var(--mp-text-secondary);
-                cursor: pointer;
-                border-radius: var(--mp-border-radius-sm);
-                transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-                user-select: none;
-                border: 1px solid transparent;
-            }
-
-            .mp-segment-opt:hover {
-                color: var(--mp-text-primary);
-                background-color: rgba(0,0,0,0.02);
-            }
-
-            .mp-segment-opt.selected {
-                background-color: var(--mp-bg-primary);
-                color: var(--mp-text-primary);
-                border-color: var(--mp-border-primary);
-                box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-                font-weight: 600;
-            }
-
-            .mp-segment-opt.selected svg {
-                color: var(--mp-accent-primary);
-            }
-
-            .mp-theme-scroll-container,
-            .mp-shortcut-scroll-container {
-                padding: 4px !important;
-                border: none !important;
-                margin: 0 !important;
-                background: transparent !important;
-                box-sizing: border-box !important;
-                width: 100% !important;
-            }
-
-            .mp-theme-wrapper-fixed,
-            .mp-shortcut-wrapper-fixed {
-                flex: none !important;
-                height: auto !important;
-                max-height: 165px !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-                margin-top: 12px !important;
-                border: 1px solid var(--mp-border-primary);
-                background-color: var(--mp-bg-secondary);
-                border-radius: var(--mp-border-radius-md);
-                overflow: hidden;
-                position: relative;
-            }
-
-            .mp-theme-option,
-            .mp-shortcut-option {
-                flex-shrink: 0;
-                padding: 12px;
-                border-radius: var(--mp-border-radius-md);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                font-size: 14px;
-                font-weight: 500;
-                color: var(--mp-text-secondary);
-                transition: all 0.2s ease;
-                border: 1px solid var(--mp-border-primary);
-                background-color: var(--mp-bg-secondary);
-                box-sizing: border-box;
-            }
-
-            @keyframes mp-pulse-recording {
-                0% { box-shadow: 0 0 0 0px color-mix(in srgb, var(--mp-accent-edit) 40%, transparent); }
-                100% { box-shadow: 0 0 0 6px transparent; }
-            }
-
-            .mp-shortcut-option.recording {
-                border-color: var(--mp-accent-edit) !important;
-                color: var(--mp-accent-edit) !important;
-                background-color: color-mix(in srgb, var(--mp-accent-edit) 10%, var(--mp-bg-primary)) !important;
-                font-weight: 700 !important;
-                animation: mp-pulse-recording 1.5s infinite;
-            }
-
-            .mp-theme-option:last-child,
-            .mp-shortcut-option:last-child {
-                margin-bottom: 0;
-            }
-
-            .mp-theme-option:hover,
-            .mp-shortcut-option:hover {
-                background-color: var(--mp-bg-tertiary);
-                color: var(--mp-text-primary);
-                transform: translateY(-1px);
-                box-shadow: var(--mp-shadow-sm);
-            }
-
-            .mp-theme-option.selected,
-            .mp-shortcut-option.selected {
-                background-color: color-mix(in srgb, var(--mp-accent-primary) 10%, var(--mp-bg-primary));
-                color: var(--mp-accent-primary);
-                border-color: var(--mp-accent-primary);
-                font-weight: 700;
-                box-shadow: var(--mp-shadow-md);
-            }
-
-            .mp-theme-option {
-                margin: 5px;
-                width: auto;
-            }
-
-            .mp-shortcut-option {
-                margin: 0 0 5px 0;
-                width: 100%;
-            }
-
-            .mp-shortcut-option:last-child {
-                margin-bottom: 0;
-            }
-
-            .mp-settings-footer {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding-top: 16px;
-                margin-top: 10px;
-                border-top: 1px solid var(--mp-border-primary);
-                flex-shrink: 0;
-            }
-
-            .mp-settings-footer .save-button {
-                min-width: 160px;
-            }
-
-            .mp-theme-action-row {
-                display: flex;
-                gap: 8px;
-                padding: 0 5px;
-                margin: 5px 0 8px 0;
-                flex-shrink: 0;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .mp-theme-split-btn {
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 10px;
-                border-radius: var(--mp-border-radius-md);
-                border: 1px dashed var(--mp-border-primary);
-                color: var(--mp-text-secondary);
-                background-color: var(--mp-bg-secondary);
-                cursor: pointer;
-                transition: all 0.2s ease;
-                font-size: 13px;
-                font-weight: 500;
-            }
-
-            .mp-theme-split-btn:hover {
-                background-color: var(--mp-bg-tertiary);
-                border-color: var(--mp-accent-primary);
-                color: var(--mp-accent-primary);
-                transform: translateY(-1px);
-                box-shadow: var(--mp-shadow-sm);
-            }
-
-            /* ======================== */
-            /* CORREÇÃO DE SOBREPOSIÇÃO */
-            /* ======================== */
-
-            #__ap_settings_overlay {
-                z-index: 99990 !important;
-                position: fixed !important;
-            }
-
-            #__ap_lang_modal_overlay {
-                z-index: 99999 !important;
-                position: fixed !important;
-            }
-
-            #__ap_lang_modal_overlay .lang-box {
-                z-index: 100000 !important;
-                position: relative !important;
-            }
-
-        `);
+        setSafeInnerHTML(styleElement, cssContent);
         document.head.appendChild(styleElement);
     }
 
-    // ---TOOLTIPS CUSTOMIZADOS---
     function createCustomTooltip(button, text, position = 'top') {
         let tooltipElement = null;
         const showTooltip = () => {
@@ -3396,7 +578,6 @@
         button.addEventListener('mousedown', hideTooltip);
     }
 
-    // --- ÍCONES SVG ---
     const ICONS = {
         cloudFile:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.913 7.029C7.751 5.772 9.626 4 12.5 4c2.13 0 3.65 1.08 4.607 2.33a7.1 7.1 0 0 1 1.285 2.745c.785.127 1.695.43 2.505 1.014C22.092 10.948 23 12.373 23 14.5s-.908 3.551-2.103 4.412C19.753 19.735 18.41 20 17.5 20H13v-6.586l1.293 1.293a1 1 0 0 0 1.414-1.414l-3-3a1 1 0 0 0-1.414 0l-3 3a1 1 0 1 0 1.414 1.414L11 13.414V20H7.5c-1.077 0-2.67-.315-4.022-1.288C2.075 17.701 1 16.026 1 13.5s1.075-4.201 2.478-5.212c1.124-.809 2.413-1.163 3.435-1.26z" fill="currentColor"/></svg>`,
         monitor:    `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`,
@@ -3423,508 +604,22 @@
         drag:       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M278.6 9.4a32 32 0 0 0-45.3 0l-64 64A32 32 0 0 0 192 128h32v96h-96v-32a32.1 32.1 0 0 0-54.7-22.7l-64 64a32 32 0 0 0 0 45.3l64 64A32 32 0 0 0 128 320v-32h96v96h-32a32.1 32.1 0 0 0-22.7 54.7l64 64a32 32 0 0 0 45.3 0l64-64A32 32 0 0 0 320 384h-32v-96h96v32a32.1 32.1 0 0 0 54.7 22.7l64-64a32 32 0 0 0 0-45.3l-64-64A32 32 0 0 0 384 192v32h-96v-96h32a32.1 32.1 0 0 0 22.7-54.7l-64-64z"/></svg>`,
         pin:        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>`,
         saveExit:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M11.5 12A2.5 2.5 0 0 1 9 9.5V3H7.5A4.5 4.5 0 0 0 3 7.5v17a4.5 4.5 0 0 0 4 4.47V18.5A2.5 2.5 0 0 1 9.5 16h13a2.5 2.5 0 0 1 2.5 2.5v10.47a4.5 4.5 0 0 0 4-4.47V10.45a4.5 4.5 0 0 0-1.32-3.18l-2.95-2.95A4.5 4.5 0 0 0 22 3.02V9.5a2.5 2.5 0 0 1-2.5 2.5zM20 3h-9v6.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5zm3 26H9V18.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5z"/></svg>`,
-        restore:    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="M256 448A192 192 0 0 1 65.5 279.8l42.3-5.3a149.4 149.4 0 1 0 25.6-103.8h80v42.6H64V64h42.7v71.3A192 192 0 1 1 256 448" clip-rule="evenodd"/></svg>`
+        restore:    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="M256 448A192 192 0 0 1 65.5 279.8l42.3-5.3a149.4 149.4 0 1 0 25.6-103.8h80v42.6H64V64h42.7v71.3A192 192 0 1 1 256 448" clip-rule="evenodd"/></svg>`,
+        prompts:    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9.812 1.238a1 1 0 0 1 .73 1.11l-.023.115-3.106 11.591a1 1 0 0 1-1.956-.403l.024-.114L8.587 1.946a1 1 0 0 1 1.225-.708M4.707 4.293a1 1 0 0 1 0 1.414L2.414 8l2.293 2.293a1 1 0 1 1-1.414 1.414l-3-3a1 1 0 0 1 0-1.414l3-3a1 1 0 0 1 1.414 0m6.586 0a1 1 0 0 1 1.32-.083l.094.083 3 3a1 1 0 0 1 .083 1.32l-.083.094-3 3a1 1 0 0 1-1.497-1.32l.083-.094L13.586 8l-2.293-2.293a1 1 0 0 1 0-1.414"/></svg>`
     };
     const DEFAULT_ICONS = { ...ICONS };
 
-    // =================
-    // #endregion ESTILOS GLOBAIS
-    // =================
-
-    // =================
-    // #endregion GLOBAL
-    // =================
-
-    // =================
-    // #region BOTÕES DE PROMPT
-    // =================
-
-    // --- CHATGPT ---
-    function createChatGPTButton() {
+    function createPromptButton() {
         const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.className = 'composer-btn';
-        setSafeInnerHTML(btn, `<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="2"/></svg>`);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- DEEPSEEK ---
-    function createDeepseekButton() {
-        const styleId = 'uni-btn-deepseek-v2';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-btn-deepseek-v2 {display: inline-flex;align-items: center;justify-content: center;box-sizing: border-box;height: 32px;cursor: pointer;gap: 4px;}.uni-btn-deepseek-v2 svg { display: block; }`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('div');
-        btn.setAttribute('role', 'button');
-        btn.setAttribute('aria-disabled', 'false');
-        btn.setAttribute('tabindex', '0');
-        btn.className = 'ds-atom-button ds-toggle-button ds-toggle-button--md uni-btn-deepseek-v2';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        const iconDiv = document.createElement('div');
-        iconDiv.className = 'ds-icon ds-atom-button__icon';
-        iconDiv.style.cssText = 'font-size: 14px; width: 14px; height: 14px; color: var(--dsw-alias-label-primary); margin-right: 4px; display: flex; align-items: center; justify-content: center;';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '14'); svg.setAttribute('height', '14');
-        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor');
-        path.setAttribute('stroke-width', '2');
-        svg.appendChild(path);
-        iconDiv.appendChild(svg);
-        const textWrapper = document.createElement('span');
-        const textInner = document.createElement('span');
-        textInner.textContent = getTranslation('prompts');
-        textWrapper.appendChild(textInner);
-        const focusRing = document.createElement('div');
-        focusRing.className = 'ds-focus-ring';
-        btn.appendChild(iconDiv);
-        btn.appendChild(textWrapper);
-        btn.appendChild(focusRing);
-        return btn;
-    }
-
-    // --- GOOGLE AI STUDIO ---
-    function createGoogleAIStudioButton() {
-        const styleId = 'uni-ai-btn-style';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-ai-btn {display: inline-flex; align-items: center; justify-content: center;box-sizing: border-box; width: 32px; height: 32px; border-radius: 50%;border: 1px solid transparent; background: transparent; cursor: pointer;color: currentColor; transition: all 0.2s ease; margin-right: 4px;position: relative; z-index: 10;}.uni-ai-btn:hover { background-color: rgba(125, 125, 125, 0.15); }.uni-ai-btn svg { display: block; }`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('button');
-        btn.className = 'uni-ai-btn';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('aria-label', getTranslation('prompts'));
-        const span = document.createElement('span');
-        span.style.display = 'flex';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '24');
-        svg.setAttribute('height', '24');
-        svg.setAttribute('viewBox', '0 0 20 20');
-        svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor');
-        path.setAttribute('stroke-width', '2');
-        svg.appendChild(path);
-        span.appendChild(svg);
-        btn.appendChild(span);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- QWEN ---
-    function createQwenButton() {
-        const btn = document.createElement('div');
-        btn.className = 'chat-input-feature-btn';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.style.cursor = 'pointer';
-        setSafeInnerHTML(btn, `<span class="chat-input-feature-btn-icon"><svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" style="font-size: 16px;"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="2"/></svg></span><span class="chat-input-feature-btn-text">${getTranslation('prompt')}</span>`);
-        return btn;
-    }
-
-    // --- Z.AI ---
-    function createZaiButton() {
-        const btnWrapper = document.createElement('div');
-        setSafeInnerHTML(btnWrapper, `<button type="button" class="px-2 @xl:px-3 py-1.5 flex gap-1.5 items-center text-sm rounded-lg border transition-colors duration-300 focus:outline-hidden max-w-full overflow-hidden bg-transparent dark:text-gray-300 border-[#E5E5E5] dark:border-[#3C3E3F] hover:bg-black/5 dark:hover:bg-white/5"><svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="2"></path></svg><span class="hidden @sm:block whitespace-nowrap overflow-hidden text-ellipsis translate-y-[0.5px] mr-0.5">${getTranslation('prompt')}</span></button>`);
-        const btn = btnWrapper.firstElementChild;
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        return btn;
-    }
-
-    // --- GEMINI ---
-    function createGeminiButton() {
-        const btn = document.createElement('button');
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.className = 'mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-primary mat-mdc-tooltip-trigger';
-        const svgHTML = `<span class="mat-mdc-button-persistent-ripple mdc-icon-button__ripple"></span><span class="mat-icon notranslate" style="display: inline-flex; align-items: center; justify-content: center;"><svg style="width: 24px; height: 24px;" viewBox="0 0 20 20" fill="currentColor"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="2"></path></svg></span><span class="mat-focus-indicator"></span><span class="mat-mdc-button-touch-target"></span><span class="mat-ripple mat-mdc-button-ripple"></span>`;
-        setSafeInnerHTML(btn, svgHTML);
-        createCustomTooltip(btn, getTranslation('prompt'));
-        return btn;
-    }
-
-    // --- LMARENA ---
-    function createLmarenaButton() {
-        const btn = document.createElement('button');
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.className = 'inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-2 focus-visible:ring-offset-surface-primary disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 text-interactive-active border border-border-faint bg-transparent active:text-text-tertiary touch-hitbox group/modality-button hover:text-interactive-active relative h-8 w-8 rounded-md py-2 pl-2 pr-2 transition-colors duration-150 ease-out active:transition-transform active:duration-75 hover:bg-interactive-normal/10 hover:border-interactive-normal/10';
-        btn.type = 'button';
-        btn.setAttribute('aria-label', 'Prompts');
-        btn.setAttribute('data-state', 'closed');
-        btn.setAttribute('data-slot', 'tooltip-trigger');
-        setSafeInnerHTML(btn, `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu size-4"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>`);
-        createCustomTooltip(btn, getTranslation('prompt'));
-        return btn;
-    }
-
-    // --- KIMI ---
-    function createKimiButton() {
-        const styleId = 'uni-kimi-style';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-kimi-btn {display: flex; align-items: center; justify-content: center;width: 32px; height: 32px;border-radius: 8px;cursor: pointer;background: transparent;color: var(--Labels-Secondary, #666);transition: background-color 0.3s ease-in-out;}.uni-kimi-btn:hover {background-color: var(--Fills-F1, rgba(0,0,0,0.05));}.uni-kimi-btn svg { display: block; }`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('div');
-        btn.className = 'icon-button toolkit-trigger-btn uni-kimi-btn';
-        btn.setAttribute('data-v-10d40aa8', '');
-        btn.setAttribute('data-v-7f585946', '');
-        btn.style.width = '32px';
-        btn.style.height = '32px';
-        btn.setAttribute('role', 'button');
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('aria-label', getTranslation('prompts'));
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '18'); svg.setAttribute('height', '18');
-        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor');
-        path.setAttribute('stroke-width', '2');
-        path.setAttribute('stroke-linecap', 'round');
-        svg.appendChild(path);
-        btn.appendChild(svg);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- CLAUDE ---
-    function createClaudeButton() {
-        const styleId = 'uni-icon-btn-claude';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-icon-btn-claude {display: inline-flex; align-items: center; justify-content: center;box-sizing: border-box;cursor: pointer;}.uni-icon-btn-claude svg { pointer-events: none; }`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('button');
-        btn.className = `uni-icon-btn-claude inline-flex items-center justify-center relative shrink-0 transition-all duration-200 h-8 w-8 rounded-lg text-text-300 hover:text-text-200 hover:bg-bg-200 active:scale-95 can-focus select-none`;
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('aria-label', getTranslation('prompts'));
-        btn.type = 'button';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '20');
-        svg.setAttribute('height', '20');
-        svg.setAttribute('viewBox', '0 0 20 20');
-        svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor');
-        path.setAttribute('stroke-width', '2');
-        svg.appendChild(path);
-        btn.appendChild(svg);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- GROK---
-    function createGrokButton() {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        const btnHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-[2] text-primary transition-colors duration-100"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor"></path></svg>`;
-        setSafeInnerHTML(btn, btnHTML);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- PERPLEXITY ---
-    function createPerplexityButton() {
-        const span = document.createElement('span');
-        span.innerHTML = `<button data-testid="composer-button-prompts" type="button" class="focus-visible:bg-subtle hover:bg-subtle text-quiet hover:text-foreground dark:hover:bg-subtle px-[4px] font-sans focus:outline-none outline-none outline-transparent transition duration-300 ease-out select-none items-center relative group/button font-semimedium justify-center text-center items-center rounded-lg cursor-pointer active:scale-[0.97] active:duration-150 active:ease-outExpo origin-center whitespace-nowrap inline-flex text-sm h-8 aspect-[9/8]" aria-label="Prompts"><div class="flex items-center min-w-0 gap-two justify-center"><div><div class="isolate my-xs flex items-center"><div class="flex items-center"><div class="relative flex items-center justify-center rounded-full size-5" style="z-index: 1;"><div class="flex size-5 items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="inline-flex tabler-icon"><path d="M4 6h16M4 12h16M4 18h16" /></svg></div></div></div></div></div></div></button>`;
-        const innerBtn = span.querySelector('button');
-        createCustomTooltip(innerBtn, getTranslation('prompts'));
-        return span;
-    }
-
-    // --- LONGCAT ---
-    function createLongcatButton() {
-        const styleId = 'uni-icon-btn-longcat';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-longcat-wrapper{display:flex;flex:none}.uni-icon-btn-longcat{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:32px;height:32px;border-radius:32px;border:1px solid rgba(17, 25, 37, 0.15);background:transparent;cursor:pointer;transition:all 0.2s ease;color:#000}.uni-icon-btn-longcat:hover{background-color:rgba(17, 25, 37, 0.05);border-color:rgba(17, 25, 37, 0.25)}.uni-icon-btn-longcat svg{width:16px;height:16px;display:block}`;
-            document.head.appendChild(style);
-        }
-        const wrapper = document.createElement('div');
-        wrapper.className = 'upload-button-content uni-longcat-wrapper';
-        const btn = document.createElement('div');
-        btn.className = 'background-mp upload-button uni-icon-btn-longcat';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('role', 'button');
-        btn.setAttribute('tabindex', '0');
-        const innerDiv = document.createElement('div');
-        innerDiv.className = 'upload-file default-upload';
-        innerDiv.style.display = 'flex';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '24'); svg.setAttribute('height', '24');
-        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
-        svg.classList.add('svg-icon');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '2');
-        svg.appendChild(path);
-        innerDiv.appendChild(svg);
-        btn.appendChild(innerDiv);
-        wrapper.appendChild(btn);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return wrapper;
-    }
-
-    // --- MISTRAL ---
-    function createMistralButton() {
-        const btn = document.createElement('button');
-        btn.className = 'flex items-center justify-center text-center font-medium cursor-pointer outline-hidden focus-visible:ring-3 relative whitespace-nowrap transition-colors focus-visible:ring-default focus-visible:ring-offset-1 aria-disabled:cursor-not-allowed aria-busy:cursor-wait aria-busy:text-transparent aria-disabled:aria-busy:text-transparent text-default bg-state-secondary hover:bg-state-secondary-hover active:bg-state-secondary-press aria-busy:bg-state-secondary-loading border-darker border-[0.5px] aria-disabled:text-muted h-9 w-9 text-sm rounded-md shrink-0 gap-0 overflow-hidden p-0';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.type = 'button';
-        const iconHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-icon-default"><path d="M4 6h16M4 12h16M4 18h16" /></svg>`;
-        setSafeInnerHTML(btn, iconHTML);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- TENCENT YUANBAO ---
-    function createYuanbaoButton() {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'ybc-atomSelect-tools-wrapper';
-        wrapper.style.display = 'flex';
-        wrapper.style.alignItems = 'center';
-        const btn = document.createElement('button');
-        btn.className = 'ybc-atomSelect-tools t-button t-button--theme-default t-button--variant-text';
-        btn.setAttribute('type', 'button');
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        const iconHTML = `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="z-index: 1; margin-right: 4px;"><path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="2"></path></svg>`;
-        const textHTML = `<span class="t-button__text" style="z-index: 1;">${getTranslation('prompts')}</span>`;
-        setSafeInnerHTML(btn, iconHTML + textHTML);
-        wrapper.appendChild(btn);
-        return wrapper;
-    }
-
-    // --- CHATGLM ---
-    function createChatGLMButton(type) {
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('data-testid', 'composer-button-prompts');
-        wrapper.style.cursor = 'pointer';
-        const mySvg = `<svg class="model-select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="z-index: 10; height: 24px;"><path d="M4 5h12M4 10h12M4 15h12" stroke="var(--txt_icon_black_1)" stroke-width="2" fill="none"></path></svg>`;
-        let innerHTML = '';
-        if (type === 'element1') {
-            wrapper.setAttribute('data-v-7dc2591c', '');
-            wrapper.setAttribute('data-v-b023d9fa', '');
-            wrapper.className = 'prompt-item dark el-tooltip__trigger el-tooltip__trigger';
-            innerHTML = mySvg;
-        } else if (type === 'element2') {
-            wrapper.setAttribute('data-v-7a34b085', '');
-            wrapper.className = 'prompt-item el-tooltip__trigger el-tooltip__trigger';
-            innerHTML = mySvg;
-        } else {
-            wrapper.setAttribute('data-v-5170ca64', '');
-            wrapper.setAttribute('data-v-b023d9fa', '');
-            wrapper.className = 'model-select-container flex flex-y-center flex-x-center';
-            innerHTML = `<span data-v-5170ca64="" class="el-tooltip__trigger"><div data-v-5170ca64="" class="model-select-icon-container flex flex-y-center flex-x-center animate-glide el-tooltip__trigger el-tooltip__trigger">${mySvg}</div></span>`;
-        }
-        setSafeInnerHTML(wrapper, innerHTML);
-        createCustomTooltip(wrapper, getTranslation('prompts'));
-        return wrapper;
-    }
-
-    // --- POE ---
-    function createPoeButton() {
-        const wrapper = document.createElement('div');
-        const btnHTML = `<button class="button_root__TL8nv button_ghost__YsMI5 button_sm__hWzjK button_center__RsQ_o button_showIconOnly-always__05Gb5" type="button" aria-label="${getTranslation('prompts')}" data-theme="ghost"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" style="height: 20px; width: 20px; display: block; flex: 0 0 auto;"><path d="M5 5h14M5 12h14M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg><span class="button_label__mCaDf"></span></button>`;
-        setSafeInnerHTML(wrapper, btnHTML);
-        const btn = wrapper.querySelector('button');
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return wrapper;
-    }
-
-    // --- GOOGLE MODO IA ---
-    function createGoogleModoIAButton() {
-        const btn = document.createElement('button');
-        btn.setAttribute('tabindex', '0');
-        btn.className = 'uMMzHc';
-        btn.setAttribute('aria-label', getTranslation('prompts'));
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('type', 'button');
-        const divWilSz = document.createElement('div');
-        divWilSz.className = 'wilSz';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.classList.add('EQxvpc', 'wffbD');
-        svg.setAttribute('fill', 'currentColor');
-        svg.setAttribute('viewBox', '0 -960 960 960');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M120-200v-60h720v60H120Zm0-240v-60h720v60H120Zm0-240v-60h720v60H120Z');
-        svg.appendChild(path);
-        divWilSz.appendChild(svg);
-        const divTXv1xf = document.createElement('div');
-        divTXv1xf.className = 'TXv1xf';
-        btn.appendChild(divWilSz);
-        btn.appendChild(divTXv1xf);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- NOTEBOOKLM ---
-    function createNotebookLMButton() {
-        const btn = document.createElement('button');
-        btn.setAttribute('mat-icon-button', '');
-        btn.setAttribute('appearance', 'fill');
-        btn.setAttribute('type', 'button');
-        btn.setAttribute('aria-label', 'Prompts');
-        btn.className = 'mdc-icon-button mat-mdc-icon-button mat-mdc-button-base prompts-button mat-unthemed';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        const icon = document.createElement('mat-icon');
-        icon.setAttribute('role', 'img');
-        icon.setAttribute('aria-hidden', 'true');
-        icon.className = 'mat-icon notranslate mat-icon-rtl-mirror google-symbols mat-icon-no-color';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        svg.setAttribute('width', '24');
-        svg.setAttribute('height', '24');
-        svg.setAttribute('viewBox', '0 0 20 20');
-        svg.setAttribute('fill', 'currentColor');
-        setSafeInnerHTML(svg, `<path d="M4 5h12M4 10h12M4 15h12" stroke="currentColor" stroke-width="2" fill="none"/>`);
-        icon.appendChild(svg);
-        btn.appendChild(icon);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- DOUBAO ---
-    function createDoubaoButton() {
-        const styleId = 'uni-icon-btn-doubao';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-icon-btn-doubao {display: inline-flex; align-items: center; justify-content: center;box-sizing: border-box;width: 36px; height: 36px;border-radius: 9999px;border: none; background: transparent; cursor: pointer;transition: background-color 0.15s ease-out;margin-left: 4px;}.uni-icon-btn-doubao svg { display: block; }`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('button');
-        btn.className = 'uni-icon-btn-doubao text-dbx-text-primary hover:bg-dbx-fill-trans-10-hover';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('aria-label', getTranslation('prompts'));
-        const span = document.createElement('span');
-        span.style.display = 'flex';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '20'); svg.setAttribute('height', '20');
-        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '2');
-        svg.appendChild(path);
-        span.appendChild(svg);
-        btn.appendChild(span);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- COPILOT ---
-    function createCopilotButton() {
-        const styleId = 'uni-icon-btn-copilot';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-icon-btn-copilot {display: inline-flex;align-items: center;justify-content: center;box-sizing: border-box;width: 36px; height: 36px;margin: 0 4px;cursor: pointer;transition: background-color 0.2s ease;}.uni-icon-btn-copilot svg { display: block; }`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('button');
-        btn.className = 'uni-icon-btn-copilot relative flex items-center text-foreground-800 fill-foreground-800 active:text-foreground-600 active:fill-foreground-600 dark:active:text-foreground-650 dark:active:fill-foreground-650 bg-transparent safe-hover:bg-black/5 active:bg-black/3 dark:safe-hover:bg-black/30 dark:active:bg-black/20 text-sm justify-center min-h-9 min-w-9 h-9 select-none gap-1 rounded-2xl border border-black/8 dark:border-white/8 outline-2 outline-offset-1 focus-visible:z-[1] focus-visible:outline focus-visible:outline-stroke-900';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('aria-label', getTranslation('prompts'));
         btn.type = "button";
-        const span = document.createElement('span');
-        span.style.display = 'flex';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '24'); svg.setAttribute('height', '24');
-        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor');
-        path.setAttribute('stroke-width', '2');
-        svg.appendChild(path);
-        span.appendChild(svg);
-        btn.appendChild(span);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // --- GLM IMAGE ---
-    function createGlmImageButton() {
-        const styleId = 'uni-icon-btn-GLMIMAGE';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-icon-btn-GLMIMAGE {display: inline-flex;align-items: center;justify-content: center;box-sizing: border-box; width: 40px; height: 40px;border-radius: 8px;background: #fff !important;cursor: pointer;transition: all 0.2s ease;color: inherit;}.uni-icon-btn-GLMIMAGE svg { display: block; }`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('button');
-        btn.className = 'uni-icon-btn-GLMIMAGE h-10 w-10 rounded-lg border border-input bg-white text-gray-900 hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-ring';
+        btn.className = 'mp-prompt-action-btn';
         btn.setAttribute('data-testid', 'composer-button-prompts');
         btn.setAttribute('aria-label', getTranslation('prompts'));
-        const span = document.createElement('span');
-        span.style.display = 'flex';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '24'); svg.setAttribute('height', '24');
-        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '2');
-        svg.appendChild(path);
-        span.appendChild(svg);
-        btn.appendChild(span);
+        setSafeInnerHTML(btn, ICONS.prompts);
         createCustomTooltip(btn, getTranslation('prompts'));
         return btn;
     }
 
-    // --- WHISK ---
-    function createWhiskButton() {
-        const styleId = 'uni-icon-btn-whisk';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `.uni-icon-btn-whisk {display: inline-flex;align-items: center;justify-content: center;box-sizing: border-box;width: 32px;height: 32px;border-radius: 50%;border: none;background: transparent;cursor: pointer;transition: background-color 0.2s ease, color 0.2s ease;flex-shrink: 0;}.uni-icon-btn-whisk:hover {background-color: rgba(0, 0, 0, 0.05);}.uni-icon-btn-whisk svg {display: block;width: 20px;height: 20px;}`;
-            document.head.appendChild(style);
-        }
-        const btn = document.createElement('button');
-        btn.className = 'uni-icon-btn-whisk sc-8b6c1c1e-1 gyhlCg';
-        btn.setAttribute('data-testid', 'composer-button-prompts');
-        btn.setAttribute('aria-label', getTranslation('prompts'));
-        const span = document.createElement('span');
-        span.style.display = 'flex';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '24'); svg.setAttribute('height', '24');
-        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
-        path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '2');
-        path.setAttribute('stroke-linecap', 'round');
-        svg.appendChild(path);
-        span.appendChild(svg);
-        btn.appendChild(span);
-        createCustomTooltip(btn, getTranslation('prompts'));
-        return btn;
-    }
-
-    // ================
-    // #endregion BOTÕES DE PROMPT
-    // ================
-
-    // ================
-    // #region MENUS E MODAIS
-    // ================
-
-    // =================
-    // #region MENU DE CONFIGURAÇÕES
-    // =================
-
-    // --- MODAL DE CONFIGURAÇÕES ---
     function createSettingsModal() {
         let tempConfig = { ...currentThemeConfig };
         const overlay = document.createElement('div');
@@ -3942,92 +637,21 @@
         box.onclick = (e) => e.stopPropagation();
         const htmlContent = `
             <div class="mp-settings-container">
-
-            <!-- CABEÇALHO -->
-            <div class="mp-tabs-header">
-                <button class="mp-tab-btn active" data-tab="basic">${getTranslation('basic')}</button>
-                <button class="mp-tab-btn" data-tab="advanced">${getTranslation('advanced')}</button>
-            </div>
-
-            <!-- CONTEÚDO PRINCIPAL -->
+            <div class="mp-tabs-header"><button class="mp-tab-btn active" data-tab="basic">${getTranslation('basic')}</button><button class="mp-tab-btn" data-tab="advanced">${getTranslation('advanced')}</button></div>
             <div class="mp-scroll-wrapper" style="flex:1; overflow:hidden;">
             <div id="mp-settings-scroll-area" style="padding: 0 4px 12px 4px; overflow-y: auto;">
-
-            <!-- ============ -->
-            <!--  ABA BÁSICO  -->
-            <!-- ============ -->
             <div class="mp-tab-content active" id="tab-basic" style="margin-bottom: 16px; margin-top: 16px;">
-
-                <!-- IDIOMA -->
-                <div class="mp-form-group">
-                    <label class="mp-label">${getTranslation('languageSettings')}</label>
-                    <button id="mp-btn-open-lang" class="mp-action-btn-full">
-                        <span id="mp-current-lang-display" style="font-weight:600;">${translations[currentLang]?.langName || currentLang}</span>
-                        <span class="mp-btn-icon">${ICONS.globo}</span>
-                    </button>
-                </div>
-
-                <!-- MODO DE COR -->
-                <div class="mp-form-group">
-                    <label class="mp-label">${getTranslation('colorMode')}</label>
-                    <div class="mp-segmented-control">
-                        <div class="mp-segment-opt" data-val="auto">${ICONS.monitor} <span>${getTranslation('auto')}</span></div>
-                        <div class="mp-segment-opt" data-val="light">${ICONS.sol} <span>${getTranslation('light')}</span></div>
-                        <div class="mp-segment-opt" data-val="dark">${ICONS.lua} <span>${getTranslation('dark')}</span></div>
-                    </div>
-                </div>
-
-                <!-- LISTA DE TEMAS -->
-                <div class="mp-form-group style=" style="margin-bottom: 0px;">
-                    <label class="mp-label">${getTranslation('theme')}</label>
-                    <div class="mp-theme-scroll-container" id="mp-theme-list-container"></div>
-                </div>
-
-            </div>
-
-            <!-- ============ -->
-            <!-- ABA AVANÇADO -->
-            <!-- ============ -->
+            <div class="mp-form-group"><label class="mp-label">${getTranslation('languageSettings')}</label><button id="mp-btn-open-lang" class="mp-action-btn-full"><span id="mp-current-lang-display" style="font-weight:600;">${translations[currentLang]?.langName || currentLang}</span><span class="mp-btn-icon">${ICONS.globo}</span></button></div>
+            <div class="mp-form-group"><label class="mp-label">${getTranslation('colorMode')}</label><div class="mp-segmented-control"><div class="mp-segment-opt" data-val="auto">${ICONS.monitor} <span>${getTranslation('auto')}</span></div><div class="mp-segment-opt" data-val="light">${ICONS.sol} <span>${getTranslation('light')}</span></div><div class="mp-segment-opt" data-val="dark">${ICONS.lua} <span>${getTranslation('dark')}</span></div></div></div>
+            <div class="mp-form-group style=" style="margin-bottom: 0px;"><label class="mp-label">${getTranslation('theme')}</label><div class="mp-theme-scroll-container" id="mp-theme-list-container"></div></div></div>
             <div class="mp-tab-content" id="tab-advanced" style="margin-bottom: 16px; margin-top: 16px;">
-
-                <!-- EDITOR INTELIGENTE -->
-                <div class="mp-form-group">
-                    <label class="mp-label">${getTranslation('editorSettings')}</label>
-                    <div class="mp-switch-container" style="display: flex; justify-content: space-between; align-items: center; background: var(--mp-bg-secondary); border: 1px solid var(--mp-border-primary); padding: 12px; border-radius: var(--mp-border-radius-md); margin:0;">
-                        <span id="mp-smart-predict-lbl" style="font-size:14px; font-weight:600; color:var(--mp-text-primary); cursor: default;">
-                            ${getTranslation('smartPredict')}
-                        </span>
-                        <div class="mp-switch"><input type="checkbox" id="mp_setting_prediction" /><label for="mp_setting_prediction">Toggle</label></div>
-                    </div>
-                </div>
-
-                <!-- LISTA DE ATALHOS -->
-                <div class="mp-form-group" style="margin-bottom: 0px;">
-                    <label class="mp-label">Atalhos de Teclado</label>
-                    <div class="mp-shortcut-scroll-container" id="mp-shortcuts-list-container"></div>
-                </div>
-
-            </div>
-
-            </div> <!-- Fim Scroll Area -->
-            </div> <!-- Fim Scroll Wrapper -->
-
-            <!-- ============ -->
-            <!--    RODAPÉ    -->
-            <!-- ============ -->
-            <div class="mp-settings-footer">
-                <button class="save-button" id="mp-settings-save">${getTranslation('save')}</button>
-            </div>
-
-            </div> <!-- Fim Settings Container -->
+            <div class="mp-form-group"><label class="mp-label">${getTranslation('editorSettings')}</label><div class="mp-switch-container" style="display: flex; justify-content: space-between; align-items: center; background: var(--mp-bg-secondary); border: 1px solid var(--mp-border-primary); padding: 12px; border-radius: var(--mp-border-radius-md); margin:0;"><span id="mp-smart-predict-lbl" style="font-size:14px; font-weight:600; color:var(--mp-text-primary); cursor: default;">${getTranslation('smartPredict')}</span><div class="mp-switch"><input type="checkbox" id="mp_setting_prediction" /><label for="mp_setting_prediction">Toggle</label></div></div></div>
+            <div class="mp-form-group" style="margin-bottom: 0px;"><label class="mp-label">Atalhos de Teclado</label><div class="mp-shortcut-scroll-container" id="mp-shortcuts-list-container"></div></div></div></div></div>
+            <div class="mp-settings-footer"><button class="save-button" id="mp-settings-save">${getTranslation('save')}</button></div></div>
         `;
 
         setSafeInnerHTML(box, htmlContent);
         overlay.appendChild(box);
-
-        // =================
-        // #region TEMAS
-        // =================
         const themeListContainer = box.querySelector('#mp-theme-list-container');
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
@@ -4050,8 +674,6 @@
         };
         const renderThemeList = () => {
             setSafeInnerHTML(themeListContainer, '');
-
-            // --- BOTÕES DE AÇÃO (LOJA/ADD) ---
             const actionRow = document.createElement('div');
             actionRow.className = 'mp-theme-action-row';
             const shopBtn = document.createElement('div');
@@ -4067,8 +689,6 @@
             actionRow.appendChild(shopBtn);
             actionRow.appendChild(addBtn);
             themeListContainer.appendChild(actionRow);
-
-            // --- LISTA DE OPÇÕES ---
             const createThemeEl = (id, def, isImported) => {
                 const item = document.createElement('div');
                 item.className = 'mp-theme-option';
@@ -4103,21 +723,11 @@
             'var(--mp-border-radius-md)'
         );
         if (themeWrapper) themeWrapper.classList.add('mp-theme-wrapper-fixed');
-
-        // =================
-        // #endregion TEMAS
-        // =================
-
-        // =================
-        // #region ATALHOS
-        // =================
         const shortcutContainer = box.querySelector('#mp-shortcuts-list-container');
         const shortcutLabel = shortcutContainer.parentElement.querySelector('.mp-label');
         if(shortcutLabel) shortcutLabel.textContent = getTranslation('shortcutsSettings');
         const renderShortcuts = () => {
             setSafeInnerHTML(shortcutContainer, '');
-
-            // --- BOTÃO RESTAURAR ---
             const restoreBtn = document.createElement('div');
             restoreBtn.className = 'mp-shortcut-option';
             setSafeInnerHTML(restoreBtn, ICONS.restore);
@@ -4140,8 +750,6 @@
             };
             createCustomTooltip(restoreBtn, getTranslation('restoreShortcuts'), 'right');
             shortcutContainer.appendChild(restoreBtn);
-
-            // --- BOTÕES DE ATALHOS ---
             Object.keys(currentShortcuts).forEach(key => {
                 const item = currentShortcuts[key];
                 const btn = document.createElement('div');
@@ -4205,16 +813,6 @@
                 shortcutContainer.style.width = '100%';
             }
         }
-
-        // =================
-        // #endregion ATALHOS
-        // =================
-
-        // =================
-        // #region LÓGICA UI GERAL
-        // =================
-
-        // --- ABAS ---
         const tabs = box.querySelectorAll('.mp-tab-btn');
         tabs.forEach(btn => {
             btn.onclick = () => {
@@ -4225,8 +823,6 @@
                 if(box.querySelector(`#${targetId}`)) box.querySelector(`#${targetId}`).classList.add('active');
             };
         });
-
-        // --- MODOS DE COR ---
         const modeOpts = box.querySelectorAll('.mp-segment-opt');
         const updateModeUI = () => {
             modeOpts.forEach(opt => opt.classList.toggle('selected', opt.getAttribute('data-val') === tempConfig.mode));
@@ -4239,20 +835,14 @@
                 applyTheme(tempConfig);
             };
         });
-
-        // --- MODAL DE IDIOMA ---
         box.querySelector('#mp-btn-open-lang').onclick = () => {
             if (!languageModal) { languageModal = createLanguageModal(); document.body.appendChild(languageModal); }
             showModal(languageModal);
         };
-
-        // TOOLTIP DO SMART PREDICT
         const smartLabel = box.querySelector('#mp-smart-predict-lbl');
         if(smartLabel) {
             createCustomTooltip(smartLabel, getTranslation('smartPredictDesc'), 'left');
         }
-
-        // --- CHECKBOX PREDIÇÃO ---
         const predictionCheckbox = box.querySelector('#mp_setting_prediction');
         if (predictionCheckbox) {
             predictionCheckbox.checked = currentPredictionConfig.enabled;
@@ -4260,15 +850,6 @@
                 currentPredictionConfig.enabled = predictionCheckbox.checked;
             };
         }
-
-        // =================
-        // #endregion LÓGICA UI GERAL
-        // =================
-
-        // =================
-        // #region SALVAR E FECHAR
-        // =================
-
         box.querySelector('#mp-settings-save').onclick = async () => {
             await saveThemeConfig(tempConfig);
             if (predictionCheckbox) {
@@ -4277,11 +858,6 @@
             saveShortcutsConfig();
             hideModal(overlay);
         };
-        // =================
-        // #endregion SALVAR
-        // =================
-
-        // --- SCROLL PRINCIPAL ---
         setupEnhancedScroll(box.querySelector('#mp-settings-scroll-area'));
         overlay.resetToCurrent = () => {
             tempConfig = { ...currentThemeConfig };
@@ -4295,15 +871,6 @@
         return overlay;
     }
 
-    // =================
-    // #endregion MENU DE CONFIGURAÇÕES
-    // =================
-
-    // ================
-    // #region PROMPT DINÂMICO PT1
-    // ================
-
-    // --- PARSEAR PROMPT INTERNO ---
     function parsePromptInternal(rawText) {
         if (!rawText) return { processedText: '', ignoreMap: new Map(), selectMap: new Map(), inputMap: new Map() };
         let processedText = rawText;
@@ -4319,31 +886,23 @@
             c = c.replace(/\r?\n[ \t]*$/, '');
             return c;
         };
-
-        // --- BLOCO DE IGNORAR ---
         const blockFenceRegex = /([ \t]*)(#+)ignore[ \t]*(?:\r?\n)?([\s\S]*?)(?:\r?\n)?[ \t]*\2end/g;
         processedText = processedText.replace(blockFenceRegex, (_match, _whitespace, _hashes, content) => {
             const key = `__IGNORE_BLK_${ignoreCounter++}__`;
             ignoreMap.set(key, content);
             return key;
         });
-
-        // --- CERCA DE VALOR OCULTO ---
         const valueFenceRegex = /('{2,})((?:(?!\1)[\s\S])*)\1/g;
         processedText = processedText.replace(valueFenceRegex, (_match, _quoteSequence, content) => {
             const key = `__QUOTE_${ignoreCounter++}__`;
             ignoreMap.set(key, content);
             return key;
         });
-
-        // --- CARACTERES ESCAPADOS ---
         processedText = processedText.replace(/\\([#\[\]])/g, (_match, char) => {
             const key = `__ESC_CHAR_${ignoreCounter++}__`;
             ignoreMap.set(key, char);
             return key;
         });
-
-        // --- BLOCOS DE SELEÇÃO ---
         const regionRegex = /#start([\s\S]*?)#end/g;
         processedText = processedText.replace(regionRegex, (_match, body) => {
             const key = `__SELECT_${selectCounter++}__`;
@@ -4385,8 +944,6 @@
             selectMap.set(key, { title: (typeof getTranslation !== 'undefined' ? getTranslation('select') : 'Select'), options });
             return key;
         });
-
-        // --- CAMPOS DE INPUT ---
         processedText = processedText.replace(/\[([^\]=]+?)\s*=\s*(\$[a-zA-Z0-9_]+)\](?:\(([^)]*)\))?/g, (match, label, varName, comment, _offset, _fullString) => {
             if (label.startsWith('__') && label.endsWith('__')) return match;
             const key = `__INPUT_${inputCounter++}__`;
@@ -4394,8 +951,6 @@
             inputMap.set(key, { label: label.trim(), varName: varName.trim(), context: finalContext });
             return key;
         });
-
-        // --- CAMPOS DE INPUT SIMPLES ---
         processedText = processedText.replace(/\[([^\]]+?)\](?:\(([^)]*)\))?/g, (match, label, comment, _offset, _fullString) => {
             if (label.startsWith('__') && label.endsWith('__')) return match;
             if (inputMap.has(match)) return match;
@@ -4407,7 +962,6 @@
         return { processedText, ignoreMap, selectMap, inputMap };
     }
 
-    // --- CRIAR MODAL DE PROMPT DINÂMICO ---
     function createPlaceholderModal() {
         const overlay = document.createElement('div');
         overlay.className = 'mp-overlay mp-hidden';
@@ -4449,15 +1003,6 @@
         return overlay;
     }
 
-    // ================
-    // #endregion PROMPT DINÂMICO PT1
-    // ================
-
-    // ================
-    // #region MENU DE PROMPT
-    // ================
-
-    // --- CRIAR MENU DE PROMPT ---
     function createPromptMenu() {
         const menu = document.createElement('div');
         menu.className = 'prompt-menu';
@@ -4465,7 +1010,6 @@
         return menu;
     }
 
-    // --- EDITAR/CRIAR PROMPT ---
     function createPromptModal() {
         const overlay = document.createElement('div');
         overlay.className = 'mp-overlay mp-hidden';
@@ -4476,18 +1020,13 @@
         box.style.cssText = 'overflow-y: auto; padding-bottom: 24px;';
         box.onclick = e => e.stopPropagation();
         setSafeInnerHTML(box, `
-            <!-- BOTÕES (EXPANDIR/RECOLHER, SHOP, INFO, FECHAR) -->
             <button id="__ap_expand_btn" class="mp-modal-expand-btn" title="${getTranslation('expand')}">${ICONS.expand}</button>
             <button id="__ap_shop_btn" class="mp-modal-shop-btn">${ICONS.shop}</button>
             <button id="__ap_info_btn" class="mp-modal-info-btn" title="${getTranslation('infoTitle')}">${ICONS.info}</button>
             <button id="__ap_close_prompt" class="mp-modal-close-btn" title="${getTranslation('close')}">${ICONS.close}</button>
-
-            <!-- FORMULÁRIO (TÍTULO, PROMPT) -->
             <h2 class="modal-title" style="flex-shrink:0;">${getTranslation('newPrompt')}</h2>
             <div class="form-group" style="flex-shrink:0;"><label for="__ap_title" class="form-label">${getTranslation('title')}</label><input id="__ap_title" class="form-input" /></div>
             <div class="form-group" style="height: 300px; flex-shrink: 0; display: flex; flex-direction: column;"><label for="__ap_text" class="form-label">${getTranslation('prompt')}</label><textarea id="__ap_text" class="form-textarea" spellcheck="false" style="height:100% !important; resize:none;"></textarea></div>
-
-            <!-- ARQUIVOS/ANEXOS -->
             <div class="mp-files-accordion" id="__ap_accordion">
             <div class="mp-accordion-header" id="__ap_files_header">
             <div style="display:flex;align-items:center;">${ICONS.folder}<span id="__ap_files_label">${getTranslation('filesLabel')}</span></div>${ICONS.chevron}</div>
@@ -4495,8 +1034,6 @@
             <div id="__ap_file_scroll_wrapper" class="mp-file-scroll-wrapper">
             <div id="__ap_file_grid" class="mp-file-grid"></div>
             </div><input type="file" id="__ap_file_input" multiple style="display:none"></div></div>
-
-            <!-- INTERRUPTORES DE CONFIGURAÇÃO (PROMPT DINÂMICO, EXECUÇÃO AUTOMÁTICA E SALVAR) -->
             <div class="mp-switch-container" style="flex-shrink:0;">
             <div class="mp-switch"><input type="checkbox" id="__ap_use_placeholders" /><label for="__ap_use_placeholders">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_use_placeholders').click()">${getTranslation('enablePlaceholders')}</span></div>
             <div class="mp-switch"><input type="checkbox" id="__ap_auto_execute" /><label for="__ap_auto_execute">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_auto_execute').click()">${getTranslation('autoExecute')}</span></div></div>
@@ -4648,7 +1185,6 @@
         return overlay;
     }
 
-    // --- INFORMAÇÕES ---
     function createInfoModal() {
         const overlay = document.createElement('div');
         overlay.className = 'mp-overlay mp-hidden';
@@ -4667,7 +1203,6 @@
         return overlay;
     }
 
-    // --- ABRIR MODAL DE EDITAR/CRIAR PROMPT ---
     function openPromptModal(item = null, index = -1) {
         if (!currentModal) return;
         const isEditing = !!item;
@@ -4686,15 +1221,6 @@
         setTimeout(() => document.getElementById('__ap_title').focus(), 100);
     }
 
-    // ================
-    // #endregion MENU DE PROMPT
-    // ================
-
-    // ================
-    // #region MENU DE SELEÇÃO DE IDIOMA
-    // ================
-
-    // --- CRIAR MODAL DE SELEÇÃO DE IDIOMA ---
     function createLanguageModal() {
         const overlay = document.createElement('div');
         overlay.className = 'mp-overlay mp-hidden lang-overlay';
@@ -4750,33 +1276,18 @@
         return overlay;
     }
 
-    // --- ABRIR MODAL ---
     function showModal(modal) {
         if (!modal) return;
         modal.classList.remove('mp-hidden');
         setTimeout(() => modal.classList.add('visible'), 10);
     }
 
-    // --- FECHAR MODAL ---
     function hideModal(modal) {
         if (!modal) return;
         modal.classList.remove('visible');
         setTimeout(() => modal.classList.add('mp-hidden'), 200);
     }
 
-    // ================
-    // #endregion MENU DE SELEÇÃO DE IDIOMA
-    // ================
-
-    // ================
-    // #endregion MENUS E MODAIS
-    // ================
-
-    // ================
-    // #region FUNÇÕES AUXILIARES
-    // ================
-
-    // --- SCROLL PERSONALIZADO ---
     function setupEnhancedScroll(scrollContainer, customBgVariable = null, borderRadius = null) {
         if (!scrollContainer) return;
         const computedStyle = window.getComputedStyle(scrollContainer);
@@ -4824,12 +1335,10 @@
         return wrapper;
     }
 
-    // --- MOVER CURSOR PARA O FIM DO CAMPO DE TEXTO ---
     function moveCursorToEnd(editor) {
         setTimeout(() => {
             try {
                 editor.focus();
-                // --- GEMINI ---
                 if (currentPlatform === 'gemini') {
                     const selection = window.getSelection();
                     const range = document.createRange();
@@ -4839,7 +1348,6 @@
                     selection.addRange(range);
                     editor.scrollTop = editor.scrollHeight;
                 }
-                // --- MISTRAL ---
                 else if (currentPlatform === 'mistral') {
                     const selection = window.getSelection();
                     const range = document.createRange();
@@ -4857,7 +1365,6 @@
                         i++;
                     }
                 }
-                // --- CHATGPT / CLAUDE / GROK ---
                 else if (currentPlatform === 'chatgpt' || currentPlatform === 'claude' || currentPlatform === 'grok') {
                     const selection = window.getSelection();
                     const range = document.createRange();
@@ -4874,7 +1381,6 @@
                         }
                     }
                 }
-                // --- GOOGLE AI STUDIO / GOOGLE MODO IA ---
                 else if (currentPlatform === 'googleaistudio' || currentPlatform === 'googleModoIA') {
                     const textLength = editor.value.length;
                     editor.setSelectionRange(textLength, textLength);
@@ -4883,7 +1389,6 @@
                     editor.focus();
                     editor.setSelectionRange(textLength, textLength);
                 }
-                // --- PADRÃO ---
                 else {
                     const textLength = editor.value.length;
                     if (editor.setSelectionRange) {
@@ -4897,11 +1402,6 @@
         }, 10);
     }
 
-    // ================
-    // #region LISTA DE PROMPTS
-    // ================
-
-    // ---POSICIONAR LISTA  ---
     function positionMenu(menu, button) {
         const btnRect = button.getBoundingClientRect();
         const menuHeight = menu.offsetHeight;
@@ -4924,7 +1424,6 @@
         menu.style.left = `${Math.max(margin, Math.min(left, viewportWidth - menuWidth - margin))}px`;
     }
 
-    // --- ATUALIZAR LISTA ---
     async function refreshMenu(maintainDragIndex = -1) {
         if (!currentMenu) return;
         const existingList = currentMenu.querySelector('#prompt-menu-list-el');
@@ -5134,22 +1633,12 @@
         currentMenu.appendChild(footerGrid);
     }
 
-    // --- FECHAR LISTA ---
     function closeMenu() {
         if (currentMenu && currentMenu.classList.contains('visible')) {
             currentMenu.classList.remove('visible');
         }
     }
 
-    // ================
-    // #endregion LISTA DE PROMPTS
-    // ================
-
-    // ================
-    // #region PROMPT DINÂMICO PT2
-    // ================
-
-    // --- CRIAR MODAL DINÂMICO ---
     function openPlaceholderModal(item, index) {
         const { processedText, ignoreMap, selectMap, inputMap } = parsePromptInternal(item.text);
         if (selectMap.size === 0 && inputMap.size === 0) {
@@ -5342,7 +1831,6 @@
         setTimeout(() => container.querySelector('textarea, input')?.focus(), 100);
     }
 
-    // CORES PARA GRUPOS DE ID
     const mpColorPalette = [
         '#4ECDC4', '#45B7D1', '#98D8C8', '#F7DC6F', '#BB8FCE',
         '#82E0AA', '#85C1E9', '#DAF7A6', '#FFC300', '#3498DB',
@@ -5350,7 +1838,6 @@
         '#F39C12', '#16A085', '#34495E', '#F5B041', '#5499C7'
     ];
 
-    // --- OBTER COR PARA ID ---
     function getColorForId(id) {
         if (!id) return 'transparent';
         let str = String(id);
@@ -5362,26 +1849,6 @@
         return mpColorPalette[index];
     }
 
-    // ================
-    // #endregion PROMPT DINÂMICO PT2
-    // ================
-
-    // ================
-    // #region MODIFICACOES ESPECÍFICAS
-    // ================
-
-    // --- PADDING PARA O GROK---
-    function applyGrokPadding() {
-        const styleId = 'my-prompt-grok-padding';
-        if (document.getElementById(styleId)) return;
-        const styleElement = document.createElement('style');
-        styleElement.id = styleId;
-        const cssRule = `div.query-bar > div[class*="ps-11"] {padding-left: 95px !important; padding-right: 95px !important;}`;
-        setSafeInnerHTML(styleElement, cssRule);
-        document.head.appendChild(styleElement);
-    }
-
-    // --- ESTILOS ESPECÍFICOS DO CHATGLM ---
     function applyChatGLMCustomStyles() {
         const styleId = 'my-prompt-chatglm-left-align';
         if (document.getElementById(styleId)) return;
@@ -5392,15 +1859,6 @@
         document.head.appendChild(styleElement);
     }
 
-    // ================
-    // #endregion MODIFICACOES ESPECÍFICAS
-    // ================
-
-    // ================
-    // #region OPÇÃO INLINE
-    // ================
-
-    // --- CRIAR MENU ---
     function createInlineMenu() {
         if (inlineMenu) return inlineMenu;
         const menu = document.createElement('div');
@@ -5410,7 +1868,6 @@
         return menu;
     }
 
-    // --- FECHAR MENU ---
     function closeInlineMenu() {
         if (inlineMenu) {
             inlineMenu.classList.remove('visible');
@@ -5419,7 +1876,6 @@
         }
     }
 
-    // --- RENDERIZAR ITENS ---
     function renderInlineList(items, queryRaw) {
         if (!inlineMenu) createInlineMenu();
         setSafeInnerHTML(inlineMenu, '');
@@ -5445,7 +1901,6 @@
         if (selected) selected.scrollIntoView({ block: 'nearest' });
     }
 
-    // --- ATUALIZAR VISUAL ---
     function updateInlineVisuals() {
         if (!inlineMenu) return;
         const scrollContainer = inlineMenu.querySelector('.mp-inline-list');
@@ -5469,7 +1924,6 @@
         });
     }
 
-    // --- POSICIONAR MENU ---
     function positionInlineMenu(editor) {
         if (!inlineMenu) return;
         const rect = editor.getBoundingClientRect();
@@ -5483,7 +1937,6 @@
         }
     }
 
-    // --- OBTER TEXTO ---
     function getTextBeforeCaret(editor) {
         if (editor.tagName === 'TEXTAREA' || editor.tagName === 'INPUT') {
             return editor.value.substring(0, editor.selectionEnd);
@@ -5497,7 +1950,6 @@
         return '';
     }
 
-    // --- COMPLETAR PROMPT ---
     async function completeInlinePrompt(item, queryRaw) {
         const editor = document.querySelector(platformSelectors[currentPlatform]);
         if (!editor) return;
@@ -5554,7 +2006,6 @@
         }
     }
 
-    // --- CONFIGURAR SUGESTÃO ---
     function setupInlineSuggestion(editor) {
         if (editor.dataset.mpInlineActive) return;
         editor.dataset.mpInlineActive = 'true';
@@ -5630,26 +2081,15 @@
         });
     }
 
-    // ================
-    // #endregion OPÇÃO INLINE
-    // ================
-
-    // =================
-    // #region EDITOR INTELIGENTE
-    // =================
-
-    // --- CARREGAR CONFIGURAÇÕES ---
     function loadPredictionConfig() {
         currentPredictionConfig = GM_getValue(PREDICTION_STORAGE_KEY, DEFAULT_PREDICTION_CONFIG);
     }
 
-    // --- SALVAR NA MEMÓRIA ---
     async function savePredictionConfig(config) {
         currentPredictionConfig = config;
         await GM_setValue(PREDICTION_STORAGE_KEY, config);
     }
 
-    // --- APLICAR LÓGICA DE PREVISÃO ---
     function attachSmartEditorLogic(textarea) {
         if (!textarea) return;
         const pairs = {
@@ -5661,15 +2101,11 @@
             '`': '`'
         };
         const closePairs = new Set(Object.values(pairs));
-
-        // --- FUNÇÃO AUXILIAR: FECHAR AUTOCOMPLETE DE $VAR ---
         const closeVarPrediction = () => {
             varMemory.active = false;
             varMemory.list = [];
             varMemory.typed = '';
         };
-
-        // --- HANDLER: KEYDOWN ---
         textarea.addEventListener('keydown', function(e) {
             if (!currentPredictionConfig.enabled) return;
             if (e.isComposing || e.keyCode === 229) return;
@@ -5678,8 +2114,6 @@
             const val = this.value;
             const char = e.key;
             const hasSelection = start !== end;
-
-            // --- LÓGICA ESPECÍFICA PARA BACKTICK (Shift + `) ---
             if (e.key === 'Backquote' && e.shiftKey) {
                 e.preventDefault();
                 if (hasSelection) {
@@ -5695,8 +2129,6 @@
                 }
                 return;
             }
-
-            // --- LÓGICA DE AUTOCOMPLETAR VARIÁVEL ($) ---
             if (varMemory.active) {
                 if (start < varMemory.startPos) {
                     closeVarPrediction();
@@ -5731,8 +2163,6 @@
                     }
                 }
             }
-
-            // --- LÓGICA DE MACROS ---
             if (char === '#' && hasSelection) {
                 macroMemory.text = val.substring(start, end);
                 macroMemory.startIndex = start;
@@ -5766,8 +2196,6 @@
                     }
                 }
             }
-
-            // --- LÓGICA GERAL DE PARES ---
             if (hasSelection && pairs[char]) {
                 e.preventDefault();
                 const selectedText = val.substring(start, end);
@@ -5815,8 +2243,6 @@
                 }
             }
         });
-
-        // --- AUTOCOMPLETAR VARIÁVEL ---
         textarea.addEventListener('input', function(e) {
             if (!currentPredictionConfig.enabled) return;
             if (e.isComposing || (e.inputType && e.inputType.startsWith('insertComposition'))) return;
@@ -5866,8 +2292,6 @@
                 else {varMemory.typed = text.substring(varMemory.startPos, cursor);closeVarPrediction();}
                 return;
             }
-
-            // --- MACROS NORMAIS ---
             if (['s', 'e', 'i'].includes(char)) {
                 const prefixMatch = text.substring(0, cursor).match(/(^|[\s\n])(#+)([sei])$/);
                 if (prefixMatch) {
@@ -5888,14 +2312,6 @@
             }
         });
     }
-
-    // =================
-    // #endregion EDITOR INTELIGENTE
-    // =================
-
-    // =================
-    // #region CONFIGURAÇÃO DE ATALHO
-    // =================
 
     function loadShortcuts() {
         const saved = GM_getValue(SHORTCUTS_STORAGE_KEY);
@@ -5934,19 +2350,7 @@
             return eventKey === key || code === key;
         }
     }
-    // =================
-    // #endregion CONFIGURAÇÃO DE ATALHO
-    // =================
 
-    // ================
-    // #endregion FUNÇÕES AUXILIARES
-    // ================
-
-    // ================
-    // #region INTERAÇÃO COM A PÁGINA
-    // ================
-
-    // --- DETECTAR PLATAFORMA ---
     function detectPlatform() {
         const hostname = window.location.hostname;
         if (hostname.includes('chatgpt.com'))           return 'chatgpt';
@@ -5955,7 +2359,7 @@
         if (hostname.includes('chat.qwen.ai'))          return 'qwen';
         if (hostname.includes('chat.z.ai'))             return 'zai';
         if (hostname.includes('gemini.google.com'))     return 'gemini';
-        if (hostname.includes('lmarena.ai'))            return 'lmarena';
+        if (hostname.includes('arena.ai'))              return 'arena';
         if (hostname.includes('kimi.com'))              return 'kimi';
         if (hostname.includes('claude.ai'))             return 'claude';
         if (hostname.includes('grok.com'))              return 'grok';
@@ -5969,12 +2373,12 @@
         if (hostname.includes('doubao.com'))            return 'doubao';
         if (hostname.includes('copilot.microsoft.com')) return 'copilot';
         if (hostname.includes('image.z.ai'))            return 'glmimage';
+        if (hostname.includes('ernie.baidu.com'))       return 'ernie';
         if (hostname.includes('labs.google') && window.location.pathname.includes('/tools/whisk/')) return 'whisk';
         if (hostname.includes('google.com') && window.location.pathname.includes('/search') && window.location.search.includes('udm=50')) return 'googleModoIA';
         return null;
     }
 
-    // --- BOTÕES  DE ENVIO ---
     function getSendButton() {
         switch (currentPlatform) {
             case 'chatgpt':         return document.querySelector('[data-testid="send-button"]') || document.querySelector('#composer-submit-button');
@@ -5983,7 +2387,7 @@
             case 'qwen':            return document.querySelector('.send-button') || document.querySelector('#send-message-button');
             case 'zai':             return document.querySelector('#send-message-button');
             case 'gemini':          return document.querySelector('button:has(mat-icon[data-mat-icon-name="send"])') || document.querySelector('button:has(mat-icon[fonticon="send"])');
-            case 'lmarena':         return document.querySelector('button[type="submit"]:has(svg.lucide-arrow-up)') || document.querySelector('button:has(svg path[d="m5 12 7-7 7 7"])');
+            case 'arena':           return document.querySelector('button[type="submit"]');
             case 'kimi':            return document.querySelector('div:has(> svg[name="Send"])');
             case 'claude':          return document.querySelector('button:has(svg path[d^="M208.49,120.49"])');
             case 'grok':            return document.querySelector('button:has(svg path[d^="M5 11L12 4"])');
@@ -5998,15 +2402,11 @@
             case 'copilot':         return document.querySelector('[data-testid="submit-button"]');
             case 'glmimage':        return document.querySelector('button:has(img[src*="generate-icon"])');
             case 'whisk':           return document.querySelector('button:has(path[d^="M12 4l-1.41 1.41L16.17 11H4v2"])');
+            case 'ernie':           return document.querySelector('span:has(path[d^="M43,-63.4379997253418 C43,-63.4379997253418 31,-59.6879997253418"])');
             default:                return null;
         }
     }
 
-    // ================
-    // #region CONTROLE DE ANEXO DE ARQUIVOS
-    // ================
-
-    // --- AVISO DE UPLOAD ---
     function showToast(message, duration = 8000) {
         const toast = document.createElement('div');
         toast.textContent = message;
@@ -6015,7 +2415,6 @@
         setTimeout(() => toast.remove(), duration);
     }
 
-    // --- VERIFICAR SE O EDITOR ESTÁ VAZIO ---
     function isEditorEmpty(editor) {
         if (!editor) return true;
         if (!editor.isConnected) return true;
@@ -6028,7 +2427,6 @@
         return content.replace(/[\s\u200B\u00A0\r\n]/g, '').length === 0;
     }
 
-    // --- AGUARDAR UPLOAD ---
     function waitForUploadAndClick(editor, maxWaitTime = 120000) {
         const startTime = Date.now();
         const interval = setInterval(() => {
@@ -6050,7 +2448,6 @@
         }, 800);
     }
 
-    // --- TRATAMENTO CHATGLM ---
     function handleChatGLM(editor, maxWaitTime = 120000) {
         const startTime = Date.now();
         const interval  = setInterval(() => {
@@ -6066,15 +2463,6 @@
         }, 800);
     }
 
-    // ================
-    // #endregion CONTROLE DE ANEXO DE ARQUIVOS
-    // ================
-
-    // ================
-    // #region LÓGICA DE INSERÇÃO DE PROMPT
-    // ================
-
-    // --- CONTROLE TOTAL SOBRE O PROMPT ---
     async function insertPrompt(promptItem, index, forceNoAutoExecute = false, isInline = false) {
         let editor = document.querySelector(platformSelectors[currentPlatform]);
         if (!editor) { return; }
@@ -6083,8 +2471,6 @@
         let hasFiles = false;
         let totalUploadDelay = 0;
         let fileCount = 0;
-
-        // --- ANEXAR ARQUIVOS ---
         if (promptItem.activeFileIds && promptItem.activeFileIds.length > 0) {
             const allFiles      = await getGlobalFiles();
             const filesToAttach = allFiles
@@ -6094,19 +2480,12 @@
                     totalUploadDelay += f.size;
                     return dataURLtoFile(f.data, f.name);
                 });
-
-            // --- LÓGICA DE ANEXO ---
             if (filesToAttach.length > 0) {
                 hasFiles = true;
                 totalUploadDelay = 1500 + (totalUploadDelay / 1024 / 100 * 100);
                 const dt = new DataTransfer();
                 filesToAttach.forEach(file => dt.items.add(file));
-
-                // ================
-                // #region TRATAMENTO ESPECIAL PARA O GEMINI
                 if (currentPlatform === 'gemini') {
-
-                    // --- FIREFOX ---
                     if (isFirefox) {
                         let dropTarget = document.querySelector('[data-filedrop-id]') || document.querySelector('.chat-window-input-container') || editor;
                         ['dragenter', 'dragover', 'drop'].forEach(eventName => {
@@ -6118,8 +2497,6 @@
                             dropTarget.dispatchEvent(evt);
                         });
                     }
-
-                    // --- NAVEGADORES CHROMIUM ---
                     else {
                         const pasteEvent = new ClipboardEvent('paste', {
                             bubbles: true,
@@ -6129,15 +2506,9 @@
                         editor.dispatchEvent(pasteEvent);
                     }
                 }
-                // #endregion TRATAMENTO ESPECIAL PARA O GEMINI
-                // ================
-
-                // --- COMPORTAMENTO PADRÃO ---
                 else {
-
-                    // --- PLATAFORMAS QUE PREFEREM DROP ---
                     let dropHandled = false;
-                    const preferDrop = ['deepseek', 'qwen', 'longcat', 'grok', 'mistral', 'googleaistudio', 'yuanbao'];
+                    const preferDrop = ['deepseek', 'qwen', 'longcat', 'grok', 'mistral', 'googleaistudio', 'yuanbao', 'ernie'];
                     if (preferDrop.includes(currentPlatform)) {
                         let dropTarget = document.querySelector('.chat-input-container') || document.querySelector('form') || editor;
                         ['dragenter', 'dragover', 'drop'].forEach(eventName => {
@@ -6146,8 +2517,6 @@
                         });
                         dropHandled = true;
                     }
-
-                    // --- DEMAIS PLATAFORMAS (TENTAR INPUT FILE) ---
                     if (!dropHandled) {
                         let fileInput = document.querySelector('input[type="file"]');
                         if (currentPlatform === 'perplexity') fileInput = document.querySelector('input[data-testid="file-upload-input"]');
@@ -6159,8 +2528,6 @@
                                 fileInput.dispatchEvent(new Event('input', { bubbles: true }));
                             } catch(e) {}
                         }
-
-                        // --- TENTATIVA FINAL COM DROP ---
                         else {
                             ['dragenter', 'dragover', 'drop'].forEach(eventName => {
                                 const evt = new DragEvent(eventName, { bubbles: true, cancelable: true, dataTransfer: dt });
@@ -6172,11 +2539,7 @@
                 showToast(getTranslation('sendingFiles').replace('{fileCount}', fileCount), totalUploadDelay);
             }
         }
-
-        // --- INSERÇÃO DO TEXTO DO PROMPT ---
         setTimeout(() => {
-
-            // --- LÓGICA PARA O FIREFOX ---
             if (isFirefox && (currentPlatform === 'kimi' || currentPlatform === 'perplexity' || currentPlatform === 'qwen')) {
                 editor.focus();
                 document.execCommand('insertText', false, promptItem.text);
@@ -6198,21 +2561,14 @@
                 sel.removeAllRanges();
                 sel.addRange(range);
             }
-
-            // ================
-            // #region TRATAMENTO ESPECIAL PARA O GEMINI
             else if (currentPlatform === 'gemini') {
                 editor.focus();
-
-                // --- FIREFOX ---
                 if (isFirefox) {
                     let p = editor.querySelector('p') || document.createElement('p');
                     p.textContent += promptItem.text;
                     if (!editor.contains(p)) editor.appendChild(p);
                     editor.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
                 }
-
-                // --- NAVEGADORES CHROMIUM ---
                 else {
                     const success = document.execCommand('insertText', false, promptItem.text);
                     if (!success) {
@@ -6222,10 +2578,6 @@
                     editor.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
                 }
             }
-            // #endregion TRATAMENTO ESPECIAL PARA O GEMINI
-            // ================
-
-            // --- LÓGICA PADRÃO ---
             else {
                 const dt = new DataTransfer();
                 dt.setData('text/plain', promptItem.text);
@@ -6249,7 +2601,6 @@
             if (!isInline) {
                 moveCursorToEnd(editor);
             }
-            // --- ENVIO AUTOMÁTICO ---
             if (promptItem.autoExecute && !forceNoAutoExecute) {
                 if (currentPlatform === 'chatglm') {
                     handleChatGLM(editor);
@@ -6303,7 +2654,6 @@
                 }
             }
         }, 100);
-        // --- ATUALIZAR LISTA DE PROMPTS ---
         if (index > -1) {
             let prompts = await getAll();
             const originalSavedItem = prompts[index];
@@ -6336,15 +2686,6 @@
         }
     }
 
-    // ================
-    // #endregion LÓGICA DE INSERÇÃO DE PROMPT
-    // ================
-
-    // ================
-    // #region EXPORTAÇÃO DE PROMPTS
-    // ===============
-
-    // --- MENU DE EXPORTAÇÃO ---
     async function openExportMenu() {
         closeMenu();
         const overlay = document.createElement('div');
@@ -6485,12 +2826,10 @@
         setTimeout(() => searchInput.focus(), 100);
     }
 
-    // --- ABRIR MENU ---
     function exportPrompts() {
         openExportMenu();
     }
 
-    // --- AÇÃO DE IMPORTAÇÃO ---
     function importPrompts() {
         const input=document.createElement('input');
         input.type='file';
@@ -6521,11 +2860,6 @@
         closeMenu();
     }
 
-    // ================
-    // #endregion EXPORTAÇÃO DE PROMPTS
-    // ===============
-
-    // --- LIMPAR ELEMENTOS ---
     function cleanup() {
         if (currentButton          ) { currentButton.remove          (); currentButton           = null; }
         if (currentMenu            ) { currentMenu.remove            (); currentMenu             = null; }
@@ -6535,87 +2869,22 @@
         isInitialized = false;
     }
 
-    // ================
-    // #endregion INTERAÇÃO COM A PÁGINA
-    // ================
-
-    // ================
-    // #region INJETAR E INICIALIZAR
-    // ================
-
-    // --- INICIALIZAR INTERFACE ---
     async function initUI() {
         if (pageObserver) pageObserver.disconnect();
         cleanup();
         currentPlatform = detectPlatform();
         if (!currentPlatform) return;
-
-        // ================
-        // #region INSERIR BOTÃO
-        // ================
-
         try {
             let btn, elementToInsert, insertionPoint, insertionMethod = 'before';
-
-            // --- CHATGPT ---
             if (currentPlatform === 'chatgpt') {
-                insertionPoint = await waitFor('div[class*="[grid-area:leading]"]');
-                insertionPoint.style.display = 'flex';
-                insertionPoint.style.alignItems = 'center';
-                btn = createChatGPTButton();
-                elementToInsert = btn;
-                insertionMethod = 'append';
-            }
-
-            // --- DEEPSEEK ---
-            else if (currentPlatform === 'deepseek') {
                 const findAnchor = () => {
-                    const SEARCH_ICON_PATH_START = "M7 0.150391C10.7832";
-                    const toggles = Array.from(document.querySelectorAll('.ds-toggle-button'));
-                    const searchBtn = toggles.find(el => {
-                        const path = el.querySelector('path');
-                        if (!path) return false;
-                        const d = path.getAttribute('d');
-                        return d && d.startsWith(SEARCH_ICON_PATH_START);
-                    });
-                    if (searchBtn) return { element: searchBtn, type: 'icon-fingerprint' };
-                    return null;
-                };
-                let anchorData = findAnchor();
-                if (!anchorData) {
-                    await new Promise(r => setTimeout(r, 1500));
-                    anchorData = findAnchor();
-                }
-                if (!anchorData) return;
-                const anchor = anchorData.element;
-                const container = anchor.parentElement;
-                if (!container) return;
-                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
-                if (existingBtn) {
-                    btn = existingBtn;
-                } else {
-                    btn = createDeepseekButton();
-                    if (anchor.nextSibling) {
-                        container.insertBefore(btn, anchor.nextSibling);
-                    } else {
-                        container.appendChild(btn);
+                    const anchor = document.getElementById('composer-plus-btn') || document.querySelector('[data-testid="composer-plus-btn"]');
+                    if (anchor) {
+                        const hasIcon = anchor.querySelector('use[href*="6be74c"]');
+                        if (hasIcon || anchor.querySelector('svg')) {
+                            return { element: anchor, type: 'fingerprint-id' };
+                        }
                     }
-                }
-                elementToInsert = btn;
-                insertionPoint = container;
-                insertionMethod = 'handled_manually';
-            }
-
-            // --- GOOGLE AI STUDIO ---
-            else if (currentPlatform === 'googleaistudio') {
-                const findAnchor = () => {
-                    let el = document.querySelector('ms-add-media-button');
-                    if (el) return { element: el, type: 'component' };
-                    el = document.querySelector('button[aria-label*="Insert images"], button[aria-label="Run"]');
-                    if (el) return { element: el, type: 'aria' };
-                    const icons = Array.from(document.querySelectorAll('.material-symbols-outlined, .material-icons'));
-                    const targetIcon = icons.find(i => i.textContent.trim() === 'note_add' || i.textContent.trim() === 'keyboard_return');
-                    if (targetIcon) return { element: targetIcon, type: 'icon' };
                     return null;
                 };
                 let anchorData = findAnchor();
@@ -6624,122 +2893,196 @@
                     anchorData = findAnchor();
                 }
                 if (!anchorData) return;
-                let actionButtonsContainer = null;
-                let referenceNode = null;
-                if (anchorData.type === 'component') {
-                    referenceNode = anchorData.element;
-                    actionButtonsContainer = anchorData.element.parentElement;
-                } else if (anchorData.type === 'aria' || anchorData.type === 'icon') {
-                    const el = anchorData.element;
-                    let parent = el.parentElement;
-                    for (let i = 0; i < 4; i++) {
-                        if (parent && getComputedStyle(parent).display === 'flex') {
-                            actionButtonsContainer = parent;
-                            referenceNode = parent.querySelector('ms-add-media-button') || el.closest('button') || el;
-                            if (referenceNode.innerText.includes('Run') || referenceNode.getAttribute('aria-label') === 'Run') {
-                                referenceNode = actionButtonsContainer.firstChild;
-                            }
-                            break;
-                        }
-                        parent = parent.parentElement;
-                    }
-                }
-                if (!actionButtonsContainer) return;
-                let existingBtn = actionButtonsContainer.querySelector('[data-testid="composer-button-prompts"]');
+                const anchorBtn = anchorData.element;
+                const container = anchorBtn.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
                 if (existingBtn) {
                     btn = existingBtn;
                 } else {
-                    btn = createGoogleAIStudioButton();
-                    if (referenceNode && actionButtonsContainer.contains(referenceNode)) {
-                        actionButtonsContainer.insertBefore(btn, referenceNode);
-                    } else {
-                        actionButtonsContainer.insertBefore(btn, actionButtonsContainer.firstChild);
-                    }
+                    btn = createPromptButton();
+                    container.insertBefore(btn, anchorBtn);
                 }
                 elementToInsert = btn;
-                insertionPoint = actionButtonsContainer;
+                insertionPoint = container;
                 insertionMethod = 'handled_manually';
-                actionButtonsContainer.style.display = 'flex';
-                actionButtonsContainer.style.alignItems = 'center';
-                if (actionButtonsContainer.style.gap) {
-                }
             }
-
-            // --- QWEN ---
-            else if (currentPlatform === 'qwen') {
-                const buttonContainer = await waitFor('.action-bar-left-btns', 5000);
-                if (!buttonContainer) return;
-                insertionPoint = buttonContainer.firstChild;
-                insertionMethod = 'before';
-                btn = createQwenButton();
-                elementToInsert = btn;
-                if (!buttonContainer.contains(btn)) {
-                    buttonContainer.prepend(btn);
-                }
-                const qwenPositionObserver = new MutationObserver(() => {
-                    if (document.body.contains(buttonContainer) && !buttonContainer.contains(btn)) {
-                        buttonContainer.prepend(btn);
-                    }
-                });
-                qwenPositionObserver.observe(buttonContainer, { childList: true, subtree: true });
-            }
-
-            // --- Z.AI ---
-            else if (currentPlatform === 'zai') {
-                const referenceElement = await waitFor('button[data-autothink]', 8000);
-                if (referenceElement) {
-                    insertionPoint = referenceElement.closest('.flex.gap-\\[8px\\].items-center') || referenceElement.parentElement?.parentElement;
-                    if (insertionPoint) {
-                        btn = createZaiButton();
-                        elementToInsert = btn;
-                        insertionMethod = 'append';
-                    }
-                }
-            }
-
-            // --- GEMENI ---
-            else if (currentPlatform === 'gemini') {
-                insertionPoint = await waitFor('uploader', 8000);
-                btn = createGeminiButton();
-                elementToInsert = btn;
-                insertionMethod = 'after';
-                const wrapper = insertionPoint.parentElement;
-                if (wrapper) {
-                    wrapper.style.display = 'flex';
-                    wrapper.style.alignItems = 'center';
-                    wrapper.style.gap = '3px';
-                }
-            }
-
-            // --- LMARENA ---
-            else if (currentPlatform === 'lmarena') {
-                insertionPoint = await waitFor('div.mr-1.flex.h-8.flex-none.gap-2 > div.flex.items-center.gap-2', 8000);
-                if (!insertionPoint) {
-                    insertionPoint = document.querySelector('div.mr-1.flex.h-8.flex-none.gap-2')?.querySelector('div.flex.items-center.gap-2');
-                }
-                btn = createLmarenaButton();
-                elementToInsert = btn;
-                insertionMethod = 'append';
-            }
-
-            // --- KIMI ---
-            else if (currentPlatform === 'kimi') {
+            else if (currentPlatform === 'deepseek') {
                 const findAnchor = () => {
-                    const PATH_NORMAL = "M624.469333";
-                    const PATH_ACTIVE = "M512 132.266667";
-                    const paths = document.querySelectorAll('svg path');
-                    for (let p of paths) {
-                        const d = p.getAttribute('d');
-                        if (!d) continue;
-                        if (d.startsWith(PATH_NORMAL)) {
-                            const el = p.closest('.icon-button') || p.closest('.toolkit-trigger-btn');
-                            if (el) return { element: el, mode: 'normal' };
-                        }
-                        if (d.startsWith(PATH_ACTIVE)) {
-                            const el = p.closest('.tool-switch');
-                            if (el) return { element: el, mode: 'active' };
-                        }
+                    const ANCHORICONPATH = "M7.06428 5.93342C7.6876 5.93342";
+                    const candidates = Array.from(document.querySelectorAll('button, div[role="button"]'));
+                    const target = candidates.find(btn => {
+                        const path = btn.querySelector('path');
+                        return path && path.getAttribute('d')?.startsWith(ANCHORICONPATH);
+                    });
+                    if (target) return { element: target, type: 'icon-fingerprint' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let container = anchorData.element.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="injected-prompt-btn"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    btn.style.margin = "0 8px 0 0";
+                    btn.style.display = "flex";
+                    container.insertBefore(btn, anchorData.element);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
+            else if (currentPlatform === 'googleaistudio') {
+                const findAnchor = () => {
+                    const mediaBtn = document.querySelector('button[iconname="add_circle"]');
+                    if (mediaBtn) {
+                        const wrapper = mediaBtn.closest('.button-wrapper');
+                        if (wrapper) return { element: wrapper, type: 'attribute-fingerprint' };
                     }
+                    const wrapper = document.querySelector('.button-wrapper');
+                    if (wrapper) return { element: wrapper, type: 'class-fallback' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let container = anchorData.element.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    btn.style.marginRight = '8px';
+                    container.insertBefore(btn, anchorData.element);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
+            else if (currentPlatform === 'qwen') {
+                const findAnchor = () => {
+                    const container = document.querySelector('.prompt-input-action-bar');
+                    if (!container) return null;
+                    const leftArea = container.querySelector('.action-bar-left');
+                    if (!leftArea) return { element: container, type: 'container-only' };
+                    const uploadGroup = leftArea.querySelector('.upload-group');
+                    if (uploadGroup) {
+                        return { element: container, reference: uploadGroup, type: 'chat-mode' };
+                    } else {
+                        return { element: container, reference: leftArea, type: 'image-mode-prepend' };
+                    }
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let existingBtn = anchorData.element.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    btn.style.marginRight = '8px';
+                    if (anchorData.type === 'chat-mode') {
+                        anchorData.reference.parentElement.insertBefore(btn, anchorData.reference);
+                    } else if (anchorData.type === 'image-mode-prepend') {
+                        anchorData.reference.insertBefore(btn, anchorData.reference.firstChild);
+                    } else {
+                        anchorData.element.appendChild(btn);
+                    }
+                }
+                elementToInsert = btn;
+                insertionPoint = anchorData.element;
+                insertionMethod = 'handled_manually';
+            }
+            else if (currentPlatform === 'zai') {
+                const findAnchor = () => {
+                    const SEND_ICON = "M7.99946 1.50005L2.29635 13.5283"; const STOP_SELECTOR = "button span.block.bg-white.size-3";
+                    const sendBtn = document.getElementById('send-message-button');
+                    if (sendBtn) return { element: sendBtn, type: 'id' };
+                    const pathTarget = Array.from(document.querySelectorAll('button svg path'))
+                        .find(p => p.getAttribute('d')?.startsWith(SEND_ICON));
+                    if (pathTarget) return { element: pathTarget.closest('button'), type: 'fingerprint-send' };
+                    const stopBtn = document.querySelector(STOP_SELECTOR)?.closest('button');
+                    if (stopBtn) return { element: stopBtn, type: 'fingerprint-stop' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                const container = anchorData.element.closest('div.flex.self-end');
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    btn.style.marginRight = '10px';
+                    container.insertBefore(btn, container.firstChild);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
+            else if (currentPlatform === 'gemini') {
+                const findAnchor = () => {
+                    const micIcon = document.querySelector('mat-icon[data-mat-icon-name="mic"]');
+                    if (micIcon) {
+                        return { element: micIcon.closest('.input-buttons-wrapper-bottom'), type: 'mic-wrapper' };
+                    }
+                    const sendIcon = document.querySelector('mat-icon[data-mat-icon-name="send"]');
+                    if (sendIcon) {
+                        return { element: sendIcon.closest('.input-buttons-wrapper-bottom'), type: 'send-wrapper' };
+                    }
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                const bottomWrapper = anchorData.element;
+                const container = bottomWrapper.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    container.insertBefore(btn, bottomWrapper);
+                    container.insertBefore(document.createComment(''), bottomWrapper);
+                    container.insertBefore(document.createComment(''), bottomWrapper);
+                    container.insertBefore(document.createComment(''), bottomWrapper);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
+            else if (currentPlatform === 'arena') {
+                const findAnchor = () => {
+                    const ANCHOR_FINGERPRINT = "M3 12L21 12M21 12L12.5 3.5";
+                    const candidates = Array.from(document.querySelectorAll('button[type="submit"], div[role="button"], button'));
+                    const target = candidates.find(btn => {
+                        const path = btn.querySelector('path');
+                        return path && path.getAttribute('d')?.includes(ANCHOR_FINGERPRINT);
+                    });
+                    if (target) return { element: target, type: 'svg-fingerprint' };
                     return null;
                 };
                 let anchorData = findAnchor();
@@ -6749,50 +3092,67 @@
                 }
                 if (!anchorData) return;
                 const anchorElement = anchorData.element;
-                const mode = anchorData.mode;
-                let container = anchorElement.parentElement;
-                let insertionReference = anchorElement;
-                const leftArea = anchorElement.closest('.left-area');
-                if (leftArea) {
-                    container = leftArea;
-                    let current = anchorElement;
-                    while (current.parentElement && current.parentElement !== leftArea) {
-                        current = current.parentElement;
-                    }
-                    insertionReference = current;
-                }
+                const container = anchorElement.parentElement;
                 if (!container) return;
-                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                let existingBtn = container.querySelector('.custom-prompt-btn-class') || container.querySelector('[data-testid="composer-button-prompts"]');
                 if (existingBtn) {
                     btn = existingBtn;
                 } else {
-                    btn = createKimiButton();
-                    if (mode === 'normal') {
-                        if (insertionReference.nextSibling) {
-                            container.insertBefore(btn, insertionReference.nextSibling);
-                        } else {
-                            container.appendChild(btn);
-                        }
-                    } else {
-                        container.insertBefore(btn, insertionReference);
-                    }
+                    btn = createPromptButton();
+                    container.insertBefore(btn, anchorElement);
                 }
                 elementToInsert = btn;
                 insertionPoint = container;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- CLAUDE ---
+            else if (currentPlatform === 'kimi') {
+                const findAnchor = () => {
+                    const SEND_ICON_PATH = "M705.536 433.664a38.4 38.4 0 1 1-54.272 54.272L550.4"; const STOP_ICON_PATH = "M331.946667 379.904";
+                    const candidates = Array.from(document.querySelectorAll('.send-button-container, .send-icon, svg'));
+                    const targetIcon = candidates.find(el => {
+                        const path = el.querySelector('path');
+                        const d = path?.getAttribute('d');
+                        return d && (d.startsWith(SEND_ICON_PATH) || d.startsWith(STOP_ICON_PATH));
+                    });
+                    const sendContainer = targetIcon?.closest('.send-button-container');
+                    if (sendContainer) {
+                        return { element: sendContainer, type: 'icon-fingerprint' };
+                    }
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 2000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                const container = anchorData.element.closest('.right-area') || anchorData.element.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    container.insertBefore(btn, anchorData.element);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
             else if (currentPlatform === 'claude') {
                 const findAnchor = () => {
-                    const ANCHOR_FINGERPRINT = "M10 3C10.2761 3 10.5 3.22386";
-                    const candidates = Array.from(document.querySelectorAll('button svg path, div[role="button"] svg path'));
-                    const targetPath = candidates.find(path =>
-                        path.getAttribute('d')?.startsWith(ANCHOR_FINGERPRINT)
-                    );
-                    if (targetPath) {
-                        const btnEl = targetPath.closest('button, [role="button"]');
-                        if (btnEl) return { element: btnEl, type: 'icon-fingerprint' };
+                    const SEND_ICON = "M208.49,120.49a12,12,0,0,1-17,0L140,69V216"; const STOP_ICON = "M128,20A108,108,0,1,0,236,128,108.12";
+                    const candidates = Array.from(document.querySelectorAll('button'));
+                    const targetBtn = candidates.find(btn => {
+                        const d = btn.querySelector('path')?.getAttribute('d');
+                        return d?.startsWith(SEND_ICON) || d?.startsWith(STOP_ICON);
+                    });
+                    if (targetBtn) {
+                        let outerWrapper = targetBtn.parentElement;
+                        if (outerWrapper && outerWrapper.hasAttribute('data-state')) {
+                            outerWrapper = outerWrapper.parentElement;
+                        }
+                        return { element: outerWrapper, type: 'adaptive-wrapper' };
                     }
                     return null;
                 };
@@ -6802,113 +3162,201 @@
                     anchorData = findAnchor();
                 }
                 if (!anchorData) return;
-                let container = anchorData.element.parentElement;
+                const targetElement = anchorData.element;
+                const container = targetElement.parentElement;
+                if (!container) return;
+
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    container.insertBefore(btn, targetElement);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
+            else if (currentPlatform === 'grok') {
+                const findAnchor = () => {
+                    const BARS_HEIGHTS = "0.4rem,0.8rem,1.2rem,0.7rem,1rem,0.4rem";
+                    const candidates = Array.from(document.querySelectorAll('button'));
+                    const target = candidates.find(btn => {
+                        const container = btn.querySelector('div[class*="aspect-square"], div.h-10');
+                        if (!container) return false;
+                        const bars = Array.from(container.children);
+                        if (bars.length !== 6) return false;
+                        const currentHeights = bars.map(div => div.style.height).join(',');
+                        return currentHeights === BARS_HEIGHTS;
+                    });
+                    if (target) return { element: target, type: 'css-bars-fingerprint' };
+                    const fallback = document.querySelector('button[aria-label*="oice"]');
+                    if (fallback) return { element: fallback, type: 'fallback-aria' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 2000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                const wrapperDiv = anchorData.element.parentElement;
+                if (!wrapperDiv || !wrapperDiv.parentElement) return;
+                const insertContainer = wrapperDiv.parentElement;
+                let existingBtn = insertContainer.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    btn.style.marginRight = '0.5rem';
+                    btn.style.marginBottom = '2px';
+                    insertContainer.insertBefore(btn, wrapperDiv);
+                }
+                elementToInsert = btn;
+                insertionPoint = insertContainer;
+                insertionMethod = 'handled_manually';
+            }
+            else if (currentPlatform === 'perplexity') {
+                const findAnchor = () => {
+                    const ANCHOR_ICON_ID = "#pplx-icon-custom-perplexity-v2v";
+                    const candidates = Array.from(document.querySelectorAll('use'));
+                    const targetUse = candidates.find(use => {
+                        const href = use.getAttribute('xlink:href') || use.getAttribute('href');
+                        return href === ANCHOR_ICON_ID;
+                    });
+                    if (targetUse) {
+                        const button = targetUse.closest('button');
+                        if (button) return { element: button, type: 'svg-use-fingerprint' };
+                    }
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                const voiceButton = anchorData.element;
+                const wrapperDiv = voiceButton.parentElement;
+                let container = wrapperDiv.parentElement;
                 if (!container) return;
                 let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
                 if (existingBtn) {
                     btn = existingBtn;
                 } else {
-                    btn = createClaudeButton();
-                    if (anchorData.element.nextSibling) {
-                        container.insertBefore(btn, anchorData.element.nextSibling);
-                    } else {
-                        container.appendChild(btn);
-                    }
+                    btn = createPromptButton();
+                    container.insertBefore(btn, wrapperDiv);
                 }
                 elementToInsert = btn;
                 insertionPoint = container;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- GROK ---
-            else if (currentPlatform === 'grok') {
-                const attachButtonSelector = 'button:has(svg > path[d^="M10 9V15C"])';
-                insertionPoint = await waitFor(attachButtonSelector);
-                btn = createGrokButton();
-                btn.className = insertionPoint.className;
-                btn.style.marginLeft = '-6px';
-                elementToInsert = btn;
-                insertionMethod = 'after';
-            }
-
-            // --- PERPLEXITY ---
-            else if (currentPlatform === 'perplexity') {
-                const containerSelector = 'div.flex.items-center.justify-self-end.col-start-3.row-start-2';
-                const container = await waitFor(containerSelector);
-                const spanWrapper = createPerplexityButton();
-                elementToInsert = spanWrapper;
-                btn = spanWrapper.querySelector('button');
-                if (container.firstElementChild) {
-                    insertionPoint = container.firstElementChild;
-                    insertionMethod = 'before';
-                } else {
-                    insertionPoint = container;
-                    insertionMethod = 'append';
-                }
-            }
-
-            // --- LONGCAT ---
             else if (currentPlatform === 'longcat') {
                 const findAnchor = () => {
-                    const ANCHOR_HREF_FINGERPRINT = "#icon-upload";
-                    const uses = Array.from(document.querySelectorAll('use'));
-                    const targetUse = uses.find(u => u.getAttribute('href') === ANCHOR_HREF_FINGERPRINT);
-                    if (targetUse) {
-                        const anchorContainer = targetUse.closest('.upload-button-content');
-                        if (anchorContainer) return { element: anchorContainer, type: 'svg-href-fingerprint' };
+                    const ICON_HREFS = ["#icon-sikao", "#icon-lianwang", "#icon-upload"];
+                    const candidates = Array.from(document.querySelectorAll('use'));
+                    const targetIcon = ICON_HREFS.map(href =>
+                        candidates.find(use => use.getAttribute('href') === href)
+                    ).find(el => el !== undefined);
+                    if (targetIcon) {
+                        const footer = targetIcon.closest('.chat-input-footer');
+                        if (footer) {
+                            const leftBox = footer.closest('.left-box');
+                            if (leftBox) return { element: leftBox, type: 'structure-fingerprint' };
+                        }
                     }
+                    const leftBoxEl = document.querySelector('.left-box');
+                    if (leftBoxEl) return { element: leftBoxEl, type: 'class-selector' };
                     return null;
                 };
                 let anchorData = findAnchor();
                 if (!anchorData) {
-                    await new Promise(r => setTimeout(r, 1500));
+                    await new Promise(r => setTimeout(r, 1000));
                     anchorData = findAnchor();
                 }
                 if (!anchorData) return;
-                let container = anchorData.element.parentElement;
-                if (!container) return;
+                let container = anchorData.element;
                 let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
                 if (existingBtn) {
-                    btn = existingBtn.closest('.upload-button-content');
+                    btn = existingBtn;
                 } else {
-                    btn = createLongcatButton();
-                    if (anchorData.element.nextSibling) {
-                        container.insertBefore(btn, anchorData.element.nextSibling);
-                    } else {
-                        container.appendChild(btn);
-                    }
+                    btn = createPromptButton();
+                    btn.style.marginRight = '8px';
+                    container.prepend(btn);
                 }
                 elementToInsert = btn;
                 insertionPoint = container;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- MISTRAL ---
             else if (currentPlatform === 'mistral') {
-                const fileBtn = await waitFor('[data-testid="attach-file-button"]', 8000);
-                insertionPoint = fileBtn.parentElement;
-                btn = createMistralButton();
-                elementToInsert = btn;
-                insertionMethod = 'after';
-            }
-
-            // --- TENCENT YUANBAO ---
-            else if (currentPlatform === 'yuanbao') {
-                insertionPoint = await waitFor('.ybc-atomSelect-tools-wrapper', 8000);
-                if (insertionPoint && insertionPoint.parentElement) {
-                    insertionPoint.parentElement.style.display = 'flex';
-                    insertionPoint.parentElement.style.alignItems = 'center';
-                    insertionPoint.parentElement.style.gap = '8px';
+                const findAnchor = () => {
+                    const ANCHORICONPATH = "M12 19v3";
+                    const candidates = Array.from(document.querySelectorAll('button, [role="button"]'));
+                    const target = candidates.find(btn => {
+                        const path = btn.querySelector('path');
+                        return path && path.getAttribute('d')?.startsWith(ANCHORICONPATH);
+                    });
+                    if (target) return { element: target, type: 'icon-fingerprint' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    anchorData = findAnchor();
                 }
-                btn = createYuanbaoButton();
+                if (!anchorData) return;
+                const micButton = anchorData.element;
+                const wrapperDiv = micButton.parentElement;
+                const outerContainer = wrapperDiv.parentElement;
+                if (!outerContainer) return;
+                let existingBtn = outerContainer.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    outerContainer.insertBefore(btn, wrapperDiv);
+                }
                 elementToInsert = btn;
-                insertionMethod = 'after';
+                insertionPoint = outerContainer;
+                insertionMethod = 'handled_manually';
             }
-
-            // --- CHATGLM ---
+            else if (currentPlatform === 'yuanbao') {
+                const findAnchor = () => {
+                    const ANCHORICONPATH = "M7.74121 3.17676C9.89642";
+                    const allPaths = document.querySelectorAll('path');
+                    const targetPath = Array.from(allPaths).find(path =>
+                        path.getAttribute('d')?.startsWith(ANCHORICONPATH)
+                    );
+                    if (targetPath) {
+                        const toolbarContainer = targetPath.closest('.InputToolbar_iconListLeft__Ggvh_');
+                        if (toolbarContainer) {
+                            return { element: toolbarContainer, type: 'icon-fingerprint' };
+                        }
+                    }
+                    const containerByClass = document.querySelector('.InputToolbar_iconListLeft__Ggvh_');
+                    if (containerByClass) return { element: containerByClass, type: 'css-class' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                const container = anchorData.element;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    container.prepend(btn);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
             else if (currentPlatform === 'chatglm') {
                 let container = document.querySelector('div.options-container.flex.flex-y-center');
-                let targetType = 'original';
                 let anchor = null;
                 if (container) {
                     anchor = container.querySelector('.upload-image-wrap');
@@ -6944,60 +3392,118 @@
                 if (!container || !anchor) return;
                 btn = container.querySelector('[data-testid="composer-button-prompts"]');
                 if (!btn) {
-                    btn = createChatGLMButton(targetType);
+                    btn = createPromptButton();
                 }
                 elementToInsert = btn;
                 insertionPoint = anchor;
                 insertionMethod = 'after';
             }
-
-            // --- POE ---
             else if (currentPlatform === 'poe') {
-                insertionPoint = await waitFor('div[class*="ChatMessageInputContainer_actionContainerLeft"]', 8000);
-                btn = createPoeButton();
+                const findAnchor = () => {
+                    const ANCHOR_ICON_SIG = "M13 4.5a1 1 0 1 0-2 0V11";
+                    const candidates = Array.from(document.querySelectorAll('button[data-button-file-input="true"], button'));
+                    const target = candidates.find(btn => {
+                        const path = btn.querySelector('path');
+                        return path && path.getAttribute('d')?.startsWith(ANCHOR_ICON_SIG);
+                    });
+                    if (target) {
+                        const actionContainer = target.closest('[class*="actionContainerLeft"]');
+                        return {
+                            element: actionContainer || target.parentElement,
+                            type: 'icon-fingerprint'
+                        };
+                    }
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData || !anchorData.element) return;
+                let container = anchorData.element;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    if (container.firstChild) {
+                        container.insertBefore(btn, container.firstChild);
+                    } else {
+                        container.appendChild(btn);
+                    }
+                }
                 elementToInsert = btn;
-                insertionMethod = 'append';
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
             }
-
-            // --- GOOGLE MODO IA ---
             else if (currentPlatform === 'googleModoIA') {
-                btn = createGoogleModoIAButton();
+                const findAnchor = () => {
+                    const ANCHOR_SVG_PATH = "M440-440H200v-80H440V-760h80v240H760v80H520v240H440V-440Z";
+                    const candidates = Array.from(document.querySelectorAll('button.uMMzHc, button[jsuid]'));
+                    const target = candidates.find(btn => {
+                        const path = btn.querySelector('path');
+                        return path && path.getAttribute('d') === ANCHOR_SVG_PATH;
+                    });
+                    if (target) return { element: target, type: 'icon-fingerprint' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let container = anchorData.element.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    btn.style.marginTop = "6px";
+                    container.insertBefore(btn, anchorData.element);
+                }
                 elementToInsert = btn;
+                insertionPoint = container;
                 insertionMethod = 'handled_manually';
-                insertionPoint = document.body;
-                const PARTIAL_ICON_PATH = "M440-440H200";
-                setInterval(() => {
-                    const candidates = document.querySelectorAll('button.uMMzHc');
-                    let targetAnchor = null;
-                    for (const candidate of candidates) {
-                        if (!candidate.offsetParent) continue;
-                        const svgPath = candidate.querySelector('path');
-                        if (svgPath) {
-                            const dAttr = svgPath.getAttribute('d');
-                            if (dAttr && dAttr.includes(PARTIAL_ICON_PATH)) {
-                                targetAnchor = candidate;
-                                break;
-                            }
-                        }
-                    }
-                    if (targetAnchor && targetAnchor.nextSibling !== btn) {
-                        targetAnchor.insertAdjacentElement('afterend', btn);
-                    }
-                }, 500);
             }
-
-            // --- NOTEBOOKLM ---
             else if (currentPlatform === 'notebooklm') {
-                const sendButton = await waitFor('button.submit-button', 8000);
-                if (!sendButton) return;
-                btn = createNotebookLMButton();
-                sendButton.parentNode.insertBefore(btn, sendButton);
+                const findAnchor = () => {
+                    const ANCHORICONPATH = "M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l7 7Z";
+                    const candidates = Array.from(document.querySelectorAll('button.submit-button, button[aria-label]'));
+                    const target = candidates.find(btn => {
+                        const svgPath = btn.querySelector('path');
+                        const dAttribute = svgPath?.getAttribute('d');
+                        const isArrow = dAttribute && dAttribute.includes(ANCHORICONPATH.substring(0, 4));
+                        const isNamed = btn.querySelector('mat-icon')?.textContent.trim() === 'arrow_forward';
+                        return isArrow || isNamed;
+                    });
+                    if (target) return { element: target, type: 'icon-fingerprint' };
+                    const fallback = document.querySelector('button.submit-button');
+                    if (fallback) return { element: fallback, type: 'class-selector' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 2000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let container = anchorData.element.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    btn.style.marginTop = '8px';
+                    container.insertBefore(btn, anchorData.element);
+                }
                 elementToInsert = btn;
-                insertionPoint = sendButton.parentNode;
+                insertionPoint = container;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- DOUBAO ---
             else if (currentPlatform === 'doubao') {
                 const findAnchor = () => {
                     const ANCHOR_ICON_PATH = "M17.3977 3.9588C15.8361 2.39727";
@@ -7025,7 +3531,7 @@
                 if (existingBtn) {
                     btn = existingBtn;
                 } else {
-                    btn = createDoubaoButton();
+                    btn = createPromptButton();
                     if (anchorWrapper.nextSibling) {
                         container.insertBefore(btn, anchorWrapper.nextSibling);
                     } else {
@@ -7036,41 +3542,34 @@
                 insertionPoint = container;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- COPILOT ---
             else if (currentPlatform === 'copilot') {
                 const findAnchor = () => {
                     const testIdEl = document.querySelector('button[data-testid="composer-create-button"]');
-                    if (testIdEl) return { element: testIdEl, type: 'testid' };
+                    if (testIdEl) {
+                        const wrapper = testIdEl.parentElement;
+                        return { element: testIdEl, wrapper: wrapper, type: 'testid' };
+                    }
                     return null;
                 };
                 let anchorData = findAnchor();
                 if (!anchorData) {
-                    await new Promise(r => setTimeout(r, 1500));
+                    await new Promise(r => setTimeout(r, 2000));
                     anchorData = findAnchor();
                 }
                 if (!anchorData) return;
-                const anchorButton = anchorData.element;
-                const anchorWrapper = anchorButton.parentElement;
-                const mainContainer = anchorWrapper ? anchorWrapper.parentElement : anchorButton.parentElement;
+                const mainContainer = anchorData.wrapper.parentElement;
                 if (!mainContainer) return;
                 let existingBtn = mainContainer.querySelector('[data-testid="composer-button-prompts"]');
                 if (existingBtn) {
                     btn = existingBtn;
                 } else {
-                    btn = createCopilotButton();
-                    if (anchorWrapper && anchorWrapper.nextSibling) {
-                        mainContainer.insertBefore(btn, anchorWrapper.nextSibling);
-                    } else {
-                        mainContainer.appendChild(btn);
-                    }
+                    btn = createPromptButton();
+                    mainContainer.insertBefore(btn, anchorData.wrapper);
                 }
                 elementToInsert = btn;
                 insertionPoint = mainContainer;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- GLM IMAGE ---
             else if (currentPlatform === 'glmimage') {
                 const findAnchor = () => {
                     const ANCHORICONPATH = "m6 9 6 6 6-6";
@@ -7097,54 +3596,92 @@
                 if (existingBtn) {
                     btn = existingBtn;
                 } else {
-                    btn = createGlmImageButton();
+                    btn = createPromptButton();
                     container.prepend(btn);
                 }
                 elementToInsert = btn;
                 insertionPoint = container;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- WHISK ---
             else if (currentPlatform === 'whisk') {
                 const findAnchor = () => {
-                    const ANCHORICONPATH = "M19 12h-2v2h2v-2";
-                    const candidates = Array.from(document.querySelectorAll('button, [role="button"]'));
+                    const ANCHORICONPATH = "M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l7 7Z";
+                    const candidates = Array.from(document.querySelectorAll('button[type="submit"]'));
                     const target = candidates.find(btn => {
-                        const path = btn.querySelector('path');
-                        return path && path.getAttribute('d')?.includes(ANCHORICONPATH);
+                        const icon = btn.querySelector('i');
+                        const hasArrowText = icon?.textContent.trim() === 'arrow_forward';
+                        const hasArrowPath = btn.querySelector('path')?.getAttribute('d')?.includes("M6.4");
+                        return hasArrowText || hasArrowPath;
                     });
                     if (target) return { element: target, type: 'icon-fingerprint' };
-                    const classEl = document.querySelector('button.sc-8b6c1c1e-1.gyhlCg');
-                    if (classEl) return { element: classEl, type: 'class' };
+                    const fallback = document.querySelector('button.sc-bece3008-0');
+                    if (fallback) return { element: fallback, type: 'class-selector' };
                     return null;
                 };
                 let anchorData = findAnchor();
                 if (!anchorData) {
-                    await new Promise(r => setTimeout(r, 1000));
+                    await new Promise(r => setTimeout(r, 1500));
                     anchorData = findAnchor();
                 }
                 if (!anchorData) return;
-                let container = anchorData.element.closest('.sc-18deeb1d-4');
-                if (!container) container = anchorData.element.parentElement;
+                let container = anchorData.element.parentElement;
                 if (!container) return;
                 let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
                 if (existingBtn) {
                     btn = existingBtn;
                 } else {
-                    btn = createWhiskButton();
-                    if (anchorData.element.nextSibling) {
-                        container.insertBefore(btn, anchorData.element.nextSibling);
-                    } else {
-                        container.appendChild(btn);
-                    }
+                    btn = createPromptButton();
+                    btn.style.setProperty('padding', '0', 'important');
+                    btn.style.flexShrink = '0';
+                    container.insertBefore(btn, anchorData.element);
                 }
                 elementToInsert = btn;
                 insertionPoint = container;
                 insertionMethod = 'handled_manually';
             }
-
-            // --- VERIFICAÇÃO FINAL ---
+            else if (currentPlatform === 'ernie') {
+                const findAnchorContainer = () => {
+                    const SEND_ICON_FINGERPRINT = "M43,-63.4379997253418 C43,-63.4379997253418 31,-59.6879997253418";
+                    const sendSpan = Array.from(document.querySelectorAll('span')).find(span => {
+                        const svg = span.querySelector('svg');
+                        if (!svg) return false;
+                        return Array.from(svg.querySelectorAll('path')).some(path =>
+                            path.getAttribute('d')?.trim()?.startsWith(SEND_ICON_FINGERPRINT)
+                        );
+                    });
+                    if (sendSpan?.parentElement?.parentElement?.classList.contains('send__fP6LsYgF')) {
+                        return sendSpan.parentElement.parentElement;
+                    }
+                    const stopSpan = document.querySelector('span[data-auto-test="stop_response"], span[class*="stopBtn"]');
+                    if (stopSpan?.parentElement?.parentElement?.classList.contains('send__fP6LsYgF')) {
+                        return stopSpan.parentElement.parentElement;
+                    }
+                    const footbar = document.querySelector('div[class*="footbarRight"]');
+                    if (footbar?.lastElementChild?.classList.contains('send__fP6LsYgF')) {
+                        return footbar.lastElementChild;
+                    }
+                    return null;
+                };
+                let anchorContainer = findAnchorContainer();
+                if (!anchorContainer) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorContainer = findAnchorContainer();
+                }
+                if (!anchorContainer || !anchorContainer.parentElement) return;
+                const parentContainer = anchorContainer.parentElement;
+                const existingBtn = parentContainer.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createPromptButton();
+                    parentContainer.insertBefore(btn, anchorContainer);
+                    btn.style.marginRight = '10px';
+                    btn.style.flexShrink = '0';
+                }
+                elementToInsert = btn;
+                insertionPoint = parentContainer;
+                insertionMethod = 'handled_manually';
+            }
             if (!btn || !insertionPoint) return;
             const editorEl = document.querySelector(platformSelectors[currentPlatform]);
             if (editorEl) {
@@ -7155,21 +3692,12 @@
                     if (retryEditor) setupInlineSuggestion(retryEditor);
                 }, 1000);
             }
-
-            // --- INSERIR BOTÃO ---
             currentButton   = elementToInsert;
             const clickable = btn;
             if      (insertionMethod === 'append'){insertionPoint.appendChild(elementToInsert);}
             else if (insertionMethod === 'before'){insertionPoint.parentNode.insertBefore(elementToInsert, insertionPoint);}
             else if (insertionMethod === 'after' ){insertionPoint.parentNode.insertBefore(elementToInsert, insertionPoint.nextSibling);}
-            if      (currentPlatform === 'grok'  ){applyGrokPadding();}
             else if (currentPlatform === 'chatglm'){applyChatGLMCustomStyles();}
-
-        // ================
-        // #endregion INSERIR BOTÃO
-        // ================
-
-            // ---INICIALIZAR INTERFACE---
             currentMenu = createPromptMenu();
             currentModal = createPromptModal();
             languageModal = createLanguageModal();
@@ -7199,8 +3727,6 @@
                     }, 250);
                 });
             });
-
-            // --- LÓGICA DE SALVAR PROMPT ---
             currentModal.querySelector('#__ap_save').onclick = async (e) => {
                 e.stopPropagation();
                 const index = parseInt(currentModal.dataset.index, 10);
@@ -7229,8 +3755,6 @@
                     currentActiveFileIds.clear();
                 });
             };
-
-            // --- LÓGICA CTRL+ENTER (SALVAR E USAR) ---
             const handleSaveAndExecute = async (e) => {
                 if (!isShortcutPressed(e, 'saveSend')) return;
                 e.preventDefault();
@@ -7259,12 +3783,6 @@
                 e.stopPropagation();
                 hideModal(currentModal);
             };
-
-    // ================
-    // #region PROMPT DINÂMICO PT3
-    // ================
-
-            // --- LÓGICA DE INSERIR O PROMPT DINÂMICO ---
             currentPlaceholderModal.querySelector('#__ap_insert_prompt').onclick = async (e) => {
                 e.stopPropagation();
                 const isFromInline = currentPlaceholderModal.dataset.fromInline === "true";
@@ -7277,8 +3795,6 @@
                 const inputMap = new Map(parseData.inputMap);
                 const variablesToApply = [];
                 const container = document.getElementById('__ap_placeholders_container');
-
-                // --- PROCESSAR INPUTS E COLETAR VARIÁVEIS ---
                 inputMap.forEach((data, key) => {
                     const inputEl = container.querySelector(`textarea[data-key="${key}"]`);
                     const val = inputEl ? inputEl.value : '';
@@ -7287,16 +3803,12 @@
                         variablesToApply.push({ name: data.varName, value: val });
                     }
                 });
-
-                // --- PROCESSAR SELECTS ---
                 selectMap.forEach((_data, key) => {
                     const group = container.querySelector(`div[data-select-key="${key}"]`);
                     const checked = Array.from(group.querySelectorAll('input:checked'));
                     const selectedText = checked.map(cb => cb.value).join('\n');
                     finalText = finalText.replace(key, selectedText);
                 });
-
-                // --- FUNÇÃO AUXILIAR PARA APLICAR VARIÁVEIS ---
                 const applyVariables = (text) => {
                     if (!text) return text;
                     let t = text;
@@ -7307,11 +3819,7 @@
                     });
                     return t;
                 };
-
-                // --- APLICAR VARIÁVEIS NO TEXTO PRINCIPAL ---
                 finalText = applyVariables(finalText);
-
-                // --- REINSERIR ITENS IGNORADOS COM FILTRO ---
                 ignoreMap.forEach((content, key) => {
                     if (key.startsWith('__QUOTE_')) {
                         const contentWithVars = applyVariables(content);
@@ -7321,8 +3829,6 @@
                         finalText = finalText.replace(key, content);
                     }
                 });
-
-                // --- INSERIR NO EDITOR ---
                 if (isFromInline && currentPlaceholderModal._savedCursor) {
                     const saved = currentPlaceholderModal._savedCursor;
                     const editor = document.querySelector(platformSelectors[currentPlatform]);
@@ -7344,32 +3850,20 @@
                         } catch(err) {}
                     }
                 }
-
-                // FINALIZAR
                 const finalPrompt = { ...originalItem, text: finalText };
                 await insertPrompt(finalPrompt, index, isFromInline, isFromInline);
                 currentPlaceholderModal.dataset.fromInline = "false";
                 currentPlaceholderModal._savedCursor = null;
                 hideModal(currentPlaceholderModal);
             };
-
-    // ================
-    // #endregion PROMPT DINÂMICO PT3
-    // ================
-
-            // --- FECHAR MODAL DINÂMICO ---
             currentPlaceholderModal.querySelector('#__ap_close_placeholder').onclick = (e) => {
                 e.stopPropagation();
                 hideModal(currentPlaceholderModal);
             };
-
-            // --- LÓGICA DO MODAL DE INFORMAÇÕES ---
             currentModal.querySelector('#__ap_info_btn').onclick = (e) => {
                 e.stopPropagation();
                 showModal(infoModal);
             };
-
-            // -- FECHAR MODAL DE INFORMAÇÕES ---
             infoModal.querySelector('#__ap_close_info').onclick = (e) => {
                 e.stopPropagation();
                 hideModal(infoModal);
@@ -7381,7 +3875,6 @@
     }
     const debouncedTryInit = debounce(tryInit, 500);
 
-    // --- OBSERVAR A PÁGINA ---
     function setupPageObserver() {
         if (pageObserver) pageObserver.disconnect();
         pageObserver = new MutationObserver(() => {
@@ -7392,7 +3885,6 @@
         pageObserver.observe(document.body, { childList: true, subtree: true });
     }
 
-    // --- EVENTOS GLOBAIS ---
     function setupGlobalEventListeners() {
         document.addEventListener('click', ev => {
             if (!currentMenu || !currentButton) return;
@@ -7400,8 +3892,6 @@
             closeMenu();
         });
         document.addEventListener('keydown', ev => {
-
-            // --- TECLA ESCAPE (ESC) ---
             if (ev.key === 'Escape') {
                 if (currentMenu && currentMenu.classList.contains('visible')) {
                     closeMenu();
@@ -7410,16 +3900,12 @@
                 if (languageModal && languageModal.classList.contains('visible')) hideModal(languageModal);
                 if (currentPlaceholderModal && currentPlaceholderModal.classList.contains('visible')) hideModal(currentPlaceholderModal);
             }
-
-            // --- ATALHO ALT+N (NOVO PROMPT) ---
             if (isShortcutPressed(ev, 'newPrompt')) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 closeMenu();
                 openPromptModal();
             }
-
-            // --- ATALHO ALT+P (ABRIR/FECHAR MENU) ---
             if (isShortcutPressed(ev, 'listPrompts')) {
                 ev.preventDefault();
                 ev.stopPropagation();
@@ -7430,8 +3916,6 @@
                 }
             }
         });
-
-        // --- REPOSICIONAR MENU AO REDIMENSIONAR A JANELA ---
         window.addEventListener('resize', debounce(() => {
             if (currentMenu && currentMenu.classList.contains('visible')) {
                 positionMenu(currentMenu, currentButton);
@@ -7439,7 +3923,6 @@
         }, 100));
     }
 
-    // --- TENTAR INICIALIZAR ---
     function tryInit() {
         if (isInitializing) return;
         if (isInitialized && currentButton && document.body.contains(currentButton) && currentPlatform === detectPlatform()) {
@@ -7449,7 +3932,6 @@
         initUI().finally(() => { isInitializing = false; });
     }
 
-    // --- INICIAR TUDO ---
     async function start() {
         await determineLanguage();
         loadShortcuts()
@@ -7469,8 +3951,4 @@
         tryInit();
     }
     start();
-
-    // ================
-    // #endregion INJETAR E INICIALIZAR
-    // ================
 })();

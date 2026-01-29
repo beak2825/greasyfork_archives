@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         Outlook 附件圖片懸浮預覽
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  Outlook 網頁版附件圖片點擊後懸浮原圖，可拖曳與滾輪縮放
 // @author       shanlan(grok-4-fast-reasoning)
 // @match        https://outlook.office.com/mail/*
+// @match        https://outlook.office365.com/mail/*
+// @match        https://outlook.cloud.microsoft/mail/*
 // @grant        GM_download
 // @run-at       document-end
 // @license      MIT

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         WME Place Helper – URL & AU/DR Phone Formatter
+// @name         WME Place Helper – URL & AU/DR/MX Phone Formatter
 // @namespace    https://waze.com/wme/place-helper
-// @version      1.5.3
-// @description  Removes http(s):// from Website field, formats phone numbers by selected country (AU/DR), and shows ℹ️ hint / ✅ valid status in WME Place editor. Includes persistent ON/OFF toggle and country selector embedded above Website.
+// @version      1.5.5
+// @description  Removes http(s):// from Website field, strips tracking/query tails, formats phone numbers by selected country (AU/DR/MX), and shows ℹ️ hint / ✅ valid status in WME Place editor. Includes persistent ON/OFF toggle and country selector embedded above Website.
 // @author       PMaxDino
 // @license      MIT
 // @homepageURL  https://greasyfork.org/en/scripts/564120-wme-place-helper-url-au-phone-formatter
@@ -17,8 +17,8 @@
 // @run-at       document-end
 // @require      https://update.greasyfork.org/scripts/24851/1558013/WazeWrap.js
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/564120/WME%20Place%20Helper%20%E2%80%93%20URL%20%20AUDR%20Phone%20Formatter.user.js
-// @updateURL https://update.greasyfork.org/scripts/564120/WME%20Place%20Helper%20%E2%80%93%20URL%20%20AUDR%20Phone%20Formatter.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/564120/WME%20Place%20Helper%20%E2%80%93%20URL%20%20AUDRMX%20Phone%20Formatter.user.js
+// @updateURL https://update.greasyfork.org/scripts/564120/WME%20Place%20Helper%20%E2%80%93%20URL%20%20AUDRMX%20Phone%20Formatter.meta.js
 // ==/UserScript==
 
 /*
@@ -102,7 +102,16 @@
 
   function normaliseWebsite(v) {
     if (v == null) return v;
-    return String(v).trim().replace(/^https?:\/\//i, "");
+    let s = String(v).trim();
+    if (!s) return s;
+
+    // Strip protocol
+    s = s.replace(/^https?:\/\//i, "");
+
+    // Strip query/hash tails (anything after ? or #)
+    s = s.split("?")[0].split("#")[0];
+
+    return s.trim();
   }
 
   function isValidWebsite(value) {
@@ -135,38 +144,31 @@
 
         let d = digitsOnly(original);
 
-        // If it already includes country code, drop it for processing.
         if (d.startsWith("61")) d = d.slice(2);
-
-        // If it includes trunk prefix 0, drop it for mobiles/landlines.
-        // (Service numbers generally won't start with 0)
         if (d.startsWith("0")) d = d.slice(1);
 
-        // ---- Service numbers (force +61) ----
-        // 13/14 numbers: 6 digits (e.g., 131234)
+        // 13/14 numbers: 6 digits national
         if ((d.startsWith("13") || d.startsWith("14")) && d.length === 6) {
           return `+61 ${d.slice(0, 2)} ${d.slice(2)}`; // +61 13 1234
         }
 
-        // 1300 / 1800 / 190x style: 10 digits
-        if (/^(1300|1800|1900|1902|1903|1901)/.test(d) && d.length === 10) {
+        // 1300 / 1800 / 190x: 10 digits national
+        if (/^(1300|1800|1900|1901|1902|1903)/.test(d) && d.length === 10) {
           return `+61 ${d.slice(0, 4)} ${d.slice(4, 7)} ${d.slice(7)}`; // +61 1800 123 456
         }
 
-        // Some providers use 19xx numbers; keep generic "19" + 10 digits as well.
+        // Generic 19xx patterns as 10 digits (safety)
         if (d.startsWith("19") && d.length === 10) {
           return `+61 ${d.slice(0, 4)} ${d.slice(4, 7)} ${d.slice(7)}`;
         }
 
-        // ---- Standard numbers (mobiles/landlines): 9 digits national after stripping ----
+        // Mobiles/landlines: 9 digits national
         if (d.length !== 9) return original;
 
-        // Mobile: 4XX XXX XXX
         if (d.startsWith("4")) {
           return `+61 ${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}`;
         }
 
-        // Landline: X XXXX XXXX (X = 2,3,7,8)
         if (/^[2378]/.test(d)) {
           return `+61 ${d[0]} ${d.slice(1, 5)} ${d.slice(5)}`;
         }
@@ -178,30 +180,25 @@
         const v = String(value || "").trim();
         if (!v) return false;
 
-        // Must be explicitly +61 now (including service numbers)
         if (!v.startsWith("+61")) return false;
 
         const d = digitsOnly(v);
         if (!d.startsWith("61")) return false;
 
-        const nat = d.slice(2); // national significant number
+        const nat = d.slice(2);
 
-        // 13/14 numbers: 6 digits total national (e.g., 131234)
         if ((nat.startsWith("13") || nat.startsWith("14")) && nat.length === 6) return true;
 
-        // 1300/1800/190x: 10 digits national
         if (
-          (nat.startsWith("1300") || nat.startsWith("1800") || nat.startsWith("1900") || nat.startsWith("19")) &&
-          nat.length === 10
+          nat.length === 10 &&
+          (nat.startsWith("1300") || nat.startsWith("1800") || nat.startsWith("1900") || nat.startsWith("19"))
         ) {
           return true;
         }
 
-        // Mobiles/landlines: 9 digits national
         if (nat.length !== 9) return false;
-
-        if (nat.startsWith("4")) return true; // mobile
-        if (["2", "3", "7", "8"].includes(nat.slice(0, 1))) return true; // landline
+        if (nat.startsWith("4")) return true;
+        if (["2", "3", "7", "8"].includes(nat.slice(0, 1))) return true;
 
         return false;
       },
@@ -209,7 +206,7 @@
 
     DO: {
       label: "Dominican Rep. (+1)",
-      infoText: "Paste a DR phone number — we’ll format it to +1",
+      infoText: "Paste a DR phone number — we’ll format it to +1 (no spaces)",
       okText: "Phone number formatted correctly (DR)",
 
       normalise(value) {
@@ -219,21 +216,16 @@
 
         let d = digitsOnly(original);
 
-        // Accept: 10 digits (NANP national), 11 digits with leading 1 (country code)
         if (d.length === 11 && d.startsWith("1")) d = d.slice(1);
         if (d.length !== 10) return original;
 
         const area = d.slice(0, 3);
-        const exch = d.slice(3, 6);
-        const line = d.slice(6);
-
         const DR_AREAS = ["809", "829", "849"];
         const TOLLFREE = ["800", "888", "877", "866", "855", "844", "833", "822"];
 
-        // Only rewrite DR area codes or toll-free prefixes (NANP)
         if (![...DR_AREAS, ...TOLLFREE].includes(area)) return original;
 
-        return `+1 ${area} ${exch} ${line}`;
+        return `+1${d}`; // no spaces
       },
 
       isValid(value) {
@@ -245,7 +237,6 @@
         const DR_AREAS = ["809", "829", "849"];
         const TOLLFREE = ["800", "888", "877", "866", "855", "844", "833", "822"];
 
-        // Allow 10-digit NANP national
         if (d.length === 10) {
           const area = d.slice(0, 3);
           const exchFirst = d.slice(3, 4);
@@ -256,7 +247,6 @@
           return true;
         }
 
-        // Allow 11-digit with leading country code 1
         if (d.length === 11 && d.startsWith("1")) {
           const area = d.slice(1, 4);
           const exchFirst = d.slice(4, 5);
@@ -266,6 +256,62 @@
 
           return true;
         }
+
+        return false;
+      },
+    },
+
+    MX: {
+      label: "Mexico (+52)",
+      infoText: "Paste a Mexico phone number — we’ll format it to +52 XX XXXX XXXX",
+      okText: "Phone number formatted correctly (MX)",
+
+      normalise(value) {
+        if (value == null) return value;
+        const original = String(value).trim();
+        if (!original) return original;
+
+        let d = digitsOnly(original);
+
+        // Common international dial prefixes (best-effort)
+        // 00 52 ...
+        if (d.startsWith("00")) d = d.slice(2);
+
+        // If pasted with country code 52...
+        if (d.startsWith("52")) d = d.slice(2);
+
+        // Legacy mobile convention sometimes appears as +52 1 ...
+        if (d.startsWith("1") && d.length === 11) d = d.slice(1);
+
+        // Some people paste with a trunk-ish leading 0
+        if (d.startsWith("0") && d.length === 11) d = d.slice(1);
+
+        // Expect 10 national digits now
+        if (d.length !== 10) return original;
+
+        // Format: +52 XX XXXX XXXX
+        return `+52 ${d.slice(0, 2)} ${d.slice(2, 6)} ${d.slice(6)}`;
+      },
+
+      isValid(value) {
+        const v = String(value || "").trim();
+        if (!v) return false;
+
+        // Accept:
+        // - raw 10 digits (will get normalised)
+        // - 12 digits starting with 52 (52 + 10)
+        // - 13 digits starting with 521 (legacy)
+        // - normalised string +52 ...
+        let d = digitsOnly(v);
+
+        if (d.length === 10) return true;
+
+        if (d.length === 12 && d.startsWith("52")) return true;
+
+        if (d.length === 13 && d.startsWith("521")) return true;
+
+        // Also accept if it already looks like +52 plus digits
+        if (v.startsWith("+52") && (d.length === 12 || d.length === 13)) return true;
 
         return false;
       },
@@ -299,41 +345,35 @@
         border: 1px solid rgba(0,0,0,0.06);
         user-select: none;
       }
-
       #${UI_ID} .row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 10px;
       }
-
       #${UI_ID} .title {
         font-size: 12px;
         font-weight: 700;
         color: #222;
         line-height: 1.2;
       }
-
       #${UI_ID} .subtitle {
         font-size: 11px;
         color: #555;
         line-height: 1.2;
       }
-
       #${UI_ID} .left {
         display: flex;
         flex-direction: column;
         gap: 2px;
         min-width: 0;
       }
-
       #${UI_ID} .right {
         display: flex;
         align-items: center;
         gap: 10px;
         flex-shrink: 0;
       }
-
       #${UI_ID} .state {
         font-size: 12px;
         font-weight: 700;
@@ -341,7 +381,6 @@
         text-align: right;
         color: #333;
       }
-
       #${UI_ID} .switch {
         position: relative;
         display: inline-block;
@@ -379,7 +418,6 @@
       #${UI_ID} input:checked + .slider:before {
         transform: translateX(20px);
       }
-
       #${UI_ID} label.country-label {
         font-size: 12px;
         font-weight: 600;
@@ -387,7 +425,6 @@
         margin-right: 8px;
         white-space: nowrap;
       }
-
       #${UI_ID} select.country-select {
         font-size: 12px;
         padding: 5px 8px;
@@ -396,9 +433,8 @@
         background: #fff;
         color: #222;
         outline: none;
-        max-width: 220px;
+        max-width: 260px;
       }
-
       #${UI_ID} select.country-select:disabled {
         opacity: 0.6;
       }
@@ -590,11 +626,11 @@
         const d = digitsOnly(v);
 
         if (wzId === "venue-phone") {
-          // If user is typing, don't fight them; if paste/mostly complete, normalise.
-          if (d.length >= 8) applyNormalisation();
+          if (d.length >= 6) applyNormalisation();
           else updateStatus();
         } else {
-          if (/^https?:\/\//i.test(v.trim())) applyNormalisation();
+          const tv = v.trim();
+          if (/^https?:\/\//i.test(tv) || tv.includes("?") || tv.includes("#")) applyNormalisation();
           else updateStatus();
         }
       }, 180);
@@ -627,8 +663,8 @@
         "venue-url",
         () => normaliseWebsite,
         () => isValidWebsite,
-        () => "URL stripped of protocol (http:// or https://)",
-        () => "Paste a website — protocol will be removed automatically",
+        () => "URL sanitised (protocol + tracking removed)",
+        () => "Paste a website — protocol and tracking (e.g. ?utm=...) will be removed",
         "venue-url"
       );
 

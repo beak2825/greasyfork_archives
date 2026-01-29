@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MWI Command Palette (Item/Action/Wiki/Market)
 // @namespace    mwi_command_palette
-// @version      4.3.0
+// @version      4.3.2
 // @description  Command palette for quick item & action lookup (Cmd+K / Ctrl+K) with autocomplete and fuzzy matching.
 // @author       Mists
 // @license      MIT
@@ -194,6 +194,10 @@
             const actionHridToName = {};
             const actionHridToMonsterHrid = {};
             const combatActionHrids = new Set();
+            const dungeonActionHrids = new Set();
+            const dungeonMaxDifficulty = {};  // Map action HRID to max difficulty tier
+            const tieredMonsterHrids = new Set();
+            const tieredMonsterMaxDifficulty = {};  // Map action HRID to max difficulty tier for tiered solo content
 
             for (const [hrid, action] of Object.entries(actionDetailMap)) {
                 if (action && action.name) {
@@ -205,11 +209,28 @@
                     if (action.type === 'combat' || action.combatZoneInfo || action.category === 'combat') {
                         combatActionHrids.add(hrid);
 
+                        // Check if this is a dungeon OR has tiers
+                        const hasTiers = action.maxDifficulty > 0;
+                        const isPartyContent = action.maxPartySize && action.maxPartySize > 1;
+                        const isDungeon = action.combatZoneInfo?.isDungeon || isPartyContent;
+
+                        if (isDungeon) {
+                            dungeonActionHrids.add(hrid);
+                            dungeonMaxDifficulty[hrid] = action.maxDifficulty || 0;
+                            console.log('[Game Commands] Detected dungeon:', action.name, 'HRID:', hrid, 'maxDifficulty:', action.maxDifficulty);
+                        }
+
+                        // Track tiered solo content separately
+                        if (hasTiers && !isDungeon) {
+                            tieredMonsterHrids.add(hrid);
+                            tieredMonsterMaxDifficulty[hrid] = action.maxDifficulty || 0;
+                            console.log('[Game Commands] Detected tiered monster:', action.name, 'HRID:', hrid, 'maxDifficulty:', action.maxDifficulty);
+                        }
+
                         // Derive monster HRID from action HRID
                         // Only for individual monsters, not dungeons
-                        // Dungeons have maxPartySize > 1 (e.g., Aqua Planet has maxPartySize: 3)
                         if (hrid.startsWith('/actions/combat/')) {
-                            const isDungeon = action.maxPartySize && action.maxPartySize > 1;
+                            const isDungeon = action.combatZoneInfo?.isDungeon;
                             if (!isDungeon) {
                                 const monsterName = hrid.replace('/actions/combat/', '');
                                 actionHridToMonsterHrid[hrid] = `/monsters/${monsterName}`;
@@ -219,18 +240,33 @@
                 }
             }
 
-            return {
+            const result = {
                 itemNameToHrid,
                 itemHridToName,
                 itemHridToActionHrid,
                 actionNameToHrid,
                 actionHridToName,
                 combatActionHrids,
+                dungeonActionHrids,
+                dungeonMaxDifficulty,
+                tieredMonsterHrids,
+                tieredMonsterMaxDifficulty,
                 actionHridToMonsterHrid,
                 actionDetailMap,
                 itemDetailMap,
                 itemNamesSet: new Set(Object.keys(itemNameToHrid))  // Pre-computed for getSuggestions()
             };
+
+            console.log('[Game Commands] Loaded game data:', {
+                totalDungeons: dungeonActionHrids.size,
+                dungeons: Array.from(dungeonActionHrids).map(hrid => ({
+                    name: actionHridToName[hrid],
+                    hrid,
+                    maxDifficulty: dungeonMaxDifficulty[hrid]
+                }))
+            });
+
+            return result;
         } catch (error) {
             console.error('[Game Commands] Failed to load game data:', error);
             return null;
@@ -362,6 +398,23 @@
     // ===== ITEM SUGGESTIONS =====
 
     /**
+     * Parse tier number from query string
+     * @param {string} query - The search query (e.g., "aqua 3", "chimerical 2")
+     * @returns {Object} { cleanQuery: string, tier: number|null }
+     */
+    function parseTierFromQuery(query) {
+        // Match trailing number: "aqua 3" -> tier 3, "aqua" -> no tier
+        const match = query.match(/^(.+?)\s+(\d+)$/);
+        if (match) {
+            return {
+                cleanQuery: match[1].trim(),
+                tier: parseInt(match[2], 10)
+            };
+        }
+        return { cleanQuery: query, tier: null };
+    }
+
+    /**
      * Get suggestions (items + actions) based on query
      * @param {string} query - The search query
      * @param {number} maxResults - Maximum number of results to return
@@ -370,7 +423,9 @@
     function getSuggestions(query, maxResults = 10) {
         if (!window.GAME_COMMAND_DATA || !query) return [];
 
-        const lowerQuery = query.toLowerCase();
+        // Parse tier from query (e.g., "aqua 3" -> "aqua" + tier 3)
+        const { cleanQuery, tier } = parseTierFromQuery(query);
+        const lowerQuery = cleanQuery.toLowerCase();
         const suggestions = [];
 
         // Split query into tokens for fuzzy matching
@@ -425,25 +480,29 @@
                     continue;
                 }
 
-                // Skip dungeons (maxPartySize > 1) since we can't open them properly
-                const actionData = window.GAME_COMMAND_DATA.actionDetailMap?.[hrid];
-                if (actionData && actionData.maxPartySize && actionData.maxPartySize > 1) {
-                    continue;
-                }
-
                 const match = matchQuery(lowerName);
                 if (match) {
                     const actionName = window.GAME_COMMAND_DATA.actionHridToName[hrid];
                     const isCombat = window.GAME_COMMAND_DATA.combatActionHrids?.has(hrid);
+                    const isDungeon = window.GAME_COMMAND_DATA.dungeonActionHrids?.has(hrid);
 
-                    suggestions.push({
+                    const suggestion = {
                         name: isCombat ? `⚔️ ${actionName}` : actionName,
                         hrid: hrid,
                         type: 'action',
                         isCombat: isCombat,
+                        isDungeon: isDungeon,
+                        tier: tier,  // Add parsed tier
+                        maxDifficulty: window.GAME_COMMAND_DATA.dungeonMaxDifficulty?.[hrid],
                         priority: match.priority,
                         score: match.score
-                    });
+                    };
+
+                    if (isDungeon) {
+                        console.log('[Game Commands] Adding dungeon suggestion:', suggestion);
+                    }
+
+                    suggestions.push(suggestion);
                 }
             }
         }
@@ -534,7 +593,7 @@
 
         const cmdKey = IS_MAC ? '⌘' : 'Ctrl';
         const optKey = IS_MAC ? '⌥' : 'Alt';
-        hints.textContent = `⏎ Dictionary/Action  |  ⇧⏎ Market  |  ${cmdKey}⏎ Wiki  |  ${optKey}⏎ Go To`;
+        hints.textContent = `⏎ Dictionary/Action  |  ⇧⏎ Market  |  ${cmdKey}⏎ Wiki  |  ${optKey}⏎ Go To  |  Dungeons: "name [tier]"`;
 
         // Assemble
         container.appendChild(input);
@@ -673,11 +732,21 @@
         const itemName = item.name;
         const itemType = item.type;
 
+        console.log('[Game Commands] executeAction:', { actionType, item });
+
         switch (actionType) {
             case 'item':
                 if (itemType === 'action') {
                     // Actions: Navigate to action
-                    openAction(itemHrid, item.isCombat);
+                    const tier = item.tier !== null && item.tier !== undefined ? item.tier : 0;
+                    console.log('[Game Commands] Executing action with tier:', tier, 'from item.tier:', item.tier);
+                    openAction(
+                        itemHrid,
+                        item.isCombat,
+                        item.isDungeon,
+                        tier,
+                        item.maxDifficulty || 0
+                    );
                 } else {
                     // Items: Open Item Dictionary
                     openItemDictionary(itemHrid);
@@ -708,7 +777,14 @@
             case 'goto':
                 if (itemType === 'action') {
                     // Already an action, just navigate
-                    openAction(itemHrid, item.isCombat);
+                    const tier = item.tier !== null && item.tier !== undefined ? item.tier : 0;
+                    openAction(
+                        itemHrid,
+                        item.isCombat,
+                        item.isDungeon,
+                        tier,
+                        item.maxDifficulty || 0
+                    );
                 } else if (itemType === 'item') {
                     // Item: Navigate to its crafting action
                     const actionHrid = window.GAME_COMMAND_DATA.itemHridToActionHrid[itemHrid];
@@ -920,12 +996,48 @@
     /**
      * Navigate to a specific action/skill
      * @param {string} actionHrid - The action HRID (e.g., "/actions/fishing")
+     * @param {boolean} isCombat - Whether this is a combat action
+     * @param {boolean} isDungeon - Whether this is a dungeon
+     * @param {number} tier - The difficulty tier (0-2, default 0)
+     * @param {number} maxDifficulty - Maximum difficulty tier for this dungeon
      * @returns {boolean} True if navigation succeeded, false otherwise
      */
-    function openAction(actionHrid, isCombat = false) {
+    function openAction(actionHrid, isCombat = false, isDungeon = false, tier = 0, maxDifficulty = 2) {
         const core = window.MWI_GAME_CORE;
         if (!core) {
             return false;
+        }
+
+        // Check if this is a tiered monster (solo tiered content)
+        const isTieredMonster = window.GAME_COMMAND_DATA.tieredMonsterHrids?.has(actionHrid);
+
+        // Debug logging
+        console.log('[Game Commands] openAction:', {
+            actionHrid,
+            isCombat,
+            isDungeon,
+            isTieredMonster,
+            tier,
+            maxDifficulty
+        });
+
+        // If it's a dungeon, use handleGoToFindParty with tier
+        if (isDungeon && typeof core.handleGoToFindParty === 'function') {
+            try {
+                // Validate and clamp tier to valid range
+                const validTier = Math.max(0, Math.min(tier, maxDifficulty));
+                console.log('[Game Commands] Opening dungeon with tier:', validTier);
+                core.handleGoToFindParty(actionHrid, validTier);
+
+                // Force reload by calling handleViewPartyList
+                if (typeof core.handleViewPartyList === 'function') {
+                    core.handleViewPartyList(actionHrid, validTier);
+                }
+                return true;
+            } catch (error) {
+                console.error('[Game Commands] Failed to open dungeon:', error);
+                return false;
+            }
         }
 
         // If it's a combat action, try to use handleGoToMonster
@@ -934,11 +1046,31 @@
 
             if (monsterHrid && typeof core.handleGoToMonster === 'function') {
                 try {
-                    // Try opening as individual monster
+                    // Check if this is a tiered monster
+                    if (isTieredMonster && tier > 0) {
+                        // Tiered solo content - use handleGoToFindParty with tier
+                        const maxTier = window.GAME_COMMAND_DATA.tieredMonsterMaxDifficulty?.[actionHrid] || 0;
+                        const validTier = Math.max(0, Math.min(tier, maxTier));
+                        console.log('[Game Commands] Opening tiered monster with tier:', validTier);
+
+                        if (typeof core.handleGoToFindParty === 'function') {
+                            core.handleGoToFindParty(actionHrid, validTier);
+
+                            // Force reload by calling handleViewPartyList
+                            if (typeof core.handleViewPartyList === 'function') {
+                                core.handleViewPartyList(actionHrid, validTier);
+                            }
+                            return true;
+                        }
+                    }
+
+                    // Simple monster (no tiers)
+                    console.log('[Game Commands] Opening monster:', monsterHrid);
                     core.handleGoToMonster(monsterHrid);
                     return true;
                 } catch (monsterError) {
-                    // Failed - likely a dungeon, fall back to handleGoToAction
+                    console.warn('[Game Commands] handleGoToMonster failed, trying handleGoToAction:', monsterError);
+                    // Failed - fall back to handleGoToAction
                     try {
                         core.handleGoToAction(actionHrid);
                         return true;
@@ -946,6 +1078,19 @@
                         console.error('[Game Commands] Both navigation methods failed:', actionError);
                         return false;
                     }
+                }
+            } else {
+                // No monster HRID - might be a raid or other combat content
+                // Try handleGoToAction directly
+                console.log('[Game Commands] No monster HRID, using handleGoToAction for:', actionHrid);
+                try {
+                    if (typeof core.handleGoToAction === 'function') {
+                        core.handleGoToAction(actionHrid);
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('[Game Commands] handleGoToAction failed:', error);
+                    return false;
                 }
             }
         }

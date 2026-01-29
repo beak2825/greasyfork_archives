@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Navbar: add missing avatar to profile button
 // @namespace    https://github.com/nate-kean/
-// @version      2026.1.27
-// @description  Put your profile picture in the icon in the top right corner of the screen.
+// @version      2026.1.28
+// @description  None
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=fellowshiponego.com

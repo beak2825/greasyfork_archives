@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch - Mute homepage
 // @namespace    https://greasyfork.org/users/1002054-igorskyflyer
-// @version      v1.0.0
+// @version      v1.0.1
 // @description  🔇 Mutes auto-playing videos on Twitch's homepage. 📺
 // @author       igorskyflyer
 // @date         2026-01-29
@@ -39,8 +39,11 @@
         return
       }
 
-      player.addEventListener('playing', () => {
+      player.addEventListener('playing', function handler() {
         player.volume = 0
+        // remove the handler immediately,
+        // so we are not stuck in a mute loop
+        player.removeEventListener('playing', handler)
       })
 
       foundPlayer = true

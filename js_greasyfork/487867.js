@@ -52,7 +52,7 @@
 // @antifeature referral-link
 // @antifeature payment
 // @antifeature membership
-// @icon         https://autoduo.site/assets/imgs/favicon.ico
+// @icon         https://autoduofamily.github.io/adassets/assets/imgs/favicon.ico
 // @downloadURL https://update.greasyfork.org/scripts/487867/Auto-Duolingo.user.js
 // @updateURL https://update.greasyfork.org/scripts/487867/Auto-Duolingo.meta.js
 // ==/UserScript==
@@ -86,16 +86,16 @@
 			this.contactWrapper = document.createElement("div");
 			Object.assign(this.contactWrapper, {
 				className: "contact-wrapper-listening",
-				innerHTML: `<a class="contact-item-listening" href="https://t.me/autoduofamily" target="_blank" style="--data-img: url('https://autoduo.site/assets/clients/tele-icon.ndx')">
+				innerHTML: `<a class="contact-item-listening" href="https://t.me/autoduofamily" target="_blank" style="--data-img: url('https://autoduofamily.github.io/adassets/assets/clients/tele-icon.ndx')">
 								<p class="popup">Telegram Community</p>
 							</a>
-							<a class="contact-item-listening" href="https://www.youtube.com/@autoduofamily" target="_blank" style="--data-img: url('https://autoduo.site/assets/clients/youtube-icon.ndx')">
+							<a class="contact-item-listening" href="https://www.youtube.com/@autoduofamily" target="_blank" style="--data-img: url('https://autoduofamily.github.io/adassets/assets/clients/youtube-icon.ndx')">
 								<p class="popup">Youtube Channel</p>
 							</a>
-							<a class="contact-item-listening" href="https://www.facebook.com/groups/autoduofamily" target="_blank" style="--data-img: url('https://autoduo.site/assets/clients/facebook-icon.png')">
+							<a class="contact-item-listening" href="https://www.facebook.com/groups/autoduofamily" target="_blank" style="--data-img: url('https://autoduofamily.github.io/adassets/assets/clients/facebook-icon.png')">
 								<p class="popup">Facebook Community</p>
 							</a>
-							<a class="contact-item-listening" id="greasyfork" href="https://greasyfork.org/en/scripts/487867-auto-duolingo" target="_blank" style="--data-img: url('https://autoduo.site/assets/clients/greasyfork-icon.ndx')">
+							<a class="contact-item-listening" id="greasyfork" href="https://greasyfork.org/en/scripts/487867-auto-duolingo" target="_blank" style="--data-img: url('https://autoduofamily.github.io/adassets/assets/clients/greasyfork-icon.ndx')">
 								<p class="popup">Greasy Fork</p>
 							</a>`,
 			});
@@ -136,12 +136,12 @@
 										${admList.map(item => `
 												<div class="adm-item">
 														<p class="adm-bio">${item.bio}</p>
-														<img class="adm-avatar" src="https://autoduo.site/assets/imgs/admin/${item.avatar}" />
+														<img class="adm-avatar" src="https://autoduofamily.github.io/adassets/assets/imgs/admin/${item.avatar}" />
 														<h5>${item.name}</h5>
 														<p class="adm-role">Role: <b>${item.role}</b></p>
 														<div class="adm-contact contact-wrapper-listening">
-																<a class="contact-item-listening" href="${item.contact.tele}" target="_blank" style="--data-img: url('https://autoduo.site/assets/clients/tele-icon.ndx')"></a>
-																<a class="contact-item-listening" href="${item.contact.fb}" target="_blank" style="--data-img: url('https://autoduo.site/assets/clients/facebook-icon.png')"></a>
+																<a class="contact-item-listening" href="${item.contact.tele}" target="_blank" style="--data-img: url('https://autoduofamily.github.io/adassets/assets/clients/tele-icon.ndx')"></a>
+																<a class="contact-item-listening" href="${item.contact.fb}" target="_blank" style="--data-img: url('https://autoduofamily.github.io/adassets/assets/clients/facebook-icon.png')"></a>
 														</div>
 												</div>     
 										`).join('')}
@@ -331,7 +331,7 @@
 			})
 			this.contactBtn = document.createElement('button')
 			this.contactBtn.className = 'contact-btn'
-			this.contactBtn.innerHTML = '<img src="https://autoduo.site/assets/clients/headphone.png" style="margin: -4px 4px 0 0; width: 16px" /> SUPPORT'
+			this.contactBtn.innerHTML = '<img src="https://autoduofamily.github.io/adassets/assets/clients/headphone.png" style="margin: -4px 4px 0 0; width: 16px" /> SUPPORT'
 			this.contactBtn.addEventListener('click', () => {
 				document.body.appendChild(this.contactModal)
 			})
@@ -1107,7 +1107,7 @@
 				margin-top: 10px;
 			}
 			button.setting-btn-listening::before {
-				background-image: url(https://autoduo.site/assets/clients/setting.svg);
+				background-image: url(https://autoduofamily.github.io/adassets/assets/clients/setting.svg);
 				background-repeat: no-repeat;
 				background-size: 22px;
 				background-position: 18px;
@@ -1117,7 +1117,7 @@
 				margin-top: 8px;
 			}
 			button.auto-farm-btn-listening::before {
-				background-image: url(https://autoduo.site/assets/clients/xp.svg);
+				background-image: url(https://autoduofamily.github.io/adassets/assets/clients/xp.svg);
 				background-repeat: no-repeat;
 				background-size: 32px;
 				background-position: 12px;
@@ -1154,13 +1154,13 @@
 				width: 21px;
 				height: 21px;
 				margin-right: 4px;
-				background-image: url('https://autoduo.site/assets/clients/clock.svg');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/clock.svg');
 				background-size: cover;
 			}
 			.total-exp-listening::before{
 				width: 16px;
 				height: 21px;
-				background-image: url('https://autoduo.site/assets/clients/exp.svg');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/exp.svg');
 			}
             .total-exp-listening::after{
                 content: 'XP';
@@ -1171,33 +1171,33 @@
 				margin-top: 8px;
 			}
 			.guide-btn-listening::before{
-				background-image: url('https://autoduo.site/assets/clients/twinkle.ndx');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/twinkle.ndx');
     			background-size: 85px auto;
 			}
 			.notify-bubble-listening::before {
-				background-image: url('https://autoduo.site/assets/clients/notify-icon-lite.png');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/notify-icon-lite.png');
 			}
 			.max-bubble {
 				filter: grayscale(1);
 			}
 			.max-bubble::before{
-                background-image: url(https://autoduo.site/assets/clients/max-icon.svg), url(https://autoduo.site/assets/clients/premium-circle.gif);
+                background-image: url(https://autoduofamily.github.io/adassets/assets/clients/max-icon.svg), url(https://autoduofamily.github.io/adassets/assets/clients/premium-circle.gif);
                 background-size: 33px, cover !important;
                 background-position: 6px 10px, center !important;
             }
 			.super-bubble-listening::before {
-				background-image: url('https://autoduo.site/assets/clients/superfree-icon.png');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/superfree-icon.png');
 			}
 			.unlimited-hearts-bubble::after{
                 display: block !important;
                 border-color: red;
             }
             .unlimited-hearts-bubble::before{
-                background-image: url(https://autoduo.site/assets/clients/unlimited-hearts.svg);
+                background-image: url(https://autoduofamily.github.io/adassets/assets/clients/unlimited-hearts.svg);
                 transform: scale(0.75) translateY(2px);
             }
 			.full-bubble-listening::before {
-				background-image: url('https://autoduo.site/assets/clients/upgrade.png'), url('https://autoduo.site/assets/clients/marketer.webp');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/upgrade.png'), url('https://autoduofamily.github.io/adassets/assets/clients/marketer.webp');
 				background-size: 26px, 250% !important;
 				background-position: center;
 				background-repeat: no-repeat;
@@ -1304,7 +1304,7 @@
 				content: '';
 				width: 50px;
 				height: 50px;
-				background-image: url(https://autoduo.site/assets/clients/autoduosuperThumb.ndx);
+				background-image: url(https://autoduofamily.github.io/adassets/assets/clients/autoduosuperThumb.ndx);
 				background-size: cover;
 				margin: -4px 0;
 				margin-right: 4px;
@@ -1325,7 +1325,7 @@
 				height: 22px;
 				border: none;
 				background-color: transparent;
-				background: url('https://autoduo.site/assets/clients/upgrade.png');
+				background: url('https://autoduofamily.github.io/adassets/assets/clients/upgrade.png');
 				background-size: cover;
 				transition: transform 0.3s;
 			}
@@ -1361,7 +1361,7 @@
 				content: '';
 				position: absolute;
 				inset: 0;
-				background-image: url('https://autoduo.site/assets/clients/vipCircle.ndx');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/vipCircle.ndx');
 				background-size: cover;
 				transform: scale(1.2);
 			}
@@ -1382,7 +1382,7 @@
 				flex-shrink: 0;
 				width: 35px;
 				height: 35px;
-				background-image: url('https://autoduo.site/assets/clients/eye.svg');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/eye.svg');
 				background-size: cover;
 			}
 			.show-hide-listening.hide i::after{
@@ -1436,7 +1436,7 @@
 				margin-left: 4px;
 				margin-right: 8px;
 				border-radius: 50%;
-				background-image: url('https://autoduo.site/assets/clients/infomation-icon.ndx');
+				background-image: url('https://autoduofamily.github.io/adassets/assets/clients/infomation-icon.ndx');
 				background-size: cover;
 				cursor: pointer;
 			}
@@ -1644,7 +1644,7 @@
 				width: calc(60% - 4px);
 			}
 			.guide-popup-btn .autoduo-btn:last-child::before {
-				background-image: url(https://autoduo.site/assets/clients/video-icon.png);
+				background-image: url(https://autoduofamily.github.io/adassets/assets/clients/video-icon.png);
 				background-size: 30px;
 				background-position: 16px center;
 				background-repeat: no-repeat;

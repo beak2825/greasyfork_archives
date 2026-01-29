@@ -69,8 +69,12 @@ Notes:
         console.log(`Found user prompt:\n${userPrompt}`);
 
         // list of possible selectors
-        const SELECTORS = ['textarea[aria-label="Type something or tab to choose an example prompt"]',
-            'textarea[placeholder="Start typing a prompt"]'
+        const SELECTORS = [
+            'textarea[formcontrolname="promptText"]',
+            'textarea[aria-label="Enter a prompt"]',
+            'textarea[aria-label="Type something or tab to choose an example prompt"]',
+            'textarea[placeholder="Start typing a prompt"]',
+            'textarea[placeholder="Start typing a prompt, use option + enter to append"]'
         ];
 
         let promptTextArea = null;

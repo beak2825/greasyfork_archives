@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ranged Way Idle
-// @version      6.24
+// @version      6.25
 // @author       AlphB
 // @description  一些超级有用的MWI的QoL功能
 // @match        https://*.milkywayidle.com/*
@@ -100,8 +100,10 @@
             watermarkText: {type: "input_text", value: ""},
             quickCopyItemHrid: {type: "switch", value: false, trigger: ["ob"]},
             visibleItemCountMarket: {type: "switch", value: false, trigger: ["ob"]},
-            visibleItemCountOpacity: {type: "input_range", value: 0.25, min: 0, max: 1, step: 0.01},
-            visibleItemCountCountEquippedItems: {type: "switch", value: true},
+            visibleItemCountMarketOpacity: {type: "input_range", value: 0.25, min: 0, max: 1, step: 0.01},
+            visibleItemCountMarketCountEquippedItems: {type: "switch", value: true},
+            visibleItemCountSkillPanel: {type: "switch", value: false, trigger: ["ob"]},
+            visibleItemCountSkillPanelCountEquippedItems: {type: "switch", value: true},
         },
 
         listingClass: {
@@ -158,12 +160,13 @@
             mournForMagicWayIdle: {type: "switch", value: true, trigger: ["init"]},
             debugPrintWSMessages: {type: "switch", value: false, listenMessageTypes: []},
             lazyLoadScript: {type: "switch", value: false},
+            asyncProcessorFunctionEnable: {type: "switch", value: false},
             showConfigMenu: {type: "switch", value: true, trigger: ["ob"], isHidden: true}
         }
     };
 
     const globalVariables = {
-        scriptVersion: GM_info?.script?.version || "6.24",
+        scriptVersion: GM_info?.script?.version || "6.25",
         marketAPIUrl: "https://www.milkywayidle.com/game_data/marketplace.json",
         initCharacterData: null,
         documentObserver: null,
@@ -277,13 +280,20 @@
         "visibleItemCountMarket": {
             "zh-cn": "市场界面可见背包内的物品数量", "en-us": "Visible item count in market UI"
         },
-        "visibleItemCountOpacity": {
+        "visibleItemCountMarketOpacity": {
             "zh-cn": "市场界面可见背包内的物品数量：背包里不包含该物品时，图标的不透明度",
             "en-us": "Visible item count in market UI: Opcity of item count in market UI when not in inventory"
         },
-        "visibleItemCountCountEquippedItems": {
+        "visibleItemCountMarketCountEquippedItems": {
             "zh-cn": "市场界面可见背包内的物品数量：是否统计已装备的物品",
             "en-us": "Visible item count in market UI: Count equipped items"
+        },
+        "visibleItemCountSkillPanel": {
+            "zh-cn": "专业界面可见背包内的物品数量", "en-us": "Visible item count in skill panel UI"
+        },
+        "visibleItemCountSkillPanelCountEquippedItems": {
+            "zh-cn": "专业界面可见背包内的物品数量：是否统计已装备的物品",
+            "en-us": "Visible item count in skill panel UI: Count equipped items"
         },
         "saveListingInfoToLocalStorage": {
             "zh-cn": "保存挂单信息到localStorage", "en-us": "Save listing info to localStorage"
@@ -348,6 +358,10 @@
         "lazyLoadScript": {
             "zh-cn": "懒加载脚本以提升初始化脚本时的性能，但可能导致部分功能更改开关后，需要手动刷新页面才能生效。",
             "en-us": "Lazy load script to improve performance during initialization, but may cause some features to not work properly until page refresh."
+        },
+        "asyncProcessorFunctionEnable": {
+            "zh-cn": "使用异步方式对游戏进行修改以减少卡顿，但会导致页面渲染出现闪烁。需要手动刷新页面才能生效。",
+            "en-us": "Modifying game asynchronously to reduces lag, but may cause flickering during page rendering. Requiring manual page refreshes for changes to take effect."
         },
 
         "configNoteText": {
@@ -506,6 +520,8 @@
             }
         }
 
+        const asyncProcessorFunctionEnable = localConfig ? localConfig?.otherClass?.asyncProcessorFunctionEnable : false;
+
         function hookWebSocket() {
             // message processor
             globalVariables.webSocketMessageProcessor = function (message, type) {
@@ -541,7 +557,11 @@
                 }
                 const message = oriGet.call(this);
                 try {
-                    globalVariables.webSocketMessageProcessor(message, 'get')
+                    if (asyncProcessorFunctionEnable) {
+                        setTimeout(() => globalVariables.webSocketMessageProcessor(message, 'get'), 0);
+                    } else {
+                        globalVariables.webSocketMessageProcessor(message, 'get');
+                    }
                 } catch (err) {
                     console.error(err);
                 }
@@ -552,20 +572,24 @@
                 get: hookedGet, configurable: true, enumerable: true
             });
 
-            // // send
-            // const originalSend = WebSocket.prototype.send;
-            //
-            // WebSocket.prototype.send = function (message) {
-            //     if (!this.url || !this.url.includes("wss://api.milkywayidle")) {
-            //         return originalSend.call(this, message);
-            //     }
-            //     try {
-            //         globalVariables.webSocketMessageProcessor(message, 'send');
-            //     } catch (err) {
-            //         console.error(err);
-            //     }
-            //     return originalSend.call(this, message);
-            // }
+            // send
+            const originalSend = WebSocket.prototype.send;
+
+            WebSocket.prototype.send = function (message) {
+                if (!this.url || !this.url.includes("wss://api.milkywayidle")) {
+                    return originalSend.call(this, message);
+                }
+                try {
+                    if (asyncProcessorFunctionEnable) {
+                        setTimeout(() => globalVariables.webSocketMessageProcessor(message, 'send'), 0);
+                    } else {
+                        globalVariables.webSocketMessageProcessor(message, 'send');
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+                return originalSend.call(this, message);
+            }
         }
 
         function initDocumentObserver() {
@@ -576,7 +600,11 @@
                         const config = configs[configClass][configName];
                         if (config.type === 'switch' && config.value && config?.trigger?.includes('ob') && globalVariables.functionMap[configClass][configName]) {
                             try {
-                                globalVariables.functionMap[configClass][configName].ob(document);
+                                if (asyncProcessorFunctionEnable) {
+                                    setTimeout(() => globalVariables.functionMap[configClass][configName].ob(document), 0);
+                                } else {
+                                    globalVariables.functionMap[configClass][configName].ob(document);
+                                }
                             } catch (err) {
                                 console.error(err);
                             }
@@ -1727,7 +1755,7 @@
                     if (!node.querySelector(".MarketplacePanel_marketItems__D4k7e")) return;
                     const itemCountMap = {};
                     for (const item of globalVariables.gameStateNode.state.characterItemMap.values()) {
-                        if (configs.gameUIClass.visibleItemCountCountEquippedItems.value || (item.itemLocationHrid === "/item_locations/inventory")) {
+                        if (configs.gameUIClass.visibleItemCountMarketCountEquippedItems.value || (item.itemLocationHrid === "/item_locations/inventory")) {
                             itemCountMap[item.itemHrid] = (itemCountMap[item.itemHrid] || 0) + item.count;
                         }
                     }
@@ -1735,7 +1763,7 @@
                         const divNode = targetNode.querySelector(".SimpleMarketNext") || targetNode.appendChild(document.createElement("div"));
                         const itemHrid = "/items/" + targetNode.querySelector("use").href.baseVal.split("#")[1];
                         const itemCount = (itemCountMap[itemHrid] || 0).toString();
-                        const opacity = configs.gameUIClass.visibleItemCountOpacity.value.toString();
+                        const opacity = configs.gameUIClass.visibleItemCountMarketOpacity.value.toString();
                         if ((divNode.textContent === itemCount) || (divNode.textContent === "" && itemCount === "0" && targetNode.style.opacity === opacity)) continue;
                         if (itemCount === "0") {
                             targetNode.style.opacity = opacity;
@@ -1758,6 +1786,66 @@
                 return {ob: ob};
             }
 
+            function visibleItemCountSkillPanel() {
+                const actionItemMap = {
+                    "cow": "milk",
+                    "verdant_cow": "verdant_milk",
+                    "azure_cow": "azure_milk",
+                    "burble_cow": "burble_milk",
+                    "crimson_cow": "crimson_milk",
+                    "unicow": "rainbow_milk",
+                    "holy_cow": "holy_milk",
+                    "tree": "log",
+                    "birch_tree": "birch_log",
+                    "cedar_tree": "cedar_log",
+                    "purpleheart_tree": "purpleheart_log",
+                    "ginkgo_tree": "ginkgo_log",
+                    "redwood_tree": "redwood_log",
+                    "arcane_tree": "arcane_log",
+                };
+                let itemCountMap = {};
+
+
+                function ob(node) {
+                    // combat
+                    if (node.querySelector(".CombatZones_combatZones__6VliY")) return;
+
+                    let hasInitItemMap = false;
+                    for (const actionGridNode of node.querySelectorAll(".SkillActionGrid_skillActionGrid__1tJFk")) {
+                        for (const skillAction of actionGridNode.querySelectorAll(".SkillAction_skillAction__1esCp")) {
+                            const hrefValue = skillAction.querySelector(".SkillAction_iconContainer__1ZFYB use")?.href?.baseVal;
+                            if (!hrefValue) continue;
+                            const imgName = hrefValue.split('#')[1];
+                            const itemName = hrefValue.includes("items_sprite") ? imgName : actionItemMap[imgName];
+                            if (!itemName) continue;
+                            if (!hasInitItemMap) {
+                                initItemCountMap();
+                                hasInitItemMap = true;
+                            }
+                            const itemHrid = "/items/" + itemName;
+                            const itemCount = itemCountMap[itemHrid] || 0;
+                            const skillNameNode = skillAction.querySelector(".SkillAction_name__2VPXa");
+                            if (skillNameNode.dataset.itemCount !== itemCount.toString()) {
+                                skillNameNode.dataset.itemCount = itemCount.toString();
+                                const originalName = skillNameNode.textContent.split(' (')[0];
+                                skillNameNode.textContent = `${originalName} (${formatItemCount(itemCount)})`;
+                            }
+                        }
+                    }
+                }
+
+                function initItemCountMap() {
+                    itemCountMap = {};
+                    for (const item of globalVariables.gameStateNode.state.characterItemMap.values()) {
+                        if (configs.gameUIClass.visibleItemCountSkillPanelCountEquippedItems.value || (item.itemLocationHrid === "/item_locations/inventory")) {
+                            itemCountMap[item.itemHrid] = (itemCountMap[item.itemHrid] || 0) + item.count;
+                        }
+                    }
+                }
+
+                return {ob: ob};
+            }
+
             return {
                 autoClickTaskSortButton: autoClickTaskSortButton,
                 showMarketAPIUpdateTime: showMarketAPIUpdateTime,
@@ -1769,6 +1857,7 @@
                 addWatermark: addWatermark,
                 quickCopyItemHrid: quickCopyItemHrid,
                 visibleItemCountMarket: visibleItemCountMarket,
+                visibleItemCountSkillPanel: visibleItemCountSkillPanel,
             }
         }
 

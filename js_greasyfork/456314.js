@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         去除软件站无用元素
 // @namespace    http://tampermonkey.net/
-// @version      0.41
+// @version      0.42
 // @description  去除殁漂遥、果核剥壳、423down、mefcl等软件站的无用元素
 // @author       You
 // @match        *://*.mpyit.com/*
@@ -23,7 +23,7 @@
 (function() {
     'use strict';
     if (window.location.hostname == "www.mpyit.com") {
-        $(".sticky").remove();//正版推荐和广告
+        removeElementsByText('#post', 'div', '2020-00-00');
         $('body').css('background-image', 'none');//body的背景设置为none
         window.scrollTo(0, 60);
         window.scrollTo(0, 0);
@@ -53,7 +53,13 @@
         let isPC = $('div.wrapper').length > 0;
         if (isPC) {
             $('.content-wrap:eq(0) .content ul.excerpt div.info span.cat:contains("423Down")').parent().parent().remove()//带推广和推荐的全删除
-            $('.content-wrap:eq(0) .content ul.excerpt li:contains("！"),.content-wrap:eq(0) .content ul.excerpt li:contains("!")').remove();//推广一般都带感叹号
+            // 筛选出包含感叹号（且排除note类内容）的li并删除
+            $('.content-wrap:eq(0) .content ul.excerpt li').filter(function() {
+                // 克隆当前li（避免修改原页面元素），删除克隆体中的note类元素，再提取文本
+                let liTextWithoutNote = $(this).clone().find('.note').remove().end().text();
+                // 判断是否包含中文感叹号或英文感叹号
+                return liTextWithoutNote.includes('！') || liTextWithoutNote.includes('!');
+            }).remove();
             $('ul.nav ul li').slice(-2).remove();//导航条后两个ai广告
         } else {
             $('.post-list li:contains("置顶")').remove();//手机端匹配"置顶"就行
@@ -64,9 +70,10 @@
         if (!window.location.href.includes('.html')) {
             removeElementsByText('.content', 'article', '合作推荐');
             removeElementsByText('.content', 'article', '正版特惠');
+            removeElementsByText('.content', 'article', '置顶');
+            $(".item-01").empty();
         }else{
             $(".orbui-post-content").remove();
-            $(".item-01").empty();
         }
     }else if (window.location.hostname == "www.fenxm.com") {
         removeElementsByText('.content', 'article', '置顶');
@@ -74,13 +81,18 @@
         $(".full-pst").remove();
     }else if (window.location.hostname == "www.gndown.com") {
         removeElementsByText('.content', 'article', '置顶');
+        $(".item-01").empty();
     }else if (window.location.hostname == "www.osssr.com") {
-        removeElementsByText('.content', 'article', '置顶');
-        $(".excerpt-minic-index").remove();
+        setInterval(function () {
+            if (typeof $ !== 'undefined') {
+                removeElementsByText('.content', 'article', '置顶');
+            }
+        }, 200);
+        document.querySelector('.excerpt-minic-index')?.remove();
     }else if (window.location.hostname == "www.lsapk.com") {
         $(".swiper-container").remove();
         removeElementsByText('.post-list', 'li', '置顶');
-        removeElementWithoutClass(".sidebar-box-list > div")
+        removeElementWithoutClass(".sidebar-box-list > div");
         $(".cp-pop-btn")[0]?.click()
     }else if (window.location.hostname == "www.lxapk.com") {
         $('.adsbygoogle').css('height', '0px');
@@ -91,6 +103,7 @@
     }else if (window.location.hostname == "www.qiuquan.cc") {
         $('span.sticky-icon').parent().parent().remove();
         $('a.style02').parent().remove();
+        $(".orbui-post-01").empty();
     }
 
     //删除包含指定字符串的元素

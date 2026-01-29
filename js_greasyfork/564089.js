@@ -2,15 +2,14 @@
 // @name         Huuto.net Movies - Search Buttons & Redirects
 // @name:en      Huuto.net Movies - Search Buttons & Redirects
 // @namespace    https://greasyfork.org/en/users/1552401-chipfin
-// @version      1.5.3
-// @description  Lisää elokuva-aiheiset hakupainikkeet Huuto.netiin (IMDb, Videospace, Finna jne.) ja tekee automaattisia uudelleenohjauksia. Piilottaa FIx-galleria-napit ei-VHS-kohteista.
-// @description:en  Adds movie-related search buttons to Huuto.net and performs automatic redirects. Hides FIx-galleria buttons for non-VHS items.
+// @version      1.5.6
+// @description  Lisää hakunapit Huuto.nettiin ja hoitaa uudelleenohjaukset (myös FIx-galleria -Proxy -toiminnot). Älykäs Videospace-haku ja SPA-tuki.
+// @description:en  Adds search buttons to Huuto.net and handles redirects (including FIx-galleria -Proxy functions). Smart Videospace search and SPA support.
 // @icon         https://www.huuto.net/favicon.ico
 // @author       Gemini 3 Pro, Claude 4.5 Sonnet, ChatGPT-5.2
 // @match        https://www.huuto.net/kohteet/*/*
 // @match        https://videospace.fi/releases?se=*
-// @match        https://www.fixgalleria.net/haku?*
-// @match        https://www.fixgalleria.net/julkaisu/*
+// @match        https://www.fixgalleria.net/*
 // @match        https://www.finna.fi/*
 // @match        https://www.imdb.com/find/?*
 // @grant        GM_openInTab
@@ -30,35 +29,12 @@
     // APUFUNKTIOT
     // =========================================================================
 
-    // Tehokas elementtien odotus MutationObserverilla
-    function waitForElement(selector, callback, timeout = 5000) {
-        const element = document.querySelector(selector);
-        if (element) {
-            callback(element);
-            return;
-        }
-
-        const observer = new MutationObserver(() => {
-            const el = document.querySelector(selector);
-            if (el) {
-                observer.disconnect();
-                clearTimeout(timer);
-                callback(el);
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        const timer = setTimeout(() => {
-            observer.disconnect();
-        }, timeout);
-    }
-
     function showRedirectOverlay(site) {
+        // Estä päällekkäiset ilmoitukset
+        if (document.getElementById('hn-redirect-overlay')) return;
+
         const d = document.createElement('div');
+        d.id = 'hn-redirect-overlay';
         d.style.cssText = 'position:fixed;top:80px;right:20px;z-index:9999;background:#333;color:#fff;padding:10px 16px;border-radius:6px;font-weight:600;box-shadow:0 2px 10px rgba(0,0,0,0.3);';
         d.textContent = `Single result. Redirecting to ${site} item...`;
         document.body.appendChild(d);
@@ -76,7 +52,7 @@
     const DEFAULT_CUSTOM_STOPWORDS = ['isokoppa vhs', 'isokoppa', 'vhs'];
     // Default order
     const DEFAULT_BUTTON_ORDER = 'Videospace, Finna, IMDb, FIx-galleria, IMDb (via FIx-galleria), OS (via FIx-galleria), SB (via FIx-galleria)';
-    const DEFAULT_DISABLED_BUTTONS = ['SB (via FIx-galleria)']; // Superbits hidden by default
+    const DEFAULT_DISABLED_BUTTONS = ['SB (via FIx-galleria)'];
 
     GM_addStyle(`
         #hn-settings-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 100000; display: flex; justify-content: center; align-items: center; font-family: Arial, sans-serif; }
@@ -122,13 +98,10 @@
     `);
 
     const ICONS = {
-        // IMDb (Fixed SVG, scaled for 26x26 container)
         'IMDb': `<svg width="22" height="10" viewBox="0 0 48 18" fill="currentColor" style="margin-top:1px;"><g><polygon points="0 18 5 18 5 0 0 0"/><path d="M15.6725178,0 L14.5534833,8.40846934 L13.8582008,3.83502426 C13.65661,2.37009263 13.4632474,1.09175121 13.278113,0 L7,0 L7,18 L11.2416347,18 L11.2580911,6.11380679 L13.0436094,18 L16.0633571,18 L17.7583653,5.8517865 L17.7707076,18 L22,18 L22,0 L15.6725178,0 Z"/><path d="M24,18 L24,0 L31.8045586,0 C33.5693522,0 35,1.41994415 35,3.17660424 L35,14.8233958 C35,16.5777858 33.5716617,18 31.8045586,18 L24,18 Z M29.8322479,3.2395236 C29.6339219,3.13233348 29.2545158,3.08072342 28.7026524,3.08072342 L28.7026524,14.8914865 C29.4312846,14.8914865 29.8796736,14.7604764 30.0478195,14.4865461 C30.2159654,14.2165858 30.3021941,13.486105 30.3021941,12.2871637 L30.3021941,5.3078959 C30.3021941,4.49404499 30.272014,3.97397442 30.2159654,3.74371416 C30.1599168,3.5134539 30.0348852,3.34671372 29.8322479,3.2395236 Z"/><path d="M44.4299079,4.50685823 L44.749518,4.50685823 C46.5447098,4.50685823 48,5.91267586 48,7.64486762 L48,14.8619906 C48,16.5950653 46.5451816,18 44.749518,18 L44.4299079,18 C43.3314617,18 42.3602746,17.4736618 41.7718697,16.6682739 L41.4838962,17.7687785 L37,17.7687785 L37,0 L41.7843263,0 L41.7843263,5.78053556 C42.4024982,5.01015739 43.3551514,4.50685823 44.4299079,4.50685823 Z M43.4055679,13.2842155 L43.4055679,9.01907814 C43.4055679,8.31433946 43.3603268,7.85185468 43.2660746,7.63896485 C43.1718224,7.42607505 42.7955881,7.2893916 42.5316822,7.2893916 C42.267776,7.2893916 41.8607934,7.40047379 41.7816216,7.58767002 L41.7816216,9.01907814 L41.7816216,13.4207851 L41.7816216,14.8074788 C41.8721037,15.0130276 42.2602358,15.1274059 42.5316822,15.1274059 C42.8031285,15.1274059 43.1982131,15.0166981 43.281155,14.8074788 C43.3640968,14.5982595 43.4055679,14.0880581 43.4055679,13.2842155 Z"/></g></svg>`,
         'FIx-galleria': `<img src="https://www.fixgalleria.net/assets/img/favicon.ico" style="width:16px;height:16px;">`,
         'Videospace': `<img src="https://videospace.fi/favicon.ico" style="width:16px;height:16px;">`,
-        // Finna: Filled version, nonzero, no stroke
         'Finna': `<svg height="16" viewBox="0 0 4.736 10.688" xmlns="http://www.w3.org/2000/svg"><g stroke-linecap="round" fill-rule="nonzero" font-size="9pt" stroke="currentColor" stroke-width="0" fill="currentColor" style="stroke:currentColor;stroke-width:0;fill:currentColor"><path d="M 1.536 9.92 C 1.536 10.352 1.2 10.688 0.768 10.688 C 0.352 10.688 0 10.352 0 9.92 L 0 0.768 C 0 0.352 0.352 0 0.768 0 L 3.968 0 C 4.4 0 4.736 0.352 4.736 0.768 C 4.736 1.2 4.4 1.536 3.968 1.536 L 1.536 1.536 L 1.536 4.416 L 3.648 4.416 C 4.08 4.416 4.416 4.768 4.416 5.184 C 4.416 5.616 4.08 5.952 3.648 5.952 L 1.536 5.952 L 1.536 9.92 Z"/></g></svg>`,
-        // IMDb Fix (Fixed SVG, grayscale)
         'IMDb (via FIx-galleria)': `<svg width="22" height="10" viewBox="0 0 48 18" fill="currentColor" style="margin-top:1px;filter:grayscale(100%);"><g><polygon points="0 18 5 18 5 0 0 0"/><path d="M15.6725178,0 L14.5534833,8.40846934 L13.8582008,3.83502426 C13.65661,2.37009263 13.4632474,1.09175121 13.278113,0 L7,0 L7,18 L11.2416347,18 L11.2580911,6.11380679 L13.0436094,18 L16.0633571,18 L17.7583653,5.8517865 L17.7707076,18 L22,18 L22,0 L15.6725178,0 Z"/><path d="M24,18 L24,0 L31.8045586,0 C33.5693522,0 35,1.41994415 35,3.17660424 L35,14.8233958 C35,16.5777858 33.5716617,18 31.8045586,18 L24,18 Z M29.8322479,3.2395236 C29.6339219,3.13233348 29.2545158,3.08072342 28.7026524,3.08072342 L28.7026524,14.8914865 C29.4312846,14.8914865 29.8796736,14.7604764 30.0478195,14.4865461 C30.2159654,14.2165858 30.3021941,13.486105 30.3021941,12.2871637 L30.3021941,5.3078959 C30.3021941,4.49404499 30.272014,3.97397442 30.2159654,3.74371416 C30.1599168,3.5134539 30.0348852,3.34671372 29.8322479,3.2395236 Z"/><path d="M44.4299079,4.50685823 L44.749518,4.50685823 C46.5447098,4.50685823 48,5.91267586 48,7.64486762 L48,14.8619906 C48,16.5950653 46.5451816,18 44.749518,18 L44.4299079,18 C43.3314617,18 42.3602746,17.4736618 41.7718697,16.6682739 L41.4838962,17.7687785 L37,17.7687785 L37,0 L41.7843263,0 L41.7843263,5.78053556 C42.4024982,5.01015739 43.3551514,4.50685823 44.4299079,4.50685823 Z M43.4055679,13.2842155 L43.4055679,9.01907814 C43.4055679,8.31433946 43.3603268,7.85185468 43.2660746,7.63896485 C43.1718224,7.42607505 42.7955881,7.2893916 42.5316822,7.2893916 C42.267776,7.2893916 41.8607934,7.40047379 41.7816216,7.58767002 L41.7816216,9.01907814 L41.7816216,13.4207851 L41.7816216,14.8074788 C41.8721037,15.0130276 42.2602358,15.1274059 42.5316822,15.1274059 C42.8031285,15.1274059 43.1982131,15.0166981 43.281155,14.8074788 C43.3640968,14.5982595 43.4055679,14.0880581 43.4055679,13.2842155 Z"/></g></svg>`,
         'OS (via FIx-galleria)': `<img src="https://static.opensubtitles.org/favicon.ico" style="width:16px;height:16px;">`,
         'SB (via FIx-galleria)': `<img src="https://superbits.org/favicon.ico" style="width:16px;height:16px;">`
@@ -144,10 +117,7 @@
         'SB (via FIx-galleria)': { bg: '#457cce', text: '#fff' }
     };
 
-    // =========================================================================
-    // VALIKKOMENUT
-    // =========================================================================
-
+    // ... (VALIKKOMENUT koodi pysyy samana) ...
     async function openSortableSettings() {
         if (document.getElementById('hn-settings-overlay')) return;
 
@@ -280,226 +250,205 @@
     }
     GM_registerMenuCommand('Toggle Stopword Popup (ON/OFF)', togglePopup, 't');
 
-
     // =========================================================================
-    // HUUTO.NET LOGIC
+    // SITE LOGIC HANDLERS
     // =========================================================================
 
-    if (window.location.href.includes('huuto.net/kohteet/')) {
-        (async () => {
-            const h1 = document.querySelector("h1.item-title");
-            if (!h1) return;
+    async function handleHuutoNet() {
+        if (!window.location.href.includes('huuto.net/kohteet/')) return;
+        const h1 = document.querySelector("h1.item-title");
+        if (!h1 || h1.dataset.processed) return;
+        h1.dataset.processed = 'true';
 
-            let isMovieCategory = false;
-            let isVHS = false;
-            const breadcrumbs = document.querySelectorAll('.breadcrumb--item a');
-            breadcrumbs.forEach(link => {
-                const href = link.getAttribute('href') || '';
-                const text = link.textContent.toLowerCase();
-                if (href.includes('/elokuvat/') || text.includes('elokuvat') || href.includes('dvd') || text.includes('video')) isMovieCategory = true;
-                if (href.includes('vhs') || text.includes('vhs')) { isVHS = true; isMovieCategory = true; }
-            });
+        let isMovieCategory = false;
+        let isVHS = false;
+        let isDVD = false;
 
-            if (!isMovieCategory) return;
+        const breadcrumbs = document.querySelectorAll('.breadcrumb--item a');
+        breadcrumbs.forEach(link => {
+            const href = link.getAttribute('href') || '';
+            const text = link.textContent.toLowerCase();
 
-            // Stopword popup
-            h1.addEventListener('mouseup', async (e) => {
-                const isPopupEnabled = await GM_getValue(POPUP_ENABLED_KEY, false);
-                if (!isPopupEnabled) return;
+            if (href.includes('/elokuvat/') || text.includes('elokuvat') || href.includes('dvd') || text.includes('video')) isMovieCategory = true;
+            if (href.includes('vhs') || text.includes('vhs')) { isVHS = true; isMovieCategory = true; }
+            if (href.includes('dvd') || text.includes('dvd')) { isDVD = true; isMovieCategory = true; }
+        });
 
-                if (e.target.closest('a.custom-search-btn')) return;
-                const sel = window.getSelection().toString().trim();
-                if (sel) {
-                    const d = document.createElement('div');
-                    d.className = 'hn-stopword-popup';
-                    d.style.left = e.pageX + 'px'; d.style.top = (e.pageY+10) + 'px';
-                    d.innerText = `Exclude "${sel}"?`;
-                    d.onclick = async () => {
-                        const w = await GM_getValue(STOPWORDS_KEY, DEFAULT_CUSTOM_STOPWORDS);
-                        if (!w.includes(sel)) { w.push(sel); await GM_setValue(STOPWORDS_KEY, w); }
-                        d.remove();
-                    };
-                    document.body.appendChild(d);
-                    setTimeout(()=>d.remove(), 3000);
-                }
-            });
+        if (!isMovieCategory) return;
 
-            function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+        h1.addEventListener('mouseup', async (e) => {
+            const isPopupEnabled = await GM_getValue(POPUP_ENABLED_KEY, false);
+            if (!isPopupEnabled) return;
 
-            const fullText = h1.innerText.trim();
-            const customStopwords = await GM_getValue(STOPWORDS_KEY, DEFAULT_CUSTOM_STOPWORDS);
-            let customRegex = null;
-            if (customStopwords && customStopwords.length > 0) {
-                const pattern = '\\b(' + customStopwords.map(escapeRegExp).join('|') + ')\\b';
-                customRegex = new RegExp(pattern, 'ig');
-            }
-            let shortText = fullText;
-
-            // 1.4.9 FIX: Cut everything after the first open parenthesis
-            if (shortText.includes('(')) {
-                shortText = shortText.split('(')[0];
-            }
-
-            if (customRegex) shortText = shortText.replace(customRegex, '');
-
-            // 1.4.4 FIX: Add space between "Word -Word" -> "Word - Word"
-            shortText = shortText.replace(/(\s-)(\S)/g, '$1 $2');
-
-            shortText = shortText.replace(/\b\d+\s*DVD\b/ig, '').replace(/\bDVD\b/ig, '').replace(/\bBlu[- ]?ray\b/ig, '').replace(/\b4K\s*(?:UHD|Ultra\s*HD)\b/ig, '').replace(/\s+/g, ' ').trim();
-            const match = shortText.match(/^(.*?\(\s*\d{4})/);
-            if (match && match[1]) shortText = match[1].trim();
-            const encodedQuery = encodeURIComponent(shortText);
-
-            const buttonContainer = document.createElement('div');
-            buttonContainer.style.cssText = 'display:inline-flex;align-items:center;gap:8px;margin-left:12px;vertical-align:middle;';
-
-            function createBtn(url, title, bg, text, iconHtml) {
-                const btn = document.createElement('a');
-                btn.href = url;
-                btn.title = title;
-                btn.className = 'custom-search-btn';
-                // Fixed 26x26 square, no padding
-                btn.style.cssText = `display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;background-color:${bg};border-radius:4px;text-decoration:none;transition:background-color 0.2s ease;color:${text};`;
-
-                btn.onmouseenter = () => btn.style.opacity = '0.9';
-                btn.onmouseleave = () => btn.style.opacity = '1';
-
-                btn.addEventListener('click', (e) => {
-                    if (e.button === 0 && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
-                        e.preventDefault();
-                        GM_openInTab(url, { active: false });
-                    }
-                });
-
-                const iconContainer = document.createElement('span');
-                iconContainer.style.display = 'flex';
-                iconContainer.style.alignItems = 'center';
-                iconContainer.innerHTML = iconHtml;
-                btn.appendChild(iconContainer);
-                return btn;
-            }
-
-            const buttons = {
-                'IMDb': () => createBtn("https://www.imdb.com/find/?s=all&q=" + encodedQuery, 'IMDb', COLORS.IMDb.bg, COLORS.IMDb.text, ICONS.IMDb),
-                // 1.5.3 FIX: Show FIx-galleria button only if it's VHS
-                'FIx-galleria': () => isVHS ? createBtn('https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery, 'FIx-galleria', COLORS['FIx-galleria'].bg, COLORS['FIx-galleria'].text, ICONS['FIx-galleria']) : null,
-                'Videospace': () => createBtn('https://videospace.fi/releases?se=' + encodedQuery, 'Videospace', COLORS.Videospace.bg, COLORS.Videospace.text, ICONS.Videospace),
-                'Finna': () => createBtn('https://www.finna.fi/Search/Results?limit=20&lookfor=' + encodedQuery + '&type=Title&filter%5B%5D=%7Eformat_ext_str_mv%3A%220%2FVideo%2F%22', 'Finna', COLORS.Finna.bg, COLORS.Finna.text, ICONS.Finna),
-
-                // FIX-PROXY - ONLY IF VHS
-                'IMDb (via FIx-galleria)': () => isVHS ? createBtn(
-                    'https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery + '&autoredirect=imdb',
-                    'Etsi FIx-galleriasta ja avaa IMDb',
-                    COLORS['IMDb (via FIx-galleria)'].bg, COLORS['IMDb (via FIx-galleria)'].text, ICONS['IMDb (via FIx-galleria)']
-                ) : null,
-                'OS (via FIx-galleria)': () => isVHS ? createBtn(
-                    'https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery + '&autoredirect=os',
-                    'Etsi FIx-galleriasta ja avaa OpenSubtitles',
-                    COLORS['OS (via FIx-galleria)'].bg, COLORS['OS (via FIx-galleria)'].text, ICONS['OS (via FIx-galleria)']
-                ) : null,
-                'SB (via FIx-galleria)': () => isVHS ? createBtn(
-                    'https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery + '&autoredirect=sb',
-                    'Etsi FIx-galleriasta ja avaa Superbits',
-                    COLORS['SB (via FIx-galleria)'].bg, COLORS['SB (via FIx-galleria)'].text, ICONS['SB (via FIx-galleria)']
-                ) : null
-            };
-
-            const userOrderStr = await GM_getValue(BUTTON_ORDER_KEY, DEFAULT_BUTTON_ORDER);
-            let order = userOrderStr.split(',').map(s => s.trim());
-            const allKeys = Object.keys(buttons);
-            order = [...new Set([...order, ...allKeys])].filter(k => allKeys.includes(k));
-
-            const disabledKeys = await GM_getValue(DISABLED_BUTTONS_KEY, DEFAULT_DISABLED_BUTTONS);
-
-            order.forEach(key => {
-                if (disabledKeys.includes(key)) return;
-                const btnFunc = buttons[key];
-                if (btnFunc) {
-                    const btn = btnFunc();
-                    if (btn) buttonContainer.appendChild(btn);
-                }
-            });
-
-            h1.style.display = 'inline-flex';
-            h1.style.alignItems = 'center';
-            h1.style.flexWrap = 'wrap';
-            h1.appendChild(buttonContainer);
-        })();
-    }
-
-    // =========================================================================
-    // VIDEOSPACE REDIRECT (Updated 1.4.3: Wait for both count and link)
-    // =========================================================================
-    if (window.location.href.includes('videospace.fi/releases?se=')) {
-        // Luodaan oma tarkkailija, joka varmistaa sekä tulosmäärän että linkin olemassaolon
-        const observer = new MutationObserver(() => {
-            const countEl = document.querySelector('.row.mt-0.mb-1 .smaller-txt b');
-            const link = document.querySelector('.row.mt-0.align-center .pa-1.relative a[href^="/release/"]');
-
-            // Odotetaan, että molemmat ovat olemassa ja count on "1"
-            if (countEl && countEl.textContent.trim() === '1' && link) {
-                observer.disconnect();
-                showRedirectOverlay('Videospace');
-                setTimeout(() => window.location.href = 'https://videospace.fi' + link.getAttribute('href'), 11);
+            if (e.target.closest('a.custom-search-btn')) return;
+            const sel = window.getSelection().toString().trim();
+            if (sel) {
+                const d = document.createElement('div');
+                d.className = 'hn-stopword-popup';
+                d.style.left = e.pageX + 'px'; d.style.top = (e.pageY+10) + 'px';
+                d.innerText = `Exclude "${sel}"?`;
+                d.onclick = async () => {
+                    const w = await GM_getValue(STOPWORDS_KEY, DEFAULT_CUSTOM_STOPWORDS);
+                    if (!w.includes(sel)) { w.push(sel); await GM_setValue(STOPWORDS_KEY, w); }
+                    d.remove();
+                };
+                document.body.appendChild(d);
+                setTimeout(()=>d.remove(), 3000);
             }
         });
 
-        observer.observe(document.body, { childList: true, subtree: true });
+        function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
-        // Varmuuden vuoksi lopetetaan tarkkailu 5 sekunnin kuluttua
-        setTimeout(() => observer.disconnect(), 5000);
+        const fullText = h1.innerText.trim();
+        const customStopwords = await GM_getValue(STOPWORDS_KEY, DEFAULT_CUSTOM_STOPWORDS);
+        let customRegex = null;
+        if (customStopwords && customStopwords.length > 0) {
+            const pattern = '\\b(' + customStopwords.map(escapeRegExp).join('|') + ')\\b';
+            customRegex = new RegExp(pattern, 'ig');
+        }
+        let shortText = fullText;
+        if (shortText.includes('(')) shortText = shortText.split('(')[0];
+        if (customRegex) shortText = shortText.replace(customRegex, '');
+        shortText = shortText.replace(/(\s-)(\S)/g, '$1 $2');
+        shortText = shortText.replace(/\b\d+\s*DVD\b/ig, '').replace(/\bDVD\b/ig, '').replace(/\bBlu[- ]?ray\b/ig, '').replace(/\b4K\s*(?:UHD|Ultra\s*HD)\b/ig, '').replace(/\s+/g, ' ').trim();
+        const match = shortText.match(/^(.*?\(\s*\d{4})/);
+        if (match && match[1]) shortText = match[1].trim();
+        const encodedQuery = encodeURIComponent(shortText);
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = 'display:inline-flex;align-items:center;gap:8px;margin-left:12px;vertical-align:middle;';
+
+        function createBtn(url, title, bg, text, iconHtml) {
+            const btn = document.createElement('a');
+            btn.href = url;
+            btn.title = title;
+            btn.className = 'custom-search-btn';
+            btn.style.cssText = `display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;background-color:${bg};border-radius:4px;text-decoration:none;transition:background-color 0.2s ease;color:${text};`;
+            btn.onmouseenter = () => btn.style.opacity = '0.9';
+            btn.onmouseleave = () => btn.style.opacity = '1';
+            btn.addEventListener('click', (e) => {
+                if (e.button === 0 && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
+                    e.preventDefault();
+                    GM_openInTab(url, { active: false });
+                }
+            });
+            const iconContainer = document.createElement('span');
+            iconContainer.style.display = 'flex';
+            iconContainer.style.alignItems = 'center';
+            iconContainer.innerHTML = iconHtml;
+            btn.appendChild(iconContainer);
+            return btn;
+        }
+
+        let vsQueryUrl = 'https://videospace.fi/releases?se=' + encodedQuery;
+        if (isVHS) vsQueryUrl += '&fo=2';
+        else if (isDVD) vsQueryUrl += '&fo=3';
+        else vsQueryUrl += '&fo=7&fo=11&fo=1&fo=5&fo=6&fo=8&fo=9';
+
+        const buttons = {
+            'IMDb': () => createBtn("https://www.imdb.com/find/?s=all&q=" + encodedQuery, 'IMDb', COLORS.IMDb.bg, COLORS.IMDb.text, ICONS.IMDb),
+            'FIx-galleria': () => isVHS ? createBtn('https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery, 'FIx-galleria', COLORS['FIx-galleria'].bg, COLORS['FIx-galleria'].text, ICONS['FIx-galleria']) : null,
+            'Videospace': () => createBtn(vsQueryUrl, 'Videospace', COLORS.Videospace.bg, COLORS.Videospace.text, ICONS.Videospace),
+            'Finna': () => createBtn('https://www.finna.fi/Search/Results?limit=20&lookfor=' + encodedQuery + '&type=Title&filter%5B%5D=%7Eformat_ext_str_mv%3A%220%2FVideo%2F%22', 'Finna', COLORS.Finna.bg, COLORS.Finna.text, ICONS.Finna),
+            'IMDb (via FIx-galleria)': () => isVHS ? createBtn('https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery + '&autoredirect=imdb', 'Etsi FIx-galleriasta ja avaa IMDb', COLORS['IMDb (via FIx-galleria)'].bg, COLORS['IMDb (via FIx-galleria)'].text, ICONS['IMDb (via FIx-galleria)']) : null,
+            'OS (via FIx-galleria)': () => isVHS ? createBtn('https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery + '&autoredirect=os', 'Etsi FIx-galleriasta ja avaa OpenSubtitles', COLORS['OS (via FIx-galleria)'].bg, COLORS['OS (via FIx-galleria)'].text, ICONS['OS (via FIx-galleria)']) : null,
+            'SB (via FIx-galleria)': () => isVHS ? createBtn('https://www.fixgalleria.net/haku?tyyppi=julkaisu&q=' + encodedQuery + '&autoredirect=sb', 'Etsi FIx-galleriasta ja avaa Superbits', COLORS['SB (via FIx-galleria)'].bg, COLORS['SB (via FIx-galleria)'].text, ICONS['SB (via FIx-galleria)']) : null
+        };
+
+        const userOrderStr = await GM_getValue(BUTTON_ORDER_KEY, DEFAULT_BUTTON_ORDER);
+        let order = userOrderStr.split(',').map(s => s.trim());
+        const allKeys = Object.keys(buttons);
+        order = [...new Set([...order, ...allKeys])].filter(k => allKeys.includes(k));
+        const disabledKeys = await GM_getValue(DISABLED_BUTTONS_KEY, DEFAULT_DISABLED_BUTTONS);
+
+        order.forEach(key => {
+            if (disabledKeys.includes(key)) return;
+            const btnFunc = buttons[key];
+            if (btnFunc) {
+                const btn = btnFunc();
+                if (btn) buttonContainer.appendChild(btn);
+            }
+        });
+
+        h1.style.display = 'inline-flex';
+        h1.style.alignItems = 'center';
+        h1.style.flexWrap = 'wrap';
+        h1.appendChild(buttonContainer);
     }
 
-    // =========================================================================
-    // FIXGALLERIA SEARCH REDIRECT (Optimized + Smart Search)
-    // =========================================================================
-    if (window.location.href.includes('fixgalleria.net/haku')) {
-        let attempted = false;
+    function handleVideospace() {
+        if (!window.location.href.includes('videospace.fi/releases?se=')) return;
+        const countEl = document.querySelector('.row.mt-0.mb-1 .smaller-txt b');
+        const link = document.querySelector('.row.mt-0.align-center .pa-1.relative a[href^="/release/"]');
+        if (countEl && countEl.textContent.trim() === '1' && link) {
+            showRedirectOverlay('Videospace');
+            setTimeout(() => window.location.href = 'https://videospace.fi' + link.getAttribute('href'), 11);
+        }
+    }
+
+    function handleFixGalleriaSearch() {
+        if (!window.location.href.includes('fixgalleria.net/haku')) return;
+        if (document.body.dataset.redirectAttempted) return;
+
         const urlParams = new URLSearchParams(window.location.search);
         const searchQuery = urlParams.get('q');
         const autoRedirectMode = urlParams.get('autoredirect');
+        const items = document.querySelectorAll('.g-items-container a.g-list-item-link');
+        const itemsArray = Array.from(items);
 
-        waitForElement('.g-items-container', () => {
-            if (attempted) return;
-            const items = document.querySelectorAll('.g-items-container a.g-list-item-link');
-            let targetItem = null;
+        let exactMatchCount = 0;
+        let targetItem = null;
 
-            if (items.length === 1) {
-                targetItem = items[0];
-            } else if (items.length > 1 && searchQuery) {
-                const cleanQuery = searchQuery.trim().toLowerCase();
-                const itemsArray = Array.from(items);
-                targetItem = itemsArray.find(item => {
-                    const titleContainer = item.querySelector('.g-list-item-title-container');
-                    if (!titleContainer) return false;
+        if (items.length === 1) {
+            targetItem = items[0];
+            exactMatchCount = 1;
+        } else if (items.length > 1 && searchQuery) {
+            const cleanQuery = searchQuery.trim().toLowerCase();
+            itemsArray.forEach(item => {
+                const titleContainer = item.querySelector('.g-list-item-title-container');
+                if (titleContainer) {
                     const cleanTitle = titleContainer.textContent.trim().replace(/\s*\(\d{4}(?:–\d{4})?\)$/, '').trim().toLowerCase();
-                    return cleanTitle === cleanQuery;
-                });
-            }
-
-            if (targetItem) {
-                attempted = true;
-                let targetUrl = targetItem.href;
-                if (autoRedirectMode) {
-                    targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'autoredirect=' + autoRedirectMode;
+                    if (cleanTitle === cleanQuery) {
+                        exactMatchCount++;
+                        targetItem = item;
+                    }
                 }
-                showRedirectOverlay(autoRedirectMode ? 'FIx-galleria (Proxy)' : 'FIx-galleria');
-                setTimeout(() => window.location.href = targetUrl, 11);
+            });
+        }
+
+        if (exactMatchCount === 1 && targetItem) {
+            document.body.dataset.redirectAttempted = 'true';
+            let targetUrl = targetItem.href;
+            if (autoRedirectMode) {
+                targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'autoredirect=' + autoRedirectMode;
             }
-        });
+            showRedirectOverlay(autoRedirectMode ? 'FIx-galleria (Proxy)' : 'FIx-galleria');
+            setTimeout(() => window.location.href = targetUrl, 11);
+        } else if (autoRedirectMode) {
+            // Add params to links for manual selection
+            itemsArray.forEach(item => {
+                let currentHref = item.getAttribute('href');
+                if (currentHref && !currentHref.includes('autoredirect=')) {
+                    const separator = currentHref.includes('?') ? '&' : '?';
+                    item.setAttribute('href', currentHref + separator + 'autoredirect=' + autoRedirectMode);
+                }
+            });
+        }
     }
 
-    // =========================================================================
-    // FIXGALLERIA ITEM PROXY REDIRECT (Optimized)
-    // =========================================================================
-    if (window.location.href.includes('fixgalleria.net/julkaisu')) {
+    function handleFixGalleriaItem() {
+        if (!window.location.href.includes('fixgalleria.net/julkaisu')) return;
         const urlParams = new URLSearchParams(window.location.search);
         const autoRedirectMode = urlParams.get('autoredirect');
 
-        if (autoRedirectMode) {
-            waitForElement('a.g-imdb-link', (imdbLink) => {
+        if (autoRedirectMode && !document.body.dataset.redirectAttempted) {
+            // Try to find ANY link to IMDb, not just by class
+            const imdbLink = document.querySelector('a[href*="imdb.com/title"]');
+
+            if (imdbLink) {
                 const match = imdbLink.href.match(/tt\d+/);
                 if (match) {
+                    document.body.dataset.redirectAttempted = 'true';
                     const imdbId = match[0];
                     const imdbNum = imdbId.replace('tt', '');
 
@@ -521,63 +470,88 @@
                     document.body.appendChild(d);
                     setTimeout(() => window.location.href = targetUrl, 11);
                 }
-            });
+            }
+        }
+    }
+
+    function handleFinna() {
+        if (!window.location.href.includes('finna.fi/Search/Results')) return;
+        const countEl = document.querySelector('.search-stats .total');
+        if (countEl && countEl.textContent.trim() === '1') {
+            const link = document.querySelector('.record-list .result .title-container .search-title a.title');
+            if (link) {
+                showRedirectOverlay('Finna');
+                setTimeout(() => window.location.href = link.href, 11);
+            }
+        }
+    }
+
+    function handleFinnaExpand() {
+        if (!window.location.hostname.includes('finna.fi')) return;
+        const btn = document.querySelector('button.show-details-button');
+        if (btn && btn.offsetParent !== null && !btn.dataset.clicked) {
+            btn.click();
+            btn.dataset.clicked = 'true';
+        }
+    }
+
+    function handleImdb() {
+        if (!window.location.hostname.includes('imdb.com') || !window.location.pathname.includes('/find/')) return;
+        const titleSection = document.querySelector('[data-testid="find-results-section-title"]');
+        if (!titleSection) return;
+        const items = titleSection.querySelectorAll('.ipc-metadata-list-summary-item');
+        if (items.length === 1) {
+            const link = items[0].querySelector('a.ipc-title-link-wrapper');
+            if (link) {
+                showRedirectOverlay('IMDb');
+                setTimeout(() => window.location.href = link.href, 11);
+            }
         }
     }
 
     // =========================================================================
-    // FINNA REDIRECT (Optimized)
+    // MAIN LOOP (Robust SPA Support)
     // =========================================================================
-    if (window.location.href.includes('finna.fi/Search/Results')) {
-        let attempted = false;
-        waitForElement('.search-stats .total', (countEl) => {
-            if (attempted || countEl.textContent.trim() !== '1') return;
-            const link = document.querySelector('.record-list .result .title-container .search-title a.title');
-            if (link) {
-                attempted = true;
-                showRedirectOverlay('Finna');
-                setTimeout(() => window.location.href = link.href, 11);
-            }
-        });
+
+    let lastUrl = window.location.href;
+
+    // Main Runner
+    function runAllChecks() {
+        handleHuutoNet();
+        handleVideospace();
+        handleFixGalleriaSearch();
+        handleFixGalleriaItem();
+        handleFinna();
+        handleFinnaExpand();
+        handleImdb();
     }
 
-    // =========================================================================
-    // FINNA AUTO-EXPAND (Robust interval fix)
-    // =========================================================================
-    if (window.location.hostname.includes('finna.fi')) {
-        const clicker = setInterval(() => {
-            const btn = document.querySelector('button.show-details-button');
-            if (btn && btn.offsetParent !== null && !btn.dataset.clicked) {
-                btn.click();
-                btn.dataset.clicked = 'true';
-                clearInterval(clicker);
-            }
-        }, 200);
-        setTimeout(() => clearInterval(clicker), 5000); // Stop trying after 5s
-    }
+    // Initial Run
+    runAllChecks();
 
-    // =========================================================================
-    // IMDb REDIRECT (Titles only)
-    // =========================================================================
-    if (window.location.hostname.includes('imdb.com') && window.location.pathname.includes('/find/')) {
-        let attempted = false;
-        waitForElement('[data-testid="find-results-section-title"] .ipc-metadata-list-summary-item', () => {
-            if (attempted) return;
+    // Loop for SPA/AJAX changes
+    setInterval(() => {
+        const currentUrl = window.location.href;
 
-            const titleSection = document.querySelector('[data-testid="find-results-section-title"]');
-            if (!titleSection) return;
+        // Detect URL change
+        if (currentUrl !== lastUrl) {
+            lastUrl = currentUrl;
+            document.body.dataset.redirectAttempted = ''; // Reset redirect state
+            // Give DOM a moment to update after URL change
+            setTimeout(runAllChecks, 500);
+        } else {
+            // Also run checks periodically for slow-loading content (like FIx-galleria items)
+            if (window.location.hostname.includes('fixgalleria.net')) handleFixGalleriaItem();
+            if (window.location.hostname.includes('videospace.fi')) handleVideospace();
+            if (window.location.hostname.includes('finna.fi')) handleFinna();
+        }
+    }, 1000);
 
-            const items = titleSection.querySelectorAll('.ipc-metadata-list-summary-item');
-
-            if (items.length === 1) {
-                const link = items[0].querySelector('a.ipc-title-link-wrapper');
-                if (link) {
-                    attempted = true;
-                    showRedirectOverlay('IMDb');
-                    setTimeout(() => window.location.href = link.href, 11);
-                }
-            }
-        });
-    }
+    // MutationObserver fallback for rapid DOM changes
+    const observer = new MutationObserver(() => {
+        if (window.location.hostname.includes('huuto.net')) handleHuutoNet();
+        if (window.location.hostname.includes('imdb.com')) handleImdb();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
 })();

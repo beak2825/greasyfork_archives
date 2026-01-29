@@ -14,7 +14,7 @@
 // @grant           GM_xmlhttpRequest
 // @match           https://x.com/*
 // @match           https://twitter.com/*
-// @version         1.1.0
+// @version         1.1.1
 // @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js
 // @downloadURL https://update.greasyfork.org/scripts/560318/TwitterX%20Media%20Downloader.user.js
 // @updateURL https://update.greasyfork.org/scripts/560318/TwitterX%20Media%20Downloader.meta.js
@@ -36,1018 +36,1078 @@ const FILENAME_PATTERN = '@{user-id}-{status-id}';
 const INVALID_CHARS = { '\\': '＼', '/': '／', '|': '｜', '<': '＜', '>': '＞', ':': '：', '*': '＊', '?': '？', '"': '＂', '\u200b': '', '\u200c': '', '\u200d': '', '\u2060': '', '\ufeff': '', '🔞': '' };
 // Selectors for media elements in the DOM
 const MEDIA_SELECTOR = [
-    'a[href*="/photo/1"]', 'div[role="progressbar"]', 'button[data-testid="playButton"]',
-    'a[href="/settings/content_you_see"]', 'div.media-image-container', 'div.media-preview-container',
-    'div[aria-labelledby]>div:first-child>div[role="button"][tabindex="0"]'
+  'a[href*="/photo/1"]', 'div[role="progressbar"]', 'button[data-testid="playButton"]',
+  'a[href="/settings/content_you_see"]', 'div.media-image-container', 'div.media-preview-container',
+  'div[aria-labelledby]>div:first-child>div[role="button"][tabindex="0"]'
 ].join(',');
 
 const WHATS_NEW = [
-    'Added the ability to look at and manage download history.',
-    'Added the ability to export download history.'
+  'Added download button to the image expansion modal (top-left of image).',
+  'Improved compatibility with various modal layouts.'
 ];
 
 const TMD = (function () {
-    // ==========================================
-    // State Variables
-    // ==========================================
-    let lang, host, is_tweetdeck;
-    let history_cache = new Set(); // Using Set for O(1) lookups and auto-deduplication
+  // ==========================================
+  // State Variables
+  // ==========================================
+  let lang, host, is_tweetdeck;
+  let history_cache = new Set(); // Using Set for O(1) lookups and auto-deduplication
 
-    // ==========================================
-    // Helper Functions (Private)
-    // ==========================================
+  // ==========================================
+  // Helper Functions (Private)
+  // ==========================================
 
-    // Safely extract tweet ID from URL, handling params like ?newtwitter=true
-    const getId = url => url.split('/status/').pop().split(/[/?#]/)[0];
+  // Safely extract tweet ID from URL, handling params like ?newtwitter=true
+  const getId = url => url.split('/status/').pop().split(/[/?#]/)[0];
 
-    // Sanitize string for markdown/filenames
-    const cleanText = str => str.replace(/([\\/|*?:\"\u200b-\u200d\u2060\ufeff]|🔞)/g, c => INVALID_CHARS[c] || '');
+  // Extract index from URL, handling params
+  const getIndex = url => {
+    if (!url.includes('/photo/')) return 1;
+    let index = url.split('/photo/')[1].split(/[/?#]/)[0];
+    return isNaN(parseInt(index)) ? 1 : index;
+  };
 
-    // Check if website is in dark mode
-    const updateTheme = () => {
-        let rgb = getComputedStyle(document.body).backgroundColor.match(/\d+/g);
-        if (rgb && (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) < 128) {
-            document.body.classList.add('tmd-dark');
-        } else {
-            document.body.classList.remove('tmd-dark');
-        }
-    };
+  // Sanitize string for markdown/filenames
+  const cleanText = str => str.replace(/([\\/|*?:\"\u200b-\u200d\u2060\ufeff]|🔞)/g, c => INVALID_CHARS[c] || '');
 
-    // ==========================================
-    // Core Logic
-    // ==========================================
-    return {
-        /**
+  // Check if website is in dark mode
+  const updateTheme = () => {
+    let rgb = getComputedStyle(document.body).backgroundColor.match(/\d+/g);
+    if (rgb && (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) < 128) {
+      document.body.classList.add('tmd-dark');
+    } else {
+      document.body.classList.remove('tmd-dark');
+    }
+  };
+
+  // ==========================================
+  // Core Logic
+  // ==========================================
+  return {
+    /**
+     * Helper to create a download button with consistent attributes
+     */
+    createDownloadButton: function(status_id, img_uid, size = 18) {
+      let btn = document.createElement('div');
+      // SVG viewBox is always 24x24, but style controls display size
+      btn.innerHTML = `<div><div><svg viewBox="0 0 24 24" style="width: ${size}px; height: ${size}px;">${this.svg}</svg></div></div>`;
+      btn.classList.add('tmd-down');
+      
+      if (img_uid) {
+        btn.classList.add('tmd-img');
+        btn.dataset.imgUid = img_uid;
+      }
+      btn.dataset.statusId = status_id;
+      this.status(btn, 'download');
+      return btn;
+    },
+
+    /**
          * Initialize the script, register menu commands, and start the observer.
          */
-        init: async function () {
-            // Wait 100ms to allow Old Twitter DOM injection to occur (if present)
-            await new Promise(resolve => setTimeout(resolve, 100));
+    init: async function () {
+      // Wait 100ms to allow Old Twitter DOM injection to occur (if present)
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-            // Check for #oldtwitter-version to prevent running on incompatible layouts
-            if (document.querySelector('#oldtwitter-version')) {
-                console.log('TMD: Old Twitter Layout detected. Aborting.');
-                return;
-            }
+      // Check for #oldtwitter-version to prevent running on incompatible layouts
+      if (document.querySelector('#oldtwitter-version')) {
+        console.log('TMD: Old Twitter Layout detected. Aborting.');
+        return;
+      }
 
-            // Fix: Bind 'this' to settings so it functions correctly when called from menu
-            GM_registerMenuCommand((this.language[navigator.language] || this.language.en).settings, () => this.settings());
-            GM_registerMenuCommand('View History', () => this.viewHistory());
-            GM_registerMenuCommand('Export History (JSON)', async () => this.exportHistory());
+      // Fix: Bind 'this' to settings so it functions correctly when called from menu
+      GM_registerMenuCommand((this.language[navigator.language] || this.language.en).settings, () => this.settings());
+      GM_registerMenuCommand('View History', () => this.viewHistory());
+      GM_registerMenuCommand('Export History (JSON)', async () => this.exportHistory());
 
-            lang = this.language[document.querySelector('html').lang] || this.language.en;
-            host = location.hostname;
-            is_tweetdeck = host.includes('tweetdeck');
+      lang = this.language[document.querySelector('html').lang] || this.language.en;
+      host = location.hostname;
+      is_tweetdeck = host.includes('tweetdeck');
 
-            // Load history from storage into memory cache
-            await this.history_load();
+      // Load history from storage into memory cache
+      await this.history_load();
 
-            document.head.insertAdjacentHTML('beforeend', '<style>' + this.css + '</style>');
+      document.head.insertAdjacentHTML('beforeend', '<style>' + this.css + '</style>');
 
-            // Initial theme check
-            updateTheme();
+      // Initial theme check
+      updateTheme();
 
-            // Check for version update
-            this.checkVersion();
+      // Check for version update
+      this.checkVersion();
 
-            // Observer to detect new tweets and theme changes
-            new MutationObserver(ms => {
-                ms.forEach(m => {
-                    if (m.target === document.body && m.attributeName === 'style') updateTheme();
-                    m.addedNodes.forEach(node => this.detect(node));
-                });
-            }).observe(document.body, { childList: true, subtree: true, attributes: true });
+      // Observer to detect new tweets and theme changes
+      new MutationObserver(ms => {
+        ms.forEach(m => {
+          if (m.target === document.body && m.attributeName === 'style') updateTheme();
+          m.addedNodes.forEach(node => this.detect(node));
+        });
+      }).observe(document.body, { childList: true, subtree: true, attributes: true });
 
-            // MANUAL SWEEP: Detect content that loaded during the 100ms delay
-            document.querySelectorAll('article').forEach(article => this.addButtonTo(article));
-            const existingMediaTabs = document.querySelectorAll('li[role="listitem"]');
-            if (existingMediaTabs.length > 0) {
-                this.addButtonToMedia(existingMediaTabs);
-            }
-        },
+      // MANUAL SWEEP: Detect content that loaded during the 100ms delay
+      document.querySelectorAll('article').forEach(article => this.addButtonTo(article));
+      document.querySelectorAll('div[aria-label="Image"]').forEach(img => this.addButtonToExpandedImage(img));
+      const existingMediaTabs = document.querySelectorAll('li[role="listitem"]');
+      if (existingMediaTabs.length > 0) {
+        this.addButtonToMedia(existingMediaTabs);
+      }
+    },
 
-        // ==========================================
-        // What's New Logic
-        // ==========================================
-        checkVersion: async function() {
-            const lastVersion = await GM_getValue('last_version', '0.0.0');
-            if (lastVersion !== GM_info.script.version) {
-                setTimeout(() => this.showWhatsNew(), 1500);
-            }
-        },
+    // ==========================================
+    // What's New Logic
+    // ==========================================
+    checkVersion: async function() {
+      const lastVersion = await GM_getValue('last_version', '0.0.0');
+      if (lastVersion !== GM_info.script.version) {
+        setTimeout(() => this.showWhatsNew(), 1500);
+      }
+    },
 
-        showWhatsNew: function() {
-            const createElement = (parent, tagName, content, className) => {
-                let el = document.createElement(tagName);
-                if (content) el.innerHTML = content;
-                if (className) el.className = className;
-                parent.appendChild(el); return el;
-            };
+    showWhatsNew: function() {
+      const createElement = (parent, tagName, content, className) => {
+        let el = document.createElement(tagName);
+        if (content) el.innerHTML = content;
+        if (className) el.className = className;
+        parent.appendChild(el); return el;
+      };
 
-            const modal = createElement(document.body, 'div', '', 'tmd-wn-modal');
+      const modal = createElement(document.body, 'div', '', 'tmd-wn-modal');
 
-            const header = createElement(modal, 'div', '', 'tmd-wn-header');
-            const title = createElement(header, 'div', 'WHAT\'S NEW', 'tmd-wn-title');
-            createElement(title, 'span', `v${GM_info.script.version}`, 'tmd-wn-tag');
+      const header = createElement(modal, 'div', '', 'tmd-wn-header');
+      const title = createElement(header, 'div', 'WHAT\'S NEW', 'tmd-wn-title');
+      createElement(title, 'span', `v${GM_info.script.version}`, 'tmd-wn-tag');
 
-            const closeBtn = createElement(header, 'div', '×', 'tmd-wn-close');
-            closeBtn.onclick = () => {
-                GM_setValue('last_version', GM_info.script.version);
-                modal.style.transform = 'translateX(120%)';
-                setTimeout(() => modal.remove(), 500);
-            };
+      const closeBtn = createElement(header, 'div', '×', 'tmd-wn-close');
+      closeBtn.onclick = () => {
+        GM_setValue('last_version', GM_info.script.version);
+        modal.style.transform = 'translateX(120%)';
+        setTimeout(() => modal.remove(), 500);
+      };
 
-            const list = createElement(modal, 'ul', '', 'tmd-wn-list');
-            WHATS_NEW.forEach(item => {
-                createElement(list, 'li', item);
-            });
-        },
+      const list = createElement(modal, 'ul', '', 'tmd-wn-list');
+      WHATS_NEW.forEach(item => {
+        createElement(list, 'li', item);
+      });
+    },
 
-        // ==========================================
-        // History Management (Refactored)
-        // ==========================================
+    // ==========================================
+    // History Management (Refactored)
+    // ==========================================
 
-        history_load: async function() {
-            // 1. Load standard GM storage
-            let gm_data = await GM_getValue('download_history', []);
+    history_load: async function() {
+      // 1. Load standard GM storage
+      let gm_data = await GM_getValue('download_history', []);
 
-            // 2. Load legacy localStorage (migration path)
-            let ls_data = JSON.parse(localStorage.getItem('history') || '[]');
+      // 2. Load legacy localStorage (migration path)
+      let ls_data = JSON.parse(localStorage.getItem('history') || '[]');
 
-            // 3. Merge into Set (Handles deduplication automatically)
-            history_cache = new Set([...gm_data, ...ls_data]);
+      // 3. Merge into Set (Handles deduplication automatically)
+      history_cache = new Set([...gm_data, ...ls_data]);
 
-            // 4. Clean up legacy storage if found
-            if (ls_data.length > 0) {
-                localStorage.removeItem('history');
-                await this.history_save();
-            }
-        },
+      // 4. Clean up legacy storage if found
+      if (ls_data.length > 0) {
+        localStorage.removeItem('history');
+        await this.history_save();
+      }
+    },
 
-        history_add: async function(val) {
-            let prevSize = history_cache.size;
+    history_add: async function(val) {
+      let prevSize = history_cache.size;
 
-            // Handle both single string and array of strings
-            if (Array.isArray(val)) {
-                val.forEach(v => history_cache.add(v));
+      // Handle both single string and array of strings
+      if (Array.isArray(val)) {
+        val.forEach(v => history_cache.add(v));
+      } else {
+        history_cache.add(val);
+      }
+
+      // Only write to disk if something actually changed
+      if (history_cache.size > prevSize) {
+        await this.history_save();
+      }
+    },
+
+    history_save: async function() {
+      // Convert Set back to Array for storage
+      await GM_setValue('download_history', Array.from(history_cache));
+    },
+
+    history_clear: async function() {
+      // 1. Clear memory cache
+      history_cache.clear();
+
+      // 2. Clear persistent storage
+      await GM_setValue('download_history', []);
+
+      // 3. Visual Feedback: Reset all "Completed" buttons on the page to "Download"
+      document.querySelectorAll('.tmd-down.completed').forEach(btn => {
+        this.status(btn, 'download', lang.download);
+      });
+    },
+
+    // ==========================================
+    // View History
+    // ==========================================
+    viewHistory: async function() {
+      const createElement = (parent, tagName, content, className) => {
+        let el = document.createElement(tagName);
+        if (content !== undefined) {
+          if (tagName === 'input') el.value = content;
+          else el.innerHTML = content;
+        }
+        if (className) el.className = className;
+        parent.appendChild(el); return el;
+      };
+
+      let overlay = createElement(document.body, 'div', '', 'tmd-overlay');
+      let isOverlayClick;
+      overlay.onmousedown = e => isOverlayClick = e.target === overlay;
+      overlay.onmouseup = e => { if (isOverlayClick && e.target === overlay) overlay.remove(); };
+
+      let modal = createElement(overlay, 'div', '', 'tmd-modal');
+      createElement(modal, 'h3', 'Download History');
+
+      let layout = createElement(modal, 'div', '', 'tmd-history-layout');
+
+      let listContainer = createElement(layout, 'div', '', 'tmd-history-list');
+      let previewContainer = createElement(layout, 'div', '', 'tmd-preview-pane');
+      createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
+
+      let historyList = Array.from(history_cache);
+      if (historyList.length === 0) {
+        listContainer.innerHTML = '';
+        createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
+      } else {
+        let grouped = new Set();
+        historyList.reverse().forEach(id => grouped.add(id.split('_')[0]));
+        let uniqueIds = Array.from(grouped);
+
+        uniqueIds.forEach(realId => {
+          let row = this.createHistoryRow(realId, modal, listContainer, previewContainer, createElement);
+          listContainer.appendChild(row);
+        });
+      }
+
+      let footer = createElement(modal, 'div', '', 'tmd-footer');
+      footer.style.cssText = 'display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;';
+
+      let leftGroup = createElement(footer, 'div', '');
+      leftGroup.style.cssText = 'display: flex; gap: 10px;';
+
+      let clearBtn = createElement(leftGroup, 'button', 'Clear History', 'tmd-btn');
+      clearBtn.style.cssText = 'background-color: var(--tmd-state-fail); border-color: var(--tmd-state-fail); color: var(--tmd-text-btn); width: auto; padding: 8px 16px; font-size: 13px; margin: 0;';
+      clearBtn.onclick = () => {
+        if (confirm('Are you sure you want to clear all history?')) {
+          this.history_clear();
+          listContainer.innerHTML = '';
+          createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
+          previewContainer.innerHTML = '';
+          createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
+        }
+      };
+
+      let exportBtn = createElement(leftGroup, 'button', 'Export JSON', 'tmd-btn');
+      exportBtn.style.cssText = 'background-color: var(--tmd-state-done); border-color: var(--tmd-state-done); color: var(--tmd-icon-color); width: auto; padding: 8px 16px; font-size: 13px; margin: 0;';
+      exportBtn.onclick = () => this.exportHistory();
+
+      let closeBtn = createElement(footer, 'button', 'Close', 'tmd-btn');
+      closeBtn.style.cssText = 'width: auto; padding: 8px 24px; font-size: 13px; margin: 0;';
+      closeBtn.onclick = () => overlay.remove();
+    },
+
+    createHistoryRow: function(realId, modal, listContainer, previewContainer, createElement) {
+      let row = document.createElement('div');
+      row.className = 'tmd-history-row';
+
+      let link = createElement(row, 'a', realId, 'tmd-history-link');
+      link.href = '#';
+      link.onclick = async (e) => {
+        e.preventDefault();
+        modal.classList.add('tmd-expanded');
+
+        listContainer.querySelectorAll('.tmd-history-row').forEach(r => r.classList.remove('active'));
+        row.classList.add('active');
+
+        previewContainer.innerHTML = '';
+
+        let closePreview = createElement(previewContainer, 'div', '×', 'tmd-preview-close');
+        closePreview.onclick = () => {
+          modal.classList.remove('tmd-expanded');
+          listContainer.querySelectorAll('.tmd-history-row').forEach(r => r.classList.remove('active'));
+          previewContainer.innerHTML = '';
+          createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
+        };
+
+        let loading = createElement(previewContainer, 'div', 'Loading preview...', 'tmd-preview-loading');
+
+        try {
+          let json = await this.fetchJson(realId);
+          let tweet = json.legacy;
+          let user = json.core.user_results.result.legacy;
+
+          loading.remove();
+
+          this.createPreviewCard(tweet, user, previewContainer, createElement);
+
+        } catch (err) {
+          console.error(err);
+          loading.textContent = 'Error loading preview. Tweet might be deleted or private.';
+        }
+      };
+
+      let extLink = createElement(row, 'a', '&#x2197;', 'tmd-history-ext');
+      extLink.href = `https://x.com/i/web/status/${realId}`;
+      extLink.target = '_blank';
+      extLink.title = 'Open in new tab';
+
+      let delBtn = createElement(row, 'button', 'DELETE', 'tmd-btn-sm');
+      delBtn.onclick = async () => {
+        if(confirm(`Remove ${realId} and all its media from history?`)) {
+          let toRemove = [];
+          history_cache.forEach(k => {
+            if (k === realId || k.startsWith(realId + '_')) toRemove.push(k);
+          });
+          toRemove.forEach(k => history_cache.delete(k));
+
+          await this.history_save();
+          row.remove();
+          if (history_cache.size === 0) {
+            listContainer.innerHTML = '';
+            createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
+          }
+
+          let btn = document.querySelector(`.tmd-down[data-status-id="${realId}"]`);
+          if(btn) {
+            if (btn.dataset.statusId === realId) this.status(btn, 'download', lang.download);
+          }
+          document.querySelectorAll(`.tmd-down[data-status-id="${realId}"]`).forEach(imgBtn => {
+            this.status(imgBtn, 'download', lang.download);
+          });
+        }
+      };
+
+      return row;
+    },
+
+    createPreviewCard: function(tweet, user, container, createElement) {
+      let card = createElement(container, 'div', '', 'tmd-preview-card');
+
+      let header = createElement(card, 'div', '', 'tmd-card-header');
+      let avatar = createElement(header, 'img', '', 'tmd-card-avatar');
+      avatar.src = user.profile_image_url_https;
+      let userInfo = createElement(header, 'div', '', 'tmd-card-user');
+      createElement(userInfo, 'div', user.name, 'tmd-card-name');
+      createElement(userInfo, 'div', `@${user.screen_name}`, 'tmd-card-handle');
+
+      let fullText = tweet.full_text || '';
+      createElement(card, 'div', fullText, 'tmd-card-text');
+
+      let media = tweet.extended_entities?.media || tweet.media;
+      if (media && media.length) {
+        let mediaContainer = createElement(card, 'div', '', 'tmd-card-media');
+        mediaContainer.classList.add(`tmd-media-${Math.min(media.length, 4)}`);
+
+        media.forEach(m => {
+          let url = m.media_url_https;
+          if (m.type === 'video' || m.type === 'animated_gif') {
+            url = m.media_url_https; // Use thumbnail for video
+          }
+          let img = createElement(mediaContainer, 'img', '', 'tmd-card-img');
+          img.src = url;
+        });
+      }
+
+      let date = new Date(tweet.created_at);
+      createElement(card, 'div', date.toLocaleString(), 'tmd-card-date');
+    },
+
+    // ==========================================
+    // Export
+    // ==========================================
+    exportHistory: async function () {
+      try {
+        // Use cache for export
+        const historyList = Array.from(history_cache);
+        if (!historyList.length) return;
+
+        // Uniqueify tweet IDs (strip _index) to ensure we only fetch each tweet once
+        const uniqueTweetIds = Array.from(new Set(historyList.map(id => id.split('_')[0])));
+
+        const jsonContent = (await Promise.all(uniqueTweetIds.map(id => this.generateLogEntry(id))))
+          .filter(entry => entry !== null);
+
+        const blob = new Blob([JSON.stringify(jsonContent, null, 4)], { type: 'application/json;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `twitter_download_history_(${uniqueTweetIds.length}).json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+      } catch (error) {
+        console.error('Error exporting history:', error);
+        alert('An error occurred while exporting JSON history.');
+      }
+    },
+
+    generateLogEntry: async function (id, fetch = true) {
+      // Ensure we use the base tweet ID even if an individual media ID is passed
+      const tweet_id = id.split('_')[0];
+
+      if (!fetch) {
+        return {
+          tweet_id: tweet_id,
+          url: `https://x.com/i/web/status/${tweet_id}`,
+          error: 'Fetch disabled'
+        };
+      }
+
+      try {
+        let json = await this.fetchJson(tweet_id);
+        let tweet = json.quoted_status_result?.result?.legacy?.media || json.quoted_status_result?.result?.legacy || json.legacy;
+        let user = json.core.user_results.result.legacy;
+
+        // Clean inputs
+        let user_name = cleanText(user.name);
+        let full_text = cleanText(tweet.full_text.split('\n').join(' ').replace(/\s*https:\/\/t\.co\/\w+/g, ''));
+
+        return {
+          screen_name: user.screen_name,
+          user_name: user_name,
+          tweet_text: full_text,
+          tweet_id: tweet_id,
+          url: `https://x.com/${user.screen_name}/status/${tweet_id}`
+        };
+      } catch {
+        return {
+          tweet_id: tweet_id,
+          url: `https://x.com/i/web/status/${tweet_id}`,
+          error: 'Could not fetch details'
+        };
+      }
+    },
+
+    // ==========================================
+    // DOM Detection & UI Injection
+    // ==========================================
+    detect: function (node) {
+      // Standard: Check if node is ARTICLE or contains one
+      let article = (node.tagName === 'ARTICLE' && node) || (node.tagName === 'DIV' && (node.querySelector('article') || node.closest('article')));
+      if (article) this.addButtonTo(article);
+
+      // Standard: Check if node is listitem (media tab)
+      let listitems = (node.tagName === 'LI' && node.getAttribute('role') === 'listitem' && [node]) || (node.tagName === 'DIV' && node.querySelectorAll('li[role="listitem"]'));
+      if (listitems) this.addButtonToMedia(listitems);
+
+      // Modal Expanded Image
+      if (node.tagName === 'DIV') {
+        if (node.getAttribute('aria-label') === 'Image') {
+          this.addButtonToExpandedImage(node);
+        }
+        if (node.querySelectorAll) {
+          node.querySelectorAll('div[aria-label="Image"]').forEach(img => this.addButtonToExpandedImage(img));
+        }
+      }
+    },
+
+    addButtonToExpandedImage: function (container) {
+      // Check if button already exists
+      if (container.querySelector('.tmd-down.tmd-img')) return;
+
+      // Click Handler
+      const handleClick = (e, btn) => {
+        e.preventDefault(); e.stopPropagation();
+        let url = window.location.href;
+        let status_id = getId(url);
+        let index = getIndex(url);
+
+        // Update dataset for sync (in case URL changed without DOM rebuild)
+        btn.dataset.statusId = status_id;
+        btn.dataset.imgUid = `${status_id}_${index}`;
+
+        let is_exist = history_cache.has(status_id) || history_cache.has(`${status_id}_${index}`);
+        this.click(btn, status_id, is_exist, index);
+      };
+
+      // Initial Setup
+      let url = window.location.href;
+      let status_id = url.includes('/status/') ? getId(url) : 'unknown';
+      let index = getIndex(url);
+      
+      // Create Button (Size 24px for expanded modal)
+      let btn_down = this.createDownloadButton(status_id, `${status_id}_${index}`, 24);
+      btn_down.onclick = (e) => handleClick(e, btn_down);
+
+      // Check Status
+      if (status_id !== 'unknown') {
+        let is_exist = history_cache.has(status_id) || history_cache.has(`${status_id}_${index}`);
+        this.status(btn_down, is_exist ? 'completed' : 'download');
+      }
+
+      container.classList.add('tmd-img-parent');
+      container.appendChild(btn_down);
+    },
+
+    addButtonTo: function (article) {
+      // Check for valid tweet link
+      let statusLink = article.querySelector('a[href*="/status/"]');
+      if (!statusLink) return;
+
+      let status_id = getId(statusLink.href);
+
+      // =================================================================
+      // Main Button Logic (For Videos, GIFs, or Main Container)
+      // =================================================================
+      let media = article.querySelector(MEDIA_SELECTOR);
+      
+      // Filter out false positives (e.g., composer progress bar)
+      if (media && media.getAttribute('role') === 'progressbar') {
+        // Character count progress bar has aria-valuemax="100"
+        if (media.getAttribute('aria-valuemax') === '100' || media.closest('[data-testid="toolBar"]') || media.closest('[data-testid="inline_reply_offscreen"]')) {
+          media = null;
+        }
+      }
+
+      if (media) {
+        let btn_group = article.querySelector('div[role="group"]:last-of-type, ul.tweet-actions, ul.tweet-detail-actions');
+        if (btn_group) {
+          let existingBtn = btn_group.querySelector('.tmd-down:not(.tmd-img)');
+
+          // Cleanup Stale Button (Recycled DOM Node)
+          if (existingBtn && existingBtn.dataset.statusId !== status_id) {
+            existingBtn.remove();
+            existingBtn = null;
+          }
+
+          // Check history using Set
+          let is_exist = history_cache.has(status_id);
+
+          if (!existingBtn) {
+            let btn_share = Array.from(btn_group.querySelectorAll(':scope>div>div, li.tweet-action-item>a, li.tweet-detail-action-item>a')).pop().parentNode;
+            let btn_down = btn_share.cloneNode(true);
+
+            btn_down.querySelector('button').removeAttribute('disabled');
+
+            if (is_tweetdeck) {
+              btn_down.firstElementChild.innerHTML = `<svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">${this.svg}</svg>`;
+              btn_down.firstElementChild.removeAttribute('rel');
+              btn_down.classList.replace('pull-left', 'pull-right');
             } else {
-                history_cache.add(val);
+              btn_down.querySelector('svg').innerHTML = this.svg;
             }
 
-            // Only write to disk if something actually changed
-            if (history_cache.size > prevSize) {
-                await this.history_save();
-            }
-        },
-
-        history_save: async function() {
-            // Convert Set back to Array for storage
-            await GM_setValue('download_history', Array.from(history_cache));
-        },
-
-        history_clear: async function() {
-            // 1. Clear memory cache
-            history_cache.clear();
-
-            // 2. Clear persistent storage
-            await GM_setValue('download_history', []);
-
-            // 3. Visual Feedback: Reset all "Completed" buttons on the page to "Download"
-            document.querySelectorAll('.tmd-down.completed').forEach(btn => {
-                this.status(btn, 'download', lang.download);
-            });
-        },
-
-        // ==========================================
-        // View History
-        // ==========================================
-        viewHistory: async function() {
-            const createElement = (parent, tagName, content, className) => {
-                let el = document.createElement(tagName);
-                if (content !== undefined) {
-                    if (tagName === 'input') el.value = content;
-                    else el.innerHTML = content;
-                }
-                if (className) el.className = className;
-                parent.appendChild(el); return el;
-            };
-
-            let overlay = createElement(document.body, 'div', '', 'tmd-overlay');
-            let isOverlayClick;
-            overlay.onmousedown = e => isOverlayClick = e.target === overlay;
-            overlay.onmouseup = e => { if (isOverlayClick && e.target === overlay) overlay.remove(); };
-
-            let modal = createElement(overlay, 'div', '', 'tmd-modal');
-            createElement(modal, 'h3', 'Download History');
-
-            let layout = createElement(modal, 'div', '', 'tmd-history-layout');
-
-            let listContainer = createElement(layout, 'div', '', 'tmd-history-list');
-            let previewContainer = createElement(layout, 'div', '', 'tmd-preview-pane');
-            createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
-
-            let historyList = Array.from(history_cache);
-            if (historyList.length === 0) {
-                listContainer.innerHTML = '';
-                createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
-            } else {
-                let grouped = new Set();
-                historyList.reverse().forEach(id => grouped.add(id.split('_')[0]));
-                let uniqueIds = Array.from(grouped);
-
-                uniqueIds.forEach(realId => {
-                    let row = this.createHistoryRow(realId, modal, listContainer, previewContainer, createElement);
-                    listContainer.appendChild(row);
-                });
-            }
-
-            let footer = createElement(modal, 'div', '', 'tmd-footer');
-            footer.style.cssText = 'display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;';
-
-            let leftGroup = createElement(footer, 'div', '');
-            leftGroup.style.cssText = 'display: flex; gap: 10px;';
-
-            let clearBtn = createElement(leftGroup, 'button', 'Clear History', 'tmd-btn');
-            clearBtn.style.cssText = 'background-color: var(--tmd-state-fail); border-color: var(--tmd-state-fail); color: var(--tmd-text-btn); width: auto; padding: 8px 16px; font-size: 13px; margin: 0;';
-            clearBtn.onclick = () => {
-                if (confirm('Are you sure you want to clear all history?')) {
-                    this.history_clear();
-                    listContainer.innerHTML = '';
-                    createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
-                    previewContainer.innerHTML = '';
-                    createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
-                }
-            };
-
-            let exportBtn = createElement(leftGroup, 'button', 'Export JSON', 'tmd-btn');
-            exportBtn.style.cssText = 'background-color: var(--tmd-state-done); border-color: var(--tmd-state-done); color: var(--tmd-icon-color); width: auto; padding: 8px 16px; font-size: 13px; margin: 0;';
-            exportBtn.onclick = () => this.exportHistory();
-
-            let closeBtn = createElement(footer, 'button', 'Close', 'tmd-btn');
-            closeBtn.style.cssText = 'width: auto; padding: 8px 24px; font-size: 13px; margin: 0;';
-            closeBtn.onclick = () => overlay.remove();
-        },
-
-        createHistoryRow: function(realId, modal, listContainer, previewContainer, createElement) {
-            let row = document.createElement('div');
-            row.className = 'tmd-history-row';
-
-            let link = createElement(row, 'a', realId, 'tmd-history-link');
-            link.href = '#';
-            link.onclick = async (e) => {
-                e.preventDefault();
-                modal.classList.add('tmd-expanded');
-
-                listContainer.querySelectorAll('.tmd-history-row').forEach(r => r.classList.remove('active'));
-                row.classList.add('active');
-
-                previewContainer.innerHTML = '';
-
-                let closePreview = createElement(previewContainer, 'div', '×', 'tmd-preview-close');
-                closePreview.onclick = () => {
-                    modal.classList.remove('tmd-expanded');
-                    listContainer.querySelectorAll('.tmd-history-row').forEach(r => r.classList.remove('active'));
-                    previewContainer.innerHTML = '';
-                    createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
-                };
-
-                let loading = createElement(previewContainer, 'div', 'Loading preview...', 'tmd-preview-loading');
-
-                try {
-                    let json = await this.fetchJson(realId);
-                    let tweet = json.legacy;
-                    let user = json.core.user_results.result.legacy;
-
-                    loading.remove();
-
-                    this.createPreviewCard(tweet, user, previewContainer, createElement);
-
-                } catch (err) {
-                    console.error(err);
-                    loading.textContent = 'Error loading preview. Tweet might be deleted or private.';
-                }
-            };
-
-            let extLink = createElement(row, 'a', '&#x2197;', 'tmd-history-ext');
-            extLink.href = `https://x.com/i/web/status/${realId}`;
-            extLink.target = '_blank';
-            extLink.title = 'Open in new tab';
-
-            let delBtn = createElement(row, 'button', 'DELETE', 'tmd-btn-sm');
-            delBtn.onclick = async () => {
-                if(confirm(`Remove ${realId} and all its media from history?`)) {
-                    let toRemove = [];
-                    history_cache.forEach(k => {
-                        if (k === realId || k.startsWith(realId + '_')) toRemove.push(k);
-                    });
-                    toRemove.forEach(k => history_cache.delete(k));
-
-                    await this.history_save();
-                    row.remove();
-                    if (history_cache.size === 0) {
-                        listContainer.innerHTML = '';
-                        createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
-                    }
-
-                    let btn = document.querySelector(`.tmd-down[data-status-id="${realId}"]`);
-                    if(btn) {
-                        if (btn.dataset.statusId === realId) this.status(btn, 'download', lang.download);
-                    }
-                    document.querySelectorAll(`.tmd-down[data-status-id="${realId}"]`).forEach(imgBtn => {
-                        this.status(imgBtn, 'download', lang.download);
-                    });
-                }
-            };
-
-            return row;
-        },
-
-        createPreviewCard: function(tweet, user, container, createElement) {
-            let card = createElement(container, 'div', '', 'tmd-preview-card');
-
-            let header = createElement(card, 'div', '', 'tmd-card-header');
-            let avatar = createElement(header, 'img', '', 'tmd-card-avatar');
-            avatar.src = user.profile_image_url_https;
-            let userInfo = createElement(header, 'div', '', 'tmd-card-user');
-            createElement(userInfo, 'div', user.name, 'tmd-card-name');
-            createElement(userInfo, 'div', `@${user.screen_name}`, 'tmd-card-handle');
-
-            let fullText = tweet.full_text || '';
-            createElement(card, 'div', fullText, 'tmd-card-text');
-
-            let media = tweet.extended_entities?.media || tweet.media;
-            if (media && media.length) {
-                let mediaContainer = createElement(card, 'div', '', 'tmd-card-media');
-                mediaContainer.classList.add(`tmd-media-${Math.min(media.length, 4)}`);
-
-                media.forEach(m => {
-                    let url = m.media_url_https;
-                    if (m.type === 'video' || m.type === 'animated_gif') {
-                        url = m.media_url_https; // Use thumbnail for video
-                    }
-                    let img = createElement(mediaContainer, 'img', '', 'tmd-card-img');
-                    img.src = url;
-                });
-            }
-
-            let date = new Date(tweet.created_at);
-            createElement(card, 'div', date.toLocaleString(), 'tmd-card-date');
-        },
-
-        // ==========================================
-        // Export
-        // ==========================================
-        exportHistory: async function () {
-            try {
-                // Use cache for export
-                const historyList = Array.from(history_cache);
-                if (!historyList.length) return;
-
-                const jsonContent = (await Promise.all(historyList.map(id => this.generateLogEntry(id))))
-                    .filter(entry => entry !== null);
-
-                const blob = new Blob([JSON.stringify(jsonContent, null, 4)], { type: 'application/json;charset=utf-8' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `twitter_download_history_(${historyList.length}).json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(link.href);
-            } catch (error) {
-                console.error('Error exporting history:', error);
-                alert('An error occurred while exporting JSON history.');
-            }
-        },
-
-        generateLogEntry: async function (tweet_id, fetch = true) {
-            // Skip individual image history entries (e.g., 12345_1) when generating generic tweet history
-            if (tweet_id.includes('_')) return null;
-
-            if (!fetch) {
-                return {
-                    tweet_id: tweet_id,
-                    url: `https://x.com/i/web/status/${tweet_id}`,
-                    error: 'Fetch disabled'
-                };
-            }
-
-            try {
-                let json = await this.fetchJson(tweet_id);
-                let tweet = json.quoted_status_result?.result?.legacy?.media || json.quoted_status_result?.result?.legacy || json.legacy;
-                let user = json.core.user_results.result.legacy;
-
-                // Clean inputs
-                let user_name = cleanText(user.name);
-                let full_text = cleanText(tweet.full_text.split('\n').join(' ').replace(/\s*https:\/\/t\.co\/\w+/g, ''));
-
-                return {
-                    screen_name: user.screen_name,
-                    user_name: user_name,
-                    tweet_text: full_text,
-                    tweet_id: tweet_id,
-                    url: `https://x.com/${user.screen_name}/status/${tweet_id}`
-                };
-            } catch {
-                return {
-                    tweet_id: tweet_id,
-                    url: `https://x.com/i/web/status/${tweet_id}`,
-                    error: 'Could not fetch details'
-                };
-            }
-        },
-
-        // ==========================================
-        // DOM Detection & UI Injection
-        // ==========================================
-        detect: function (node) {
-            // Standard: Check if node is ARTICLE or contains one
-            let article = (node.tagName === 'ARTICLE' && node) || (node.tagName === 'DIV' && (node.querySelector('article') || node.closest('article')));
-            if (article) this.addButtonTo(article);
-
-            // Standard: Check if node is listitem (media tab)
-            let listitems = (node.tagName === 'LI' && node.getAttribute('role') === 'listitem' && [node]) || (node.tagName === 'DIV' && node.querySelectorAll('li[role="listitem"]'));
-            if (listitems) this.addButtonToMedia(listitems);
-        },
-
-        addButtonTo: function (article) {
-            // Check for valid tweet link
-            let statusLink = article.querySelector('a[href*="/status/"]');
-            if (!statusLink) return;
-
-            let status_id = getId(statusLink.href);
-
-            // =================================================================
-            // Main Button Logic (For Videos, GIFs, or Main Container)
-            // =================================================================
-            let media = article.querySelector(MEDIA_SELECTOR);
-            if (media) {
-                let btn_group = article.querySelector('div[role="group"]:last-of-type, ul.tweet-actions, ul.tweet-detail-actions');
-                if (btn_group) {
-                    let existingBtn = btn_group.querySelector('.tmd-down:not(.tmd-img)');
-
-                    // Cleanup Stale Button (Recycled DOM Node)
-                    if (existingBtn && existingBtn.dataset.statusId !== status_id) {
-                        existingBtn.remove();
-                        existingBtn = null;
-                    }
-
-                    // Check history using Set
-                    let is_exist = history_cache.has(status_id);
-
-                    if (!existingBtn) {
-                        let btn_share = Array.from(btn_group.querySelectorAll(':scope>div>div, li.tweet-action-item>a, li.tweet-detail-action-item>a')).pop().parentNode;
-                        let btn_down = btn_share.cloneNode(true);
-
-                        btn_down.querySelector('button').removeAttribute('disabled');
-
-                        if (is_tweetdeck) {
-                            btn_down.firstElementChild.innerHTML = `<svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">${this.svg}</svg>`;
-                            btn_down.firstElementChild.removeAttribute('rel');
-                            btn_down.classList.replace('pull-left', 'pull-right');
-                        } else {
-                            btn_down.querySelector('svg').innerHTML = this.svg;
-                        }
-
-                        btn_down.dataset.statusId = status_id;
-                        this.status(btn_down, 'tmd-down');
-
-                        btn_group.insertBefore(btn_down, btn_share.nextSibling);
-
-                        this.status(btn_down, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
-                        btn_down.onclick = () => this.click(btn_down, status_id, is_exist);
-                    } else {
-                        this.status(existingBtn, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
-                        existingBtn.onclick = () => this.click(existingBtn, status_id, is_exist);
-                    }
-                }
-            }
-
-            // =================================================================
-            // Multiple Images Logic
-            // =================================================================
-            let imgs = article.querySelectorAll('a[href*="/photo/"], div[data-testid="videoComponent"]');
-            if (imgs.length > 0) {
-                let main_status_id = status_id;
-                let all_images_downloaded = true;
-
-                imgs.forEach(img => {
-                    let urlParts;
-                    if (img.tagName === 'A') {
-                        urlParts = img.href.split('/status/');
-                    } else {
-                        // Always use parent status_id for video components (non-links)
-                        // This avoids incorrect parsing from window.location.href on feeds/timelines
-                        urlParts = [null, status_id + '/video/1'];
-                    }
-
-                    if (urlParts.length < 2) return;
-
-                    let specific_id = urlParts[1].split('/')[0];
-                    let index = urlParts[1].split('/').pop().split(/[/?#]/)[0];
-                    // If index isn't a number (e.g. '1'), default to 1
-                    if (isNaN(parseInt(index))) index = 1;
-
-                    let img_uid = `${specific_id}_${index}`;
-
-                    // Check history using Set
-                    let is_exist = history_cache.has(img_uid) || history_cache.has(specific_id);
-                    if (!is_exist) all_images_downloaded = false;
-
-                    let existingImgBtn = img.parentNode.querySelector('.tmd-down.tmd-img');
-
-                    // Cleanup Stale Button (Recycled DOM Node)
-                    if (existingImgBtn && existingImgBtn.dataset.imgUid !== img_uid) {
-                        existingImgBtn.remove();
-                        existingImgBtn = null;
-                    }
-
-                    if (!existingImgBtn) {
-                        let btn_down = document.createElement('div');
-                        // Use larger dimensions for image buttons (24px vs 18px)
-                        btn_down.innerHTML = `<div><div><svg viewBox="0 0 24 24" style="width: 24px; height: 24px;">${this.svg}</svg></div></div>`;
-                        btn_down.classList.add('tmd-down', 'tmd-img');
-                        btn_down.dataset.imgUid = img_uid;
-                        btn_down.dataset.statusId = specific_id;
-
-                        this.status(btn_down, is_exist ? 'completed' : 'download');
-
-                        // For videos, the parent might need relative positioning if not already
-                        if (img.tagName === 'DIV') {
-                            img.style.position = 'relative';
-                        }
-
-                        img.parentNode.classList.add('tmd-img-parent');
-                        img.parentNode.appendChild(btn_down);
-
-                        btn_down.onclick = e => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            // Re-check state on click
-                            let current_exist = history_cache.has(img_uid) || history_cache.has(specific_id);
-                            this.click(btn_down, specific_id, current_exist, index);
-                        };
-                    } else {
-                        // Update status
-                        this.status(existingImgBtn, is_exist ? 'completed' : 'download');
-                    }
-                });
-
-                // Update Main Button if all images are done
-                if (all_images_downloaded && media) {
-                    let mainBtn = article.querySelector('.tmd-down:not(.tmd-img)');
-                    if (mainBtn && !history_cache.has(main_status_id)) {
-                        this.status(mainBtn, 'completed', lang.completed);
-                    }
-                }
-            }
-        },
-
-        addButtonToMedia: function (listitems) {
-            listitems.forEach(li => {
-                let statusLink = li.querySelector('a[href*="/status/"]');
-                if (!statusLink) return;
-
-                let status_id = getId(statusLink.href);
-                let is_exist = history_cache.has(status_id);
-
-                let existingBtn = li.querySelector('.tmd-down.tmd-media');
-
-                // Cleanup Stale Button
-                if (existingBtn && existingBtn.dataset.statusId !== status_id) {
-                    existingBtn.remove();
-                    existingBtn = null;
-                }
-
-                if (!existingBtn) {
-                    let btn_down = document.createElement('div');
-                    btn_down.innerHTML = `<div><div><svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">${this.svg}</svg></div></div>`;
-                    btn_down.classList.add('tmd-down', 'tmd-media');
-                    btn_down.dataset.statusId = status_id;
-
-                    this.status(btn_down, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
-                    li.appendChild(btn_down);
-                    btn_down.onclick = () => this.click(btn_down, status_id, is_exist);
-                } else {
-                    // Update status
-                    this.status(existingBtn, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
-                    existingBtn.onclick = () => this.click(existingBtn, status_id, is_exist);
-                }
-            });
-        },
-
-        // ==========================================
-        // User Interactions
-        // ==========================================
-        selectTweetDialog: function (originalUser, quotedUser) {
-            return new Promise(resolve => {
-                const overlay = document.createElement('div');
-                overlay.className = 'tmd-overlay';
-
-                const dialog = document.createElement('div');
-                dialog.className = 'tmd-modal';
-
-                const title = document.createElement('h3');
-                title.innerText = `${lang.choose}`;
-
-                const container = document.createElement('div');
-                container.style.cssText = 'display:flex;flex-direction:column;gap:12px;';
-
-                const createBtn = (text, type) => {
-                    const btn = document.createElement('button');
-                    btn.textContent = text;
-                    btn.className = `tmd-btn ${type || ''}`;
-                    return btn;
-                };
-
-                const originalBtn = createBtn(`${lang.original} (by ${originalUser})`);
-                originalBtn.onclick = () => { resolve('original'); overlay.remove(); };
-
-                const quotedBtn = createBtn(`${lang.quote} (by ${quotedUser})`, 'secondary');
-                quotedBtn.onclick = () => { resolve('quoted'); overlay.remove(); };
-
-                const cancelBtn = createBtn(`${lang.cancel}`, 'text');
-                cancelBtn.onclick = () => { resolve(null); overlay.remove(); };
-
-                container.append(originalBtn, quotedBtn, cancelBtn);
-                dialog.append(title, container);
-                overlay.appendChild(dialog);
-                document.body.appendChild(overlay);
-
-                overlay.onclick = e => { if (e.target === overlay) { resolve(null); overlay.remove(); }};
-            });
-        },
-
-        click: async function (btn, status_id, is_exist, index) {
-            if (btn.classList.contains('loading')) return;
-            this.status(btn, 'loading');
-
-            let out = (await GM_getValue('filename', FILENAME_PATTERN)).split('\n').join('');
-            let save_history = await GM_getValue('save_history', true);
-            let json;
-
-            try {
-                json = await this.fetchJson(status_id);
-            } catch {
-                return this.status(btn, 'failed', 'API Error');
-            }
-
-            // Check media availability
-            let hasOriginal = json.legacy?.extended_entities?.media || json.legacy?.media;
-            let quotedResult = json.quoted_status_result?.result;
-            let hasQuoted = quotedResult?.legacy?.extended_entities?.media || quotedResult?.legacy?.media;
-
-            let tweet, user;
-            let download_id = status_id; // Default to the requested ID
-
-            // If we have an index (specific photo download), we don't need the dialog.
-            if (index) {
-                if (hasOriginal) {
-                    tweet = json.legacy;
-                    user = json.core.user_results.result.legacy;
-                } else if (hasQuoted) {
-                    tweet = quotedResult.legacy;
-                    user = quotedResult.core.user_results.result.legacy;
-                    // In individual mode, status_id is usually correct, but let's be safe
-                    download_id = tweet.id_str;
-                } else {
-                    return this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
-                }
-            } else if (hasOriginal && hasQuoted) {
-                let originalUser = `${json.core?.user_results?.result?.legacy?.name} @${json.core?.user_results?.result?.legacy?.screen_name}`;
-                let quotedUser = `${quotedResult?.core?.user_results?.result?.legacy?.name} @${quotedResult?.core?.user_results?.result?.legacy?.screen_name}`;
-
-                let choice = await this.selectTweetDialog(originalUser, quotedUser);
-                if (!choice) return this.status(btn, 'download', lang.download);
-
-                let target = choice === 'quoted' ? quotedResult : json;
-                tweet = target.legacy;
-                user = target.core.user_results.result.legacy;
-                // Update ID if we switched targets
-                download_id = tweet.id_str;
-            } else if (hasQuoted) {
-                tweet = quotedResult.legacy;
-                user = quotedResult.core.user_results.result.legacy;
-                download_id = tweet.id_str;
-            } else {
-                tweet = json.legacy;
-                user = json.core.user_results.result.legacy;
-            }
-
-            let datetime = out.match(/\{date-time(-local)?:[^{}]+\}/) ? out.match(/\{date-time(?:-local)?:([^{}]+)\}/)[1].replace(/[\\/|<>*?:\"]/g, v => INVALID_CHARS[v] || '') : 'YYYYMMDD-hhmmss';
-            let info = {
-                'status-id': download_id, // Use actual ID
-                'user-name': cleanText(user.name),
-                'user-id': user.screen_name,
-                'date-time': this.formatDate(tweet.created_at, datetime),
-                'date-time-local': this.formatDate(tweet.created_at, datetime, true),
-                'full-text': cleanText(tweet.full_text.split('\n').join(' ').replace(/\s*https:\/\/t\.co\/\w+/g, ''))
-            };
-
-            let medias = tweet.extended_entities?.media || tweet.media;
-
-            if (json?.card) return this.status(btn, 'failed', 'Links not supported');
-            if (!Array.isArray(medias)) return this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
-
-            let mediaToDownload = medias;
-            let isIndividual = false;
-
-            if (index) {
-                let mediaIndex = parseInt(index) - 1;
-                if (medias[mediaIndex]) {
-                    mediaToDownload = [medias[mediaIndex]];
-                    isIndividual = true;
-                } else {
-                    return this.status(btn, 'failed', 'Invalid Media Index');
-                }
-            }
-
-            if (mediaToDownload.length > 0) {
-                // Generate ZIP name
-                let zipName = out.replace(/\.?\{file-ext\}/, '').replace(/\{([^{}:]+)(:[^{}]+)?\}/g, (match, name) => info[name] || match);
-
-                let tasks = mediaToDownload.map((media, i) => {
-                    let url = media.type === 'photo' ? media.media_url_https + ':orig' : media.video_info.variants.filter(n => n.content_type === 'video/mp4').sort((a, b) => b.bitrate - a.bitrate)[0].url;
-                    let ext = url.split('/').pop().split(/[:?]/).shift().split('.').pop();
-                    // If individual, use index from arg, else loop index
-                    let idx = isIndividual ? (parseInt(index) - 1) : i;
-                    let filename = (out.replace(/\.?\{file-ext\}/, '') + ((medias.length > 1 || index) && !out.match('{file-name}') ? '-' + idx : '') + '.' + ext).replace(/\{([^{}:]+)(:[^{}]+)?\}/g, (match, name) => info[name] || match);
-                    return { url: url, name: filename };
-                });
-
-                // Completion Callback for History Sync
-                const onDownloadComplete = async () => {
-                    if (!save_history) return;
-
-                    if (isIndividual) {
-                        // 1. Save specific image history (e.g. 12345_1)
-                        let imgUid = `${download_id}_${index}`;
-                        await this.history_add(imgUid);
-
-                        // 2. Check if all sibling images are now downloaded
-                        let article = btn.closest('article');
-                        if (article) {
-                            let allImgs = Array.from(article.querySelectorAll('.tmd-down.tmd-img'));
-                            // Filter to only buttons belonging to THIS tweet (Using download_id)
-                            let siblingImgs = allImgs.filter(b => b.dataset.statusId === download_id);
-
-                            // Check if all siblings are done (either just done, or in history)
-                            let allDone = siblingImgs.every(b => {
-                                let uid = b.dataset.imgUid;
-                                return history_cache.has(uid) || history_cache.has(download_id);
-                            });
-
-                            if (allDone) {
-                                // Mark main button for this specific ID as completed
-                                let mainBtns = Array.from(article.querySelectorAll('.tmd-down:not(.tmd-img)'));
-                                let targetMainBtn = mainBtns.find(b => b.dataset.statusId === download_id);
-                                if (targetMainBtn) {
-                                    this.status(targetMainBtn, 'completed', lang.completed);
-                                    this.history_add(download_id);
-                                }
-                            }
-                        }
-                    } else {
-                        // Batch download
-                        // 1. Save main ID (of the actual content downloaded)
-                        this.history_add(download_id);
-
-                        // 2. Save all individual IDs for this tweet
-                        let individualIds = medias.map((_, i) => `${download_id}_${i+1}`);
-                        this.history_add(individualIds);
-
-                        // 3. Visual Sync: Update all individual buttons matching the downloaded ID
-                        let article = btn.closest('article');
-                        if (article) {
-                            let allImgs = Array.from(article.querySelectorAll('.tmd-down.tmd-img'));
-                            // Filter to match download_id so we don't color original images if we downloaded quoted (or vice versa)
-                            allImgs.filter(b => b.dataset.statusId === download_id)
-                                .forEach(b => this.status(b, 'completed', lang.completed));
-
-                            // Also update any matching main buttons (e.g. if quoted tweet has its own container)
-                            let allMainBtns = Array.from(article.querySelectorAll('.tmd-down:not(.tmd-img)'));
-                            allMainBtns.filter(b => b.dataset.statusId === download_id)
-                                .forEach(b => this.status(b, 'completed', lang.completed));
-                        }
-                    }
-                };
-
-                this.downloader.add(tasks, btn, GM_getValue('enable_packaging', true) && !isIndividual, zipName, onDownloadComplete);
-            } else {
-                this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
-            }
-        },
-
-        // ==========================================
-        // Download Module
-        // ==========================================
-        downloader: (function () {
-            let tasks = [], thread = 0, failed = 0, notifier, has_failed = false;
-            return {
-                add: function (taskList, btn, packaging, zipName, onComplete) {
-                    tasks.push(...taskList);
-                    this.update();
-
-                    const handleComplete = () => {
-                        this.status(btn, 'completed', lang.completed);
-                        if (onComplete) onComplete();
-                    };
-
-                    // Packaging mode (Only if multiple files and enabled)
-                    if (packaging && taskList.length > 1) {
-                        let zip = new JSZip();
-                        let promises = taskList.map(task => {
-                            thread++; this.update();
-                            return new Promise((resolve, reject) => {
-                                GM_xmlhttpRequest({
-                                    method: 'GET',
-                                    url: task.url,
-                                    responseType: 'arraybuffer',
-                                    onload: (response) => {
-                                        if (response.status >= 200 && response.status < 300) {
-                                            zip.file(task.name, response.response);
-                                            resolve();
-                                        } else {
-                                            reject(new Error(`HTTP ${response.status}`));
-                                        }
-                                    },
-                                    onerror: () => reject(new Error('Network Error')),
-                                    onabort: () => reject(new Error('Aborted'))
-                                });
-                            })
-                                .then(() => {
-                                    tasks = tasks.filter(t => t.url !== task.url);
-                                })
-                                .catch(e => {
-                                    failed++;
-                                    tasks = tasks.filter(t => t.url !== task.url);
-                                    console.error(`Download failed for ${task.name}:`, e);
-                                })
-                                .finally(() => {
-                                    thread--;
-                                    this.update();
-                                });
-                        });
-
-                        Promise.allSettled(promises).then(() => {
-                            if (Object.keys(zip.files).length > 0) {
-                                zip.generateAsync({ type: 'blob' }).then(content => {
-                                    let a = document.createElement('a');
-                                    a.href = URL.createObjectURL(content);
-                                    a.download = `${zipName}.zip`;
-                                    a.click();
-                                    handleComplete();
-                                    setTimeout(() => URL.revokeObjectURL(a.href), 60000);
-                                }).catch(err => {
-                                    console.error('ZIP Generation Error:', err);
-                                    this.status(btn, 'failed', 'ZIP Error');
-                                });
-                            } else {
-                                this.status(btn, 'failed', 'All downloads failed');
-                            }
-                        });
-
-                    } else {
-                        // Standard mode
-                        taskList.forEach(task => {
-                            thread++; this.update();
-                            GM_download({
-                                url: task.url, name: task.name,
-                                onload: () => {
-                                    thread--;
-                                    tasks = tasks.filter(t => t.url !== task.url);
-                                    handleComplete();
-                                    this.update();
-                                },
-                                onerror: e => {
-                                    thread--; failed++;
-                                    tasks = tasks.filter(t => t.url !== task.url);
-                                    this.status(btn, 'failed', e.details.current);
-                                    this.update();
-                                }
-                            });
-                        });
-                    }
-                },
-                status: function (btn, css, title, style) {
-                    if (css) { btn.classList.remove('download', 'completed', 'loading', 'failed'); btn.classList.add(css); }
-                    if (title) btn.title = title;
-                    if (style) btn.style.cssText = style;
-                },
-                update: function () {
-                    if (!notifier) {
-                        notifier = document.createElement('div'); notifier.className = 'tmd-notifier'; notifier.title = 'Twitter Media Downloader';
-                        notifier.innerHTML = '<label>0</label>|<label>0</label>'; document.body.appendChild(notifier);
-                    }
-                    if (failed > 0 && !has_failed) {
-                        has_failed = true; notifier.innerHTML += '|';
-                        let clear = document.createElement('label'); notifier.appendChild(clear);
-                        clear.onclick = () => { notifier.innerHTML = '<label>0</label>|<label>0</label>'; failed = 0; has_failed = false; this.update(); };
-                    }
-                    notifier.firstChild.innerText = thread;
-                    notifier.firstChild.nextElementSibling.innerText = tasks.length - thread - failed;
-                    if (failed > 0) notifier.lastChild.innerText = failed;
-                    notifier.classList.toggle('running', thread > 0 || tasks.length > 0 || failed > 0);
-                }
-            };
-        })(),
-
-        // ==========================================
-        // Helper Functions
-        // ==========================================
-        status: function (btn, css, title, style) {
-            if (css) { btn.classList.remove('download', 'completed', 'loading', 'failed'); btn.classList.add(css); }
-            if (title) btn.title = title;
-            if (style) btn.style.cssText = style;
-        },
-
-        settings: async function () {
-            const createElement = (parent, tagName, content, className) => {
-                let el = document.createElement(tagName);
-                if (content !== undefined) {
-                    if (tagName === 'input') {
-                        if (content === 'checkbox') el.type = 'checkbox';
-                        else el.value = content;
-                    } else if (tagName === 'textarea') {
-                        el.value = content;
-                    } else {
-                        el.innerHTML = content;
-                    }
-                }
-                if (className) el.className = className;
-                parent.appendChild(el); return el;
-            };
-
-            let overlay = createElement(document.body, 'div', '', 'tmd-overlay');
-            let isOverlayClick;
-            overlay.onmousedown = e => isOverlayClick = e.target === overlay;
-            overlay.onmouseup = e => { if (isOverlayClick && e.target === overlay) overlay.remove(); };
-
-            let modal = createElement(overlay, 'div', '', 'tmd-modal');
-            createElement(modal, 'h3', lang.dialog.title);
-            let optionGroup = createElement(modal, 'div', '', 'tmd-option-group');
-
-            let historyLabel = createElement(optionGroup, 'label', lang.dialog.save_history, 'tmd-label');
-            let historyInput = createElement(historyLabel, 'input', 'checkbox');
-            historyInput.checked = await GM_getValue('save_history', true);
-            historyInput.onchange = () => GM_setValue('save_history', historyInput.checked);
-
-            let clearLink = createElement(historyLabel, 'label', lang.dialog.clear_history, 'tmd-link');
-            clearLink.onclick = (e) => {
-                e.preventDefault();
-                if (confirm(lang.dialog.clear_confirm)) {
-                    this.history_clear(); // UPDATED
-                }
-            };
-
-            let pkgLabel = createElement(optionGroup, 'label', lang.enable_packaging, 'tmd-label');
-            let pkgInput = createElement(pkgLabel, 'input', 'checkbox');
-            pkgInput.checked = await GM_getValue('enable_packaging', true);
-            pkgInput.onchange = () => GM_setValue('enable_packaging', pkgInput.checked);
-
-            let fileGroup = createElement(modal, 'div', '', 'tmd-option-group');
+            btn_down.dataset.statusId = status_id;
+            this.status(btn_down, 'tmd-down');
+
+            btn_group.insertBefore(btn_down, btn_share.nextSibling);
+
+            this.status(btn_down, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
+            btn_down.onclick = () => this.click(btn_down, status_id, is_exist);
+          } else {
+            this.status(existingBtn, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
+            existingBtn.onclick = () => this.click(existingBtn, status_id, is_exist);
+          }
+        }
+      }
+
+      // =================================================================
+      // Multiple Images Logic
+      // =================================================================
+      let imgs = article.querySelectorAll('a[href*="/photo/"], div[data-testid="videoComponent"]');
+      if (imgs.length > 0) {
+        let main_status_id = status_id;
+        let all_images_downloaded = true;
+
+        imgs.forEach(img => {
+          let urlParts;
+          if (img.tagName === 'A') {
+            urlParts = img.href.split('/status/');
+          } else {
+            // Always use parent status_id for video components (non-links)
+            urlParts = [null, status_id + '/video/1'];
+          }
+
+          if (urlParts.length < 2) return;
+
+          let specific_id = urlParts[1].split('/')[0];
+          // Construct a dummy URL for getIndex if needed, or just use the part
+          // getIndex expects a string containing /photo/, which urlParts[1] has for photos.
+          // For videos, getIndex returns 1, which is correct.
+          let index = getIndex('https://x.com/status/' + urlParts[1]);
+
+          let img_uid = `${specific_id}_${index}`;
+
+          // Check history using Set
+          let is_exist = history_cache.has(img_uid) || history_cache.has(specific_id);
+          if (!is_exist) all_images_downloaded = false;
+
+          let existingImgBtn = img.parentNode.querySelector('.tmd-down.tmd-img');
+
+          // Cleanup Stale Button (Recycled DOM Node)
+          if (existingImgBtn && existingImgBtn.dataset.imgUid !== img_uid) {
+            existingImgBtn.remove();
+            existingImgBtn = null;
+          }
+
+          if (!existingImgBtn) {
+            // Create Button (Size 24px)
+            let btn_down = this.createDownloadButton(specific_id, img_uid, 24);
             
-            let previewContainer = createElement(fileGroup, 'div', '', 'tmd-preview-box');
-            previewContainer.style.cssText = 'margin-bottom: 10px; padding: 8px; background: rgba(29, 161, 242, 0.1); border: 1px solid rgba(29, 161, 242, 0.3); border-radius: 4px; font-size: 12px; font-family: monospace; word-break: break-all; color: var(--tmd-text);';
-            createElement(previewContainer, 'div', 'Preview:', 'tmd-preview-label').style.fontWeight = 'bold';
-            let previewText = createElement(previewContainer, 'div', '', 'tmd-preview-text');
+            // For videos, the parent might need relative positioning if not already
+            if (img.tagName === 'DIV') {
+              img.style.position = 'relative';
+            }
 
-            createElement(fileGroup, 'label', lang.dialog.pattern, 'tmd-label');
-            let fileInput = createElement(fileGroup, 'textarea', await GM_getValue('filename', FILENAME_PATTERN), 'tmd-textarea');
-            fileInput.addEventListener('mousedown', e => e.stopPropagation()); // Prevent drag/selection issues if parent has listeners
+            img.parentNode.classList.add('tmd-img-parent');
+            img.parentNode.appendChild(btn_down);
 
-            const mockData = {
-                'user-name': 'KanashiiWolf',
-                'user-id': 'kanashiiwolf',
-                'status-id': '1234567890987654321',
-                'date-time': '20231231-235959',
-                'date-time-local': '20231231-185959',
-                'full-text': 'Hello world',
-                'file-type': 'photo',
-                'file-name': 'E8x...jpg'
+            this.status(btn_down, is_exist ? 'completed' : 'download');
+
+            btn_down.onclick = e => {
+              e.preventDefault(); e.stopPropagation();
+              // Re-check state on click
+              let current_exist = history_cache.has(img_uid) || history_cache.has(specific_id);
+              this.click(btn_down, specific_id, current_exist, index);
             };
+          } else {
+            // Update status
+            this.status(existingImgBtn, is_exist ? 'completed' : 'download');
+          }
+        });
 
-            const updatePreview = () => {
-                let val = fileInput.value;
-                // Handle complex date-time replacement first if present
-                val = val.replace(/\{date-time(-local)?:[^{}]+\}/g, (_match) => {
-                    // Just use a static example for complex dates in preview to avoid reimplementing formatDate here
-                    return '31-DEC-23 23.59'; 
+        // Update Main Button if all images are done
+        if (all_images_downloaded && media) {
+          let mainBtn = article.querySelector('.tmd-down:not(.tmd-img)');
+          if (mainBtn && !history_cache.has(main_status_id)) {
+            this.status(mainBtn, 'completed', lang.completed);
+          }
+        }
+      }
+    },
+
+    addButtonToMedia: function (listitems) {
+      listitems.forEach(li => {
+        let statusLink = li.querySelector('a[href*="/status/"]');
+        if (!statusLink) return;
+
+        let status_id = getId(statusLink.href);
+        let is_exist = history_cache.has(status_id);
+
+        let existingBtn = li.querySelector('.tmd-down.tmd-media');
+
+        // Cleanup Stale Button
+        if (existingBtn && existingBtn.dataset.statusId !== status_id) {
+          existingBtn.remove();
+          existingBtn = null;
+        }
+
+        if (!existingBtn) {
+          let btn_down = this.createDownloadButton(status_id, null, 18);
+          btn_down.classList.add('tmd-media');
+          
+          this.status(btn_down, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
+          li.appendChild(btn_down);
+          btn_down.onclick = () => this.click(btn_down, status_id, is_exist);
+        } else {
+          // Update status
+          this.status(existingBtn, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
+          existingBtn.onclick = () => this.click(existingBtn, status_id, is_exist);
+        }
+      });
+    },
+
+    // ==========================================
+    // User Interactions
+    // ==========================================
+    selectTweetDialog: function (originalUser, quotedUser) {
+      return new Promise(resolve => {
+        const overlay = document.createElement('div');
+        overlay.className = 'tmd-overlay';
+
+        const dialog = document.createElement('div');
+        dialog.className = 'tmd-modal';
+
+        const title = document.createElement('h3');
+        title.innerText = `${lang.choose}`;
+
+        const container = document.createElement('div');
+        container.style.cssText = 'display:flex;flex-direction:column;gap:12px;';
+
+        const createBtn = (text, type) => {
+          const btn = document.createElement('button');
+          btn.textContent = text;
+          btn.className = `tmd-btn ${type || ''}`;
+          return btn;
+        };
+
+        const originalBtn = createBtn(`${lang.original} (by ${originalUser})`);
+        originalBtn.onclick = () => { resolve('original'); overlay.remove(); };
+
+        const quotedBtn = createBtn(`${lang.quote} (by ${quotedUser})`, 'secondary');
+        quotedBtn.onclick = () => { resolve('quoted'); overlay.remove(); };
+
+        const cancelBtn = createBtn(`${lang.cancel}`, 'text');
+        cancelBtn.onclick = () => { resolve(null); overlay.remove(); };
+
+        container.append(originalBtn, quotedBtn, cancelBtn);
+        dialog.append(title, container);
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        overlay.onclick = e => { if (e.target === overlay) { resolve(null); overlay.remove(); }};
+      });
+    },
+
+    click: async function (btn, status_id, is_exist, index) {
+      if (btn.classList.contains('loading')) return;
+      this.status(btn, 'loading');
+
+      let out = (await GM_getValue('filename', FILENAME_PATTERN)).split('\n').join('');
+      let save_history = await GM_getValue('save_history', true);
+      let json;
+
+      try {
+        json = await this.fetchJson(status_id);
+      } catch {
+        return this.status(btn, 'failed', 'API Error');
+      }
+
+      // Check media availability
+      let hasOriginal = json.legacy?.extended_entities?.media || json.legacy?.media;
+      let quotedResult = json.quoted_status_result?.result;
+      let hasQuoted = quotedResult?.legacy?.extended_entities?.media || quotedResult?.legacy?.media;
+
+      let tweet, user;
+      let download_id = status_id; // Default to the requested ID
+
+      // If we have an index (specific photo download), we don't need the dialog.
+      if (index) {
+        if (hasOriginal) {
+          tweet = json.legacy;
+          user = json.core.user_results.result.legacy;
+        } else if (hasQuoted) {
+          tweet = quotedResult.legacy;
+          user = quotedResult.core.user_results.result.legacy;
+          // In individual mode, status_id is usually correct, but let's be safe
+          download_id = tweet.id_str;
+        } else {
+          return this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
+        }
+      } else if (hasOriginal && hasQuoted) {
+        let originalUser = `${json.core?.user_results?.result?.legacy?.name} @${json.core?.user_results?.result?.legacy?.screen_name}`;
+        let quotedUser = `${quotedResult?.core?.user_results?.result?.legacy?.name} @${quotedResult?.core?.user_results?.result?.legacy?.screen_name}`;
+
+        let choice = await this.selectTweetDialog(originalUser, quotedUser);
+        if (!choice) return this.status(btn, 'download', lang.download);
+
+        let target = choice === 'quoted' ? quotedResult : json;
+        tweet = target.legacy;
+        user = target.core.user_results.result.legacy;
+        // Update ID if we switched targets
+        download_id = tweet.id_str;
+      } else if (hasQuoted) {
+        tweet = quotedResult.legacy;
+        user = quotedResult.core.user_results.result.legacy;
+        download_id = tweet.id_str;
+      } else {
+        tweet = json.legacy;
+        user = json.core.user_results.result.legacy;
+      }
+
+      let datetime = out.match(/\{date-time(-local)?:[^{}]+\}/) ? out.match(/\{date-time(?:-local)?:([^{}]+)\}/)[1].replace(/[\\/|<>*?:\"]/g, v => INVALID_CHARS[v] || '') : 'YYYYMMDD-hhmmss';
+      let info = {
+        'status-id': download_id, // Use actual ID
+        'user-name': cleanText(user.name),
+        'user-id': user.screen_name,
+        'date-time': this.formatDate(tweet.created_at, datetime),
+        'date-time-local': this.formatDate(tweet.created_at, datetime, true),
+        'full-text': cleanText(tweet.full_text.split('\n').join(' ').replace(/\s*https:\/\/t\.co\/\w+/g, ''))
+      };
+
+      let medias = tweet.extended_entities?.media || tweet.media;
+
+      if (json?.card) return this.status(btn, 'failed', 'Links not supported');
+      if (!Array.isArray(medias)) return this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
+
+      let mediaToDownload = medias;
+      let isIndividual = false;
+
+      if (index) {
+        let mediaIndex = parseInt(index) - 1;
+        if (medias[mediaIndex]) {
+          mediaToDownload = [medias[mediaIndex]];
+          isIndividual = true;
+        } else {
+          return this.status(btn, 'failed', 'Invalid Media Index');
+        }
+      }
+
+      if (mediaToDownload.length > 0) {
+        // Generate ZIP name
+        let zipName = out.replace(/\.?\{file-ext\}/, '').replace(/\{([^{}:]+)(:[^{}]+)?\}/g, (match, name) => info[name] || match);
+
+        let tasks = mediaToDownload.map((media, i) => {
+          let url = media.type === 'photo' ? media.media_url_https + ':orig' : media.video_info.variants.filter(n => n.content_type === 'video/mp4').sort((a, b) => b.bitrate - a.bitrate)[0].url;
+          let ext = url.split('/').pop().split(/[:?]/).shift().split('.').pop();
+          // If individual, use index from arg, else loop index
+          let idx = isIndividual ? (parseInt(index) - 1) : i;
+          let filename = (out.replace(/\.?\{file-ext\}/, '') + ((medias.length > 1 || index) && !out.match('{file-name}') ? '-' + idx : '') + '.' + ext).replace(/\{([^{}:]+)(:[^{}]+)?\}/g, (match, name) => info[name] || match);
+          return { url: url, name: filename };
+        });
+
+        const onDownloadComplete = async () => {
+          if (!save_history) return;
+
+          let ids_to_save = [];
+
+          if (isIndividual) {
+            ids_to_save.push(`${download_id}_${index}`);
+          } else {
+            ids_to_save.push(download_id);
+            medias.forEach((_, i) => ids_to_save.push(`${download_id}_${i + 1}`));
+          }
+
+          // Optimistically add to history first
+          await this.history_add(ids_to_save);
+
+          // Check if we should mark the main ID as done (for individual mode)
+          if (isIndividual) {
+            let allDone = medias.every((_, i) => history_cache.has(`${download_id}_${i + 1}`));
+            if (allDone) {
+              await this.history_add(download_id);
+              ids_to_save.push(download_id);
+            }
+          }
+
+          // Visual Sync
+          ids_to_save.forEach(id => {
+            if (id.includes('_')) {
+              // Sync Image Buttons
+              document.querySelectorAll(`.tmd-down.tmd-img[data-img-uid="${id}"]`)
+                .forEach(b => this.status(b, 'completed', lang.completed));
+            } else {
+              // Sync Main Buttons
+              document.querySelectorAll(`.tmd-down:not(.tmd-img)[data-status-id="${id}"]`)
+                .forEach(b => this.status(b, 'completed', lang.completed));
+            }
+          });
+        };
+
+        this.downloader.add(tasks, btn, GM_getValue('enable_packaging', true) && !isIndividual, zipName, onDownloadComplete);
+      } else {
+        this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
+      }
+    },
+
+    // ==========================================
+    // Download Module
+    // ==========================================
+    downloader: (function () {
+      let tasks = [], thread = 0, failed = 0, notifier, has_failed = false;
+      return {
+        add: function (taskList, btn, packaging, zipName, onComplete) {
+          tasks.push(...taskList);
+          this.update();
+
+          const handleComplete = () => {
+            this.status(btn, 'completed', lang.completed);
+            if (onComplete) onComplete();
+          };
+
+          // Packaging mode (Only if multiple files and enabled)
+          if (packaging && taskList.length > 1) {
+            let zip = new JSZip();
+            let promises = taskList.map(task => {
+              thread++; this.update();
+              return new Promise((resolve, reject) => {
+                GM_xmlhttpRequest({
+                  method: 'GET',
+                  url: task.url,
+                  responseType: 'arraybuffer',
+                  onload: (response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                      zip.file(task.name, response.response);
+                      resolve();
+                    } else {
+                      reject(new Error(`HTTP ${response.status}`));
+                    }
+                  },
+                  onerror: () => reject(new Error('Network Error')),
+                  onabort: () => reject(new Error('Aborted'))
                 });
-                
-                // Replace standard tags
-                Object.keys(mockData).forEach(key => {
-                    const regex = new RegExp(`\{${key}\}`, 'g');
-                    val = val.replace(regex, mockData[key]);
+              })
+                .then(() => {
+                  tasks = tasks.filter(t => t.url !== task.url);
+                })
+                .catch(e => {
+                  failed++;
+                  tasks = tasks.filter(t => t.url !== task.url);
+                  console.error(`Download failed for ${task.name}:`, e);
+                })
+                .finally(() => {
+                  thread--;
+                  this.update();
                 });
+            });
+
+            Promise.allSettled(promises).then(() => {
+              if (Object.keys(zip.files).length > 0) {
+                zip.generateAsync({ type: 'blob' }).then(content => {
+                  let a = document.createElement('a');
+                  a.href = URL.createObjectURL(content);
+                  a.download = `${zipName}.zip`;
+                  a.click();
+                  handleComplete();
+                  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+                }).catch(err => {
+                  console.error('ZIP Generation Error:', err);
+                  this.status(btn, 'failed', 'ZIP Error');
+                });
+              } else {
+                this.status(btn, 'failed', 'All downloads failed');
+              }
+            });
+
+          } else {
+            // Standard mode
+            taskList.forEach(task => {
+              thread++; this.update();
+              GM_download({
+                url: task.url, name: task.name,
+                onload: () => {
+                  thread--;
+                  tasks = tasks.filter(t => t.url !== task.url);
+                  handleComplete();
+                  this.update();
+                },
+                onerror: e => {
+                  thread--; failed++;
+                  tasks = tasks.filter(t => t.url !== task.url);
+                  this.status(btn, 'failed', e.details.current);
+                  this.update();
+                }
+              });
+            });
+          }
+        },
+        status: function (btn, css, title, style) {
+          if (css) { btn.classList.remove('download', 'completed', 'loading', 'failed'); btn.classList.add(css); }
+          if (title) btn.title = title;
+          if (style) btn.style.cssText = style;
+        },
+        update: function () {
+          if (!notifier) {
+            notifier = document.createElement('div'); notifier.className = 'tmd-notifier'; notifier.title = 'Twitter Media Downloader';
+            notifier.innerHTML = '<label>0</label>|<label>0</label>'; document.body.appendChild(notifier);
+          }
+          if (failed > 0 && !has_failed) {
+            has_failed = true; notifier.innerHTML += '|';
+            let clear = document.createElement('label'); notifier.appendChild(clear);
+            clear.onclick = () => { notifier.innerHTML = '<label>0</label>|<label>0</label>'; failed = 0; has_failed = false; this.update(); };
+          }
+          notifier.firstChild.innerText = thread;
+          notifier.firstChild.nextElementSibling.innerText = tasks.length - thread - failed;
+          if (failed > 0) notifier.lastChild.innerText = failed;
+          notifier.classList.toggle('running', thread > 0 || tasks.length > 0 || failed > 0);
+        }
+      };
+    })(),
+
+    // ==========================================
+    // Helper Functions
+    // ==========================================
+    status: function (btn, css, title, style) {
+      if (css) { btn.classList.remove('download', 'completed', 'loading', 'failed'); btn.classList.add(css); }
+      if (title) btn.title = title;
+      if (style) btn.style.cssText = style;
+    },
+
+    settings: async function () {
+      const createElement = (parent, tagName, content, className) => {
+        let el = document.createElement(tagName);
+        if (content !== undefined) {
+          if (tagName === 'input') {
+            if (content === 'checkbox') el.type = 'checkbox';
+            else el.value = content;
+          } else if (tagName === 'textarea') {
+            el.value = content;
+          } else {
+            el.innerHTML = content;
+          }
+        }
+        if (className) el.className = className;
+        parent.appendChild(el); return el;
+      };
+
+      let overlay = createElement(document.body, 'div', '', 'tmd-overlay');
+      let isOverlayClick;
+      overlay.onmousedown = e => isOverlayClick = e.target === overlay;
+      overlay.onmouseup = e => { if (isOverlayClick && e.target === overlay) overlay.remove(); };
+
+      let modal = createElement(overlay, 'div', '', 'tmd-modal');
+      createElement(modal, 'h3', lang.dialog.title);
+      let optionGroup = createElement(modal, 'div', '', 'tmd-option-group');
+
+      let historyLabel = createElement(optionGroup, 'label', lang.dialog.save_history, 'tmd-label');
+      let historyInput = createElement(historyLabel, 'input', 'checkbox');
+      historyInput.checked = await GM_getValue('save_history', true);
+      historyInput.onchange = () => GM_setValue('save_history', historyInput.checked);
+
+      let clearLink = createElement(historyLabel, 'label', lang.dialog.clear_history, 'tmd-link');
+      clearLink.onclick = (e) => {
+        e.preventDefault();
+        if (confirm(lang.dialog.clear_confirm)) {
+          this.history_clear(); // UPDATED
+        }
+      };
+
+      let pkgLabel = createElement(optionGroup, 'label', lang.enable_packaging, 'tmd-label');
+      let pkgInput = createElement(pkgLabel, 'input', 'checkbox');
+      pkgInput.checked = await GM_getValue('enable_packaging', true);
+      pkgInput.onchange = () => GM_setValue('enable_packaging', pkgInput.checked);
+
+      let fileGroup = createElement(modal, 'div', '', 'tmd-option-group');
+            
+      let previewContainer = createElement(fileGroup, 'div', '', 'tmd-preview-box');
+      previewContainer.style.cssText = 'margin-bottom: 10px; padding: 8px; background: rgba(29, 161, 242, 0.1); border: 1px solid rgba(29, 161, 242, 0.3); border-radius: 4px; font-size: 12px; font-family: monospace; word-break: break-all; color: var(--tmd-text);';
+      createElement(previewContainer, 'div', 'Preview:', 'tmd-preview-label').style.fontWeight = 'bold';
+      let previewText = createElement(previewContainer, 'div', '', 'tmd-preview-text');
+
+      createElement(fileGroup, 'label', lang.dialog.pattern, 'tmd-label');
+      let fileInput = createElement(fileGroup, 'textarea', await GM_getValue('filename', FILENAME_PATTERN), 'tmd-textarea');
+      fileInput.addEventListener('mousedown', e => e.stopPropagation()); // Prevent drag/selection issues if parent has listeners
+
+      const mockData = {
+        'user-name': 'KanashiiWolf',
+        'user-id': 'kanashiiwolf',
+        'status-id': '1234567890987654321',
+        'date-time': '20231231-235959',
+        'date-time-local': '20231231-185959',
+        'full-text': 'Hello world',
+        'file-type': 'photo',
+        'file-name': 'E8x...jpg'
+      };
+
+      const updatePreview = () => {
+        let val = fileInput.value;
+        // Handle complex date-time replacement first if present
+        val = val.replace(/\{date-time(-local)?:[^{}]+\}/g, (_match) => {
+          // Just use a static example for complex dates in preview to avoid reimplementing formatDate here
+          return '31-DEC-23 23.59'; 
+        });
                 
-                // Add extension example
-                previewText.textContent = val.replace(/\.?\{file-ext\}/, '') + '.jpg';
-            };
+        // Replace standard tags
+        Object.keys(mockData).forEach(key => {
+          const regex = new RegExp(`\{${key}\}`, 'g');
+          val = val.replace(regex, mockData[key]);
+        });
+                
+        // Add extension example
+        previewText.textContent = val.replace(/\.?\{file-ext\}/, '') + '.jpg';
+      };
 
-            fileInput.addEventListener('input', updatePreview);
+      fileInput.addEventListener('input', updatePreview);
 
-            let tagsContainer = createElement(fileGroup, 'div', `
+      let tagsContainer = createElement(fileGroup, 'div', `
                 <span class="tmd-tag" title="user name">{user-name}</span>
                 <span class="tmd-tag" title="The user name after @ sign.">{user-id}</span>
                 <span class="tmd-tag" title="example: 1234567890987654321">{status-id}</span>
@@ -1056,120 +1116,120 @@ const TMD = (function () {
                 <span class="tmd-tag" title="Type of \"video\" or \"photo\" or \"gif\".">{file-type}</span>
                 <span class="tmd-tag" title="Original filename from URL.">{file-name}</span>`, 'tmd-tags');
 
-            tagsContainer.querySelectorAll('.tmd-tag').forEach(tag => {
-                tag.onclick = () => {
-                    let s = fileInput.selectionStart, e = fileInput.selectionEnd;
-                    // Use textContent to get the text exactly as it is in the HTML, avoiding CSS transforms (uppercase)
-                    let text = tag.textContent;
-                    fileInput.value = fileInput.value.substring(0, s) + text + fileInput.value.substring(e);
-                    fileInput.selectionStart = fileInput.selectionEnd = s + text.length; fileInput.focus();
-                    updatePreview();
-                };
-            });
+      tagsContainer.querySelectorAll('.tmd-tag').forEach(tag => {
+        tag.onclick = () => {
+          let s = fileInput.selectionStart, e = fileInput.selectionEnd;
+          // Use textContent to get the text exactly as it is in the HTML, avoiding CSS transforms (uppercase)
+          let text = tag.textContent;
+          fileInput.value = fileInput.value.substring(0, s) + text + fileInput.value.substring(e);
+          fileInput.selectionStart = fileInput.selectionEnd = s + text.length; fileInput.focus();
+          updatePreview();
+        };
+      });
 
-            updatePreview();
+      updatePreview();
 
-            let footer = createElement(modal, 'div', '', 'tmd-footer');
-            let saveBtn = createElement(footer, 'button', lang.dialog.save, 'tmd-btn');
-            saveBtn.onclick = async () => { await GM_setValue('filename', fileInput.value); overlay.remove(); };
-        },
+      let footer = createElement(modal, 'div', '', 'tmd-footer');
+      let saveBtn = createElement(footer, 'button', lang.dialog.save, 'tmd-btn');
+      saveBtn.onclick = async () => { await GM_setValue('filename', fileInput.value); overlay.remove(); };
+    },
 
-        fetchJson: async function (status_id) {
-            const base = `https://${host}/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId`;
-            const vars = {
-                tweetId: status_id,
-                with_rux_injections: false,
-                includePromotedContent: true,
-                withCommunity: true,
-                withQuickPromoteEligibilityTweetFields: true,
-                withBirdwatchNotes: true,
-                withVoice: true,
-                withV2Timeline: true
-            };
-            const feats = {
-                articles_preview_enabled: true,
-                c9s_tweet_anatomy_moderator_badge_enabled: true,
-                communities_web_enable_tweet_community_results_fetch: false,
-                creator_subscriptions_quote_tweet_preview_enabled: false,
-                creator_subscriptions_tweet_preview_api_enabled: false,
-                freedom_of_speech_not_reach_fetch_enabled: true,
-                graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
-                longform_notetweets_consumption_enabled: false,
-                longform_notetweets_inline_media_enabled: true,
-                longform_notetweets_rich_text_read_enabled: false,
-                premium_content_api_read_enabled: false,
-                profile_label_improvements_pcf_label_in_post_enabled: true,
-                responsive_web_edit_tweet_api_enabled: false,
-                responsive_web_enhance_cards_enabled: false,
-                responsive_web_graphql_exclude_directive_enabled: false,
-                responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-                responsive_web_graphql_timeline_navigation_enabled: false,
-                responsive_web_grok_analysis_button_from_backend: false,
-                responsive_web_grok_analyze_button_fetch_trends_enabled: false,
-                responsive_web_grok_analyze_post_followups_enabled: false,
-                responsive_web_grok_image_annotation_enabled: false,
-                responsive_web_grok_share_attachment_enabled: false,
-                responsive_web_grok_show_grok_translated_post: false,
-                responsive_web_jetfuel_frame: false,
-                responsive_web_media_download_video_enabled: false,
-                responsive_web_twitter_article_tweet_consumption_enabled: true,
-                rweb_tipjar_consumption_enabled: true,
-                rweb_video_screen_enabled: false,
-                standardized_nudges_misinfo: true,
-                tweet_awards_web_tipping_enabled: false,
-                tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
-                tweetypie_unmention_optimization_enabled: false,
-                verified_phone_label_enabled: false,
-                view_counts_everywhere_api_enabled: true
-            };
+    fetchJson: async function (status_id) {
+      const base = `https://${host}/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId`;
+      const vars = {
+        tweetId: status_id,
+        with_rux_injections: false,
+        includePromotedContent: true,
+        withCommunity: true,
+        withQuickPromoteEligibilityTweetFields: true,
+        withBirdwatchNotes: true,
+        withVoice: true,
+        withV2Timeline: true
+      };
+      const feats = {
+        articles_preview_enabled: true,
+        c9s_tweet_anatomy_moderator_badge_enabled: true,
+        communities_web_enable_tweet_community_results_fetch: false,
+        creator_subscriptions_quote_tweet_preview_enabled: false,
+        creator_subscriptions_tweet_preview_api_enabled: false,
+        freedom_of_speech_not_reach_fetch_enabled: true,
+        graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+        longform_notetweets_consumption_enabled: false,
+        longform_notetweets_inline_media_enabled: true,
+        longform_notetweets_rich_text_read_enabled: false,
+        premium_content_api_read_enabled: false,
+        profile_label_improvements_pcf_label_in_post_enabled: true,
+        responsive_web_edit_tweet_api_enabled: false,
+        responsive_web_enhance_cards_enabled: false,
+        responsive_web_graphql_exclude_directive_enabled: false,
+        responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+        responsive_web_graphql_timeline_navigation_enabled: false,
+        responsive_web_grok_analysis_button_from_backend: false,
+        responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+        responsive_web_grok_analyze_post_followups_enabled: false,
+        responsive_web_grok_image_annotation_enabled: false,
+        responsive_web_grok_share_attachment_enabled: false,
+        responsive_web_grok_show_grok_translated_post: false,
+        responsive_web_jetfuel_frame: false,
+        responsive_web_media_download_video_enabled: false,
+        responsive_web_twitter_article_tweet_consumption_enabled: true,
+        rweb_tipjar_consumption_enabled: true,
+        rweb_video_screen_enabled: false,
+        standardized_nudges_misinfo: true,
+        tweet_awards_web_tipping_enabled: false,
+        tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+        tweetypie_unmention_optimization_enabled: false,
+        verified_phone_label_enabled: false,
+        view_counts_everywhere_api_enabled: true
+      };
 
-            let c = this.getCookie();
-            let h = { authorization: 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-twitter-active-user': 'yes', 'x-twitter-client-language': c.lang, 'x-csrf-token': c.ct0 };
-            if (c.ct0?.length === 32) h['x-guest-token'] = c.gt;
+      let c = this.getCookie();
+      let h = { authorization: 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-twitter-active-user': 'yes', 'x-twitter-client-language': c.lang, 'x-csrf-token': c.ct0 };
+      if (c.ct0?.length === 32) h['x-guest-token'] = c.gt;
 
-            try {
-                let url = encodeURI(`${base}?variables=${JSON.stringify(vars)}&features=${JSON.stringify(feats)}`);
-                let r = await fetch(url, { headers: h });
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                let text = await r.text();
-                if (!text) throw new Error('Empty response');
-                let res = JSON.parse(text);
-                return res.data.tweetResult.result.tweet || res.data.tweetResult.result;
-            } catch (e) {
-                console.error('API Error:', e);
-                throw e;
-            }
-        },
+      try {
+        let url = encodeURI(`${base}?variables=${JSON.stringify(vars)}&features=${JSON.stringify(feats)}`);
+        let r = await fetch(url, { headers: h });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        let text = await r.text();
+        if (!text) throw new Error('Empty response');
+        let res = JSON.parse(text);
+        return res.data.tweetResult.result.tweet || res.data.tweetResult.result;
+      } catch (e) {
+        console.error('API Error:', e);
+        throw e;
+      }
+    },
 
-        getCookie: function (name) {
-            let c = {}; document.cookie.split(';').forEach(n => { let [k, v] = n.split('='); if (k && v) c[k.trim()] = v.trim(); });
-            return name ? c[name] : c;
-        },
+    getCookie: function (name) {
+      let c = {}; document.cookie.split(';').forEach(n => { let [k, v] = n.split('='); if (k && v) c[k.trim()] = v.trim(); });
+      return name ? c[name] : c;
+    },
 
-        formatDate: function (i, o, tz) {
-            let d = new Date(i);
-            if (tz) d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-            let m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-            let v = {
-                YYYY: d.getUTCFullYear(), YY: d.getUTCFullYear(), MM: d.getUTCMonth() + 1, MMM: m[d.getUTCMonth()],
-                DD: d.getUTCDate(), hh: d.getUTCHours(), mm: d.getUTCMinutes(), ss: d.getUTCSeconds(),
-                h2: d.getUTCHours() % 12, ap: d.getUTCHours() < 12 ? 'AM' : 'PM'
-            };
-            return o.replace(/(YY(YY)?|MMM?|DD|hh|mm|ss|h2|ap)/g, n => ('0' + v[n]).toString().substr(-n.length));
-        },
+    formatDate: function (i, o, tz) {
+      let d = new Date(i);
+      if (tz) d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      let m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+      let v = {
+        YYYY: d.getUTCFullYear(), YY: d.getUTCFullYear(), MM: d.getUTCMonth() + 1, MMM: m[d.getUTCMonth()],
+        DD: d.getUTCDate(), hh: d.getUTCHours(), mm: d.getUTCMinutes(), ss: d.getUTCSeconds(),
+        h2: d.getUTCHours() % 12, ap: d.getUTCHours() < 12 ? 'AM' : 'PM'
+      };
+      return o.replace(/(YY(YY)?|MMM?|DD|hh|mm|ss|h2|ap)/g, n => ('0' + v[n]).toString().substr(-n.length));
+    },
 
-        // ==========================================
-        // Assets & Locales
-        // ==========================================
-        language: {
-            en: {
-                download: 'Download', completed: 'Download Completed', settings: 'Settings',
-                dialog: { title: 'Download Settings', save: 'Save', save_history: 'Remember download history', clear_history: '(Clear)', clear_confirm: 'Clear download history?', pattern: 'File Name Pattern' },
-                enable_packaging: 'Package multiple files into a ZIP', original: 'Original Tweet', quote: 'Quoted Tweet', cancel: 'Cancel', choose: 'Select media to download'
-            }
-        },
+    // ==========================================
+    // Assets & Locales
+    // ==========================================
+    language: {
+      en: {
+        download: 'Download', completed: 'Download Completed', settings: 'Settings',
+        dialog: { title: 'Download Settings', save: 'Save', save_history: 'Remember download history', clear_history: '(Clear)', clear_confirm: 'Clear download history?', pattern: 'File Name Pattern' },
+        enable_packaging: 'Package multiple files into a ZIP', original: 'Original Tweet', quote: 'Quoted Tweet', cancel: 'Cancel', choose: 'Select media to download'
+      }
+    },
 
-        css: `
+    css: `
             :root {
                 --tmd-bg: #ffffff;
                 --tmd-bg-modal: rgba(255, 255, 255, 0.98);
@@ -1561,15 +1621,15 @@ const TMD = (function () {
             .tmd-wn-list li:before { content: ">"; color: var(--tmd-accent); font-weight: bold; }
         `,
 
-        css_ss: '',
+    css_ss: '',
 
-        svg: `
+    svg: `
             <g class="download"><path d="M2 6 L6 2 H18 L22 6 V18 L18 22 H6 L2 18 Z M7 9 H12 V11 H7 Z M13 9 H17 V11 H13 Z M8 15 H16 V17 H8 Z" fill="currentColor" fill-rule="evenodd"/></g>
             <g class="completed"><path d="M2 6 L6 2 H18 L22 6 V18 L18 22 H6 L2 18 Z M6 6 L7 6 L8.5 7.5 L10 6 L11 6 L11 7 L9.5 8.5 L11 10 L11 11 L10 11 L8.5 9.5 L7 11 L6 11 L6 10 L7.5 8.5 L6 7 Z M13 6 L14 6 L15.5 7.5 L17 6 L18 6 L18 7 L16.5 8.5 L18 10 L18 11 L17 11 L15.5 9.5 L14 11 L13 11 L13 10 L14.5 8.5 L13 7 Z M7 15 H9 V16 H11 V17 H13 V16 H15 V15 H17 V16 H18 V18 H16 V17 H14 V18 H10 V17 H8 V18 H6 V16 H7 Z" fill="currentColor" fill-rule="evenodd"/></g>
             <g class="loading"><path d="M2 6 L6 2 H18 L22 6 V18 L18 22 H6 L2 18 Z M5 8 L8 5 H16 L19 8 V16 L16 19 H8 L5 16 Z" fill="currentColor" fill-rule="evenodd"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite" step="1"/></path><path d="M8 10 h2 v2 h-2 z M14 10 h2 v2 h-2 z" fill="currentColor" fill-rule="evenodd"/></g>
             <g class="failed"><path d="M2 6 L6 2 H18 L22 6 V18 L18 22 H6 L2 18 Z M6 8 H10 V12 H6 Z M14 8 H18 V12 H14 Z M11 14 H13 V16 H11 Z M7 18 H9 V21 H7 Z M11 18 H13 V21 H11 Z M15 18 H17 V21 H15 Z" fill="currentColor" fill-rule="evenodd"/></g>
         `
-    };
+  };
 })();
 
 TMD.init();

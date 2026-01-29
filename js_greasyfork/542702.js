@@ -2,7 +2,7 @@
 // @name         MZone Advanced: Table, Stats & Play-off / MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @name:tr      MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @namespace    http://tampermonkey.net/
-// @version      2.94
+// @version      2.95
 // @description  A powerful suite combining the Advanced League Table (live scores, FD), Player Stat Averages, and the new Play-off/Play-out Predictor. Now with Excel export, Shortlist Filtering and Transfer Tracker with charts.
 // @description:tr Gelişmiş Lig Tablosu (canlı skorlar, FZ), Oyuncu İstatistik Ortalamaları ve yeni Play-Off/Play-Out Tahmincisi betiklerini tek bir güçlü araçta birleştirir. Şimdi Excel'e aktarma, Takip Listesi Filtreleme ve Grafikli Transfer Takipçisi özelliğiyle.
 // @author       alex66
@@ -6680,9 +6680,11 @@ function initializeSkillColoringScript() {
 
             // ▼▼▼ YENİ EKLENECEK KISIM BURASI ▼▼▼
             // Transfer, Oyuncular veya Kısa Liste sayfalarında çalışsın
-            if (p_param === 'transfer' || p_param === 'players' || p_param === 'shortlist') {
-                runModule("Skill Coloring (Van Style)", initializeSkillColoringScript);
-            }
+            const isMainPlayersPage = p_param === 'players' && !params.has('pid');
+
+        if (p_param === 'transfer' || p_param === 'shortlist' || isMainPlayersPage) {
+            runModule("Skill Coloring (Van Style)", initializeSkillColoringScript);
+        }
             // ▲▲▲ YENİ EKLENECEK KISIM BURASI ▲▲▲
             if (scriptSettings.maxedBallColoring && (p_param === 'transfer' || p_param === 'players' || p_param === 'shortlist')) {
                 runModule("Maxed Skill Ball Colorizer", initializeMaxedBallColoringScript);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yt-dlp Python-Downloader
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      9.29
+// @version      9.30
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Unified yt-dlp downloader - generates cross-platform Python scripts for video, audio, subtitles
@@ -9,6 +9,10 @@
 // ═══════════════════════════════════════════════════════════════
 // CHANGELOG
 // ═══════════════════════════════════════════════════════════════
+// v9.30
+// - Added: Secret Extras menu (right-click Support button)
+// - Added: "Include Video ID" toggle in Secret Extras (on by default)
+//
 // v9.29
 // - Added: Ko-Fi support button in context menu
 //
@@ -416,6 +420,7 @@
         AUDIO_OUTPUT: 'ytdlp_audio_output',
         SUBS_FORMAT: 'ytdlp_subs_format',
         SUBS_OUTPUT: 'ytdlp_subs_output',
+        INCLUDE_VIDEO_ID: 'ytdlp_include_video_id',
     };
 
     // ═══════════════════════════════════════════════════════════════
@@ -430,6 +435,7 @@
         AUDIO_OUTPUT: 'merge',
         SUBS_FORMAT: 'original',
         SUBS_OUTPUT: 'none',
+        INCLUDE_VIDEO_ID: true,
     };
 
     // ═══════════════════════════════════════════════════════════════
@@ -470,6 +476,14 @@
     const getAudioOutput = () => getStoredValue(STORAGE_KEYS.AUDIO_OUTPUT, DEFAULTS.AUDIO_OUTPUT, OUTPUT_MODES);
     const getSubsFormat = () => getStoredValue(STORAGE_KEYS.SUBS_FORMAT, DEFAULTS.SUBS_FORMAT, SUBTITLE_FORMATS);
     const getSubsOutput = () => getStoredValue(STORAGE_KEYS.SUBS_OUTPUT, DEFAULTS.SUBS_OUTPUT, OUTPUT_MODES);
+    const getIncludeVideoId = () => {
+        try {
+            const stored = GM_getValue(STORAGE_KEYS.INCLUDE_VIDEO_ID, DEFAULTS.INCLUDE_VIDEO_ID);
+            return stored === true || stored === 'true';
+        } catch (e) {
+            return DEFAULTS.INCLUDE_VIDEO_ID;
+        }
+    };
 
     // Setters
     const setVideoQuality = (v) => setStoredValue(STORAGE_KEYS.VIDEO_QUALITY, v);
@@ -480,6 +494,7 @@
     const setAudioOutput = (v) => setStoredValue(STORAGE_KEYS.AUDIO_OUTPUT, v);
     const setSubsFormat = (v) => setStoredValue(STORAGE_KEYS.SUBS_FORMAT, v);
     const setSubsOutput = (v) => setStoredValue(STORAGE_KEYS.SUBS_OUTPUT, v);
+    const setIncludeVideoId = (v) => setStoredValue(STORAGE_KEYS.INCLUDE_VIDEO_ID, v);
 
     // Helpers
     const findOption = (options, id) => options.find(o => o.id === id);
@@ -887,6 +902,56 @@
                     border-color: #4CAF50;
                     color: #4CAF50;
                 }
+
+                /* Secret Extras popup */
+                .ytdlp-secret-menu {
+                    display: none;
+                    position: absolute;
+                    bottom: calc(100% + 4px);
+                    left: 0;
+                    right: 0;
+                    background: #2d2d2d;
+                    border: 1px solid #444;
+                    border-radius: 6px;
+                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+                    padding: 6px;
+                    z-index: 100;
+                }
+
+                .ytdlp-secret-menu.visible {
+                    display: block;
+                }
+
+                .ytdlp-secret-header {
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    color: #888;
+                    letter-spacing: 0.5px;
+                    padding: 4px 8px;
+                    white-space: nowrap;
+                }
+
+                .ytdlp-secret-item {
+                    padding: 6px 8px;
+                    font-size: 12px;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    transition: background 0.15s;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    white-space: nowrap;
+                }
+
+                .ytdlp-secret-item:hover {
+                    background: #3a3a3a;
+                }
+
+                .ytdlp-secret-item .check {
+                    width: 12px;
+                    font-size: 10px;
+                    color: #4CAF50;
+                }
             `;
         },
 
@@ -1201,8 +1266,11 @@
             updateDownloadState();
 
             // ─────────────────────────────────────────────────────────────
-            // SUPPORT BUTTON
+            // SUPPORT BUTTON WITH SECRET EXTRAS
             // ─────────────────────────────────────────────────────────────
+            const supportWrapper = document.createElement('div');
+            supportWrapper.style.position = 'relative';
+
             const supportBtn = document.createElement('a');
             supportBtn.className = 'ytdlp-support-btn';
             supportBtn.href = 'https://ko-fi.com/piknockyou';
@@ -1214,7 +1282,59 @@
                 e.stopPropagation();
             });
 
-            this.element.appendChild(supportBtn);
+            // Secret extras menu (hidden by default)
+            const secretMenu = document.createElement('div');
+            secretMenu.className = 'ytdlp-secret-menu';
+
+            const secretHeader = document.createElement('div');
+            secretHeader.className = 'ytdlp-secret-header';
+            secretHeader.textContent = 'Secret Extras';
+            secretMenu.appendChild(secretHeader);
+
+            const videoIdItem = document.createElement('div');
+            videoIdItem.className = 'ytdlp-secret-item';
+
+            const videoIdCheck = document.createElement('span');
+            videoIdCheck.className = 'check';
+            videoIdCheck.textContent = getIncludeVideoId() ? '✓' : '';
+
+            const videoIdLabel = document.createElement('span');
+            videoIdLabel.textContent = 'Include Video ID';
+
+            videoIdItem.appendChild(videoIdCheck);
+            videoIdItem.appendChild(videoIdLabel);
+
+            videoIdItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const newValue = !getIncludeVideoId();
+                setIncludeVideoId(newValue);
+                videoIdCheck.textContent = newValue ? '✓' : '';
+                if (window._ytdlpUpdateTooltip) window._ytdlpUpdateTooltip();
+            });
+
+            secretMenu.appendChild(videoIdItem);
+
+            // Right-click on support button opens secret menu
+            supportBtn.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                secretMenu.classList.toggle('visible');
+            });
+
+            // Close secret menu when clicking outside
+            const closeSecretMenu = (e) => {
+                if (!secretMenu.contains(e.target) && e.target !== supportBtn) {
+                    secretMenu.classList.remove('visible');
+                }
+            };
+
+            // Use shadowRoot for event listening
+            this.shadowRoot.addEventListener('mousedown', closeSecretMenu);
+
+            supportWrapper.appendChild(secretMenu);
+            supportWrapper.appendChild(supportBtn);
+            this.element.appendChild(supportWrapper);
 
             // Initial update of all states
             updateAllStates();
@@ -1408,13 +1528,14 @@ def sanitize_filename(name, max_len=120):
 
     return name or "video"
 
-def resolve_output_name(url, cookies_arg, fallback, needs_impersonate=False, impersonate_target="chrome", referer=""):
+def resolve_output_name(url, cookies_arg, fallback, needs_impersonate=False, impersonate_target="chrome", referer="", include_id=True):
     """
     Resolve a better output base name using yt-dlp metadata (title + id).
     Falls back to the provided fallback name if anything fails.
     """
     try:
-        cmd = ["yt-dlp", "--no-playlist", "--print", "%(title)s [%(id)s]"]
+        template = "%(title)s [%(id)s]" if include_id else "%(title)s"
+        cmd = ["yt-dlp", "--no-playlist", "--print", template]
 
         if referer:
             cmd.extend(["--referer", referer])
@@ -1906,6 +2027,9 @@ NEEDS_IMPERSONATE = ${pyBool(needsImpersonate)}
 # Referer bypass (Vimeo, etc.)
 REFERER = "${referer}"
 
+# Include video ID in filename
+INCLUDE_VIDEO_ID = ${pyBool(getIncludeVideoId())}
+
 # Display labels
 VIDEO_LABEL = "${videoLabel}"
 AUDIO_LABEL = "${audioLabel}"
@@ -2064,7 +2188,7 @@ def main():
 
     # Resolve better base filename from yt-dlp metadata (helps on Instagram etc.)
     global FILENAME
-    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER)
+    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER, INCLUDE_VIDEO_ID)
     print_status("INFO", f"Output name: {FILENAME}")
 
     # Handle subtitles
@@ -2171,7 +2295,7 @@ def main():
 
     # Resolve better base filename from yt-dlp metadata
     global FILENAME
-    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER)
+    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER, INCLUDE_VIDEO_ID)
     print_status("INFO", f"Output name: {FILENAME}")
 
     # Handle subtitles
@@ -2452,7 +2576,7 @@ def main():
 
     # Resolve better base filename from yt-dlp metadata (helps on Instagram etc.)
     global FILENAME
-    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER)
+    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER, INCLUDE_VIDEO_ID)
     print_status("INFO", f"Output name: {FILENAME}")
 
     # Check for mkvmerge

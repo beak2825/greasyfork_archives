@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Remove Douyu Gift - 隐藏斗鱼礼物栏
 // @namespace       https://github.com/idxinf/Remove-Douyu-Gift
-// @version         1.0.0
+// @version         1.0.1
 // @description     隐藏斗鱼礼物栏和优化工具栏
 // @author          idxinf
 // @license         MIT
@@ -34,7 +34,7 @@ html body [class^=stream__] {
 
 html body [class^=interactive__] {
     height: var(--toolbar-height);
-    background-image: none;
+    background-image: none !important;
     background-color: #000;
 }
 

@@ -3,7 +3,7 @@
 // @name:en			HeroWarsHelper
 // @name:ru			HeroWarsHelper
 // @namespace		HeroWarsHelper
-// @version			2.423
+// @version			2.430
 // @description		Automation of actions for the game Hero Wars
 // @description:en	Automation of actions for the game Hero Wars
 // @description:ru	Автоматизация действий для игры Хроники Хаоса
@@ -1360,7 +1360,9 @@ const buttons = {
 				get name() {
 					return I18N('AUTO_RAID_ADVENTURE');
 				},
-				onClick: autoRaidAdventure,
+				onClick: () => {
+					autoRaidAdventure();
+				},
 				get title() {
 					return I18N('AUTO_RAID_ADVENTURE_TITLE');
 				},
@@ -1785,15 +1787,24 @@ const othersPopupButtons = [
 		},
 		result: async function () {
 			const maps = Object.values(lib.data.seasonAdventure.list)
-				.filter((e) => e.map.cells.length > 3)
+				.filter((e) => e.startCondition.time.value + e.duration > Date.now() / 1000)
 				.map((i) => ({
 					msg: I18N('MAP_NUM', { num: i.id }),
 					result: i.id,
 				}));
 
+			maps.push({
+				msg: I18N('MAP_NUM', { num: 'online' }),
+				result: 'online',
+			});
+
 			const result = await popup.confirm(I18N('SELECT_ISLAND_MAP'), [...maps, { result: false, isClose: true }]);
 			if (result) {
-				cheats.changeIslandMap(result);
+				if (result === 'online') {
+					window.open('https://hwmap.online/', '_blank');
+				} else {
+					cheats.changeIslandMap(result);
+				}
 			}
 		},
 		get title() {
@@ -2995,7 +3006,7 @@ async function checkChangeResponse(response) {
 		const allReward = {};
 		let readQuestInfo = false;
 		for (const call of respond.results) {
-			/** 
+			/**
 			 * Obtaining initial data for completing quests
 			 * Получение исходных данных для выполнения квестов
 			 */
@@ -3032,13 +3043,11 @@ async function checkChangeResponse(response) {
 			 * Hiding donation offers 2
 			 * Скрываем предложения доната 2
 			 */
-			if (getSaveVal('noOfferDonat') &&
-				(call.ident == callsIdent['offerGetAll'] ||
-					call.ident == callsIdent['specialOffer_getAll'])) {
+			if (getSaveVal('noOfferDonat') && (call.ident == callsIdent['offerGetAll'] || call.ident == callsIdent['specialOffer_getAll'])) {
 				let offers = call.result.response;
 				if (offers) {
 					call.result.response = offers.filter(
-						(e) => !['addBilling', 'bundleCarousel'].includes(e.type) || ['idleResource', 'stagesOffer'].includes(e.offerType)
+						(e) => !['addBilling', 'bundleCarousel'].includes(e.type) || ['idleResource', 'stagesOffer'].includes(e.offerType),
 					);
 					this._isChangeResponse = true;
 				}
@@ -3053,12 +3062,12 @@ async function checkChangeResponse(response) {
 			}
 			/**
 			 * Hiding donation offers 4
-			 * Скрываем предложения доната 4 
+			 * Скрываем предложения доната 4
 			 */
 			if (call.result?.specialOffers) {
 				const offers = call.result.specialOffers;
 				call.result.specialOffers = offers.filter(
-					(e) => !['addBilling', 'bundleCarousel'].includes(e.type) || ['idleResource', 'stagesOffer'].includes(e.offerType)
+					(e) => !['addBilling', 'bundleCarousel'].includes(e.type) || ['idleResource', 'stagesOffer'].includes(e.offerType),
 				);
 				this._isChangeResponse = true;
 			}
@@ -3129,7 +3138,7 @@ async function checkChangeResponse(response) {
 					questsInfo['userGetInfo'] = user;
 				}
 			}
-			/** 
+			/**
 			 * Prolongation of the brawl
 			 * Продление потасовки
 			 */
@@ -3154,7 +3163,8 @@ async function checkChangeResponse(response) {
 			 * Start of the battle for recalculation
 			 * Начало боя для прерасчета
 			 */
-			if (call.ident == callsIdent['clanWarAttack'] ||
+			if (
+				call.ident == callsIdent['clanWarAttack'] ||
 				call.ident == callsIdent['crossClanWar_startBattle'] ||
 				call.ident == callsIdent['bossAttack'] ||
 				call.ident == callsIdent['brawl_startBattle'] ||
@@ -3164,12 +3174,15 @@ async function checkChangeResponse(response) {
 				call.ident == callsIdent['towerStartBattle'] ||
 				call.ident == callsIdent['epicBrawl_startBattle'] ||
 				call.ident == callsIdent['adventure_turnStartBattle'] ||
-				call.ident == callsIdent['battleGetReplay'] && call.result?.response?.replay?.type !== "clan_raid") {
+				(call.ident == callsIdent['battleGetReplay'] && call.result?.response?.replay?.type !== 'clan_raid')
+			) {
 				let battle = call.result.response.battle || call.result.response.replay;
-				if (call.ident == callsIdent['brawl_startBattle'] ||
+				if (
+					call.ident == callsIdent['brawl_startBattle'] ||
 					call.ident == callsIdent['bossAttack'] ||
 					call.ident == callsIdent['towerStartBattle'] ||
-					call.ident == callsIdent['invasion_bossStart']) {
+					call.ident == callsIdent['invasion_bossStart']
+				) {
 					battle = call.result.response;
 				}
 				lastBattleInfo = battle;
@@ -3223,7 +3236,7 @@ async function checkChangeResponse(response) {
 				}
 			}
 
-			if (call.ident == callsIdent['battleGetReplay'] && call.result.response.replay.type ===	"clan_raid") {
+			if (call.ident == callsIdent['battleGetReplay'] && call.result.response.replay.type === 'clan_raid') {
 				if (call?.result?.response?.replay?.result?.damage) {
 					const damages = Object.values(call.result.response.replay.result.damage);
 					const bossDamage = damages.reduce((a, v) => a + v, 0);
@@ -3238,7 +3251,7 @@ async function checkChangeResponse(response) {
 				lastBossBattle = call.result.response.battle;
 				lastBossBattle.endTime = Date.now() + 160 * 1000;
 				if (isChecked('preCalcBattle')) {
-					const result = await Calc(lastBossBattle).then(e => e.progress[0].defenders.heroes[1].extra);
+					const result = await Calc(lastBossBattle).then((e) => e.progress[0].defenders.heroes[1].extra);
 					const bossDamage = result.damageTaken + result.damageTakenNextLevel;
 					setProgress(I18N('BOSS_DAMAGE') + bossDamage.toLocaleString(), false, hideProgress);
 				}
@@ -3252,6 +3265,40 @@ async function checkChangeResponse(response) {
 				for (let n in chains) {
 					chains[n] = 9999;
 				}
+				this._isChangeResponse = true;
+			}
+			/**
+			 * Sum the result of opening Pet Eggs
+			 * Суммирование результата открытия яиц питомцев
+			 */
+			if (isChecked('countControl') && call.ident == callsIdent['pet_chestOpen']) {
+				const rewards = call.result.response.rewards;
+				if (rewards.length > 10) {
+					/**
+					 * Removing pet cards
+					 * Убираем карточки петов
+					 */
+					for (const reward of rewards) {
+						if (reward.petCard) {
+							delete reward.petCard;
+						}
+					}
+				}
+				rewards.forEach((e) => {
+					for (let f in e) {
+						if (!allReward[f]) {
+							allReward[f] = {};
+						}
+						for (let o in e[f]) {
+							if (!allReward[f][o]) {
+								allReward[f][o] = e[f][o];
+							} else {
+								allReward[f][o] += e[f][o];
+							}
+						}
+					}
+				});
+				call.result.response.rewards = [allReward];
 				this._isChangeResponse = true;
 			}
 			/**
@@ -3307,7 +3354,7 @@ async function checkChangeResponse(response) {
 				lastDungeonBattleData = call.result.response;
 				lastDungeonBattleStart = Date.now();
 			}
-			/** 
+			/**
 			 * Getting the number of prediction cards
 			 * Получение количества карт предсказаний
 			 */
@@ -3340,8 +3387,8 @@ async function checkChangeResponse(response) {
 			 * Скрытие лишних серверов
 			 */
 			if (call.ident == callsIdent['serverGetAll'] && isChecked('hideServers')) {
-				let servers = call.result.response.users.map(s => s.serverId)
-				call.result.response.servers = call.result.response.servers.filter(s => servers.includes(s.id));
+				let servers = call.result.response.users.map((s) => s.serverId);
+				call.result.response.servers = call.result.response.servers.filter((s) => servers.includes(s.id));
 				this._isChangeResponse = true;
 			}
 			/**
@@ -3357,7 +3404,7 @@ async function checkChangeResponse(response) {
 					adv_valley_3pl_hell: 10,
 					adv_ghirwil_3pl_hell: 11,
 					adv_angels_3pl_hell: 12,
-				}
+				};
 				let msg = I18N('MAP') + (mapIdent in maps ? maps[mapIdent] : adventureId);
 				msg += '<br>' + I18N('PLAYER_POS');
 				for (const user of users) {
@@ -3370,7 +3417,7 @@ async function checkChangeResponse(response) {
 			 * Автоматический запуск рейда при окончании приключения
 			 */
 			if (call.ident == callsIdent['adventure_end']) {
-				autoRaidAdventure()
+				autoRaidAdventure();
 			}
 			/** Удаление лавки редкостей */
 			if (call.ident == callsIdent['missionRaid']) {
@@ -3461,7 +3508,7 @@ async function checkChangeResponse(response) {
 										needBuff: pack.buff,
 										haveBuff: invasionInfo.buff,
 									}),
-									false
+									false,
 								);
 							}
 						}
@@ -3482,7 +3529,7 @@ async function checkChangeResponse(response) {
 									needBuff: pack.buff,
 									haveBuff: invasionInfo.buff,
 								}),
-								false
+								false,
 							);
 						}
 					}
@@ -6521,7 +6568,7 @@ async function bossOpenChestPay() {
 	setProgress(`${I18N('OUTLAND_CHESTS_RECEIVED')}: ${count}`, true);
 }
 
-async function autoRaidAdventure() {
+async function autoRaidAdventure(countRaid = 0) {
 	const [userGetInfo, adventure_raidGetInfo] = await Caller.send(['userGetInfo', 'adventure_raidGetInfo']);
 
 	const portalSphere = userGetInfo.refillable.find((n) => n.id == 45);
@@ -6535,10 +6582,12 @@ async function autoRaidAdventure() {
 		return;
 	}
 
-	const countRaid = +(await popup.confirm(I18N('RAID_ADVENTURE', { adventureId }), [
-		{ result: false, isClose: true },
-		{ msg: I18N('RAID'), isInput: true, default: portalSphere.amount, color: 'green' },
-	]));
+	if (!countRaid) {
+		countRaid = +(await popup.confirm(I18N('RAID_ADVENTURE', { adventureId }), [
+			{ result: false, isClose: true },
+			{ msg: I18N('RAID'), isInput: true, default: portalSphere.amount, color: 'green' },
+		]));
+	}
 
 	if (!countRaid) {
 		return;
@@ -6554,7 +6603,7 @@ async function autoRaidAdventure() {
 			.map(() => ({
 				name: 'adventure_raid',
 				args: { adventureId },
-			}))
+			})),
 	);
 
 	if (!resultRaid.length && countRaid > 1) {
@@ -6564,7 +6613,7 @@ async function autoRaidAdventure() {
 	}
 
 	console.log(resultRaid, adventureId, portalSphere.amount);
-	setProgress(I18N('ADVENTURE_COMPLETED', { adventureId, times: resultRaid.length }), true);
+	setProgress(I18N('ADVENTURE_COMPLETED', { adventureId, times: countRaid }), true);
 }
 
 /** Вывести всю клановую статистику в консоль браузера */
@@ -6668,7 +6717,7 @@ async function buyInStoreForGold() {
 	setProgress(I18N('LOTS_BOUGHT', { countBuy }), true);
 }
 
-async function rewardsAndMailFarm() {
+async function rewardsAndMailFarm(isFarmMail = true) {
 	try {
 		const [questGetAll, mailGetAll, specialOffer, battlePassInfo, battlePassSpecial] = await Caller.send([
 			'questGetAll',
@@ -6779,13 +6828,15 @@ async function rewardsAndMailFarm() {
 			});
 		}
 
-		const { Letters } = HWHClasses;
-		const letterIds = Letters.filter(mailFarm);
-		if (letterIds.length) {
-			farmCaller.add({
-				name: 'mailFarm',
-				args: { letterIds },
-			});
+		if (isFarmMail) {
+			const { Letters } = HWHClasses;
+			const letterIds = Letters.filter(mailFarm);
+			if (letterIds.length) {
+				farmCaller.add({
+					name: 'mailFarm',
+					args: { letterIds },
+				});
+			}
 		}
 
 		if (farmCaller.isEmpty()) {
@@ -9477,7 +9528,7 @@ function executeDungeon(resolve, reject) {
 			const itemId = Object.keys(reward[type]).pop();
 			const count = reward[type][itemId];
 			const itemName = cheats.translate(`LIB_${type.toUpperCase()}_NAME_${itemId}`);
-			talentMsgReward += `<br> ${count} ${itemName}`;
+			this.talentMsgReward += `<br> ${count} <span style="color:${itemId === 300 ? 'red' : 'inherit'}">${itemName}</span>`;
 			doorsAmount++;
 		}
 		talentMsg = `<br>TMNT Talent: ${doorsAmount}/3 ${talentMsgReward}<br>`;
@@ -12867,6 +12918,7 @@ class doYourBest {
 
 	functions = {
 		tidyInventory: async () => {
+			const { InventoryTidier } = HWHClasses;
 			const tidyInv = new InventoryTidier();
 			await tidyInv.runSilent();
 		},
@@ -12889,7 +12941,9 @@ class doYourBest {
 		},
 		rollAscension,
 		getDailyBonus,
-		questAllFarm,
+		questAllFarm: async () => {
+			await rewardsAndMailFarm(false);
+		},
 		testDungeon,
 		synchronization: async () => {
 			cheats.refreshGame();
@@ -14388,6 +14442,7 @@ class InventoryTidier {
 			}
 			cheats.refreshInventory();
 		}
+		setProgress(I18N('DONE'), true);
 	}
 
 	async runSilent() {
@@ -14442,7 +14497,7 @@ class ZingerYWebsiteAPI {
 		return {
 			'X-Request-Signature': this.sign(),
 			'X-Script-Name': GM_info.script.name,
-			'X-Script-Version': '2.423',
+			'X-Script-Version': '2.430',
 			'X-Script-Author': GM_info.script.author,
 			'X-Script-ZingerY': 43,
 			'X-Script-Key': '1',

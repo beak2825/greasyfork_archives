@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         IMDb SeriesGraph Rating Colors
+// @name         IMDb Rating Colors
 // @namespace    http://tampermonkey.net/
 // @version      2.6
-// @description  Applies SeriesGraph rating color codes to IMDb episode heatmaps, histograms, creates a Season Average section, and adds "Save Image" functionality. Works for all languages.
+// @description  Applies rating color codes to IMDb episode heatmaps, histograms, creates a Season Average section, and adds "Save Image" functionality. Works for all languages.
 // @author       Windy
 // @match        https://www.imdb.com/title/*/ratings*
 // @match        https://www.imdb.com/*/title/*/ratings*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=imdb.com
 // @require      https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/563779/IMDb%20SeriesGraph%20Rating%20Colors.user.js
-// @updateURL https://update.greasyfork.org/scripts/563779/IMDb%20SeriesGraph%20Rating%20Colors.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563779/IMDb%20Rating%20Colors.user.js
+// @updateURL https://update.greasyfork.org/scripts/563779/IMDb%20Rating%20Colors.meta.js
 // ==/UserScript==
 
 (function() {

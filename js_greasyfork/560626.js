@@ -1,210 +1,214 @@
 // ==UserScript==
-// @name         LMArena | Collapsible Code Blocks
+// @name         Arena.ai | Collapsible Code Blocks
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      4.8
+// @version      4.9
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Adds collapsible code blocks with clickable headers, footer controls, and a global toolbar toggle
-// @match        *://*lmarena.ai/*
-// @icon         https://lmarena.ai/favicon.ico
+// @match        *://*arena.ai/*
+// @icon         https://arena.ai/favicon.ico
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/560626/LMArena%20%7C%20Collapsible%20Code%20Blocks.user.js
-// @updateURL https://update.greasyfork.org/scripts/560626/LMArena%20%7C%20Collapsible%20Code%20Blocks.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560626/Arenaai%20%7C%20Collapsible%20Code%20Blocks.user.js
+// @updateURL https://update.greasyfork.org/scripts/560626/Arenaai%20%7C%20Collapsible%20Code%20Blocks.meta.js
 // ==/UserScript==
+
+/*
+    What this script does
+    ---------------------
+    - Makes the code block header clickable to toggle (collapse/expand).
+    - Adds an in-flow footer "Collapse" bar per code block (never covers code).
+    - Uses a single global fixed footer above the input when the in-flow footer would be obscured.
+      (The in-flow footer hides via visibility to prevent layout/scroll jitter.)
+    - Adds a dual toolbar button next to the input controls:
+      * Collapse all
+      * Expand all
+      * Hold collapse to toggle persistent auto-collapse
+
+    Detection/updates model
+    -----------------------
+    - Initial scan: finds all current code blocks once on load.
+    - Incremental scan: MutationObserver looks only at added DOM nodes and initializes new code blocks.
+    - Safety net: periodic resync detects missed blocks and runs a full scan.
+    - Fixed footer updates on scroll/resize (throttled via requestAnimationFrame).
+*/
+
+// ═══════════════════════════════════════════════════════════════════════
+// CHANGELOG
+// ═══════════════════════════════════════════════════════════════════════
+//
+// v1.3
+// - Switched to incremental MutationObserver (only processes added nodes)
+// - Added 5-second fallback resync to catch edge cases
+// - Performance: avoids repeated full DOM rescans during streaming
+//
+// v1.4
+// - Batched global collapse/expand across frames to avoid long UI stalls
+//
+// v1.5
+// - Commenting pass / documentation improvements (no functional changes)
+// - Corrected init log version string
+//
+// v1.8
+// - Fixed UI flicker/stutter when toggling all code blocks
+// - Removed requestAnimationFrame batching from collapseAll/expandAll
+//   (spreading DOM changes across frames caused multiple layout recalcs,
+//   each shifting content by 1-2px before settling; synchronous is smoother
+//   since display:none doesn't trigger expensive reflows)
+// - Removed auto-expand feature (collapse-only is cleaner UX)
+// - Simplified context menu
+//
+// v1.9
+// - Cleanup: removed unused batch state variables left over from pre-v1.8 batching
+// - Cleanup: removed stale "auto-collapse/auto-expand" wording
+//
+// v2.0
+// - Cleanup: removed unused animation config (no longer used after switching to display:none collapse)
+// - Cleanup: removed unused destructured `animation` variable in injectStyles()
+// - Optional cleanup: removed unused debug helpers (getState/getAutoMode) and ContextMenu.isOpen
+//
+// v2.1
+// - Fixed: code blocks now preserve their original width when collapsed
+// - Changed: global toggle button moved to bottom-right (left of submit button)
+//
+// v2.2
+// - Added: scroll anchoring to preserve visual position when collapsing
+//   (prevents jarring scroll jumps when collapsing large code blocks)
+//
+// v2.3
+// - Fixed: scroll anchoring when viewing middle of a large code block
+//   (now detects "inside block" state and scrolls to show header after collapse)
+//
+// v2.4
+// - Redesigned: global toggle is now a dual button (collapse/expand side by side)
+// - Added: hold collapse button for 1s to toggle persistent auto-collapse mode
+// - Added: tooltip hint appears at 0.5s explaining hold-to-activate feature
+// - Removed: right-click context menu (replaced by hold gesture)
+//
+// v2.5
+// - Changed: expand button icon to unfold style (avoids dropdown menu confusion)
+// - Added: fill animation on collapse button during hold gesture
+// - Changed: tooltips now appear above buttons (not below/as title attributes)
+// - Added: hover tooltips for both buttons explaining their function
+//
+// v2.6
+// - Fixed: tooltips now properly appear on hover
+// - Changed: collapse button icon to fold style (two chevrons pointing inward)
+//
+// v2.7
+// - Fixed: hover tooltips were hidden by inline visibility/opacity styles (now cleared after measurement)
+//
+// v2.8
+// - Tooltips now explicitly mention "code blocks" and toolbar buttons include aria-labels
+//
+// v2.9
+// - Replaced floating collapse button with sticky footer bar
+// - Footer bar is part of code block structure (like the header)
+// - Footer sticks to viewport bottom while scrolling through tall blocks
+// - Footer sits at natural position when code block bottom is visible (never covers code)
+// - Removed all floating button positioning logic (simpler, more performant)
+//
+// v3.0
+// - Fixed: footer now properly follows viewport when scrolling through tall code blocks
+// - CSS sticky alone doesn't work for "show at viewport bottom when natural position is below"
+// - Re-added JavaScript positioning: fixed position when block bottom is below viewport,
+//   natural position when block bottom is visible (never covers code)
+// - Re-added scroll/resize handlers with rAF throttling for footer positioning
+//
+// v3.1
+// - Styled footer bar to match header (uses site's CSS variables for colors/borders)
+// - Fixed: footer now positions above input area (not at viewport bottom)
+// - Fixed: footer keeps rounded corners when in fixed mode
+// - Removed hardcoded footer colors from CONFIG (now uses site theme)
+//
+// v3.2
+// - Fixed: flickering during transition between natural and fixed footer positions
+// - Added hysteresis: switch to fixed only when natural is FULLY hidden behind input
+// - Added hysteresis: switch to natural only when natural would be FULLY visible
+// - Natural footer now allowed to scroll partially behind input area (no early switch)
+//
+// v3.3
+// - Changed transition logic: switch to fixed as soon as natural footer TOUCHES input area
+// - Natural footer is never partially covered (cleaner visual)
+// - Switch back to natural only when full room available (hysteresis prevents flicker)
+//
+// v3.4
+// - Fixed: robust footer swap (in-flow footer hides, separate fixed footer shows) to eliminate flicker/partial overlap
+// - Fixed footer never covers the block header: hides as soon as it would touch the header
+// - In-flow footer is hidden via visibility (keeps layout stable; prevents scroll/height jitter)
+//
+// v3.5
+// - Fixed: during smooth auto-scroll, fixed footer now disappears immediately on header collision
+// - Prevents "jumping" the fixed footer to a different code block when the bottom-most one collides
+// - More robust height math: uses in-flow footer height as fallback when fixed footer is hidden
+//
+// v3.6
+// - Cleanup/docs: removed leftover floating-button wording and unused bits
+//
+// v3.7
+// - Script name changed from "LMArena | Code Block Collapse" to "LMArena | Collapsible Code Blocks"
+//
+// v3.8
+// - Fixed: conflict with other userscripts (Multi-Provider Chat Export, etc.)
+// - Added 1000ms initialization delay to avoid React Hydration Error #418
+//
+// v3.9
+// - Replaced hardcoded delay with dynamic Stabilization Observer
+// - Detects React hydration completion by watching for the chat input bar
+// - Uses requestIdleCallback for optimal performance/compatibility
+//
+// v4.0
+// - Fixed: fixed footer now repositions when textarea grows during user input
+// - Added ResizeObserver on input area to detect height changes
+// - Footer no longer conflicts with/covers the textarea when it expands
+//
+// v4.1
+// - Cleanup: removed overridden CSS declaration (border-radius: 0 0 0 0)
+// - Cleanup: removed unused 'warn' log style
+// - Cleanup: removed redundant typeof guard for activeFixedState
+// - Cleanup: consolidated duplicate mouseleave handlers on collapse button
+//
+// v4.2
+// - Changed: replaced localStorage with GM_setValue/GM_getValue for settings persistence
+// - Settings now stored via userscript manager (more reliable, syncs across browsers if supported)
+//
+// v4.3
+// - Changed: single-block expand no longer uses scroll anchoring
+// - Expanding a block now keeps the header in place; code appears below (no viewport shift)
+// - Lets user read expanded code from the beginning instead of being scrolled to the bottom
+//
+// v4.4
+// - Fixed: single-block expand now actively scrolls header to top of viewport
+// - Ensures user always sees expanded code from the beginning (overrides browser scroll anchoring)
+//
+// v4.5
+// - Refined: single-block expand only scrolls if header is in bottom 1/3 of viewport or off-screen
+// - If header is already visible in upper 2/3, no scroll adjustment occurs
+//
+// v4.6
+// - Fixed: single-block collapse no longer "snaps" the header down to the old footer position in some scroll states
+// - Changed: when collapsing a block while its header is visible, the header is used as the scroll anchor (keeps it stable)
+// - Fixed: auto-collapse on newly added blocks no longer triggers single-block scroll behavior
+//
+// v4.6
+// - Fixed: single-block expand now first stabilizes the header position (cancels browser/scroll-area anchoring)
+// - Refined: only scrolls header to top if it ends up off-screen or in the bottom ~15% of the viewport
+//
+// v4.7
+// - Cleanup: removed unused `data` parameter from internal log function
+// - Cleanup: removed unused boolean return values from createToolbarButton()
+// - Cleanup: consolidated duplicate CSS rules and keyframe definitions
+//
+// v4.8
+// - Removed: width preservation on collapse (caused horizontal scrolling on narrow viewports)
+// - Collapsed blocks now use natural width instead of forced minWidth
+//
+// v4.9
+// - Renamed from LMArena to Arena.ai
 
 (function() {
     'use strict';
-
-    /*
-        What this script does
-        ---------------------
-        - Makes the code block header clickable to toggle (collapse/expand).
-        - Adds an in-flow footer "Collapse" bar per code block (never covers code).
-        - Uses a single global fixed footer above the input when the in-flow footer would be obscured.
-          (The in-flow footer hides via visibility to prevent layout/scroll jitter.)
-        - Adds a dual toolbar button next to the input controls:
-          * Collapse all
-          * Expand all
-          * Hold collapse to toggle persistent auto-collapse
-
-        Detection/updates model
-        -----------------------
-        - Initial scan: finds all current code blocks once on load.
-        - Incremental scan: MutationObserver looks only at added DOM nodes and initializes new code blocks.
-        - Safety net: periodic resync detects missed blocks and runs a full scan.
-        - Fixed footer updates on scroll/resize (throttled via requestAnimationFrame).
-    */
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // CHANGELOG
-    // ═══════════════════════════════════════════════════════════════════════
-    // v1.3
-    // - Switched to incremental MutationObserver (only processes added nodes)
-    // - Added 5-second fallback resync to catch edge cases
-    // - Performance: avoids repeated full DOM rescans during streaming
-    //
-    // v1.4
-    // - Batched global collapse/expand across frames to avoid long UI stalls
-    //
-    // v1.5
-    // - Commenting pass / documentation improvements (no functional changes)
-    // - Corrected init log version string
-    //
-    // v1.8
-    // - Fixed UI flicker/stutter when toggling all code blocks
-    // - Removed requestAnimationFrame batching from collapseAll/expandAll
-    //   (spreading DOM changes across frames caused multiple layout recalcs,
-    //   each shifting content by 1-2px before settling; synchronous is smoother
-    //   since display:none doesn't trigger expensive reflows)
-    // - Removed auto-expand feature (collapse-only is cleaner UX)
-    // - Simplified context menu
-    //
-    // v1.9
-    // - Cleanup: removed unused batch state variables left over from pre-v1.8 batching
-    // - Cleanup: removed stale "auto-collapse/auto-expand" wording
-    //
-    // v2.0
-    // - Cleanup: removed unused animation config (no longer used after switching to display:none collapse)
-    // - Cleanup: removed unused destructured `animation` variable in injectStyles()
-    // - Optional cleanup: removed unused debug helpers (getState/getAutoMode) and ContextMenu.isOpen
-    //
-    // v2.1
-    // - Fixed: code blocks now preserve their original width when collapsed
-    // - Changed: global toggle button moved to bottom-right (left of submit button)
-    //
-    // v2.2
-    // - Added: scroll anchoring to preserve visual position when collapsing
-    //   (prevents jarring scroll jumps when collapsing large code blocks)
-    //
-    // v2.3
-    // - Fixed: scroll anchoring when viewing middle of a large code block
-    //   (now detects "inside block" state and scrolls to show header after collapse)
-    //
-    // v2.4
-    // - Redesigned: global toggle is now a dual button (collapse/expand side by side)
-    // - Added: hold collapse button for 1s to toggle persistent auto-collapse mode
-    // - Added: tooltip hint appears at 0.5s explaining hold-to-activate feature
-    // - Removed: right-click context menu (replaced by hold gesture)
-    //
-    // v2.5
-    // - Changed: expand button icon to unfold style (avoids dropdown menu confusion)
-    // - Added: fill animation on collapse button during hold gesture
-    // - Changed: tooltips now appear above buttons (not below/as title attributes)
-    // - Added: hover tooltips for both buttons explaining their function
-    //
-    // v2.6
-    // - Fixed: tooltips now properly appear on hover
-    // - Changed: collapse button icon to fold style (two chevrons pointing inward)
-    //
-    // v2.7
-    // - Fixed: hover tooltips were hidden by inline visibility/opacity styles (now cleared after measurement)
-    //
-    // v2.8
-    // - Tooltips now explicitly mention "code blocks" and toolbar buttons include aria-labels
-    //
-    // v2.9
-    // - Replaced floating collapse button with sticky footer bar
-    // - Footer bar is part of code block structure (like the header)
-    // - Footer sticks to viewport bottom while scrolling through tall blocks
-    // - Footer sits at natural position when code block bottom is visible (never covers code)
-    // - Removed all floating button positioning logic (simpler, more performant)
-    //
-    // v3.0
-    // - Fixed: footer now properly follows viewport when scrolling through tall code blocks
-    // - CSS sticky alone doesn't work for "show at viewport bottom when natural position is below"
-    // - Re-added JavaScript positioning: fixed position when block bottom is below viewport,
-    //   natural position when block bottom is visible (never covers code)
-    // - Re-added scroll/resize handlers with rAF throttling for footer positioning
-    //
-    // v3.1
-    // - Styled footer bar to match header (uses site's CSS variables for colors/borders)
-    // - Fixed: footer now positions above input area (not at viewport bottom)
-    // - Fixed: footer keeps rounded corners when in fixed mode
-    // - Removed hardcoded footer colors from CONFIG (now uses site theme)
-    //
-    // v3.2
-    // - Fixed: flickering during transition between natural and fixed footer positions
-    // - Added hysteresis: switch to fixed only when natural is FULLY hidden behind input
-    // - Added hysteresis: switch to natural only when natural would be FULLY visible
-    // - Natural footer now allowed to scroll partially behind input area (no early switch)
-    //
-    // v3.3
-    // - Changed transition logic: switch to fixed as soon as natural footer TOUCHES input area
-    // - Natural footer is never partially covered (cleaner visual)
-    // - Switch back to natural only when full room available (hysteresis prevents flicker)
-    //
-    // v3.4
-    // - Fixed: robust footer swap (in-flow footer hides, separate fixed footer shows) to eliminate flicker/partial overlap
-    // - Fixed footer never covers the block header: hides as soon as it would touch the header
-    // - In-flow footer is hidden via visibility (keeps layout stable; prevents scroll/height jitter)
-    //
-    // v3.5
-    // - Fixed: during smooth auto-scroll, fixed footer now disappears immediately on header collision
-    // - Prevents "jumping" the fixed footer to a different code block when the bottom-most one collides
-    // - More robust height math: uses in-flow footer height as fallback when fixed footer is hidden
-
-    // v3.6
-    // - Cleanup/docs: removed leftover floating-button wording and unused bits
-
-    // v3.7
-    // - Script name changed from "LMArena | Code Block Collapse" to "LMArena | Collapsible Code Blocks"
-
-    // v3.8
-    // - Fixed: conflict with other userscripts (Multi-Provider Chat Export, etc.)
-    // - Added 1000ms initialization delay to avoid React Hydration Error #418
-
-    // v3.9
-    // - Replaced hardcoded delay with dynamic Stabilization Observer
-    // - Detects React hydration completion by watching for the chat input bar
-    // - Uses requestIdleCallback for optimal performance/compatibility
-
-    // v4.0
-    // - Fixed: fixed footer now repositions when textarea grows during user input
-    // - Added ResizeObserver on input area to detect height changes
-    // - Footer no longer conflicts with/covers the textarea when it expands
-
-    // v4.1
-    // - Cleanup: removed overridden CSS declaration (border-radius: 0 0 0 0)
-    // - Cleanup: removed unused 'warn' log style
-    // - Cleanup: removed redundant typeof guard for activeFixedState
-    // - Cleanup: consolidated duplicate mouseleave handlers on collapse button
-
-    // v4.2
-    // - Changed: replaced localStorage with GM_setValue/GM_getValue for settings persistence
-    // - Settings now stored via userscript manager (more reliable, syncs across browsers if supported)
-
-    // v4.3
-    // - Changed: single-block expand no longer uses scroll anchoring
-    // - Expanding a block now keeps the header in place; code appears below (no viewport shift)
-    // - Lets user read expanded code from the beginning instead of being scrolled to the bottom
-
-    // v4.4
-    // - Fixed: single-block expand now actively scrolls header to top of viewport
-    // - Ensures user always sees expanded code from the beginning (overrides browser scroll anchoring)
-
-    // v4.5
-    // - Refined: single-block expand only scrolls if header is in bottom 1/3 of viewport or off-screen
-    // - If header is already visible in upper 2/3, no scroll adjustment occurs
-    //
-    // v4.6
-    // - Fixed: single-block collapse no longer "snaps" the header down to the old footer position in some scroll states
-    // - Changed: when collapsing a block while its header is visible, the header is used as the scroll anchor (keeps it stable)
-    // - Fixed: auto-collapse on newly added blocks no longer triggers single-block scroll behavior
-    //
-    // v4.6
-    // - Fixed: single-block expand now first stabilizes the header position (cancels browser/scroll-area anchoring)
-    // - Refined: only scrolls header to top if it ends up off-screen or in the bottom ~15% of the viewport
-    //
-    // v4.7
-    // - Cleanup: removed unused `data` parameter from internal log function
-    // - Cleanup: removed unused boolean return values from createToolbarButton()
-    // - Cleanup: consolidated duplicate CSS rules and keyframe definitions
-    //
-    // v4.8
-    // - Removed: width preservation on collapse (caused horizontal scrolling on narrow viewports)
-    // - Collapsed blocks now use natural width instead of forced minWidth
 
     // ═══════════════════════════════════════════════════════════════════════
     // DEBUG
@@ -238,7 +242,7 @@
             collapsedHoverBg: 'rgba(255,255,255,0.06)',
             collapsedActiveBg: 'rgba(255,255,255,0.10)'
         },
-        storageKey: 'lmarena_codeblock_collapse_settings',
+        storageKey: 'arena_codeblock_collapse_settings',
         resyncInterval: 5000 // Fallback resync every 5 seconds
     };
 
@@ -1419,7 +1423,7 @@
     function setupCodeBlock(block) {
         if (blockState.has(block)) return;
 
-        // LMArena code blocks are wrapped with [data-code-block="true"].
+        // arena.ai code blocks are wrapped with [data-code-block="true"].
         // We position relative to the code container and use the header bar for toggling.
         const container = block.querySelector('.code-block_container__lbMX4') ||
                           block.querySelector('pre:last-child');

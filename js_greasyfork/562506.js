@@ -3,7 +3,7 @@
 // @namespace    https://github.com/examplecode/useful-user-scripts
 // @homepageURL  https://scriptcat.org/zh-CN/users/157252
 // @author       examplecode && Aloazny && Gemini
-// @version      4.4
+// @version      4.5
 // @description  二改@examplecode的搜索脚本，感谢@examplecode，添加MD3配色+高斯模糊+编辑/添加搜索引擎功能+搜索栏切换顶部底部+搜索框，保留原本的X浏览器搜索引擎读取，排序等功能。
 // @match        *://*/*
 // @icon          data:image/png;base64,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
@@ -12,6 +12,10 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_EX_getSearchEngines
+// @grant        GM_xmlhttpRequest
+// @connect      suggestion.baidu.com
+// @connect      suggestqueries.google.com
+// @connect      api.bing.com
 // @downloadURL https://update.greasyfork.org/scripts/562506/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%B7%A5%E5%85%B7%E6%A0%8F%28%E6%94%B9%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/562506/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%B7%A5%E5%85%B7%E6%A0%8F%28%E6%94%B9%29.meta.js
 // ==/UserScript==
@@ -27,7 +31,8 @@
     const strictSignals = ['s', 'k', 'p'];
 
     const defaultTheme = { primary: '#6750a4', opacity: 0.7, blur: 18, themeStyle: 'MIUIX' };
-    const defaultLayout = { pos: 'bottom', offset: 24, autoHide: false, showInput: false, inputStyle: 1, shrinkMode: false };
+    const defaultLayout = { pos: 'bottom', offset: 24, autoHide: false, showInput: false, inputStyle: 1, shrinkMode: false, historyLimit: 100, showSuggest: true };
+    const HISTORY_KEY = 'quick_search_history_v1';
     const defaultEngines = [
         { name: '必应', host: 'bing.com', url: 'https://www.bing.com/search?q=%s' },
         { name: 'Yandex', host: 'yandex', url: 'https://yandex.com/search/touch/?text=%s' },
@@ -151,6 +156,25 @@
         if (!el.parentNode) document.head.appendChild(el);
     }
 
+    const shadowHost = document.createElement('div');
+    const shadow = shadowHost.attachShadow({mode: 'open'});
+    const suggestBox = document.createElement('div');
+
+    const updateSuggestStyle = () => {
+        const themeData = hexToRgb(theme.primary);
+        const isMIUI = theme.themeStyle === 'MIUIX';
+        shadow.innerHTML = `<style>
+            #mask { position:fixed;inset:0;background:rgba(0,0,0,0.2);backdrop-filter:blur(${theme.blur}px);-webkit-backdrop-filter:blur(${theme.blur}px);z-index:2147483640;display:none; }
+            #box { position:fixed; ${layout.pos === 'top' ? 'top:'+(parseInt(layout.offset)+60)+'px' : 'bottom:'+(parseInt(layout.offset)+60)+'px'}; left:50%; transform:translateX(-50%); width:90vw; max-width:400px; z-index:2147483641; display:none; flex-wrap:wrap; gap:8px; padding:10px; box-sizing:border-box; }
+            .item { padding:8px 16px; background:rgba(255,255,255,0.8); backdrop-filter:blur(10px); border-radius:${isMIUI?'100px':'12px'}; font-size:13px; color:#1d1b20; cursor:pointer; border:1px solid rgba(0,0,0,0.05); transition:0.2s; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+            .item:hover { background:var(--qs-pri); color:var(--qs-on-pri); }
+            .item.his { border-color:rgba(var(--qs-pri-rgb), 0.3); }
+        </style><div id="mask"></div><div id="box"></div>`;
+        shadow.host.style.setProperty('--qs-pri', theme.primary);
+        shadow.host.style.setProperty('--qs-on-pri', themeData.contrast);
+        shadow.host.style.setProperty('--qs-pri-rgb', themeData.rgb);
+    };
+
     function normalizeUrl(url) {
         return url ? url.replace(/%keywords%/g, '%s').trim() : '';
     }
@@ -166,6 +190,41 @@
     }
 
     let saved = storage.load();
+    
+    const suggestApi = {
+        baidu: (s) => `https://suggestion.baidu.com/su?wd=${encodeURIComponent(s)}&p=3`,
+        google: (s) => `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(s)}`,
+        bing: (s) => `https://api.bing.com/osjson.aspx?query=${encodeURIComponent(s)}`,
+        fetch: (s, type = 'bing') => {
+            return new Promise((resolve) => {
+                if (typeof GM_xmlhttpRequest === 'undefined') return resolve([]);
+                GM_xmlhttpRequest({
+                    method: "GET", url: suggestApi[type](s), onload: (res) => {
+                        try {
+                            if (type === 'baidu') { const match = res.responseText.match(/\[.*\]/); resolve(match ? JSON.parse(match[0]) : []); }
+                            else if (type === 'google' || type === 'bing') { const data = JSON.parse(res.responseText); resolve(data[1] || []); }
+                        } catch (e) { resolve([]); }
+                    }, onerror: () => resolve([])
+                });
+            });
+        }
+    };
+
+    const historyManager = {
+        get: () => { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch(e) { return []; } },
+        add: (s) => {
+            if (!s || s.startsWith('http')) return;
+            let h = historyManager.get();
+            h = [s, ...h.filter(i => i !== s)].slice(0, layout.historyLimit || 100);
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+        }
+    };
+
+    function checkUrl(s) {
+        const reg = /^(https?:\/\/|ftp:\/\/|www\.)[^\s]+|^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
+        if (reg.test(s)) return s.startsWith('http') || s.startsWith('ftp') ? s : 'https://' + s;
+        return null;
+    }
 
     function initEngines() {
         if (saved.cache && saved.cache.length > 0) {
@@ -247,7 +306,7 @@
                     <input type="range" id="t-blur" min="0" max="50" value="${theme.blur}" style="width:100%;accent-color:var(--qs-pri);">   
                   <button id="t-reset" style="width:100%;margin-top:12px;padding:8px;border:none;background:none;color:var(--qs-pri);font-weight:600;font-size:12px;cursor:pointer;opacity:0.8;">恢复默认配色</button>
                 </div>
-                <div id="m-ocd-panel" style="display:none;margin-top:16px;padding:16px;background:rgba(var(--qs-pri-rgb),0.05);border-radius:20px;border:1px solid rgba(var(--qs-pri-rgb),0.1);font-size:13px;">
+                 <div id="m-ocd-panel" style="display:none;margin-top:16px;padding:16px;background:rgba(var(--qs-pri-rgb),0.05);border-radius:20px;border:1px solid rgba(var(--qs-pri-rgb),0.1);font-size:13px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                         <span>布局位置</span>
                           <button id="l-pos-toggle" style="padding:6px 16px;border-radius:10px;border:none;background:var(--qs-pri);color:var(--qs-on-pri);font-weight:600;cursor:pointer;font-size:12px;min-width:60px;">
@@ -264,9 +323,13 @@
                         <button id="l-hide" style="flex:1;padding:10px;border-radius:12px;border:none;background:${layout.autoHide?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.autoHide?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.autoHide?'✅':'🚫'} 滑动隐藏</button>
                         <button id="l-input" style="flex:1;padding:10px;border-radius:12px;border:none;background:${layout.showInput?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.showInput?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.showInput?'✅':'🚫'} 搜索框</button>
                     </div>
-                    <button id="l-shrink" style="width:100%;margin-bottom:12px;padding:10px;border-radius:12px;border:none;background:${layout.shrinkMode?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.shrinkMode?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.shrinkMode?'✅':'🚫'} 贴边收缩模式</button>
+                    <div style="display:flex;gap:10px;margin-bottom:12px;">
+                        <button id="l-shrink" style="flex:1;padding:10px;border-radius:12px;border:none;background:${layout.shrinkMode?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.shrinkMode?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.shrinkMode?'✅':'🚫'} 贴边收缩</button>
+                        <button id="l-suggest" style="flex:1;padding:10px;border-radius:12px;border:none;background:${layout.showSuggest?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.showSuggest?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.showSuggest?'✅':'🚫'} 搜索建议</button>
+                    </div>
                     <div id="m-style-cycle" style="cursor:pointer;font-size:12px;padding:10px;background:var(--qs-pri);color:var(--qs-on-pri);border-radius:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 8px rgba(var(--qs-pri-rgb),0.2);">🔍搜索框样式 ${layout.inputStyle || 1}</div>
-                </div>
+                    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;opacity:0.8;"> <span>历史记录上限</span> <input type="number" id="l-his-limit" value="${layout.historyLimit || 100}" style="width:60px;padding:4px;border-radius:6px;border:1px solid rgba(0,0,0,0.1);text-align:center;"></div>
+                 </div>
                 <div id="m-data-panel" style="display:none;margin-top:16px;padding:16px;background:rgba(var(--qs-pri-rgb),0.05);border-radius:20px;border:1px solid rgba(var(--qs-pri-rgb),0.1);font-size:13px;">
                     <div style="display:flex;gap:10px;margin-bottom:12px;">
                         <button id="d-export" style="flex:1;padding:10px;border-radius:12px;border:none;background:var(--qs-pri);color:var(--qs-on-pri);font-weight:600;cursor:pointer;font-size:12px;">导出配置</button>
@@ -354,7 +417,6 @@
         const dataBtn = card.querySelector('#m-data-btn'), dataPanel = card.querySelector('#m-data-panel');
         const fileInput = card.querySelector('#d-file'), importOpts = card.querySelector('#d-import-opts');
 
-
         hexInput.oninput = (e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { theme.primary = e.target.value; colorPicker.value = e.target.value; updateAll(); } };
         hexInput.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); hexInput.blur(); updateAll(); } };
         colorPicker.oninput = (e) => { theme.primary = e.target.value; hexInput.value = e.target.value; updateAll(); };
@@ -375,7 +437,8 @@
         card.querySelector('#d-cover').onclick = () => applyImport(false);
         card.querySelector('#d-import').onclick = () => fileInput.click();
         card.querySelector('#d-export').onclick = () => { const config = { [STORAGE_KEY]: storage.load(), [THEME_KEY]: storage.themeLoad(), [LAYOUT_KEY]: storage.layoutLoad() }; const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `search_bar_config_${new Date().getTime()}.json`; a.click(); };
-
+        card.querySelector('#l-his-limit').onchange = (e) => { layout.historyLimit = parseInt(e.target.value) || 100; storage.layoutSave(layout); };
+        card.querySelector('#l-suggest').onclick = (e) => { layout.showSuggest = !layout.showSuggest; storage.layoutSave(layout); updateLayoutBtn('#l-suggest', layout.showSuggest, ' 搜索建议'); e.target.style.transform = 'scale(0.95)'; setTimeout(() => e.target.style.transform = 'scale(1)', 100); };
 
         const updateLayoutBtn = (id, active, text) => {
             const btn = card.querySelector(id);
@@ -484,14 +547,17 @@
 
     if (query && isMatchedHost) {
         applyTheme();
+        updateSuggestStyle();
+        document.body.appendChild(shadowHost);
         requestAnimationFrame(() => {
             const bar = document.createElement('div');
             bar.className = 'qs-bar';
             bar.style[layout.pos === 'top' ? 'top' : 'bottom'] = `${layout.offset}px`;
             const getBestMatched = () => allEngines.filter(e => e.visible && e.host && e._matchFn(location.host.toLowerCase())).map(e => { let s = (e.host === location.host.toLowerCase() ? 1000 : (!e.host.includes('/') ? 500 : 0)), u; try { u = new URL(e.url); s += (u.pathname !== '/' && location.pathname.toLowerCase().includes(u.pathname.toLowerCase()) ? 200 : 0); u.searchParams.forEach(v => { const f = v.replace(/%s|%keywords%/g, '').trim().toLowerCase(); if (f) s += decodeURIComponent(location.href.toLowerCase()).includes(f) ? 600 : -800; }); } catch(e) {} return { e, s: s + (allEngines.length - allEngines.indexOf(e)) }; }).sort((a, b) => b.s - a.s)[0]?.e;
             const bestMatched = getBestMatched();
+            const showSuggest = async val => { if (!layout.showSuggest) return; const mask = shadow.getElementById('mask'), box = shadow.getElementById('box'); if (!val) { mask.style.display = box.style.display = 'none'; return; } mask.style.display = 'block'; box.style.display = 'flex'; let his = historyManager.get().filter(h => h.includes(val)).slice(0,8); let apiType = 'bing'; if (bestMatched) { const h = bestMatched.host.toLowerCase(); if (h.includes('google')) apiType = 'google'; else if (h.includes('baidu')) apiType = 'baidu'; else if (h.includes('bing')) apiType = 'bing'; } let sug = await suggestApi.fetch(val, apiType); box.innerHTML=''; [...his.map(h=>({t:h,c:'his'})), ...sug.map(s=>({t:s,c:''}))].slice(0,26).forEach(item=>{ const div=document.createElement('div'); div.className='item '+item.c; div.textContent=item.t; div.onclick=(e)=>{ e.preventDefault(); e.stopPropagation(); doSearch(bestMatched||allEngines[0],item.t) }; box.appendChild(div) }); };
             const syncInputs = (val) => { bar.querySelectorAll('.qs-main-input').forEach(el => { if (el.value !== val) el.value = val; });};
-            const doSearch = (targetEngine, keyword) => { if (!keyword) return; let targetUrl = targetEngine.url; const isCur = targetEngine.host && targetEngine._matchFn(location.host.toLowerCase()); if (isCur) { try { const uObj = new URL(targetEngine.url); targetUrl = location.origin + uObj.pathname + uObj.search; } catch {} } window.location.href = targetUrl.replace(/%s/g, encodeURIComponent(keyword)).replace(/%keywords%/g, encodeURIComponent(keyword)); };
+            const doSearch = (targetEngine, keyword) => { if (!keyword) return; const urlLink = checkUrl(keyword); if (urlLink) { window.location.href = urlLink; return; } historyManager.add(keyword); let targetUrl = targetEngine.url; if (targetUrl.includes('custom_browser_search')) { const p = new URLSearchParams(new URL(targetUrl).search); targetUrl = decodeURIComponent(p.get('url')); } window.location.href = targetUrl.replace(/%s/g, encodeURIComponent(keyword)).replace(/%keywords%/g, encodeURIComponent(keyword)); };
             const curStyle = layout.inputStyle || 1;
 
             if (curStyle === 3 && layout.showInput) {
@@ -500,10 +566,10 @@
                 input.value = query;
                 input.placeholder = "搜索...";
                 input.style.cssText = `width:80px;padding:8px 14px;border-radius:100px;background:rgba(var(--qs-pri-rgb),0.08);color:#1d1b20;flex-shrink:0;`;
-                input.onfocus = () => { input.style.width = '130px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.15)'; };
-                input.onblur = () => { input.style.width = '80px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.08)'; };
-                input.oninput = (ev) => syncInputs(ev.target.value);
-                input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); const val = e.target.value.trim(); doSearch(bestMatched || allEngines[0], val); } }, true);
+                input.onfocus = () => { input.style.width = '130px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.15)'; showSuggest(input.value); };
+                input.onblur = () => { setTimeout(() => { shadow.getElementById('mask').style.display = shadow.getElementById('box').style.display = 'none'; input.style.width = '80px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.08)'; }, 200); };
+                input.oninput = (ev) => { syncInputs(ev.target.value); showSuggest(ev.target.value); };
+                input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); doSearch(bestMatched || allEngines[0], e.target.value.trim()); } };
                 bar.appendChild(input);
             }
 
@@ -518,10 +584,10 @@
                         input.className = 'qs-main-input';
                         input.value = query;
                         input.style.cssText = `width:90px;padding:7px 12px;border-radius:100px;background:rgba(255,255,255,0.2);color:var(--qs-on-pri);`;
-                        input.oninput = (ev) => syncInputs(ev.target.value);
-                        input.onfocus = () => input.style.width = '140px';
-                        input.onblur = () => input.style.width = '90px';
-                        input.addEventListener('keydown', (e_ev) => { if (e_ev.key === 'Enter') { e_ev.preventDefault(); e_ev.stopImmediatePropagation(); const val = input.value.trim(); doSearch(e, val); } }, true);
+                        input.oninput = (ev) => { syncInputs(ev.target.value); showSuggest(ev.target.value); };
+                        input.onfocus = () => { input.style.width = '140px'; showSuggest(input.value); };
+                        input.onblur = () => { setTimeout(() => { shadow.getElementById('mask').style.display = shadow.getElementById('box').style.display = 'none'; input.style.width = '90px'; }, 200); };
+                        input.onkeydown = (e_ev) => { if (e_ev.key === 'Enter') { e_ev.preventDefault(); e_ev.stopImmediatePropagation(); doSearch(e, input.value.trim()); } };
                         const label = document.createElement('span');
                         label.textContent = e.name;
                         label.style.cssText = `padding:0 14px 0 8px;color:var(--qs-on-pri);font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer;`;
@@ -534,10 +600,10 @@
                         input.className = 'qs-main-input';
                         input.value = query;
                         input.style.cssText = `width:80px;padding:8px 14px;border-radius:100px;border:1.5px solid var(--qs-pri);background:rgba(var(--qs-pri-rgb),0.1);color:#1d1b20;flex-shrink:0;margin-right:2px;`;
-                        input.oninput = (ev) => syncInputs(ev.target.value);
-                        input.onfocus = () => input.style.width = '130px';
-                        input.onblur = () => input.style.width = '80px';
-                        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); const val = e.target.value.trim(); doSearch(bestMatched || allEngines[0], val); } }, true);
+                        input.oninput = (ev) => { syncInputs(ev.target.value); showSuggest(ev.target.value); };
+                        input.onfocus = () => { input.style.width = '130px'; showSuggest(input.value); };
+                        input.onblur = () => { setTimeout(() => { shadow.getElementById('mask').style.display = shadow.getElementById('box').style.display = 'none'; input.style.width = '80px'; }, 200); };
+                        input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); doSearch(bestMatched || allEngines[0], e.target.value.trim()); } };
                         bar.appendChild(input);
                     }
                 }

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         [Updated] Hordes Auto Loot 
+// @name         [Updated @ 2026] Hordes Auto Loot 
 // @namespace    http://tampermonkey.net/
-// @version      1.11
-// @description  Auto Loot + Anti Afk + Item Uniting
+// @version      1.12
+// @description  Auto Loot, SHIFT + L to use menu
 // @author       Ovc4 + xFuRiOuS#9356 + cbaark
 // @match        https://hordes.io/play
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=hordes.io
@@ -10,8 +10,8 @@
 // @namespace    https://greasyfork.org/en/users/925079
 // @run-at       document-start
 // @license     MIT
-// @downloadURL https://update.greasyfork.org/scripts/563821/%5BUpdated%5D%20Hordes%20Auto%20Loot.user.js
-// @updateURL https://update.greasyfork.org/scripts/563821/%5BUpdated%5D%20Hordes%20Auto%20Loot.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563821/%5BUpdated%20%40%202026%5D%20Hordes%20Auto%20Loot.user.js
+// @updateURL https://update.greasyfork.org/scripts/563821/%5BUpdated%20%40%202026%5D%20Hordes%20Auto%20Loot.meta.js
 // ==/UserScript==
 
     document.write();

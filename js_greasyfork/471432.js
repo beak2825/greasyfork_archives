@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         手机助手
 // @namespace    http://tampermonkey.net/
-// @version      10.0.1.2
+// @version      10.0.1.10
 // @description  自动滚动，嗅探图片、视频，字体放大，去除广告浮动
 // @author       You
 // @match        *://*/*
@@ -1599,8 +1599,9 @@ color:#FEFEFE!important;
             return httpParams;
         }
 
-        let preMatches = new Set();
-        let firstSpan, pAll;
+        const preMatchesO = new Set();
+        const preMatchesT = new Set();
+        let firstSpan, twoSpan, pAll;
         const QUOTE_REGEX = /&quot;|['']/g;
         const videoRegex = /https?[:%][^"<>\s|]+\.(?:avi|mp4|mov|m4v|m3u8|wmv|flv|f4v)(?:[?!/&%][^"<>\s|]+)?(?=["<>\s一-龟|]|https?[:%]|$)/gi;
         const videoUrlReg = /(\.|%2E)(avi|m3u8|mp4|mov|m4v|wmv|flv|f4v)([?!/&%#]|$)/i;
@@ -1610,8 +1611,9 @@ color:#FEFEFE!important;
                 const styles = `
 .JqMA-btn-hrefSpan{
 margin-left:auto!important;
-height:calc(.2vh + .2vw)!important;
+height:calc(1vh + 1vw)!important;
 width:calc(1vh + 1vw)!important;
+line-height:.8!important;
 background:red!important;
 position:static!important;
 }.JqMA-btn-hrefAll{
@@ -1619,8 +1621,8 @@ background:none!important;
 overflow:scroll!important;
 height:auto!important;
 width:auto!important;
-max-height:calc(5vh + 5vw)!important;
-max-width:calc(15vw + 15vh)!important;
+max-height:calc(8vh + 8vw)!important;
+max-width:calc(10vw + 10vh)!important;
 bottom:2px!important;
 right:0!important;
 }.JqMA-btn-hrefAll::-webkit-scrollbar{
@@ -1628,101 +1630,93 @@ display: none!important;
 }.JqMA-btn-href{
 text-align:left!important;
 position:static!important;
-width:calc(15vw + 15vh)!important;
-}.JqMA-btn-href>.JqMA-btn-hrefA{
-background:none!important;
-display:inline-block!important;
+width:calc(10vw + 10vh)!important;
 white-space:nowrap!important;
 }`;
-                pAll = createElement('p', {
-                    class: 'JqMA-btn-all JqMA-btn-hrefAll'
-                });
-                pAll.appendChild(createElement('style', null, styles));
-                pAll.appendChild(createElement('span', {
-                    class: 'JqMA-btn-all JqMA-btn-hrefSpan'
-                }));
-                pAll.appendChild(firstSpan = createElement('a', {
-                    href: "https://www.hlsplayer.net/",
-                    target: '_blank',
-                    style: "margin-left:auto!important; width:calc(6vw + 6vh)!important; text-align:center!important;",
-                    class: "JqMA-btn-all JqMA-btn-href"
-                }, "Player"));
+                const spans = ['1', '2', ''].map(i =>
+                    createElement('span', {
+                        class: `JqMA-btn-all JqMA-btn-hrefSpan`
+                    }, i)
+                );
+                [pAll, firstSpan, twoSpan] = [
+                    createElement('p', { class: 'JqMA-btn-all JqMA-btn-hrefAll' }),
+                    spans[1],
+                    spans[2]
+                ];
+                pAll.append(
+                    createElement('style', null, styles),
+                    ...spans
+                );
                 document.documentElement.appendChild(pAll);
             }
-            let videoSet = new Set();
+            const collectVideoUrls = () => {
+                const playSet = new Set();
+                const videoSet = new Set();
 
-            document.querySelectorAll("video,video>source").forEach(function(element) {
-                const src = element.currentSrc || element.src;
-                src && videoSet.add(src);
-            });
-            let pageSource = document.documentElement.outerHTML;
-
-            const iframeHtmls = GM_getValue("iframeHtml", {});
-            Object.values(iframeHtmls).forEach(outerhtml => {
-                for (const v of outerhtml.videos) {
-                    v && videoSet.add(v);
-                }
-                pageSource += outerhtml.html;
-                for (const entry of outerhtml.entries) {
-                    if (videoUrlReg.test(entry)) {
-                        videoSet.add(entry);
-                    }
-                }
-            });
-            const matches = pageSource.replace(QUOTE_REGEX, '"').match(videoRegex);
-
-            matches && matches.forEach(match => videoSet.add(match));
-
-            const entries = window.performance.getEntries();
-            for (const entry of entries) {
-                if (videoUrlReg.test(entry.name)) {
-                    videoSet.add(entry.name);
-                }
-            }
-            let newVideoSet = new Set();
-
-            for (const url of videoSet) {
-                const newI = formatStr(url);
-                if (!newI.replace(/[\s/]/g, "").length || /^(?!https?:)[a-z]{3,15}:/.test(newI)) continue;
-
-                const delHtList = delHttp(newI);
-                if (delHtList.length) delHtList.forEach(delht => newVideoSet.add(delht));
-
-                if (!delHtList.length || !newI.includes("player")) {
-                    newVideoSet.add(newI);
-                }
-            }
-            const fragment = document.createDocumentFragment();
-            const videoNum = pAll.children.length;
-            let newNum = 0;
-
-            for (const url of newVideoSet) {
-                const processedUrl = addLocation(decodeStr(url));
-                if (preMatches.has(processedUrl)) continue;
-
-                newNum++;
-
-                preMatches.add(processedUrl);
-
-                const videoP = createElement('p', {
-                    class: "JqMA-btn-all JqMA-btn-href"
+                document.querySelectorAll("video,video>source").forEach(element => {
+                    const src = element.currentSrc || element.src;
+                    src && videoSet.add(src);
                 });
-                videoP.appendChild(createElement('a', {
-                    href: processedUrl,
-                    style: "width:60%!important;",
-                    target: '_blank',
-                    class: "JqMA-btn-all JqMA-btn-href JqMA-btn-hrefA",
-                }, `${videoNum+newNum-3} ${processedUrl.replace(/.+\/(?=[^/])|(?<=m3u8)\?.+/g, "")} ${document.title}`));
+                window.performance.getEntries()
+                    .filter(entry => videoUrlReg.test(entry.name))
+                    .forEach(entry => playSet.add(entry.name));
 
-                videoP.appendChild(createElement('a', {
-                    href: "https://m3u8.cococut.net/player.html?m3u8=" + encodeURIComponent(processedUrl),
-                    style: "width:40%!important; text-align:center!important;",
-                    target: '_blank',
-                    class: "JqMA-btn-all JqMA-btn-href JqMA-btn-hrefA",
-                }, "Play"));
-                fragment.appendChild(videoP);
-            }
-            pAll.insertBefore(fragment, firstSpan);
+                const iframeHtmls = GM_getValue("iframeHtml", {});
+                const iframeContents = [];
+                Object.values(iframeHtmls).forEach(outerhtml => {
+                    outerhtml.videos.forEach(v => v && videoSet.add(v));
+                    outerhtml.entries
+                        .filter(entry => videoUrlReg.test(entry))
+                        .forEach(entry => playSet.add(entry));
+                    iframeContents.push(outerhtml.html);
+                });
+                const pageSource = document.documentElement.outerHTML + iframeContents.join('');
+                const matches = new Set(pageSource.replace(QUOTE_REGEX, '"').match(videoRegex) || []);
+
+                return { playSet, videoSet, matches };
+            };
+
+            const processVideos = (urlSet, beforeElement, preMatches) => {
+                const newVideoSet = [...urlSet]
+                    .map(url => formatStr(url))
+                    .filter(url => url.replace(/[\s/]/g, "").length && !/^(?!https?:)[a-z]{3,15}:/.test(url))
+                    .flatMap(url => {
+                        const delHtList = delHttp(url);
+                        return [
+                            url,
+                            ...delHtList
+                        ];
+                    });
+
+                const fragment = document.createDocumentFragment();
+                const videoNum = pAll.children.length;
+                let _index = 0;
+
+                newVideoSet.forEach(url => {
+                    const processedUrl = addLocation(decodeStr(url));
+                    if (preMatches.has(processedUrl)) return;
+
+                    preMatches.add(processedUrl);
+                    _index++;
+
+                    const fileName = processedUrl.replace(/.+\/(?=[^/])|(?<=m3u8)\?.+/g, "");
+                    const displayText = `${videoNum + _index - 4} ${fileName} ${document.title}`;
+
+                    fragment.append(
+                        createElement('a', {
+                            href: processedUrl,
+                            target: '_blank',
+                            class: "JqMA-btn-all JqMA-btn-href",
+                        }, displayText)
+                    );
+                });
+                pAll.insertBefore(fragment, beforeElement);
+            };
+            const { playSet, videoSet, matches } = collectVideoUrls();
+
+            [[playSet, firstSpan, preMatchesO], [videoSet, twoSpan, preMatchesT], [matches, twoSpan, preMatchesT]].forEach(([urlSet, span, preM]) => {
+                processVideos(urlSet, span, preM);
+            });
         }
 
         function getMinPicwh(_this) {
@@ -2203,17 +2197,15 @@ white-space:nowrap!important;
                 const picImgLen = document.querySelectorAll(".JqMA-inner-pic > img:not(.JqMA-css-smallPic)").length;
                 const keJian_Img = prevAll(pageNext_1, "img:not(.JqMA-css-smallPic)").length;
                 const search_len = prevAll(pageNext_2, "img:not(.JqMA-css-smallPic)").length;
-
                 pageNext_0.textContent = `深度：${keJian_Img} `;
-                pageNext_0.appendChild(createElement("a", {
-                    id: "JqMA-mark-pageNext_1"
-                }, `可见：${search_len - keJian_Img} `));
-                pageNext_0.appendChild(createElement("a", {
-                    id: "JqMA-mark-pageNext_2"
-                }, `所有：${picImgLen - search_len} `));
-                pageNext_0.appendChild(createElement("a", {
-                    id: "JqMA-mark-lastOne"
-                }, "最后"));
+                const texts = [
+                    { id: "JqMA-mark-pageNext_1", text: `可见：${search_len - keJian_Img} ` },
+                    { id: "JqMA-mark-pageNext_2", text: `所有：${picImgLen - search_len} ` },
+                    { id: "JqMA-mark-lastOne", text: "最后" }
+                ];
+                texts.forEach(item => {
+                    pageNext_0.appendChild(createElement("a", { id: item.id }, item.text));
+                });
             }, 400);
         }
 

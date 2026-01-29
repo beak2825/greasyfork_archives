@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         GSMArena 品牌頁面 拆解複製 - 1.0
+// @name         GSMArena 品牌頁面 拆解複製 - 3.1
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      3.1
 // @description  在 GSMArena 的機型卡片上顯示快速複製按鈕（完整 / 核心 / 後綴 / 組合），並提供標註與本地儲存設定（繁體中文）
 // @author       由 Curosr 協助建置（繁體中文註解）
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABnRSTlMAAAAAAABupgeRAAABK0lEQVR4AXxPg7KCURDuvbOt8b3ZbhgfINu2xrlxbTqzfzpcfJilweJyBVye8P7iw4EKHNRF6DeoxWztdrr4xKJxANOgTWRILBHLNpvNmbqAczUhOPymkmmEfCNwkDzE//96AjqdTpgAgNcZ+HzRfDYnoGAg+EZAaMjD4QhBFPIFlUr7ywHi8Wh8bx8OB6lUoVJqPsyAOTy+yG53lktll9MN6RcCPlRDkUi6Wi7fZqCCuByegMHEKmaTtdFo1qq1y0A2wGMNjno93SfJKPTZ2XZkZ6BbjumktrycSVLyQDRRSg5E6ut1RUc219bDzWVoQPZxQ9MEPT2QOkmQajiaqKTc6+XZWloC0oBsY3tx4URz0wnmphMtgCQCTYQxWiorQQkWzaFAhCvcgIoBJZjGKHBXJhMAAAAASUVORK5CYII=
@@ -13,102 +13,65 @@
 // @grant        GM_setClipboard
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
+// @grant        GM_xmlhttpRequest
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/560601/GSMArena%20%E5%93%81%E7%89%8C%E9%A0%81%E9%9D%A2%20%E6%8B%86%E8%A7%A3%E8%A4%87%E8%A3%BD%20-%2010.user.js
-// @updateURL https://update.greasyfork.org/scripts/560601/GSMArena%20%E5%93%81%E7%89%8C%E9%A0%81%E9%9D%A2%20%E6%8B%86%E8%A7%A3%E8%A4%87%E8%A3%BD%20-%2010.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560601/GSMArena%20%E5%93%81%E7%89%8C%E9%A0%81%E9%9D%A2%20%E6%8B%86%E8%A7%A3%E8%A4%87%E8%A3%BD%20-%2031.user.js
+// @updateURL https://update.greasyfork.org/scripts/560601/GSMArena%20%E5%93%81%E7%89%8C%E9%A0%81%E9%9D%A2%20%E6%8B%86%E8%A7%A3%E8%A4%87%E8%A3%BD%20-%2031.meta.js
 // ==/UserScript==
 
 /*
-  == 廠牌新品快速複製腳本 - GSMArena 專用 ==
+GSMArena 品牌機型快速複製 — 工具簡介
 
-  📱 功能特色：
-  - 在 GSMArena 的手機型號卡片上顯示快速複製按鈕
-  - 智慧解析型號名稱，提供多種複製組合（完整名稱、核心型號、核心+後綴、後綴）
-  - 支援標註系統，可標記喜愛的機型（左上角小圓點）
-  - 本地儲存設定，不會上傳任何個人資料
-  - 支援觸控裝置與桌面瀏覽器
+用途 & 使用場景：
+- 本工具安裝於 Tampermonkey，於 GSMArena 的品牌清單頁 自動啟用，
+用於快速擷取與複製頁面上之機型名稱，並支援從多個品牌頁做批次擷取以產生標準化 JSON。
 
-  🎯 使用說明：
-  1. 在 GSMArena 品牌手機列表頁面自動啟用
-  2. 滑鼠懸停在機型卡片上會顯示複製按鈕（可設定為常顯）
-  3. 點擊左上角小圓點可標註/取消標註機型
-  4. 點擊右上角設定按鈕可調整各種選項
-  5. 支援清除標註功能（本頁/指定品牌/全部清除）
+特點說明：
+- UI：在型號項目加輕量浮層按鈕，非破壞頁面。
+- 名稱拆解擷取：自動移除品牌詞，支援多種複製格式。
+- 批次擷取：跨頁抓取並合併結果，含速率控制與重試。
+- 本地儲存：設定與標註保存在本地，支援還原。
+- 避免封禁：分批抓取並保持合理間隔，降低被封風險。
 
-  ⚙️ 設定選項：
-  - 自動隱藏：控制複製按鈕是否需要懸停才顯示
-  - 智慧去重：避免重複顯示相同機型的按鈕
-  - 品牌識別：自動識別手機品牌並支援按品牌清除標註
+主要功能：
+- 單筆複製：型號卡提供多種複製按鈕。
+- 標註管理：收藏標註並支援匯出/還原。
+- 當頁匯出：一鍵匯出當頁所有型號為 JSON。
+- 批次擷取：從設定面板選取品牌清單後批次抓取。
+- 設定面板：調整顯示、去重與抓取參數。
+- 匯出格式：支援 HTML、CSV、JSON。
 
-  🔒 隱私保護：
-  - 所有資料僅儲存在本地瀏覽器中
-  - 不會收集或上傳任何個人資訊
-  - 使用 GM_setValue API 進行本地儲存
+使用注意：請勿一次性選取大量品牌進行擷取，建議分批執行以降低被封風險
 
-  📋 技術支援：
-  - 適用於所有主流瀏覽器（Chrome, Firefox, Safari, Edge）
-  - 需要 Tampermonkey 或類似用戶腳本管理器
-  - 最低支援 ES6+ 的現代瀏覽器環境
 
-  開發者筆記（簡述）
-  - UI：使用絕對定位的浮層（不改變原 DOM 文字排版），將複製按鈕放於型號文字正下方（視窗絕對定位）。
-  - 解析：以品牌詞彙表（排除品牌）+ 系列詞表(如 Tab) + 後綴詞表（Ultra、Pro、Plus、5G 等）做規則式解析，
-    產生候選組合：[series + core + suffix, core, core + suffix, suffix]。若解析失敗，僅顯示完整名稱一按鈕。
-  - 儲存 key：約以 location.origin + modelText 的 hash 作識別，避免名稱衝突。
 
-  更新紀錄：
-  - v0.1 初版（2025/12/27 02:00）
-  - v0.2（2025/12/27 02:20）更新重點：
-    * 僅在 `.makers` 範圍內偵測並建立按鈕，避免誤抓取其他區塊
-    * 設定面板：收折按鈕放在標題列右側，點擊立即縮小/展開（不需重整）
-    * 清除標註：提供三種按鈕（本頁 / 該品牌 / 全部），本頁清除需二次確認
-    * 標註按鈕改為小圓點（不顯示文字），並使用 data-modelKey 綁定以利後續清除
-    * 修正自動隱藏開關，切換時會立即套用到畫面上的按鈕容器
-  - v0.3（2025/12/27 02:55）更新重點：
-    * 調整縮小（mini）寬度為 220px，並改為標題及按鈕水平置中
-    * 收折按鈕顯示為單一橫槓「－」
-    * 移除重複標註圓點（同一張卡片只會有一個標註）
-    * 清除標註按鈕垂直排列，並改為：
-      - 清除【當前本頁】標註（無需二次確認）
-      - 清除【品牌所有】標註（下拉自動列出目前有標註的品牌）
-      - 清除所有標註（紅底）
-  - v0.4（2025/12/27 04:32）更新重點：
-    * 修正標註按鈕不穩定（圖片與型號會被視為同一張卡片並只建立一個標註）
-    * 清除【品牌所有】下拉選單會即時更新（標註新增/移除後）
-    * 修正設定面板內按鈕擠壓問題，調整排版與換行
-  - v0.4(檢修中)（2025/12/27）更新重點：
-    * 新增【去重模式】設定：提供「完全不去重」、「智慧去重」、「嚴格去重」三種模式
-      - 完全不去重：每個找到的元素都建立標籤，解決間隔性標籤消失問題
-      - 智慧去重：基於內容去重，相同型號只保留一個標籤（預設）
-      - 嚴格去重：基於位置去重，位置重疊的元素只保留一個
-    * 改善【品牌識別邏輯】：優先檢查型號是否以品牌開頭，避免誤識別
-    * 優化【清除品牌標註】邏輯：使用精確的品牌匹配，避免誤刪其他品牌
-    * 設定面板加入去重模式選擇器，支援動態切換
-    * 修復【card 變量未定義】錯誤：移除未定義的 card 變量引用
-    * 新增【詳細調試信息】：在控制台輸出初始化過程和節點處理詳情，便於排查問題
- - v0.6（2025/12/29 12:09）更新重點：
-    * 在「標註」按鈕點擊時，於主控台輸出所讀取與記錄的參數（modelKey、modelText、解析結果與儲存狀態），方便開發除錯
-    * 新增「返回」按鈕，可還原最近一次的清除動作（支援：清除本頁/清除品牌/清除所有），並實作撤銷暫存備份
-    * 改善「清除【品牌所有】標註」的品牌辨識：優先嘗試從頁面標題與 URL 擷取品牌，並以本頁目前顯示的機型清單比對要刪除的標籤
-    * 品牌下拉會即時更新，並於主控台回報新增/刪除的品牌與型號清單（新增回報、刪除回報、目前總數）
-    * 更新版本號與 README 記錄（0.6 / 12/29 12:09）
- - v0.7（2025/12/29 12:20）更新重點：
-    * 改善設定面板介面佈局：展開時在收折按鈕右側顯示「收折」文字，收折時隱藏
-    * 刪除多餘的「收折（請使用標題列右側按鈕）」說明文字
-    * 將「返回」按鈕移至「清除【當前本頁】標註」同一排左側，並根據是否有可返回的操作顯示不同顏色
-    * 重新設計清除標註區塊：垂直佈局、添加外框區隔，並將「清除【品牌所有】標註」與下拉框分為上下兩排
-    * 新增腳本圖標 (@icon)
-    * 在設定面板標題欄左上角添加版本號角落標籤
-    * 更新版本號與 README 記錄（0.7 / 12/29 12:20）
- - v1.0（2025/12/29 12:35）🎉 第一代穩定版本發佈：
-    * 🚀 核心功能完善：智慧去重模式，自動識別重複元素，提供最佳用戶體驗
-    * 🎯 精準觸發機制：僅在品牌手機型號預覽頁面和 Rumor mill 頁面啟用，避免干擾其他頁面
-    * 💾 跨頁面數據同步：完美解決跨品牌數據讀取問題，標註數據在不同頁面間無縫共享
-    * 🎨 現代化界面設計：設定面板採用直觀佈局，版本號角落標籤，圖標顯示
-    * 🔧 高品質代碼：移除所有開發時期的測試代碼，達到生產級品質
-    * 📱 完整功能集：快速複製按鈕、標註系統、撤銷機制、本地儲存、設定面板
-    * 🌟 穩定性提升：經過多次迭代優化，達到第一代成品的穩定品質
-    * 📝 第一代穩定版本發佈（1.0 / 12/29 12:35）
+
+
+
+----------------------------
+【更新紀錄】（由最新版永遠置頂，僅保留重點資訊）
+
+- v3.1（2026/01/28 14:30）：
+    * 新增：批次擷取已選取品牌功能（使用 GM_xmlhttpRequest，含速率控制、隨機 delay 與重試機制）
+    * 開發重點：自 2.8 版本起至今日（2026/01/28）的開發工作皆圍繞「批次擷取」功能（優化流程與風控）
+    * 新增：支援 GM_ 系列跨域請求（已在 metadata 中加入 `@grant GM_xmlhttpRequest`），並加入相關參數設定
+
+- V2.1 — V2.9
+    * 解析穩定化：強化對品牌頁面多變 DOM 的容錯，採用 mutation observer 與多層回退 selector。
+    * 動態載入支援：支援延遲載入、滾動觸發抓取、分頁合併與重試機制。
+    * 配置與可調性：新增選項面板，可自定 selector、匯出欄位、過濾條件與速率限制，並支援多組設定檔匯入/匯出。
+    * 錯誤處理與日誌：完善錯誤回報、重試邏輯與 debug 模式（可輸出詳細日誌）。
+    * UX / CSS 改善：控制面板與結果顯示優化、本地化支援、視覺樣式修正。
+    * 效能與可靠性：減少記憶體洩漏與 DOM 操作頻次、修正 race condition 與 edge-case bugs。
+    * 文件補強：新增/更新使用與開發筆記、範例設定與常見問題說明。
+
+- V0 → V1.0
+    * 初始開發與原型：建立 Tampermonkey 腳本基本架構、metadata 與啟動檢測。
+    * 核心解析邏輯：實作品牌頁面機型列表擷取（名稱、封面、連結），並建立初版 selectors 與容錯機制。
+    * 基礎 UI 與匯出：加入簡易控制面板與結果匯出（HTML / CSV）。
+    * 初步優化：整合資源與樣式、修正初期效能與相容性問題、基本錯誤修補。
+
+
 */
 
 (function () {
@@ -134,6 +97,77 @@
     // 常見後綴（suffix）
     const SUFFIX_WORDS = ['Ultra','Pro','Plus','Max','FE','Edge','Lite','Mini','SE','5G','4G','LTE','XL','Neo','Fold','Flip','Classic','GT','LE','XR','XS','S','T','Ultra+'];
 
+    // ----------------------------------------------------------------
+    // 可編輯：預設品牌清單（請直接在此區以陣列方式編輯，修改後需重新載入 Userscript）
+    // - 編輯方式：在陣列中加入或移除字串（使用品牌英文首字母大小寫與上方 BRAND_WORDS 相同）
+    // - 範例：const DEFAULT_BRANDS = ['Samsung','Apple','Xiaomi'];
+    // ----------------------------------------------------------------
+    const DEFAULT_BRANDS = [
+        'Samsung','Apple','Huawei','Nokia','Sony','HTC','Motorola','Lenovo',
+        'Xiaomi','Google','Honor','Oppo','Realme','OnePlus','Nothing','vivo',
+        'Meizu','Asus','ZTE','Sharp','TCL'
+    ];
+
+    // ----------------------------------------------------------------
+    // 抓取/風控參數（如需調整延遲、重試參數請在此編輯）
+    // ----------------------------------------------------------------
+    const BULK_FETCH_CONFIG = {
+        concurrency: 1, // 同時請求數（保守設定為 1）
+        minDelayMs: 1500,
+        maxDelayMs: 3000,
+        maxRetries: 4,
+        userAgents: [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Safari/605.1.15',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+        ],
+        acceptLanguage: 'zh-TW,zh;q=0.9'
+    };
+
+    // 品牌對應資訊（來源：開發者筆記 — 列/行位置 與 原始網址）
+    // 用於在設定面板中排列成表格，並取得對應的品牌頁面路徑
+    const BRAND_META = [
+        { name:'Samsung', path:'samsung-phones-9.php', col:1, row:1, defaultIncluded:true },
+        { name:'Apple', path:'apple-phones-48.php', col:1, row:2, defaultIncluded:true },
+        { name:'Huawei', path:'huawei-phones-58.php', col:1, row:3, defaultIncluded:true },
+        { name:'Nokia', path:'nokia-phones-1.php', col:1, row:4, defaultIncluded:true },
+        { name:'Sony', path:'sony-phones-7.php', col:1, row:5, defaultIncluded:true },
+        { name:'LG', path:'lg-phones-20.php', col:1, row:6, defaultIncluded:false },
+        { name:'HTC', path:'htc-phones-45.php', col:1, row:7, defaultIncluded:true },
+        { name:'Motorola', path:'motorola-phones-4.php', col:1, row:8, defaultIncluded:true },
+        { name:'Lenovo', path:'lenovo-phones-73.php', col:1, row:9, defaultIncluded:true },
+
+        { name:'Xiaomi', path:'xiaomi-phones-80.php', col:2, row:1, defaultIncluded:true },
+        { name:'Google', path:'google-phones-107.php', col:2, row:2, defaultIncluded:true },
+        { name:'Honor', path:'honor-phones-121.php', col:2, row:3, defaultIncluded:true },
+        { name:'Oppo', path:'oppo-phones-82.php', col:2, row:4, defaultIncluded:true },
+        { name:'Realme', path:'realme-phones-118.php', col:2, row:5, defaultIncluded:true },
+        { name:'OnePlus', path:'oneplus-phones-95.php', col:2, row:6, defaultIncluded:true },
+        { name:'Nothing', path:'nothing-phones-128.php', col:2, row:7, defaultIncluded:true },
+        { name:'vivo', path:'vivo-phones-98.php', col:2, row:8, defaultIncluded:true },
+        { name:'Meizu', path:'meizu-phones-74.php', col:2, row:9, defaultIncluded:true },
+
+        { name:'Asus', path:'asus-phones-46.php', col:3, row:1, defaultIncluded:true },
+        { name:'Alcatel', path:'alcatel-phones-5.php', col:3, row:2, defaultIncluded:false },
+        { name:'ZTE', path:'zte-phones-62.php', col:3, row:3, defaultIncluded:true },
+        { name:'RugOne', path:'rugone-phones-136.php', col:3, row:4, defaultIncluded:false },
+        { name:'Umidigi', path:'umidigi-phones-135.php', col:3, row:5, defaultIncluded:false },
+        { name:'Coolpad', path:'coolpad-phones-105.php', col:3, row:6, defaultIncluded:false },
+        { name:'Oscal', path:'oscal-phones-134.php', col:3, row:7, defaultIncluded:false },
+        { name:'Sharp', path:'sharp-phones-23.php', col:3, row:8, defaultIncluded:true },
+        { name:'Micromax', path:'micromax-phones-66.php', col:3, row:9, defaultIncluded:false },
+
+        { name:'Infinix', path:'infinix-phones-119.php', col:4, row:1, defaultIncluded:false },
+        { name:'Ulefone', path:'ulefone_-phones-124.php', col:4, row:2, defaultIncluded:false },
+        { name:'Tecno', path:'tecno-phones-120.php', col:4, row:3, defaultIncluded:false },
+        { name:'Doogee', path:'doogee-phones-129.php', col:4, row:4, defaultIncluded:false },
+        { name:'Blackview', path:'blackview-phones-116.php', col:4, row:5, defaultIncluded:false },
+        { name:'Cubot', path:'cubot-phones-130.php', col:4, row:6, defaultIncluded:false },
+        { name:'Oukitel', path:'oukitel-phones-132.php', col:4, row:7, defaultIncluded:false },
+        { name:'Itel', path:'itel-phones-131.php', col:4, row:8, defaultIncluded:false },
+        { name:'TCL', path:'tcl-phones-123.php', col:4, row:9, defaultIncluded:true }
+    ];
+
     // 預設設定（可被使用者改動並儲存）
     const DEFAULT_SETTINGS = {
         autoHide: true,          // 是否自動隱藏（hover 顯示）
@@ -149,6 +183,105 @@
     function saveSettings(settings) {
         GM_setValue(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
     }
+
+    // -----------------------------
+    // 批次抓取實作（GM_xmlhttpRequest + 速率控制、重試）
+    // 可由 UI 呼叫： window.bulkFetchSelectedBrands(selectedBrands, callbacks)
+    // callbacks: { onProgress: fn(text), onComplete: fn(resultArray) }
+    // -----------------------------
+    window.bulkFetchSelectedBrands = async function(selectedBrands = [], callbacks = {}) {
+        const results = [];
+        const cfg = BULK_FETCH_CONFIG;
+        const baseUrl = 'https://www.gsmarena.com/';
+
+        function sleep(ms){ return new Promise(res=>setTimeout(res, ms)); }
+
+        async function fetchWithRetry(url, attempt = 0) {
+            return new Promise((resolve, reject) => {
+                const ua = cfg.userAgents[Math.floor(Math.random()*cfg.userAgents.length)];
+                try {
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: url,
+                        headers: {
+                            'User-Agent': ua,
+                            'Accept-Language': cfg.acceptLanguage
+                        },
+                        timeout: 20000,
+                        onload: function(resp) {
+                            if (resp.status >= 200 && resp.status < 300) {
+                                resolve(resp.responseText);
+                            } else {
+                                reject({status: resp.status, statusText: resp.statusText});
+                            }
+                        },
+                        onerror: function(err) { reject(err); },
+                        ontimeout: function() { reject({status:'timeout'}); }
+                    });
+                } catch (e) {
+                    reject(e);
+                }
+            }).catch(async (err) => {
+                if (attempt >= cfg.maxRetries) throw err;
+                // 指數退避 + jitter
+                const backoff = Math.pow(2, attempt) * 1000 + Math.floor(Math.random()*500);
+                await sleep(backoff);
+                return fetchWithRetry(url, attempt+1);
+            });
+        }
+
+        function parseBrandHtml(html, brandName, url) {
+            try {
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const canonicalEl = doc.querySelector('link[rel=canonical]');
+                const canonical = canonicalEl ? canonicalEl.getAttribute('href') : url;
+                const nodes = Array.from(doc.querySelectorAll('div.makers ul li a'));
+                const models = nodes.map(a => {
+                    // 優先使用 innerText (strong/span) 或 img title
+                    const strong = a.querySelector('strong span');
+                    if (strong && strong.innerText) return strong.innerText.trim();
+                    const txt = (a.textContent || '').trim();
+                    if (txt) return txt;
+                    const img = a.querySelector('img');
+                    if (img && img.getAttribute('title')) return img.getAttribute('title').trim();
+                    return '';
+                }).filter(Boolean);
+                return { brand: brandName, pageUrl: url, canonical, models, timestamp: new Date().toISOString() };
+            } catch (e) {
+                return { brand: brandName, pageUrl: url, canonical: url, models: [], timestamp: new Date().toISOString(), parseError: e.message };
+            }
+        }
+
+        for (let i=0;i<selectedBrands.length;i++) {
+            const bname = selectedBrands[i];
+            const meta = BRAND_META.find(m => m.name === bname);
+            const displayIndex = `${i+1}/${selectedBrands.length}`;
+            try {
+                if (!meta) {
+                    if (callbacks.onProgress) callbacks.onProgress(`(${displayIndex}) 未找到品牌資訊：${bname}`);
+                    results.push({ brand: bname, error: 'meta_not_found' });
+                    continue;
+                }
+                if (callbacks.onProgress) callbacks.onProgress(`(${displayIndex}) 擷取 ${bname} ...`);
+                // 隨機等待（模擬人類、避免 DDoS 偵測）
+                const randDelay = cfg.minDelayMs + Math.floor(Math.random()*(cfg.maxDelayMs - cfg.minDelayMs + 1));
+                await sleep(randDelay);
+                const url = baseUrl + meta.path;
+                const html = await fetchWithRetry(url, 0);
+                const parsed = parseBrandHtml(html, bname, url);
+                results.push(parsed);
+                if (callbacks.onProgress) callbacks.onProgress(`(${displayIndex}) 完成 ${bname}`);
+            } catch (e) {
+                console.warn('[bulkFetch] error for', bname, e);
+                results.push({ brand: bname, error: (e && e.status) ? `HTTP_${e.status}` : 'fetch_error', detail: e });
+                if (callbacks.onProgress) callbacks.onProgress(`(${displayIndex}) ${bname} 發生錯誤`);
+            }
+        }
+
+        if (callbacks.onComplete) callbacks.onComplete(results);
+        return results;
+    };
+
     function loadSettings() {
         try {
             const s = GM_getValue(STORAGE_KEYS.SETTINGS);
@@ -380,6 +513,60 @@
         }, duration);
     }
 
+    // 複製當頁所有型號為 JSON 格式（保持頁面顯示順序）
+    function copyAllModelsToJSON() {
+        try {
+            console.log('[GSMArena 快速複製] 開始複製當頁所有型號...');
+
+            // 獲取當頁所有型號節點
+            const nodes = findModelNodes();
+            if (nodes.length === 0) {
+                showToast('當頁沒有找到任何型號');
+                return;
+            }
+
+            // 獲取品牌資訊
+            const currentBrand = detectCurrentPageBrand() || 'Unknown';
+
+            // 建立型號列表（保持原始順序，只去除重複）
+            const models = [];
+            const seen = new Set();
+
+            nodes.forEach(node => {
+                const modelName = node.text && node.text.trim();
+                if (modelName && !seen.has(modelName)) {
+                    seen.add(modelName);
+                    models.push(modelName);
+                }
+            });
+
+            // 建立 JSON 物件
+            const jsonData = {
+                brand: currentBrand,
+                page: window.location.href,
+                timestamp: new Date().toISOString(),
+                models: models,
+                total: models.length
+            };
+
+            // 轉換為格式化的 JSON 字串
+            const jsonString = JSON.stringify(jsonData, null, 2);
+
+            // 複製到剪貼簿
+            copyToClipboard(jsonString).then(() => {
+                showToast(`已複製 ${models.length} 個型號的 JSON 資料`);
+                console.log('[GSMArena 快速複製] JSON 資料已複製:', jsonData);
+            }).catch((error) => {
+                console.error('[GSMArena 快速複製] 複製 JSON 失敗:', error);
+                showToast('複製失敗，請查看主控台');
+            });
+
+        } catch (error) {
+            console.error('[GSMArena 快速複製] copyAllModelsToJSON 發生錯誤:', error);
+            showToast('複製失敗，請查看主控台');
+        }
+    }
+
     // -------------------------
     // 解析型號字串的核心邏輯（繁中註解）
     // input: modelText (例如 "Samsung Galaxy Tab S11 Ultra 5G")
@@ -567,6 +754,20 @@
     .gzqc-btn { white-space: normal; }
     .gzqc-clear-section { display: flex; align-items: flex-start; }
     .gzqc-clear-section::after { content: ''; clear: both; display: table; }
+    .gzqc-btn {
+        transition: all 0.1s ease;
+    }
+    .gzqc-preview-box {
+        transition: opacity 0.2s ease;
+    }
+    /* 品牌批次擷取區塊樣式 */
+    .gzqc-brand-bulk-fetch { margin-top:10px; border:1px solid #e6e6e6; border-radius:6px; padding:8px; background:#fff; }
+    .gzqc-brand-controls { display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+    .gzqc-brand-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:6px; }
+    .gzqc-brand-cell { padding:8px 6px; text-align:center; border-radius:6px; cursor:pointer; background:#f2f2f2; color:#222; user-select:none; font-weight:600; font-size:12px; }
+    .gzqc-brand-cell.selected { background: hsl(144,57%,60%); color: #072; }
+    .gzqc-brand-cell.unavailable { opacity:0.5; }
+    .gzqc-fetch-status { margin-top:8px; font-size:12px; color:#333; }
     `);
 
     // -------------------------
@@ -953,7 +1154,7 @@
         // 版本號角落標籤（絕對定位在標題欄最左上角）
         const versionLabel = document.createElement('span');
         versionLabel.className = 'panel-version';
-        versionLabel.textContent = 'v1.0';
+        versionLabel.textContent = 'v3.1';
         versionLabel.style.cssText = `
             position: absolute;
             top: 2px;
@@ -1023,7 +1224,510 @@
         rowAuto.appendChild(labelAuto); rowAuto.appendChild(chkAuto);
         content.appendChild(rowAuto);
 
+        // 複製當頁所有型號區塊（無標題）
+        const copyAllSection = document.createElement('div');
+        copyAllSection.className = 'gzqc-copy-section';
+        copyAllSection.style.border = '1px solid #4CAF50';
+        copyAllSection.style.borderRadius = '6px';
+        copyAllSection.style.padding = '10px';
+        copyAllSection.style.marginTop = '8px';
+        copyAllSection.style.backgroundColor = '#f0f9f0';
 
+        const btnCopyAllModels = document.createElement('button');
+        btnCopyAllModels.className = 'gzqc-btn';
+        btnCopyAllModels.innerText = '複製當頁所有型號';
+        btnCopyAllModels.title = '按住左鍵預覽，按住拖拽至固定顯示按鈕可保持顯示';
+        btnCopyAllModels.style.backgroundColor = '#4CAF50';
+        btnCopyAllModels.style.color = '#fff';
+        btnCopyAllModels.style.width = '100%';
+
+        // 預覽框相關變數 - 添加位置記憶
+        let previewBox = null;
+        let isPreviewVisible = false;
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
+        let holdTimer = null;
+        let lastPreviewPosition = null; // 記憶上次位置
+        let isHoldingButton = false; // 添加按鈕按住狀態追蹤
+
+        // 創建預覽框
+        function createPreviewBox() {
+            if (previewBox) return previewBox;
+
+            previewBox = document.createElement('div');
+            previewBox.className = 'gzqc-preview-box';
+            previewBox.style.cssText = `
+                position: fixed;
+                background: rgba(0, 0, 0, 0.95);
+                color: #fff;
+                border-radius: 8px;
+                padding: 15px;
+                max-width: 600px;
+                max-height: 400px;
+                overflow: auto;
+                z-index: 100000;
+                font-family: monospace;
+                font-size: 12px;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+                display: none;
+                cursor: move;
+                user-select: none;
+                transition: opacity 0.2s ease; /* 添加平滑過渡 */
+            `;
+
+            // 標題欄 - 固定在上方，不會被滾動隱藏
+            const titleBar = document.createElement('div');
+            titleBar.style.cssText = `
+                position: sticky;
+                top: -15px;
+                z-index: 1;
+                padding: 5px 8px;
+                margin: -15px -15px 10px -15px;
+                background: rgba(26, 73, 232, 0.95);
+                border-radius: 8px 8px 0 0;
+                cursor: move;
+                user-select: none;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                backdrop-filter: blur(5px);
+            `;
+
+            const title = document.createElement('span');
+            title.textContent = 'JSON 預覽';
+            title.style.fontSize = '14px';
+            title.style.fontWeight = 'bold';
+            title.style.color = '#fff';
+
+            // 關閉按鈕 - 修復事件綁定
+            const closeButton = document.createElement('button');
+            closeButton.innerHTML = '×';
+            closeButton.style.cssText = `
+                background: #f44336;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 28px;
+                height: 28px;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+            `;
+            closeButton.title = '關閉預覽';
+            closeButton.onmouseover = () => closeButton.style.transform = 'scale(1.1)';
+            closeButton.onmouseout = () => closeButton.style.transform = 'scale(1)';
+
+            // 使用 addEventListener 確保事件正確綁定
+            closeButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // 防止觸發拖拽
+                hidePreviewBox();
+            });
+
+            titleBar.appendChild(title);
+            titleBar.appendChild(closeButton);
+
+            // 拖拽功能 - 優化性能
+            let mouseMoveHandler = null;
+            let mouseUpHandler = null;
+
+            titleBar.addEventListener('mousedown', (e) => {
+                if (e.target === closeButton) return; // 不阻擋關閉按鈕點擊
+                isDragging = true;
+                const boxRect = previewBox.getBoundingClientRect();
+                dragOffset.x = e.clientX - boxRect.left;
+                dragOffset.y = e.clientY - boxRect.top;
+                previewBox.style.cursor = 'grabbing';
+                e.preventDefault();
+
+                // 創建一次性事件處理器
+                mouseMoveHandler = (e) => {
+                    if (!isDragging) return;
+                    const newLeft = e.clientX - dragOffset.x;
+                    const newTop = e.clientY - dragOffset.y;
+                    const maxLeft = window.innerWidth - previewBox.offsetWidth - 10;
+                    const maxTop = window.innerHeight - previewBox.offsetHeight - 10;
+                    const finalLeft = Math.max(10, Math.min(maxLeft, newLeft));
+                    const finalTop = Math.max(10, Math.min(maxTop, newTop));
+                    previewBox.style.left = finalLeft + 'px';
+                    previewBox.style.top = finalTop + 'px';
+                };
+
+                mouseUpHandler = () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        previewBox.style.cursor = 'move';
+                        const boxRect = previewBox.getBoundingClientRect();
+                        lastPreviewPosition = { left: boxRect.left, top: boxRect.top };
+                    }
+                    // 清理事件監聽器
+                    if (mouseMoveHandler) {
+                        document.removeEventListener('mousemove', mouseMoveHandler);
+                        mouseMoveHandler = null;
+                    }
+                    if (mouseUpHandler) {
+                        document.removeEventListener('mouseup', mouseUpHandler);
+                        mouseUpHandler = null;
+                    }
+                };
+
+                document.addEventListener('mousemove', mouseMoveHandler);
+                document.addEventListener('mouseup', mouseUpHandler);
+            });
+
+            previewBox.appendChild(titleBar);
+
+            // 添加視窗大小改變時重新定位
+            let resizeTimer = null;
+            window.addEventListener('resize', () => {
+                if (resizeTimer) clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if (previewBox && previewBox.style.display !== 'none') {
+                        ensurePreviewInBounds();
+                    }
+                }, 100);
+            });
+
+            document.body.appendChild(previewBox);
+            return previewBox;
+        }
+
+        // 顯示預覽框 - 修復初始顯示問題
+        function showPreviewBox(content) {
+            const box = createPreviewBox();
+
+            // 只更新內容部分，不重新創建標題欄
+            const contentDiv = box.querySelector('.preview-content');
+            if (!contentDiv) {
+                const newContentDiv = document.createElement('div');
+                newContentDiv.className = 'preview-content';
+                newContentDiv.style.cssText = `
+                    margin-top: 5px;
+                    padding: 0 5px;
+                    line-height: 1.4;
+                `;
+                box.appendChild(newContentDiv);
+                contentDiv = newContentDiv;
+            }
+
+            // 更新內容
+            contentDiv.textContent = content;
+
+            // 確保位置正確 - 修復初始顯示重疊問題
+            positionPreviewBox();
+
+            // 添加淡入效果
+            box.style.opacity = '0';
+            box.style.display = 'block';
+            requestAnimationFrame(() => {
+                box.style.opacity = '1';
+            });
+
+            isPreviewVisible = true;
+        }
+
+        // 隱藏預覽框 - 修復重複定義問題
+        function hidePreviewBox() {
+            if (previewBox) {
+                // 添加淡出效果
+                previewBox.style.opacity = '0';
+                setTimeout(() => {
+                    previewBox.style.display = 'none';
+                    isPreviewVisible = false;
+                }, 200);
+
+                // 清除定時器
+                if (holdTimer) {
+                    clearTimeout(holdTimer);
+                    holdTimer = null;
+                }
+            }
+        }
+
+        // 確保預覽框在螢幕邊界內
+        function ensurePreviewInBounds() {
+            if (!previewBox || previewBox.style.display === 'none') return;
+
+            const boxRect = previewBox.getBoundingClientRect();
+            let left = boxRect.left;
+            let top = boxRect.top;
+
+            // 邊界檢查和調整
+            const maxLeft = window.innerWidth - boxRect.width - 10;
+            const maxTop = window.innerHeight - boxRect.height - 10;
+
+            left = Math.max(10, Math.min(maxLeft, left));
+            top = Math.max(10, Math.min(maxTop, top));
+
+            previewBox.style.left = left + 'px';
+            previewBox.style.top = top + 'px';
+        }
+
+        // 智能定位預覽框 - 修復重疊問題
+        function positionPreviewBox() {
+            if (!previewBox) return;
+
+            // 如果有記憶的位置，優先使用
+            if (lastPreviewPosition) {
+                const boxRect = previewBox.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                // 檢查記憶的位置是否還有效
+                const panel = document.querySelector('.gzqc-panel');
+                let isValidPosition = true;
+
+                // 邊界檢查
+                if (lastPreviewPosition.left < 10 || lastPreviewPosition.top < 10 ||
+                    lastPreviewPosition.left + boxRect.width > viewportWidth - 10 ||
+                    lastPreviewPosition.top + boxRect.height > viewportHeight - 10) {
+                    isValidPosition = false;
+                }
+
+                // 面板重疊檢查
+                if (panel && panel.style.display !== 'none' && !panel.classList.contains('mini')) {
+                    const panelRect = panel.getBoundingClientRect();
+                    const previewRect = {
+                        left: lastPreviewPosition.left,
+                        top: lastPreviewPosition.top,
+                        right: lastPreviewPosition.left + boxRect.width,
+                        bottom: lastPreviewPosition.top + boxRect.height
+                    };
+
+                    const isOverlapping = !(
+                        previewRect.right < panelRect.left ||
+                        previewRect.left > panelRect.right ||
+                        previewRect.bottom < panelRect.top ||
+                        previewRect.top > panelRect.bottom
+                    );
+
+                    if (isOverlapping) {
+                        isValidPosition = false;
+                    }
+                }
+
+                if (isValidPosition) {
+                    previewBox.style.left = `${lastPreviewPosition.left}px`;
+                    previewBox.style.top = `${lastPreviewPosition.top}px`;
+                    return;
+                }
+            }
+
+            // 沒有有效記憶位置，使用智能定位
+            const btnRect = btnCopyAllModels.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            // 獲取設定面板位置
+            const panel = document.querySelector('.gzqc-panel');
+            let panelRect = null;
+            if (panel && panel.style.display !== 'none' && !panel.classList.contains('mini')) {
+                panelRect = panel.getBoundingClientRect();
+            }
+
+            // 預設位置：按鈕下方，避免重疊
+            let left = btnRect.left;
+            let top = btnRect.bottom + 10;
+
+            const boxWidth = 600;
+            const boxHeight = 400;
+
+            // 檢查是否會超出右邊界
+            if (left + boxWidth > viewportWidth - 10) {
+                left = viewportWidth - boxWidth - 10;
+            }
+
+            // 檢查是否會超出下邊界，如果是則放在上方
+            if (top + boxHeight > viewportHeight - 10) {
+                top = Math.max(10, btnRect.top - boxHeight - 10);
+            }
+
+            // 確保不會與設定面板重疊
+            if (panelRect) {
+                const previewRect = {
+                    left: left,
+                    top: top,
+                    right: left + boxWidth,
+                    bottom: top + boxHeight
+                };
+
+                const isOverlapping = !(
+                    previewRect.right < panelRect.left ||
+                    previewRect.left > panelRect.right ||
+                    previewRect.bottom < panelRect.top ||
+                    previewRect.top > panelRect.bottom
+                );
+
+                if (isOverlapping) {
+                    // 如果重疊，嘗試其他位置
+                    const alternativePositions = [
+                        // 右上角
+                        { left: viewportWidth - boxWidth - 10, top: 10 },
+                        // 左下角
+                        { left: 10, top: viewportHeight - boxHeight - 10 },
+                        // 右下角
+                        { left: viewportWidth - boxWidth - 10, top: viewportHeight - boxHeight - 10 },
+                        // 正上方
+                        { left: Math.max(10, btnRect.left - boxWidth/2), top: Math.max(10, btnRect.top - boxHeight - 10) }
+                    ];
+
+                    for (const pos of alternativePositions) {
+                        const testRect = {
+                            left: pos.left,
+                            top: pos.top,
+                            right: pos.left + boxWidth,
+                            bottom: pos.top + boxHeight
+                        };
+
+                        const testOverlapping = !(
+                            testRect.right < panelRect.left ||
+                            testRect.left > panelRect.right ||
+                            testRect.bottom < panelRect.top ||
+                            testRect.top > panelRect.bottom
+                        );
+
+                        if (!testOverlapping) {
+                            left = pos.left;
+                            top = pos.top;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // 最終邊界檢查
+            left = Math.max(10, Math.min(viewportWidth - boxWidth - 10, left));
+            top = Math.max(10, Math.min(viewportHeight - boxHeight - 10, top));
+
+            previewBox.style.left = `${left}px`;
+            previewBox.style.top = `${top}px`;
+
+            // 記憶位置
+            lastPreviewPosition = { left, top };
+        }
+
+
+        // 生成預覽內容
+        function generatePreviewContent() {
+            try {
+                const nodes = findModelNodes();
+                if (nodes.length === 0) return '當頁沒有找到任何型號';
+
+                const currentBrand = detectCurrentPageBrand() || 'Unknown';
+                const models = [];
+                const seen = new Set();
+
+                nodes.forEach(node => {
+                    const modelName = node.text && node.text.trim();
+                    if (modelName && !seen.has(modelName)) {
+                        seen.add(modelName);
+                        models.push(modelName);
+                    }
+                });
+
+                const jsonData = {
+                    brand: currentBrand,
+                    page: window.location.href,
+                    timestamp: new Date().toISOString(),
+                    models: models,
+                    total: models.length
+                };
+
+                return JSON.stringify(jsonData, null, 2);
+            } catch (error) {
+                return `生成預覽時發生錯誤: ${error.message}`;
+            }
+        }
+
+        // 滑鼠事件處理 - 修復並增加視覺回饋
+        let mouseDownTime = 0;
+        let hasTriggeredAction = false;
+
+        // 添加按鈕樣式變化函數
+        function setButtonHoldState(holding) {
+            if (holding) {
+                btnCopyAllModels.style.backgroundColor = '#1565c0'; // 更深的藍色表示按住
+                btnCopyAllModels.style.transform = 'scale(0.98)'; // 輕微縮小
+                btnCopyAllModels.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)'; // 減少陰影
+            } else {
+                btnCopyAllModels.style.backgroundColor = '#4CAF50'; // 恢復原色
+                btnCopyAllModels.style.transform = 'scale(1)'; // 恢復大小
+                btnCopyAllModels.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)'; // 恢復陰影
+            }
+        }
+
+        btnCopyAllModels.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return; // 只處理左鍵
+
+            mouseDownTime = Date.now();
+            hasTriggeredAction = false;
+            isHoldingButton = true;
+
+            // 立即顯示按住狀態
+            setButtonHoldState(true);
+
+            // 清除之前的定時器
+            if (holdTimer) {
+                clearTimeout(holdTimer);
+            }
+
+            // 設置短延遲判定（150ms後觸發按住動作）
+            holdTimer = setTimeout(() => {
+                if (!hasTriggeredAction && isHoldingButton) {
+                    hasTriggeredAction = true;
+                    // 按住操作：切換預覽顯示狀態
+                    if (isPreviewVisible) {
+                        hidePreviewBox();
+                    } else {
+                        const content = generatePreviewContent();
+                        showPreviewBox(content);
+                    }
+                }
+            }, 150);
+        });
+
+        btnCopyAllModels.addEventListener('mouseup', (e) => {
+            if (e.button !== 0) return;
+
+            isHoldingButton = false;
+            setButtonHoldState(false); // 恢復按鈕狀態
+
+            const mouseUpTime = Date.now();
+            const pressDuration = mouseUpTime - mouseDownTime;
+
+            // 清除定時器
+            if (holdTimer) {
+                clearTimeout(holdTimer);
+                holdTimer = null;
+            }
+
+            // 如果按住時間短於閾值且還沒觸發動作，執行點擊動作
+            if (pressDuration < 150 && !hasTriggeredAction) {
+                hasTriggeredAction = true;
+                // 點擊操作：複製到剪貼簿
+                copyAllModelsToJSON();
+            }
+        });
+
+        btnCopyAllModels.addEventListener('mouseleave', (e) => {
+            // 如果滑鼠離開按鈕，取消按住狀態
+            isHoldingButton = false;
+            setButtonHoldState(false);
+
+            // 如果滑鼠離開按鈕且還沒觸發動作，清除定時器
+            if (holdTimer && !hasTriggeredAction) {
+                clearTimeout(holdTimer);
+                holdTimer = null;
+            }
+        });
+
+        copyAllSection.appendChild(btnCopyAllModels);
+        content.appendChild(copyAllSection);
 
         // 清除標註區塊（重新設計：垂直佈局、外框區隔）
         const clearSection = document.createElement('div');
@@ -1268,6 +1972,280 @@
 
         clearSection.appendChild(clearButtonsContainer);
         content.appendChild(clearSection);
+
+        // -----------------------------
+        // 品牌批次擷取區塊（預設收合） — 插入在「清除標註」區塊下方
+        // -----------------------------
+        const brandBulkSection = document.createElement('div');
+        brandBulkSection.className = 'gzqc-brand-bulk-fetch';
+        // header / toggle
+        const brandHeader = document.createElement('div');
+        brandHeader.style.display = 'flex';
+        brandHeader.style.flexDirection = 'column';
+        brandHeader.style.cursor = 'pointer';
+        brandHeader.style.marginBottom = '6px';
+
+        // top row: title + toggle '展'
+        const brandRowTop = document.createElement('div');
+        brandRowTop.style.display = 'flex';
+        brandRowTop.style.alignItems = 'center';
+        brandRowTop.style.justifyContent = 'space-between';
+        const brandTitle = document.createElement('div');
+        brandTitle.innerText = '批次擷取：已選品牌';
+        brandTitle.style.fontWeight = 'bold';
+        const toggleTop = document.createElement('div');
+        toggleTop.innerText = '展';
+        toggleTop.style.fontSize = '14px';
+        toggleTop.style.lineHeight = '12px';
+        brandRowTop.appendChild(brandTitle);
+        brandRowTop.appendChild(toggleTop);
+        brandHeader.appendChild(brandRowTop);
+
+        // bottom row: primary button + toggle '開'
+        const brandRowBottom = document.createElement('div');
+        brandRowBottom.style.display = 'flex';
+        brandRowBottom.style.alignItems = 'center';
+        brandRowBottom.style.justifyContent = 'space-between';
+        const btnCopySelectedHeader = document.createElement('button');
+        btnCopySelectedHeader.className = 'gzqc-btn';
+        btnCopySelectedHeader.innerText = '一鍵擷取已選取品牌清單';
+        btnCopySelectedHeader.style.backgroundColor = '#4CAF50';
+        btnCopySelectedHeader.style.color = '#fff';
+        btnCopySelectedHeader.style.marginRight = '8px';
+        btnCopySelectedHeader.title = '一鍵擷取已選取品牌清單（收合/展開皆可操作）';
+        const toggleBottom = document.createElement('div');
+        toggleBottom.innerText = '開';
+        toggleBottom.style.fontSize = '14px';
+        toggleBottom.style.lineHeight = '12px';
+        brandRowBottom.appendChild(btnCopySelectedHeader);
+        brandRowBottom.appendChild(toggleBottom);
+        brandHeader.appendChild(brandRowBottom);
+        brandBulkSection.appendChild(brandHeader);
+
+        const brandInner = document.createElement('div');
+        brandInner.style.display = 'none'; // 預設收合
+
+        // controls (with distinct colors)
+        const controls = document.createElement('div');
+        controls.className = 'gzqc-brand-controls';
+
+        const btnSelectAllBrands = document.createElement('button');
+        btnSelectAllBrands.className = 'gzqc-btn';
+        btnSelectAllBrands.innerText = '一鍵全選';
+        btnSelectAllBrands.style.backgroundColor = '#1976d2'; // blue
+        btnSelectAllBrands.style.color = '#fff';
+
+        const btnClearSelected = document.createElement('button');
+        btnClearSelected.className = 'gzqc-btn';
+        btnClearSelected.innerText = '取消已選取';
+        btnClearSelected.style.backgroundColor = '#9E9E9E'; // gray
+        btnClearSelected.style.color = '#fff';
+
+        const btnSelectDefaults = document.createElement('button');
+        btnSelectDefaults.className = 'gzqc-btn';
+        btnSelectDefaults.innerText = '一鍵選取預設品牌';
+        btnSelectDefaults.style.backgroundColor = '#4CAF50'; // green
+        btnSelectDefaults.style.color = '#fff';
+
+        controls.appendChild(btnSelectAllBrands);
+        controls.appendChild(btnClearSelected);
+        controls.appendChild(btnSelectDefaults);
+
+        brandInner.appendChild(controls);
+
+        // status (moved above grid)
+        const fetchStatus = document.createElement('div');
+        fetchStatus.className = 'gzqc-fetch-status';
+        fetchStatus.innerText = '尚未開始';
+        brandInner.appendChild(fetchStatus);
+
+        // grid
+        const grid = document.createElement('div');
+        grid.className = 'gzqc-brand-grid';
+        // build empty grid 4 cols x 9 rows (use BRAND_META to fill cells)
+        const totalCols = 4;
+        const totalRows = 9;
+
+        // create map of [col,row] -> meta
+        const cellMap = {};
+        BRAND_META.forEach(m => {
+            cellMap[`${m.col}_${m.row}`] = m;
+        });
+
+        const selectedBrandSet = new Set();
+
+        function renderBrandGrid() {
+            grid.innerHTML = '';
+            for (let r=1;r<=totalRows;r++){
+                for (let c=1;c<=totalCols;c++){
+                    const key = `${c}_${r}`;
+                    const meta = cellMap[key];
+                    const cell = document.createElement('div');
+                    cell.className = 'gzqc-brand-cell';
+                    if (!meta) {
+                        cell.innerText = '';
+                        cell.style.visibility = 'hidden';
+                        grid.appendChild(cell);
+                        continue;
+                    }
+                    cell.innerText = meta.name;
+                    cell.dataset.brand = meta.name;
+                    if (!meta.defaultIncluded) cell.classList.add('unavailable');
+                    if (selectedBrandSet.has(meta.name)) cell.classList.add('selected');
+                    cell.addEventListener('click', ()=> {
+                        if (selectedBrandSet.has(meta.name)) {
+                            selectedBrandSet.delete(meta.name);
+                            cell.classList.remove('selected');
+                        } else {
+                            selectedBrandSet.add(meta.name);
+                            cell.classList.add('selected');
+                        }
+                        updateFetchStatus();
+                    });
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        brandInner.appendChild(grid);
+
+        // (removed duplicate inner fetch button; header button performs bulk fetch)
+
+        brandBulkSection.appendChild(brandInner);
+        content.appendChild(brandBulkSection);
+
+        // panel reposition helpers (保存/還原位置以避免改動後長時間佔位)
+        let panelRepositioned = false;
+        let lastPanelPosBeforeReposition = null;
+        let lastPanelWidthBeforeExpand = null;
+        function repositionPanelIfNeeded() {
+            // 確保 brandInner 可見；若超出視窗，嘗試移動 panel 至上方，若失敗則自動收合並提示
+            try {
+                const innerRect = brandInner.getBoundingClientRect();
+                const panelRect = panel.getBoundingClientRect();
+                const viewportH = window.innerHeight;
+                // 若底部超出螢幕 40px，嘗試把 panel 移到視窗頂部（保持 left）
+                if (innerRect.bottom > viewportH - 40) {
+                    // 若 brandInner 本身就太高（大於 viewport），則收合並提示
+                    if (innerRect.height > viewportH - 80) {
+                        brandInner.style.display = 'none';
+                        brandToggle.innerText = '展開';
+                        showToast('面板空間不足，已自動收合。請分批執行或調整面板位置');
+                        return;
+                    }
+                    // 儲存原始位置，並嘗試移動
+                    lastPanelPosBeforeReposition = { x: SETTINGS.panelPos.x, y: SETTINGS.panelPos.y };
+                    panel.style.top = `${20}px`;
+                    // 保持原 left（但避免超出）
+                    const maxLeft = Math.max(10, Math.min(window.innerWidth - panelRect.width - 10, panelRect.left));
+                    panel.style.left = `${maxLeft}px`;
+                    panelRepositioned = true;
+                }
+            } catch (e) { /* ignore */ }
+        }
+        function restorePanelPositionIfNeeded() {
+            try {
+                if (panelRepositioned && lastPanelPosBeforeReposition) {
+                    panel.style.left = `${lastPanelPosBeforeReposition.x}px`;
+                    panel.style.top = `${lastPanelPosBeforeReposition.y}px`;
+                    SETTINGS.panelPos = { x: lastPanelPosBeforeReposition.x, y: lastPanelPosBeforeReposition.y };
+                    saveSettings(SETTINGS);
+                    panelRepositioned = false;
+                    lastPanelPosBeforeReposition = null;
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        // toggle handler (expand/collapse with auto-adjust)
+        brandHeader.addEventListener('click', (ev)=> {
+            // ignore clicks on the header's buttons (e.g., copy button)
+            if (ev.target && (ev.target === btnCopySelectedHeader || ev.target.closest && ev.target.closest('.gzqc-btn'))) return;
+            if (brandInner.style.display === 'none') {
+                // expand
+                brandInner.style.display = '';
+                // set toggle labels
+                try { toggleTop.innerText = '收'; toggleBottom.innerText = '合'; } catch(e){}
+                // width adjust: store previous and expand to fit grid
+                try {
+                    const panelRect = panel.getBoundingClientRect();
+                    lastPanelWidthBeforeExpand = panelRect.width;
+                    const desired = Math.max(260, grid.scrollWidth + 80);
+                    panel.style.width = `${desired}px`;
+                } catch(e) {}
+                // 延遲執行調整以等待 layout 完成
+                setTimeout(()=> repositionPanelIfNeeded(), 60);
+            } else {
+                // collapse
+                brandInner.style.display = 'none';
+                try { toggleTop.innerText = '展'; toggleBottom.innerText = '開'; } catch(e){}
+                // restore width if changed
+                try {
+                    if (lastPanelWidthBeforeExpand) {
+                        panel.style.width = `${lastPanelWidthBeforeExpand}px`;
+                        lastPanelWidthBeforeExpand = null;
+                    } else {
+                        panel.style.width = '260px';
+                    }
+                } catch(e) {}
+                // 收合時恢復原始 panel 位置，避免長時間佔用空間
+                restorePanelPositionIfNeeded();
+            }
+        });
+
+        // helper: select all / clear / select defaults
+        btnSelectAllBrands.addEventListener('click', ()=> {
+            BRAND_META.forEach(m => { if (m) selectedBrandSet.add(m.name); });
+            renderBrandGrid();
+            updateFetchStatus();
+        });
+        btnClearSelected.addEventListener('click', ()=> {
+            selectedBrandSet.clear();
+            renderBrandGrid();
+            updateFetchStatus();
+        });
+        btnSelectDefaults.addEventListener('click', ()=> {
+            selectedBrandSet.clear();
+            BRAND_META.forEach(m => { if (m.defaultIncluded) selectedBrandSet.add(m.name); });
+            renderBrandGrid();
+            updateFetchStatus();
+        });
+
+        function updateFetchStatus(progressText) {
+            const cnt = selectedBrandSet.size;
+            fetchStatus.innerText = progressText ? progressText : `已選：${cnt} 個品牌`;
+        }
+
+        // 初始化：默認選取筆記中的預設品牌
+        BRAND_META.forEach(m => { if (m.defaultIncluded && DEFAULT_BRANDS.indexOf(m.name)!==-1) selectedBrandSet.add(m.name); });
+        renderBrandGrid();
+        updateFetchStatus();
+
+        // removed inner bulk fetch button; header button triggers fetch instead
+
+        // header 上的常駐「複製已選取品牌」按鈕綁定（收合/展開皆可使用）
+        btnCopySelectedHeader.addEventListener('click', (e)=> {
+            e.stopPropagation();
+            const brands = Array.from(selectedBrandSet);
+            if (brands.length === 0) {
+                showToast('未選取任何品牌，將自動選取預設品牌');
+                BRAND_META.forEach(m => { if (m.defaultIncluded) selectedBrandSet.add(m.name); });
+                renderBrandGrid();
+                updateFetchStatus();
+            }
+            window.bulkFetchSelectedBrands(Array.from(selectedBrandSet), {
+                onProgress: (text)=> updateFetchStatus(text),
+                onComplete: (result)=> {
+                    try {
+                        const jsonStr = JSON.stringify(result, null, 2);
+                        copyToClipboard(jsonStr);
+                        showPreviewBox(jsonStr);
+                        showToast('已複製擷取結果到剪貼簿');
+                    } catch (e) {
+                        console.error('bulk fetch complete error', e);
+                    }
+                }
+            });
+        });
 
         panel.appendChild(content);
         document.body.appendChild(panel);

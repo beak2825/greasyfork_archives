@@ -8,7 +8,7 @@
 // @grant       GM.setValue
 // @grant       GM.getValue
 // @grant       GM.addStyle
-// @version     1.11
+// @version     1.14
 // @license     MIT
 // @author      yuniDev
 // @run-at      document-idle
@@ -78,24 +78,30 @@ function hideSurroundings() {
   });
 
   addObserver(".z-controls.hidden button", el => el.parentNode.style.display = 'none');
-  addObserver("#channel-chatroom > div:first-child", el => el.style.display = 'none');
+  addObserver("#channel-chatroom > div:first-child");
+  addObserver("#channel-content");
 
   addObserver(".z-modal:has(button[data-testid='accept-cookies'])");
+  addObserver("button[data-testid='mature']", btn => btn.click());
 }
 
 function updateEmbed() {
-    if (insertedPlayer) return;
+  if (insertedPlayer) return;
   const iframe = document.querySelector("iframe.embed-frame");
   if (!iframe) return;
   const iframeLocation = iframe.src;
   let channel = null;
   if (iframeLocation.includes("player.kick")) {
-    channel = iframeLocation.split('/').pop();
+    channel = iframeLocation.split("/").pop();
   } else if (window.location.hash.startsWith("#kick/")) {
-    channel = window.location.hash.split('/')[1];
+    channel = window.location.hash.split("/")[1];
   }
   if (!channel) return;
-  insertedPlayer = htmlToNode(`<kick-embed-iframe-wrapper class="embed-frame" style="display:block" src="https://kick.com/${channel}"></kick-embed-iframe-wrapper>`);
+
+  // Load the root site first to establish session/tokens
+  insertedPlayer = htmlToNode(
+    `<kick-embed-iframe-wrapper class="embed-frame" style="display:block" src="https://kick.com/?nav=${channel}"></kick-embed-iframe-wrapper>`
+  );
   iframe.parentNode.appendChild(insertedPlayer);
 }
 
@@ -155,7 +161,21 @@ function setupChatToggleCallback() {
   });
 }
 
-if (window.location.hostname === "kick.com" && window.self !== window.top) { // Kick inside of iframe
+if (window.location.hostname === "kick.com" && window.self !== window.top) {
+  const params = new URLSearchParams(window.location.search);
+  const targetChannel = params.get("nav");
+
+  if (targetChannel && window.location.pathname === "/") {
+    function navigate() {
+      const router = unsafeWindow.next?.router;
+      if (window.location.pathname != "/") return;
+
+      router?.replace(`/${targetChannel}`);
+      setTimeout(navigate, 100);
+    };
+    navigate();
+  }
+
   hideSurroundings();
   setInterval(() => {
     if (![...document.querySelectorAll("nav")].find(el => el.getAttribute("style") && el.getAttribute("style").indexOf("display: none") > -1)) hideSurroundings();

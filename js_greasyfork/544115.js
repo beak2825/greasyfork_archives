@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name          Greasyfork in Simplified Chinese
 // @description   Localize every greasyfork page to the Simplified Chinese. Forked from https://greasyfork.org/zh-CN/scripts/6245
-// @version       0.0.2
+// @version       0.0.3
 // @match         https://greasyfork.org/*
 // @exclude       https://greasyfork.org/system/*
 // @exclude       https://greasyfork.org/*.user.css*
 // @exclude       https://greasyfork.org/zh-CN/*
+// @exclude       *zh-CN*
 // @run-at        document-start
 // @grant         GM_getValue
 // @grant         GM_setValue

@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Torn Weapons/Armor/Temporary Loan Inspector Pro
 // @namespace    http://tampermonkey.net/
-// @version      3.1
-// @description  Responsive Loan Inspector with TXT export (All/Loaned), precision retrieval, and scroll fixes.
+// @version      3.2
+// @description  Responsive Loan Inspector with TXT export (All/Loaned), precision retrieval, and scroll fixes. Fixed for 2026 Layout.
 // @author       LOKaa [2834316]
 // @match        https://www.torn.com/factions.php?step=your*
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @license MIT
+// @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/561986/Torn%20WeaponsArmorTemporary%20Loan%20Inspector%20Pro.user.js
 // @updateURL https://update.greasyfork.org/scripts/561986/Torn%20WeaponsArmorTemporary%20Loan%20Inspector%20Pro.meta.js
 // ==/UserScript==
@@ -19,7 +19,6 @@
     // --- State Management ---
     const STORAGE_KEY_MINIMIZED = 'TORN_LOAN_PRO_MINIMIZED';
     let isMinimized = localStorage.getItem(STORAGE_KEY_MINIMIZED) === 'true';
-    let isScanPending = false;
     let savedScrollTop = 0; // To fix the scroll jumping issue
 
     // --- Advanced CSS ---
@@ -191,10 +190,15 @@
 
     // --- Helpers ---
 
+    // FIX: Updated to detect active tab via aria-hidden attribute instead of fixed IDs
     function getActiveTabType() {
-        if (document.querySelector('#armoury-weapons') && document.querySelector('#armoury-weapons').style.display !== 'none') return 'weapons';
-        if (document.querySelector('#armoury-armour') && document.querySelector('#armoury-armour').style.display !== 'none') return 'armor';
-        if (document.querySelector('#armoury-temporary') && document.querySelector('#armoury-temporary').style.display !== 'none') return 'temporary';
+        const activePanel = document.querySelector('#faction-armoury-tabs .ui-tabs-panel[aria-hidden="false"]');
+        if (!activePanel) return null;
+
+        if (activePanel.classList.contains('armoury-weapons-wrap')) return 'weapons';
+        if (activePanel.classList.contains('armoury-armour-wrap')) return 'armor';
+        if (activePanel.classList.contains('armoury-temporary-wrap')) return 'temporary';
+
         return null;
     }
 
@@ -207,10 +211,14 @@
 
     function getQualityFromRow(li) {
         // Quality usually in aria-label of hidden elements or color classes
+        // FIX: Check IMG tag specifically for glow classes
         let color = '';
-        if (li.querySelector('.glow-yellow')) color = 'q-yellow';
-        else if (li.querySelector('.glow-orange')) color = 'q-orange';
-        else if (li.querySelector('.glow-red')) color = 'q-red';
+        const imgEl = li.querySelector('.img-wrap img');
+        if (imgEl) {
+            if (imgEl.classList.contains('glow-yellow')) color = 'q-yellow';
+            else if (imgEl.classList.contains('glow-orange')) color = 'q-orange';
+            else if (imgEl.classList.contains('glow-red')) color = 'q-red';
+        }
 
         // Check aria-label inside hidden view-info
         let text = '-';
@@ -246,8 +254,8 @@
         const type = getActiveTabType();
         if (!type) return;
 
-        const containerId = (type === 'armor') ? '#armoury-armour' : `#armoury-${type}`;
-        const container = document.querySelector(containerId);
+        // FIX: Use the robust selector for the active container
+        const container = document.querySelector('#faction-armoury-tabs .ui-tabs-panel[aria-hidden="false"]');
         if (!container) return;
 
         // Find Injection Point
@@ -473,18 +481,15 @@
 
     // --- Observer (The Engine) ---
     // Watches for DOM changes (Tab switches, Pagination) to trigger re-scans.
-    // Includes debounce and filter to prevent scroll bugs caused by self-updates.
-
     let debounceTimer = null;
     const observer = new MutationObserver((mutations) => {
-        // 1. Ignore changes happening INSIDE our own dashboard to prevent infinite loops/scroll jumps
+        // 1. Ignore changes happening INSIDE our own dashboard
         const isInternalChange = mutations.every(m => {
             return m.target.closest('#lip-dashboard');
         });
         if (isInternalChange) return;
 
         // 2. Ignore 'data-loaded' attribute changes on images (Torn lazy loading)
-        // These happen constantly when scrolling and shouldn't trigger a full table rebuild
         const onlyLazyLoad = mutations.every(m => {
             return m.type === 'attributes' && m.attributeName === 'data-loaded';
         });
@@ -505,7 +510,7 @@
                 attributes: true,
                 childList: true,
                 subtree: true,
-                attributeFilter: ['style', 'class', 'aria-expanded', 'data-loaded']
+                attributeFilter: ['style', 'class', 'aria-expanded', 'aria-hidden']
             });
             setTimeout(scanAndRender, 500); // Initial scan
         } else {

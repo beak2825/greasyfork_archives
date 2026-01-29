@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube No Saturated Hover
 // @namespace    https://greasyfork.org/users/1476331-jon78
-// @version      1.2.4
+// @version      1.2.5
 // @description  Removes YouTube's 2025 saturated hover effects.
 // @author       jon78
 // @license      CC0-1.0
@@ -113,15 +113,15 @@ ytd-watch-info-text,
   color: var(--yt-spec-text-primary, var(--ytc-text-primary)) !important;
 }
 
-#snippet-text:hover,
-#snippet-text *:hover,
-#attributed-snippet-text:hover,
-#attributed-snippet-text *:hover,
-ytd-watch-info-text *:hover {
+/* Description hover: only affect non-anchor hovered elements */
+#snippet-text :not(a):hover,
+#attributed-snippet-text :not(a):hover,
+ytd-watch-info-text :not(a):hover {
   color: var(--yt-spec-text-primary, var(--ytc-text-primary)) !important;
   filter: none !important;
   opacity: 1 !important;
 }
+
 
 /* Highlighted links */
 .yt-core-attributed-string--highlight-text-decorator > a.yt-core-attributed-string__link--call-to-action-color,
@@ -134,6 +134,12 @@ ytd-watch-metadata :not(.yt-core-attributed-string--highlight-text-decorator) > 
 #snippet-text :not(.yt-core-attributed-string--highlight-text-decorator) > .yt-core-attributed-string__link--call-to-action-color,
 #attributed-snippet-text :not(.yt-core-attributed-string--highlight-text-decorator) > .yt-core-attributed-string__link--call-to-action-color {
   color: var(--yt-spec-call-to-action, #3ea6ff) !important;
+}
+
+/* Watch page channel name */
+ytd-watch-metadata #owner
+  .yt-core-attributed-string__link--call-to-action-color {
+  color: var(--yt-spec-text-primary, var(--ytc-text-primary)) !important;
 }
 
 /* Saturation overrides on watch page */

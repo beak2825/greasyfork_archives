@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.014
+// @version      1.00.015
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -1854,11 +1854,10 @@ async function getPricesFromAPI() {
           ]
 ],
 "Landmark Decision": [
-    "Try: 5 Gasoline",
-    "Payout: 280K",
+     "Payout: 280K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
-    "Place: 6 Gasoline ",
+    "Place: 5 Gasoline ",
     ],
     "Last Lyft Home": [
         "Payout: 52K",
@@ -2036,7 +2035,8 @@ async function getPricesFromAPI() {
             ]
 ],
 "Medium Rare": [
-    "Might reach 42%",
+    "Might reach 46%",
+    "Try 2 Disel",
     "Payout: 355K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",

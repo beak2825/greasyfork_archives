@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ASTRIX Zed City Armor Sets Tab
 // @namespace    https://www.zed.city/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Adds an Armor Sets tab next to Inventory and Vehicle on the Inventory page
 // @author       ASTRIX
 // @match        https://www.zed.city/*
@@ -61,13 +61,13 @@
     // Must be inside <main> element
     const mainElement = document.querySelector("main");
     if (!mainElement) {
-      console.log("[ArmorSets] No <main> element found");
+      // console.log("[ArmorSets] No <main> element found");
       return null;
     }
     
     // Find all tablists inside <main> and look for the one containing "Inventory" text
     const tablists = mainElement.querySelectorAll('[role="tablist"]');
-    console.log("[ArmorSets] Found", tablists.length, "tablists inside <main>");
+    // console.log("[ArmorSets] Found", tablists.length, "tablists inside <main>");
     
     let targetTablist = null;
     
@@ -78,27 +78,27 @@
       );
       
       if (inventoryDiv) {
-        console.log("[ArmorSets] Found tablist with 'Inventory' text");
+        // console.log("[ArmorSets] Found tablist with 'Inventory' text");
         targetTablist = tablist;
         break;
       }
     }
     
     if (!targetTablist) {
-      console.log("[ArmorSets] No tablist with 'Inventory' found inside <main>");
+      // console.log("[ArmorSets] No tablist with 'Inventory' found inside <main>");
       return null;
     }
     
     // Find the q-tabs__content div inside the tablist
     const tabsContent = targetTablist.querySelector(".q-tabs__content");
     if (tabsContent) {
-      console.log("[ArmorSets] Found q-tabs__content");
+      // console.log("[ArmorSets] Found q-tabs__content");
       return tabsContent;
     }
     
     // Fallback: find the first div child of the tablist
     const divChild = targetTablist.querySelector(":scope > div");
-    console.log("[ArmorSets] Using fallback div child:", divChild);
+    // console.log("[ArmorSets] Using fallback div child:", divChild);
     return divChild || targetTablist;
   }
 
@@ -129,7 +129,7 @@
     // Look for filter-btn elements which are the INVENTORY/VEHICLE tabs
     const filterBtns = tablist.querySelectorAll(".filter-btn");
     if (filterBtns.length > 0) {
-      console.log("[ArmorSets] Found filter-btn tabs:", filterBtns.length);
+      // console.log("[ArmorSets] Found filter-btn tabs:", filterBtns.length);
       return filterBtns[0];
     }
     
@@ -173,7 +173,7 @@
     try {
       localStorage.setItem(ARMOR_SETS_KEY, JSON.stringify(sets));
     } catch (e) {
-      console.error("Failed to save armor sets", e);
+      // console.error("Failed to save armor sets", e);
     }
   }
 
@@ -188,7 +188,7 @@
         return csrfToken;
       }
     } catch (error) {
-      console.error("[ArmorSets] Error fetching CSRF token", error);
+      // console.error("[ArmorSets] Error fetching CSRF token", error);
     }
     return null;
   }
@@ -221,7 +221,7 @@
       cachedItems = json;
       return json;
     } catch (error) {
-      console.error("[ArmorSets] Error fetching items", error);
+      // console.error("[ArmorSets] Error fetching items", error);
       throw error;
     }
   }
@@ -270,7 +270,7 @@
       
       return allItems;
     } catch (error) {
-      console.error("[ArmorSets] Error getting all armor items", error);
+      // console.error("[ArmorSets] Error getting all armor items", error);
       return [];
     }
   }
@@ -341,7 +341,7 @@
       renderArmorSetsContent(panel);
       adjustPanelHeight(panel);
     } catch (error) {
-      console.error("[ArmorSets] Error refreshing data", error);
+      // console.error("[ArmorSets] Error refreshing data", error);
     }
   }
 
@@ -362,7 +362,7 @@
           const savedItemData = typeof itemData === 'object' ? itemData : { id: itemData };
           const itemId = savedItemData.id;
           
-          if (!itemId && !savedItemData.codename) continue;
+          if (!itemId && !savedItemData.name) continue;
           
           // Try to find the item by ID first, with fallback to codename/traits
           const result = await findItemById(itemId, savedItemData);
@@ -383,14 +383,15 @@
             if (result.item.id !== currentId) {
               const setIndex = armorSets.findIndex(s => s.uuid === set.uuid);
               if (setIndex !== -1) {
-                // Update with new ID, preserving/updating codename and traits
+                // Update with new ID, preserving/updating codename, name, and traits
                 armorSets[setIndex].items[slotKey] = {
                   id: result.item.id,
                   codename: result.item.codename || savedItemData.codename,
-                  traits: getTraitCodenames(result.item)
+                  name: result.item.name || savedItemData.name,
+                  traits: getItemTraits(result.item)
                 };
                 needsSave = true;
-                console.log(`[ArmorSets] Updated item ID for ${set.name} ${slotKey}: ${currentId} -> ${result.item.id}`);
+                // console.log(`[ArmorSets] Updated item ID for ${set.name} ${slotKey}: ${currentId} -> ${result.item.id}`);
               }
             }
           }
@@ -401,7 +402,7 @@
         saveArmorSets(armorSets);
       }
     } catch (error) {
-      console.error("[ArmorSets] Error updating missing item IDs", error);
+      // console.error("[ArmorSets] Error updating missing item IDs", error);
     }
   }
 
@@ -637,7 +638,7 @@
           // Error occurred, restore text
           option.textContent = originalText;
           option.style.pointerEvents = "auto";
-          console.error("[ArmorSets] Error unequipping item", error);
+          // console.error("[ArmorSets] Error unequipping item", error);
         }
       });
       unequipDropdown.appendChild(option);
@@ -728,7 +729,7 @@
           refreshBtn.disabled = false;
         }, 1500);
       } catch (error) {
-        console.error("[ArmorSets] Error refreshing items", error);
+        // console.error("[ArmorSets] Error refreshing items", error);
         refreshBtn.textContent = "✗ Error";
         setTimeout(() => {
           refreshBtn.textContent = "🔄 Refresh";
@@ -1497,15 +1498,24 @@
   // Remove quantity from item before saving
   function cleanItemForSave(item) {
     if (!item) return null;
-    // Save ID, codename, and traits for matching
+    // Save ID, codename, name, and full traits for matching
     const savedItem = {
       id: item.id,
-      codename: item.codename
+      codename: item.codename,
+      name: item.name
     };
     
-    // Save traits array (simplified - just codenames for matching)
+    // Save full traits array for matching
     if (item.traits && Array.isArray(item.traits)) {
-      savedItem.traits = item.traits.map(trait => trait.codename || trait.name).filter(Boolean);
+      savedItem.traits = item.traits.map(trait => ({
+        name: trait.name,
+        codename: trait.codename,
+        type: trait.type,
+        quantity: trait.quantity,
+        value: trait.value,
+        vars: trait.vars,
+        posted_qty: trait.posted_qty
+      }));
     } else {
       savedItem.traits = [];
     }
@@ -1513,21 +1523,75 @@
     return savedItem;
   }
 
-  // Get trait codenames from an item
-  function getTraitCodenames(item) {
+  // Get full traits from an item
+  function getItemTraits(item) {
     if (!item || !item.traits || !Array.isArray(item.traits)) return [];
-    return item.traits.map(trait => trait.codename || trait.name).filter(Boolean);
+    return item.traits.map(trait => ({
+      name: trait.name,
+      codename: trait.codename,
+      type: trait.type,
+      quantity: trait.quantity,
+      value: trait.value,
+      vars: trait.vars,
+      posted_qty: trait.posted_qty
+    }));
   }
 
-  // Count matching traits between two items
+  // Deep compare two trait objects
+  function traitsEqual(trait1, trait2) {
+    if (!trait1 || !trait2) return false;
+    // Compare key properties
+    if (trait1.codename !== trait2.codename) return false;
+    if (trait1.name !== trait2.name) return false;
+    if (trait1.type !== trait2.type) return false;
+    if (trait1.value !== trait2.value) return false;
+    
+    // Deep compare vars if they exist
+    if (trait1.vars && trait2.vars) {
+      const vars1 = trait1.vars;
+      const vars2 = trait2.vars;
+      
+      // Compare effects arrays (order-independent)
+      if (vars1.effects && vars2.effects) {
+        if (vars1.effects.length !== vars2.effects.length) return false;
+        // Create sets of effect identifiers for comparison
+        const effects1 = new Set(vars1.effects.map(e => `${e.codename}:${e.stat}`));
+        const effects2 = new Set(vars2.effects.map(e => `${e.codename}:${e.stat}`));
+        if (effects1.size !== effects2.size) return false;
+        for (const effect of effects1) {
+          if (!effects2.has(effect)) return false;
+        }
+      } else if (vars1.effects || vars2.effects) {
+        return false;
+      }
+    } else if (trait1.vars || trait2.vars) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  // Count matching traits between two items (comparing full trait objects)
   function countMatchingTraits(traits1, traits2) {
-    const set1 = new Set(traits1);
-    const set2 = new Set(traits2);
+    if (!traits1 || !traits2 || traits1.length === 0 || traits2.length === 0) return 0;
+    
     let matches = 0;
-    for (const trait of set1) {
-      if (set2.has(trait)) matches++;
+    for (const trait1 of traits1) {
+      for (const trait2 of traits2) {
+        if (traitsEqual(trait1, trait2)) {
+          matches++;
+          break;
+        }
+      }
     }
     return matches;
+  }
+
+  // Check if two items have the same traits (all traits match)
+  function hasSameTraits(traits1, traits2) {
+    if (!traits1 || !traits2) return traits1 === traits2;
+    if (traits1.length !== traits2.length) return false;
+    return countMatchingTraits(traits1, traits2) === traits1.length;
   }
 
   // Find items by codename across all sources
@@ -1567,12 +1631,54 @@
       
       return results;
     } catch (error) {
-      console.error("[ArmorSets] Error finding items by codename", error);
+      // console.error("[ArmorSets] Error finding items by codename", error);
       return [];
     }
   }
 
-  // Find item by ID or fallback to codename/traits matching
+  // Find items by name across all sources
+  async function findItemsByName(name) {
+    if (!name) return [];
+    
+    try {
+      const itemsData = await fetchItems();
+      const results = [];
+      
+      // Search in equipped items
+      if (itemsData.equip && typeof itemsData.equip === 'object') {
+        for (const [slotKey, slotItem] of Object.entries(itemsData.equip)) {
+          if (slotItem && slotItem.name === name) {
+            results.push({ item: slotItem, isVehicle: false, isEquipped: true, source: 'equipped' });
+          }
+        }
+      }
+      
+      // Search in inventory items
+      if (itemsData.items && Array.isArray(itemsData.items)) {
+        itemsData.items.forEach(item => {
+          if (item.name === name) {
+            results.push({ item, isVehicle: false, isEquipped: false, source: 'inventory' });
+          }
+        });
+      }
+      
+      // Search in vehicle_items
+      if (itemsData.vehicle_items && Array.isArray(itemsData.vehicle_items)) {
+        itemsData.vehicle_items.forEach(item => {
+          if (item.name === name) {
+            results.push({ item, isVehicle: true, isEquipped: false, source: 'vehicle' });
+          }
+        });
+      }
+      
+      return results;
+    } catch (error) {
+      // console.error("[ArmorSets] Error finding items by name", error);
+      return [];
+    }
+  }
+
+  // Find item by ID or fallback to name/traits matching
   async function findItemById(itemId, savedItemData = null) {
     if (!itemId && !savedItemData) return null;
     
@@ -1607,9 +1713,9 @@
         }
       }
       
-      // If ID not found and we have saved item data, search by codename and traits
-      if (savedItemData && savedItemData.codename) {
-        const candidates = await findItemsByCodename(savedItemData.codename);
+      // If ID not found and we have saved item data, search by name first, then by traits
+      if (savedItemData && savedItemData.name) {
+        const candidates = await findItemsByName(savedItemData.name);
         
         if (candidates.length === 0) {
           return null;
@@ -1624,23 +1730,45 @@
         if (savedItemData.traits && savedItemData.traits.length > 0) {
           const savedTraits = savedItemData.traits;
           
-          // Score each candidate by trait matches
+          // Score each candidate by trait matches (comparing full trait objects)
           const scored = candidates.map(candidate => {
-            const candidateTraits = getTraitCodenames(candidate.item);
+            const candidateTraits = getItemTraits(candidate.item);
             const matches = countMatchingTraits(savedTraits, candidateTraits);
-            return { ...candidate, traitMatches: matches };
+            const hasAllTraits = hasSameTraits(savedTraits, candidateTraits);
+            return { ...candidate, traitMatches: matches, hasAllTraits };
           });
           
-          // Sort by trait matches (descending)
-          scored.sort((a, b) => b.traitMatches - a.traitMatches);
+          // Sort by hasAllTraits first (exact match), then by trait matches (descending)
+          scored.sort((a, b) => {
+            if (a.hasAllTraits !== b.hasAllTraits) {
+              return b.hasAllTraits ? 1 : -1;
+            }
+            return b.traitMatches - a.traitMatches;
+          });
           
-          // If the best match has more than 0 trait matches, or all have 0, use the best one
-          if (scored[0].traitMatches > 0 || scored.every(s => s.traitMatches === 0)) {
+          // If we have an exact trait match, return it
+          if (scored[0].hasAllTraits) {
+            // Check if there's only one exact match
+            const exactMatches = scored.filter(s => s.hasAllTraits);
+            if (exactMatches.length === 1) {
+              return exactMatches[0];
+            }
+            // Multiple exact matches - need user selection
+            return { multipleMatches: true, candidates: exactMatches };
+          }
+          
+          // If the best match has more than 0 trait matches
+          if (scored[0].traitMatches > 0) {
             // If there's a clear winner (more matches than second place), return it
             if (scored.length === 1 || scored[0].traitMatches > scored[1].traitMatches) {
               return scored[0];
             }
+            // Same trait match count - need user selection
+            return { multipleMatches: true, candidates };
           }
+          
+          // All have 0 trait matches - need user selection
+          return { multipleMatches: true, candidates };
         }
         
         // Multiple matches with same trait score - need user selection
@@ -1649,7 +1777,7 @@
       
       return null;
     } catch (error) {
-      console.error("[ArmorSets] Error finding item", error);
+      // console.error("[ArmorSets] Error finding item", error);
       return null;
     }
   }
@@ -1668,7 +1796,7 @@
         saveArmorSets(armorSets);
       }
     } catch (error) {
-      console.error("[ArmorSets] Error updating saved item ID", error);
+      // console.error("[ArmorSets] Error updating saved item ID", error);
     }
   }
 
@@ -1706,7 +1834,7 @@
       `;
 
       const title = document.createElement("div");
-      title.textContent = `Multiple items found for ${savedItemData.codename || 'this item'}`;
+      title.textContent = `Multiple items found for ${savedItemData.name || savedItemData.codename || 'this item'}`;
       title.style.cssText = `
         color: #fff;
         font-size: 16px;
@@ -1855,7 +1983,7 @@
         saveArmorSets(armorSets);
       }
     } catch (error) {
-      console.error("[ArmorSets] Error updating saved item ID", error);
+      // console.error("[ArmorSets] Error updating saved item ID", error);
     }
   }
 
@@ -1893,7 +2021,7 @@
       `;
 
       const title = document.createElement("div");
-      title.textContent = `Multiple items found for ${savedItemData.codename || 'this item'}`;
+      title.textContent = `Multiple items found for ${savedItemData.name || savedItemData.codename || 'this item'}`;
       title.style.cssText = `
         color: #fff;
         font-size: 16px;
@@ -2112,7 +2240,7 @@
       }
       return json;
     } catch (error) {
-      console.error("[ArmorSets] Error equipping item", error);
+      // console.error("[ArmorSets] Error equipping item", error);
       throw error;
     }
   }
@@ -2139,7 +2267,7 @@
       // Return the response even if there's an error, so we can check for specific error codes
       return json;
     } catch (error) {
-      console.error("[ArmorSets] Error unequipping item", error);
+      // console.error("[ArmorSets] Error unequipping item", error);
       throw error;
     }
   }
@@ -2371,6 +2499,15 @@
                 }, 2000);
               } catch (error) {
                 equipBtn.textContent = "✗ Error";
+                
+                // Refresh all data after error to update UI state
+                setTimeout(async () => {
+                  const panel = row.closest(`.${ARMOR_SETS_PANEL_CLASS}`);
+                  if (panel) {
+                    await refreshAllData(panel);
+                  }
+                }, 100);
+                
                 setTimeout(() => {
                   equipBtn.textContent = "⚔️ Equip";
                   equipBtn.disabled = false;
@@ -2491,6 +2628,15 @@
               }, 2000);
             } catch (error) {
               equipBtn.textContent = "✗ Error";
+              
+              // Refresh all data after error to update UI state
+              setTimeout(async () => {
+                const panel = row.closest(`.${ARMOR_SETS_PANEL_CLASS}`);
+                if (panel) {
+                  await refreshAllData(panel);
+                }
+              }, 100);
+              
               setTimeout(() => {
                 equipBtn.textContent = "⚔️ Equip";
                 equipBtn.disabled = false;
@@ -2686,7 +2832,7 @@
           // Handle both old format (full object) and new format (just ID/codename/traits)
           const savedItemData = typeof itemData === 'object' ? itemData : { id: itemData };
           const itemId = savedItemData.id;
-          if (itemId || savedItemData.codename) {
+          if (itemId || savedItemData.name) {
             const result = await findItemById(itemId, savedItemData);
             if (result && !result.multipleMatches) {
               loadedItems[slotKey] = result.item;
@@ -2814,7 +2960,7 @@
 
   // Equip armor set (placeholder - you can implement the actual equip logic)
   async function equipArmorSet(set) {
-    console.log("[ArmorSets] Equipping set:", set);
+    // console.log("[ArmorSets] Equipping set:", set);
     // TODO: Implement actual equip API calls
     // For each item in the set, call the equip API
     alert(`Equipping set: ${set.name}\n\nThis will equip:\n- Head: ${set.items?.head?.name || 'None'}\n- Body: ${set.items?.body?.name || 'None'}\n- Legs: ${set.items?.legs?.name || 'None'}\n- Feet: ${set.items?.feet?.name || 'None'}`);
@@ -2947,50 +3093,50 @@
     armorSetsBtn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log("[ArmorSets] Tab clicked");
+      // console.log("[ArmorSets] Tab clicked");
       toggleArmorSetsPanel(armorSetsBtn);
     });
 
-    console.log("[ArmorSets] Created tab element:", armorSetsBtn);
+    // console.log("[ArmorSets] Created tab element:", armorSetsBtn);
     return armorSetsBtn;
   }
 
   // Insert the Armor Sets tab into the tablist
   function insertArmorSetsTab() {
     if (document.querySelector(`.${ARMOR_SETS_TAB_CLASS}`)) {
-      console.log("[ArmorSets] Tab already exists, skipping");
+      // console.log("[ArmorSets] Tab already exists, skipping");
       return;
     }
 
     const tablistContainer = findTablistContainer();
     if (!tablistContainer) {
-      console.log("[ArmorSets] No tablist container found");
+      // console.log("[ArmorSets] No tablist container found");
       return;
     }
 
     const existingTab = findExistingTab();
-    console.log("[ArmorSets] Existing tab found:", existingTab);
+    // console.log("[ArmorSets] Existing tab found:", existingTab);
     
     const armorSetsTab = createArmorSetsTab(existingTab);
 
     // Append to the tablist container
     tablistContainer.appendChild(armorSetsTab);
-    console.log("[ArmorSets] Tab inserted successfully into:", tablistContainer);
+    // console.log("[ArmorSets] Tab inserted successfully into:", tablistContainer);
   }
 
   // Initialize the script
   function init() {
-    console.log("[ArmorSets] Init called, pathname:", window.location.pathname);
+    // console.log("[ArmorSets] Init called, pathname:", window.location.pathname);
     
     if (!isDesiredPage()) {
-      console.log("[ArmorSets] Not on inventory page, skipping");
+      // console.log("[ArmorSets] Not on inventory page, skipping");
       return;
     }
 
-    console.log("[ArmorSets] On inventory page, attempting to insert tab");
+    // console.log("[ArmorSets] On inventory page, attempting to insert tab");
 
     if (insertArmorSetsTabWithRetry()) {
-      console.log("[ArmorSets] Tab inserted on first try");
+      // console.log("[ArmorSets] Tab inserted on first try");
       return;
     }
 

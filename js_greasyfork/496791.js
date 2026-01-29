@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        WME WazeMY
 // @namespace   https://www.github.com/junyian/
-// @version     2026.01.25.1
+// @version     2026.01.29.1
 // @author      junyianl <junyian@gmail.com>
 // @source      https://github.com/junyian/wme-wazemy
 // @license     MIT
@@ -2141,6 +2141,8 @@ class PluginGemini {
      * and calls the initialize method to set up the plugin.
      */
     constructor() {
+        this.lastEvaluatedImageSrc = null;
+        this.evaluateDebounceTimer = null;
         this.sdk = unsafeWindow.getWmeSdk({
             scriptId: "wme-wazemy-gemini",
             scriptName: "WazeMY",
@@ -2238,17 +2240,18 @@ class PluginGemini {
      * @return {void} This function does not return anything.
      */
     initializeVenueUpdateRequestImageHelper() {
+        const arrayBufferToBase64 = (buffer) => {
+            const bytes = new Uint8Array(buffer);
+            let binary = "";
+            for (let i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
+        };
         const onload_base64image = (response) => {
-            const base64data = btoa(response.responseText);
+            const base64data = arrayBufferToBase64(response.response);
             this.getGeminiPictureEvaluation(base64data).then((evaluation) => {
-                const jsonMatch = evaluation.match(/```json\n([\s\S]*?)\n```/);
-                let evaluationText;
-                if (jsonMatch && jsonMatch[1]) {
-                    evaluationText = JSON.parse(jsonMatch[1]);
-                }
-                else {
-                    evaluationText = JSON.parse(evaluation);
-                }
+                const evaluationText = JSON.parse(evaluation);
                 $("#gemini").replaceWith(`<div id='gemini' class="changes"><b>Gemini image evaluation: ${evaluationText.suggestion}</b><br><i>${evaluationText.reason}</i><br></div>`);
                 if (evaluationText.suggestion === "Reject") {
                     $("#gemini").append(`<b>Violations:</b><ul>${evaluationText.violations.map((v) => `<li>${v}</li>`).join("")}</ul>`);
@@ -2259,20 +2262,27 @@ class PluginGemini {
             const imagePreview = $(".image-preview");
             const geminiElement = $("#gemini");
             if (imagePreview.length > 0 && geminiElement.length === 0) {
-                $(displayAfterElement).after("<div id='gemini' class='changes'><i>Gemini is evaluating...</i><br></div>");
-                if (imagePreview.length > 0) {
-                    const src = imagePreview.attr("src");
-                    GM_xmlhttpRequest({
-                        method: "GET",
-                        url: src,
-                        responseType: "arraybuffer",
-                        onload: onload_base64image.bind(this),
-                    });
+                const src = imagePreview.attr("src");
+                if (src === this.lastEvaluatedImageSrc) {
+                    return;
                 }
+                this.lastEvaluatedImageSrc = src;
+                $(displayAfterElement).after("<div id='gemini' class='changes'><i>Gemini is evaluating...</i><br></div>");
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: src,
+                    responseType: "arraybuffer",
+                    onload: onload_base64image.bind(this),
+                });
             }
         };
-        $(document.body).on("click", "", (_e) => {
-            evaluateImage("div.changes");
+        $(document.body).on("click", (_e) => {
+            if (this.evaluateDebounceTimer) {
+                clearTimeout(this.evaluateDebounceTimer);
+            }
+            this.evaluateDebounceTimer = setTimeout(() => {
+                evaluateImage("div.changes");
+            }, 300);
         });
     }
     getGeminiTextResponse(context) {
@@ -2318,28 +2328,10 @@ Your task is to evaluate an uploaded image of a Waze venue against Waze Map Edit
 
 I will provide you with an image for evaluation.
 
-Your output MUST be a JSON object, easily parseable by a Tampermonkey script. Do not include any other text or formatting outside of the JSON.
-
-\`\`\`json
-{
-  "suggestion": "Approve" | "Reject",
-  "reason": "Concise explanation for the decision (e.g., 'Image is clear, relevant, and follows all guidelines.' or 'Image is rejected due to blurriness and irrelevance.').",
-  "violations": [
-    // Array of specific guideline violation codes if decision is "Rejected".
-    // Use the following codes:
-    // "IRRELEVANT_IMAGE": Image does not show the venue or is of a random object.
-    // "LOW_QUALITY": Image is blurry, dark, pixelated, overexposed, or distorted.
-    // "INAPPROPRIATE_CONTENT": Contains nudity, violence, hate speech, etc.
-    // "PERSONAL_INFORMATION": Shows identifiable faces without consent, license plates, private addresses not part of the venue.
-    // "SCREENSHOT_OF_MAP": Image is a screenshot of Waze, Google Maps, or any other mapping application.
-    // "EXCESSIVE_TEXT_OR_OVERLAYS": Image has too much text, watermarks, promotional overlays, or graphic elements not inherent to the venue's physical signage.
-    // "COPYRIGHTED_MATERIAL": Image appears to be copyrighted without proper authorization (use with caution, AI inference only).
-    // "ORIENTATION_OR_CROPPING_ISSUE": Image is badly rotated or cropped, making the venue unclear.
-    // "DUPLICATE_IMAGE": Image is a clear duplicate of an existing venue image (requires contextual awareness, AI may struggle here).
-    // "OTHER_GENERAL_ISSUE": Any other issues not covered by specific codes.
-  ]
-}
-\`\`\`
+Respond with a JSON object with the following fields:
+- "suggestion": "Approve" or "Reject"
+- "reason": Concise explanation for the decision
+- "violations": Array of violation codes if rejected. Valid codes: "IRRELEVANT_IMAGE", "LOW_QUALITY", "INAPPROPRIATE_CONTENT", "PERSONAL_INFORMATION", "SCREENSHOT_OF_MAP", "EXCESSIVE_TEXT_OR_OVERLAYS", "COPYRIGHTED_MATERIAL", "ORIENTATION_OR_CROPPING_ISSUE", "DUPLICATE_IMAGE", "OTHER_GENERAL_ISSUE"
 
 Waze Venue Image Guidelines to Consider:
 
@@ -2373,6 +2365,10 @@ Decision Logic:
                         ],
                     },
                 ],
+                generationConfig: {
+                    thinkingConfig: { thinkingBudget: 0 },
+                    responseMimeType: "application/json",
+                },
             };
             GM_xmlhttpRequest({
                 method: "POST",
@@ -2718,7 +2714,7 @@ PluginManager.instance = new PluginManager(SettingsStorage.instance);
 ;// ./src/index.ts
 
 
-const updateMessage = `Version 2026.01.25.1: Added UR panel with reverse-chronological sorting (newest first). Enhanced Places scan to sort PURs by date with new Date column.`;
+const updateMessage = `Version 2026.01.29.1: Improved Gemini image evaluation performance with debounced click handling, image caching, proper binary-to-base64 conversion, and faster API responses.`;
 var sdk;
 console.log("[WazeMY] Script started");
 unsafeWindow.SDK_INITIALIZED.then(initScript);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FlightClub
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-07.1
+// @version      2026-01-28.1
 // @description  Flight Club helper script for Torn
 // @author       S7upidity [3567556] based off code written by Silverdark [3503183], neth [3564828]
 // @match        https://www.torn.com/item.php*
@@ -46,6 +46,12 @@
         618: "Stingray",
         187: "Teddy Bear",
         261: "Wolverine",
+       1499: "Obsidian Point",
+       1500: "Quartzite Point",
+       1501: "Chert Point",
+       1502: "Basalt Point",
+       1503: "Chalcedony Point",
+       1504: "Quartz Point"
     };
  
     const GALLO_ITEMS = {
@@ -68,7 +74,7 @@
         742: "Molotov Cocktail",
         220: "Grenade",
         190: "Semtex",
-        229: "Stick Grenade",
+        221: "Stick Grenade",
         257: "Throwing Knife",
         814: "Tyrosine",
         464: "Melatonin",
@@ -85,7 +91,39 @@
         465: "Serotonin",
         242: "HEG",
         239: "Ninja Star",
-        392: "Pepper Spray"
+        392: "Pepper Spray",
+        283: "Donator Pack",
+        731: "Empty Blood Bag",
+        732: "Blood Bag A+",
+        733: "Blood Bag A-",
+        734: "Blood Bag B+",
+        735: "Blood Bag B-",
+        736: "Blood Bag AB+",
+        737: "Blood Bag AB-",
+        738: "Blood Bag O+",
+        739: "Blood Bag O-",
+       1012: "Blood Bag Irradiated",
+         66: "Morphine",
+         67: "First Aid Kit",
+         68: "Small First Aid Kit",
+        279: "Maneki Neko",
+        265: "Pele Charm",
+       1462: "Magnesium Shavings",
+        278: "Kabuki Mask",
+       1361: "Dog Treats",
+       1348: "Aluminium Plate",
+       1264: "Potassium Nitrate",
+       1246: "Inkwell",
+        427: "Sumo Doll",
+        328: "PVC Cards",
+       1125: "Card Skimmer",
+        326: "Printing Paper",
+        407: "Compass",
+        280: "Elephant Statue",
+       1466: "Lighter",
+        259: "Mayan Statue",
+        275: "Jade Buddah"
+
     };
  
     const RECIPIENT_MIA = "MIA[131289]";

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         全能流媒体 ID & 链接提取工具 (Ultimate v4.9)
+// @name         全能流媒体 ID & 链接提取工具 (Ultimate v5.0)
 // @namespace    http://tampermonkey.net/
-// @version      4.9
-// @description  大幅增强站点识别率，支持主流中外流媒体平台，优化 Catchplay 映射逻辑。
+// @version      5.0
+// @description  大幅增强站点识别率，支持主流中外流媒体平台，新增TVB Anywhere识别。
 // @author       Gemini
 // @match        *://*.netflix.com/*
 // @match        *://*.disneyplus.com/*
@@ -24,11 +24,12 @@
 // @match        *://*.wetv.vip/*
 // @match        *://*.miguvideo.com/*
 // @match        *://*.catchplay.com/*
+// @match        *://*.tvbanywhere.com/*
 // @grant        GM_setClipboard
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v49%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v49%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v50%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v50%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -89,6 +90,7 @@
         // --- 港台/东南亚站 ---
         if (host.includes('linetv.tw')) return p.match(/\/drama\/(\d+)/)?.[1];
         if (host.includes('mytvsuper.com')) return p.match(/_(\d+)\//)?.[1] || sp.get('programme_id');
+        if (host.includes('tvbanywhere.com')) return p.match(/\/programme\/[^/]+_(\d+)\//)?.[1];
         if (host.includes('mewatch.sg')) return p.match(/-(\d+)$/)?.[1];
         if (host.includes('now.com')) return sp.get('id') ? `${url.origin}${p}?id=${sp.get('id')}&type=${sp.get('type')}` : null;
         

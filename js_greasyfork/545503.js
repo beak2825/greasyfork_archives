@@ -2,7 +2,7 @@
 // @name        Cuberealm.io Chat+ Utilities
 // @namespace   cooluser1481
 // @match       https://cuberealm.io/*
-// @version     1.1.1
+// @version     1.1.2
 // @author      cooluser1481
 // @description Advanced chat features for Cuberealm.io. Adds chat highlighting and remove character limit. Enjoy!
 // @license     GPL3
@@ -11,13 +11,21 @@
 // ==/UserScript==
  
  
-const chatContainer = document.querySelector("#app > div > div > div:nth-child(2) > div > div:nth-child(1)");
-chatContainer.style.userSelect = "text"; /*allows chat to be selected/coppied*/
-chatContainer.style.webkitUserSelect = "text"; /*for Safari*/
- 
-setInterval(function(){
-    document.querySelectorAll('input')
-    .forEach(input => {
-        input.removeAttribute('maxlength');
-    });
-},1);
+(function(){
+  console.log('[chat+] script enabled');
+  try{
+  	const chatContainer = document.querySelector("#app > div > div > div:nth-child(2) > div > div:nth-child(1)");
+  	chatContainer.style.userSelect = "text"; /*allows chat to be selected/coppied*/
+	  chatContainer.style.webkitUserSelect = "text"; /*for Safari*/
+ 		
+    let debuggingInputDone = false;
+  	setInterval(function(){
+ 	   document.querySelectorAll('input')
+	    .forEach(input => {
+      	input.removeAttribute('maxlength');
+    	});
+  	},1);
+   } catch(error){
+      console.error('[chat+] error occurred ' + error);
+   }
+})();

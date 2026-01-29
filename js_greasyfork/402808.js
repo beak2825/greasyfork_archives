@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎美化
 // @namespace    http://tampermonkey.net/
-// @version      2026.1.25
+// @version      2026.1.29.1
 // @description  1.【重要更新】增加夜间模式按钮     2.知乎题目栏增加举报、匿名、问题日志、快捷键四个按钮     3.知乎按钮图标在鼠标悬停时变色(题目按钮、回答下方按钮、评论按钮等)     4.回答的发布时间移至顶部     5.图片原图显示     6.文字和卡片链接从知乎跳转链接改为直链     7.隐藏侧边栏     8.GIF图自动播放【默认不开启】     9.问题增加创建时间和最后编辑时间     10.鼠标悬停在回答时显示浅蓝色聚焦框    11.引用角标高亮    12.首页信息流增加不感兴趣按钮  13.【重要更新】增加设置界面    14.显示信息流标签【默认不开启】
 // @author       AN drew
 // @match        *://*.zhihu.com/*
@@ -991,15 +991,38 @@ function zhuanlan() {
     }
 
     //发布时间置顶
-    if (Config.currentValues.publishTop == 1 && $(".Post-Header").find(".ContentItem-time").length == 0) {
-        let temp_time = $('.Post-content').find(".ContentItem-time").clone();
+    if (Config.currentValues.publishTop == 1)
+    {
+        //正式文章
+        if($('.Post-Row-Content').length > 0)
+        {
+            if($(".Post-Header").find(".ContentItem-time").length == 0)
+            {
+                let temp_time = $('.Post-content').find(".ContentItem-time").clone();
 
-        $('.Post-content').find(".ContentItem-time").hide();
-        temp_time.css({
-            "padding": "0px 0px 0px 0px",
-            "margin-top": "14px"
-        });
-        temp_time.appendTo($(".Post-Header"));
+                $('.Post-content').find(".ContentItem-time").hide();
+                temp_time.css({
+                    "padding": "0px 0px 0px 0px",
+                    "margin-top": "14px"
+                });
+                temp_time.appendTo($(".Post-Header"));
+            }
+        }
+        //预览文章
+        else if($('.PreviewPost-content').length > 0)
+        {
+            if($(".PreviewPost-Main > header").find(".ContentItem-time").length == 0)
+            {
+                let temp_time = $('.PreviewPost-Main').find(".ContentItem-time").clone();
+
+                $('.PreviewPost-Main').find(".ContentItem-time").hide();
+                temp_time.css({
+                    "padding": "0px 0px 0px 0px",
+                    "margin-top": "14px"
+                });
+                temp_time.appendTo($(".PreviewPost-Main > header"));
+            }
+        }
     }
 
     //专栏设置的已选菜单项变色
@@ -3052,7 +3075,7 @@ function addLocalCSS() {
     /* ==UserStyle==
 @name        zhihu-beautify
 @description zhihu
-@version     2026.1.20
+@version     2026.1.29
 @namespace   zhihu
 @license     MIT
 @downloadURL https://update.greasyfork.org/scripts/523346/zhihu-beautify.user.css
@@ -10061,6 +10084,21 @@ html[data-theme=dark] .css-q7c9ay{
     border-top: 1px solid #444 !important;
 }
 
+/*发布回答-本回答为图文回答-背景*/
+html[data-theme=dark] .css-judo3i{
+    background:#191b1f !important;
+    border-bottom: 1px solid #444 !important;
+}
+/*发布回答-本回答为图文回答-文字*/
+html[data-theme=dark] .css-yn85sn{
+    color: #d3d3d3 !important;
+}
+/*发布回答(全屏模式)-本回答为图文回答-文字*/
+html[data-theme=dark] .css-hgdba2{
+    color: #d3d3d3 !important;
+}
+
+
 /*发布回答(全屏模式)-顶栏背景*/
 html[data-theme=dark] .css-2lvw8d{
     background:#121212 !important;
@@ -10247,6 +10285,34 @@ html[data-theme=dark] .css-1olvdus table[data-draft-type='table'] th{
 html[data-theme=dark] .css-1olvdus table[data-draft-type='table'] td,html[data-theme=dark]  .css-1olvdus table[data-draft-type='table'] th{
     border:1px solid #444;
 }
+
+/*发布成功弹窗-发布到想法*/
+html[data-theme=dark] .css-x1adtd{
+    background: #121212;
+}
+/*发布成功弹窗-同步到圈子*/
+html[data-theme=dark] .css-qv6m8g {
+    color: #d3d3d3;
+    background: #191b1f;
+}
+/*发布成功弹窗-圈子标签*/
+html[data-theme=dark] .css-1avhzcw {
+    color: #d3d3d3;
+    background: #191b1f;
+}
+/*回答列表-知乎直答-文字*/
+html[data-theme=dark] .css-175oi2r {
+    color: #d3d3d3 !important;
+}
+/*回答列表-知乎直答-logo*/
+html[data-theme=dark] .css-175oi2r svg {
+    fill: #d3d3d3 !important;
+}
+/*回答列表-知乎直答-背景*/
+html[data-theme=dark] .css-108pj4h {
+    background: #191b1f;
+}
+
 
 /*==知乎问题==*/
 
@@ -11369,9 +11435,14 @@ html[data-theme=dark] .css-1m7gidr{
     background: #151a23 !important
 }
 /*创作助手-按钮背景（更多功能）*/
+html[data-theme=dark] .css-1uevqh{
+    background: #151a23 !important
+}
+/*创作助手-按钮背景（更多功能）-过渡*/
 html[data-theme=dark] .css-5rqv84{
     background: #151a23 !important
 }
+
 
 /*创作助手-按钮背景-进行中*/
 html[data-theme=dark] .css-jjc8wi{

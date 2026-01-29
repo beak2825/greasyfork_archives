@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WebView 错误美化
 // @namespace    https://viayoo.com/h88v22
-// @version      2.0
+// @version      2.1
 // @description  重绘的 WebView 错误页面，包含三种主题MIUIX/Windows11/IOS10，有GM环境的在脚本菜单切换，没有的在脚本编辑我有注释，并且给出一定程度上的解决方案。
 // @author       Aloazny && Gemini
 // @run-at       document-start
@@ -317,14 +317,29 @@
         });
     }
 
+    const initMenu = () => {
+        if (typeof GM_registerMenuCommand !== 'undefined') {
+            const themes = [
+                { id: 'MIUIX', name: 'MIUIX', icon: '📱' },
+                { id: 'Windows', name: 'Windows', icon: '💻' },
+                { id: 'IOS', name: 'iOS', icon: '🍎' }
+            ];
+            const currentId = GM_getValue('selected_theme', DEFAULT_THEME);
+            const idx = themes.findIndex(t => t.id === currentId);
+            const curr = themes[idx === -1 ? 0 : idx];
+            const next = themes[(idx + 1) % themes.length];
+            GM_registerMenuCommand(`${curr.icon} 主题：${curr.name} ➔ ${next.name}`, () => {
+                GM_setValue('selected_theme', next.id);
+                location.reload();
+            });
+        }
+    };
+
     const main = () => { if (detect()) render(); };
     const obs = new MutationObserver(main);
     if (document.documentElement) obs.observe(document.documentElement, { childList: true, subtree: true });
-    window.addEventListener('load', main);
+    window.addEventListener('load', () => { main(); initMenu(); });
     setTimeout(main, 150);
-    if (typeof GM_registerMenuCommand !== 'undefined') {
-        GM_registerMenuCommand("切换主题: MIUIX", () => { GM_setValue('selected_theme', 'MIUIX'); location.reload(); });
-        GM_registerMenuCommand("切换主题: Windows", () => { GM_setValue('selected_theme', 'Windows'); location.reload(); });
-        GM_registerMenuCommand("切换主题: iOS", () => { GM_setValue('selected_theme', 'IOS'); location.reload(); });
-    }
 })();
+
+

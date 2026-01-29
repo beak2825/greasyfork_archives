@@ -3,7 +3,7 @@
 // @name:zh-CN          知乎黑暗模式-改2
 // @name:zh-TW          知乎黑暗模式-改2
 // @namespace           https://www.zhihu.com/
-// @version             0.1
+// @version             0.2
 // @description         Enable Zhihu.com Dark Mode Mod
 // @description:zh-CN   开启知乎黑暗模式
 // @description:zh-TW   开启知乎黑暗模式
@@ -22,7 +22,7 @@
         'www.zhihu.com/pub/book',
         'www.zhihu.com/tardis',
     ];
- 
+
     const checkURL = (url) => {
         for (const u of ignoreList) {
             if (url.indexOf(u) !== -1) {
@@ -56,7 +56,11 @@
     // 如果 theme 不存在或者不等于 dark
     if (checkURL(location.href) && currentTheme !== 'dark') {
         setCookie('theme', 'dark', 365); // 设置有效期一年
-        window.location.reload(); // 刷新页面使配置生效
+        const isDark = document.documentElement.dataset.theme === 'dark';
+        if (!isDark) {
+                    window.location.reload(); // 刷新页面使配置生效
+}
+
     }
-    
+
 })();

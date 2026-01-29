@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站AI字幕笔记助手 (Bilibili AI Subtitle Note Assistant)
 // @namespace    http://tampermonkey.net/
-// @version      0.12
+// @version      0.13
 // @description  实时记录B站视频AI字幕，自动合并断句，支持历史记录回溯等，辅助高效制作视频笔记。
 // @author       Lepturus
 // @match        *://*.bilibili.com/video/*
@@ -23,7 +23,7 @@
           --border-radius: 6px;
           --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .copyTEXT, .custom-backup-element {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           font-size: 14px;
@@ -31,12 +31,12 @@
           color: var(--text-color);
           transition: all 0.2s ease;
         }
-        
+
         .copyTEXT:hover {
           background-color: rgba(0, 161, 214, 0.05);
           border-radius: 4px;
         }
-        
+
         .search-link-container a {
           display: inline-block;
           margin: 2px 5px 2px 0;
@@ -49,7 +49,7 @@
           font-size: 12px;
           transition: all 0.2s ease;
         }
-        
+
         .search-link-container a:hover {
           background: #f5f5f5;
           border-color: var(--primary-color);
@@ -57,7 +57,7 @@
           transform: translateY(-1px);
           box-shadow: var(--shadow);
         }
-        
+
         .copyTEXT[data-copied="true"] {
           background-color: #e8f5e9 !important;
           color: #2e7d32 !important;
@@ -74,12 +74,12 @@
             font-weight: 500;
             transition: background-color 0.2s ease, transform 0.2s ease;
           }
-  
+
           #download-subs-btn:hover, .bili-history-btn:hover {
             background-color: #007bb5; /* A slightly darker blue */
             transform: translateY(-1px);
           }
-          
+
           .bili-history-modal {
               position: fixed;
               right: 20px; /* Initial position */
@@ -95,7 +95,7 @@
               border: 1px solid #eee;
               font-family: sans-serif;
               /* 设置变换原点为左上角，确保缩放时位置计算可控 */
-              transform-origin: 0 0; 
+              transform-origin: 0 0;
               will-change: transform, left, top;
           }
           .bili-history-header {
@@ -166,9 +166,9 @@
               display: inline-block;
               margin-right: 12px;
               vertical-align: middle;
-              padding-bottom: 10px; 
+              padding-bottom: 10px;
               margin-bottom: -10px;
-               
+
           }
           .bili-search-menu {
               display: none;
@@ -319,15 +319,11 @@
 
         // 2. History Button Logic (Move to Left of AI Assistant)
         // Try to find the AI Assistant element
-        const aiAssistantSpan = document.querySelector('.video-ai-assistant-info');
+        const toolbarLeftWrap = document.querySelector('.video-toolbar-left-main');
 
         // Only proceed if AI element exists and button hasn't been added yet
-        if (aiAssistantSpan && !document.getElementById('bili-history-btn')) {
-            // Find the proper container (toolbar item) to insert before
-            // Bilibili toolbar items usually have class like 'video-toolbar-item' or 'video-toolbar-left-item'
-            const aiContainer = aiAssistantSpan.closest('.video-toolbar-item, .video-toolbar-left-item, .video-toolbar-right-item') || aiAssistantSpan.parentElement;
-
-            if (aiContainer) {
+        if (toolbarLeftWrap && !document.getElementById('bili-history-btn')) {
+            if (toolbarLeftWrap) {
                 const searchContainer = document.createElement('div');
                 searchContainer.className = 'bili-search-container';
                 searchContainer.id = 'bili-search-container'; // Prevent duplicates
@@ -450,9 +446,8 @@
                     }
                 };
 
-                // Insert before AI Assistant Container
-                aiContainer.parentNode.insertBefore(searchContainer, aiContainer);
-                aiContainer.parentNode.insertBefore(historyBtn, aiContainer);
+                toolbarLeftWrap.insertAdjacentElement('afterend', searchContainer);
+                searchContainer.insertAdjacentElement('afterend', historyBtn);
 
                 // Helper for Copy Feedback
                 const handleCopyFeedback = (btn, text) => {
@@ -513,15 +508,14 @@
                     const aiSub = document.querySelector('div[data-lan="ai-zh"]');
                     const btn = this;
 
-                    // 1. 核心前提：必须要保证 B站原生字幕是【开启】状态
-                    // 检查原生开关是否处于"关闭"状态 (通常有 bpx-state-active 类名表示关闭)
+                    // 保证 B站原生字幕是【开启】状态 true 开启
                     const isNativeClosed = closeSub && closeSub.classList.contains('bpx-state-active');
-                    
+
                     if (isNativeClosed) {
                         // 如果原生是关的，先强制打开它，否则拿不到数据
                         if (aiSub) aiSub.click();
                         else if (closeSub) closeSub.click();
-                        
+
                         // 稍微延迟一下，确保字幕元素加载出来后再隐藏
                         setTimeout(() => {
                            const wrapper = document.querySelector('.bili-subtitle-x-subtitle-panel-wrap');
@@ -530,7 +524,7 @@
                                updateBtnState(true);
                            }
                         }, 200);
-                        return; 
+                        return;
                     }
 
                     // 2. 如果原生已经是开的，则只切换"视觉隐藏"
@@ -615,29 +609,29 @@
                 document.addEventListener('mouseup', () => {
                     isDragging = false;
                 });
-                
+
                 const resizeHandle = modal.querySelector('.bili-resize-handle');
                 let isResizing = false;
                 let startResizeX, startScale;
                 let currentScale = 1;
 
                 resizeHandle.onmousedown = (e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                     e.preventDefault();
                     isResizing = true;
                     startResizeX = e.clientX;
                     startScale = currentScale;
-                    
-                    document.body.style.cursor = 'nwse-resize'; 
+
+                    document.body.style.cursor = 'nwse-resize';
                 };
 
                 document.addEventListener('mousemove', (e) => {
                     if (!isResizing) return;
                     e.preventDefault();
-                    
+
                     // 计算鼠标横向移动了多少像素
                     const deltaX = e.clientX - startResizeX;
-                    
+
                     // 核心算法：
                     // 模态框原始宽度为 320px
                     // 新的比例 = 旧比例 + (移动距离 / 320)
@@ -654,7 +648,7 @@
                 document.addEventListener('mouseup', () => {
                     if (isResizing) {
                         isResizing = false;
-                        document.body.style.cursor = ''; 
+                        document.body.style.cursor = '';
                     }
                 });
             }
@@ -715,29 +709,23 @@
                         let origin = majorNode ? majorNode.textContent.trim() : "";
                         let trans = minorNode ? minorNode.textContent.trim() : "";
 
-                        // Fallback for simple structure
-                        if (!origin && !trans) {
-                            const singleNode = subContainer.querySelector('.bili-subtitle-x-subtitle-panel-text');
-                            if (singleNode) origin = singleNode.textContent.trim();
-                        }
-
                         if (!origin && !trans) return;
                         if (origin === "字幕样式测试") return;
                         // Smart Deduplication
                         const lastItem = window.biliSubtitleHistory[window.biliSubtitleHistory.length - 1];
                         const currentTime = video.currentTime;
 
-                        // Rule 1: Exact match -> Ignore
-                        if (lastItem && lastItem.origin === origin && lastItem.trans === trans) return;
+                        // Rule 1: Exact match -> Ignore (但只有空内容时不跳过)
+                        if (lastItem && lastItem.origin === origin && lastItem.trans === trans && origin) return;
                         // 判定是否为原有句子的“延伸/修正” (例如 "Hello" -> "Hello World")
                         const isOriginExtension = lastItem && origin.startsWith(lastItem.origin);
-                        
+
                         // 判定是否为翻译的“延伸” (例如 "你好" -> "你好世界")，且长度必须增加才算延伸，完全相等不算
                         const isTransExtension = lastItem && trans && lastItem.trans && trans.startsWith(lastItem.trans) && trans.length > lastItem.trans.length;
 
                         // Rule 2: ASR Correction (覆盖)
                         // 条件：时间很近 (<1s) 且 (英文变长了 OR 中文变长了)
-                        const isASRCorrection = lastItem && Math.abs(currentTime - lastItem.seconds) < 1.0 && 
+                        const isASRCorrection = lastItem && Math.abs(currentTime - lastItem.seconds) < 1.0 &&
                                                 (isOriginExtension || isTransExtension);
 
                         // Rule 3: Merge Split Sentences (追加)
@@ -846,16 +834,16 @@
             let kws = document.getElementsByClassName("bli_copyTEXT");
             for (let i = 0; i < kws.length; i++) {
                 kws[i].onclick = function () {
-                    const btn = this; 
-                    let originalHTML = btn.innerHTML; 
+                    const btn = this;
+                    let originalHTML = btn.innerHTML;
                     let originalBG = btn.style.backgroundColor;
-                    
-                    copy(btn); 
-                    
+
+                    copy(btn);
+
                     btn.innerHTML = "✓ 已复制";
                     btn.style.backgroundColor = "#e8f5e9";
                     btn.style.color = "#2e7d32";
-                    
+
                     window.setTimeout(function () {
                         if (btn) { // 安全检查
                             btn.innerHTML = originalHTML;

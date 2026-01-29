@@ -7,9 +7,9 @@
 // @description     An elegant floating navigator for LMArena chat. Features: quick navigation, favorites with batch operations, search, customizable keyboard shortcuts, dynamic density indicator with Dock-like fisheye effect, and more.
 // @description:en  An elegant floating navigator for LMArena chat. Features: quick navigation, favorites with batch operations, search, customizable keyboard shortcuts, dynamic density indicator with Dock-like fisheye effect, and more.
 // @author          Marx Einstein
-// @match           https://lmarena.ai/*
+// @match           https://arena.ai/*
 // @match           https://beta.lmarena.ai/*
-// @icon            https://lmarena.ai/favicon.ico
+// @icon            https://arena.ai/favicon.ico
 // @grant           GM_addStyle
 // @grant           GM_setValue
 // @grant           GM_getValue

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dockter Liquid Glass
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Chromium-only: SVG backdrop-filter lens with proper Snell refraction and dynamic sizing. Fixes background misalignment.
 // @author       Eitelkeit
 // @license      MIT
@@ -21,7 +21,7 @@
     const WALLPAPER_FALLBACK_URL = "";
 
     // 需要做玻璃的卡片选择器
-    const CARD_SELECTOR = ".dashboard-glass-card, .app-card, .item-card, .search-input, .navigation-sidebar, .navigation-tabs";
+    const CARD_SELECTOR = ".dashboard-glass-card, .app-card, .item-card, .search-input, .navigation-sidebar, .navigation-tabs, .magic-stat-card";
 
     // 特殊处理的选择器（内部有绝对定位子元素，不能使用 overflow:hidden）
     const NAV_SELECTOR = ".navigation-sidebar, .navigation-tabs";

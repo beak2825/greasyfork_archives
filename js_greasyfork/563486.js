@@ -51,7 +51,7 @@
     setupEventListener() {
       if (this.isTopWin()) return;
       window.addEventListener("message", ({ data }) => {
-        if (!data?.source === MSG_SOURCE) return;
+        if (!data?.source?.includes(MSG_SOURCE)) return;
         if ("selector" in data) this.refreshStyle(data.selector);
       });
     },

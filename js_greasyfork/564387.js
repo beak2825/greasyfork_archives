@@ -10,7 +10,7 @@
 // @connect      ovu.moe
 // @icon         https://ovu.moe/favicon/favicon-96x96.png
 // @grant        GM_xmlhttpRequest
-// @grant        GM_addStyle\
+// @grant        GM_addStyle
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/564387/Ovumoe%20Calendar%20Popup.user.js
 // @updateURL https://update.greasyfork.org/scripts/564387/Ovumoe%20Calendar%20Popup.meta.js
@@ -202,6 +202,7 @@
         const badNames = new Map([
             ['ASMRCh', ''],
             [/Ch$/g, ''],
+            // [/_/g, ''],
         ]);
 
         // remove bad names

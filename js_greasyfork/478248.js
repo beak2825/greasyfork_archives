@@ -3,7 +3,7 @@
 // @name:ja			Twitterを少し便利に。
 // @name:en			Make Twitter a Little more Useful.
 // @namespace		https://greasyfork.org/ja/users/1023652
-// @version			2.4.0.7
+// @version			2.4.0.8
 // @description			で？みたいな機能の集まりだけど、きっとTwitterを少し便利にしてくれるはず。
 // @description:ja			で？みたいな機能の集まりだけど、きっとTwitterを少し便利にしてくれるはず。
 // @description:en			It's a collection of features like "So what?", but it will surely make Twitter a little more useful.
@@ -1377,9 +1377,9 @@
 
 	function hideAnalytics(tweetNodes){
 		try{
-			tweetNodes.forEach(t=>{
+			tweetNodes.forEach(async t=>{
 				if(t.id === extractTweetId(currentUrl))return;
-				const analytics = t.node.querySelector('div[id][role="group"] a[role="link"]')?.parentNode || t.node.querySelector('[d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"]')?.findParent('div.r-13awgt0.r-18u37iz.r-1h0z5md');
+				const analytics = t.node.querySelector('div[id][role="group"] a[role="link"]')?.parentNode || (await waitElementAndGet({query: '[d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z"]', searchPlace: t.node, retry: 2}))?.findParent('div.r-13awgt0.r-18u37iz.r-1h0z5md');
 				if(analytics)analytics.style.display = "none";
 			});
 		}catch(error){console.error(error)}

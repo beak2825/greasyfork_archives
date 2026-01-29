@@ -1,97 +1,107 @@
 // ==UserScript==
-// @name         LMArena | Floating Copy Buttons
+// @name         Arena.ai | Floating Copy Buttons
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      3.2
+// @version      3.5
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Adds floating copy buttons for code blocks and chat messages
-// @match        *://*lmarena.ai/*
-// @icon         https://lmarena.ai/favicon.ico
+// @match        *://*arena.ai/*
+// @icon         https://arena.ai/favicon.ico
 // @grant        none
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/559194/LMArena%20%7C%20Floating%20Copy%20Buttons.user.js
-// @updateURL https://update.greasyfork.org/scripts/559194/LMArena%20%7C%20Floating%20Copy%20Buttons.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559194/Arenaai%20%7C%20Floating%20Copy%20Buttons.user.js
+// @updateURL https://update.greasyfork.org/scripts/559194/Arenaai%20%7C%20Floating%20Copy%20Buttons.meta.js
 // ==/UserScript==
 
-    /*
-        What this script does
-        ---------------------
-        - Replaces the native code block copy button with a custom, drag-capable header button.
-        - Adds a "Code Column" strip: A transparent, interactive overlay on the right edge of code blocks.
-          * Hover to see options, Click to copy, Drag to move content.
-          * The icon inside the strip vertically follows the viewport (sticky behavior).
-        - Adds floating copy buttons for chat messages (User/AI).
-        - robustly handles React hydration, SPA navigation, and dynamic resizing of the input area.
+/*
+    What this script does
+    ---------------------
+    - Replaces the native code block copy button with a custom, drag-capable header button.
+    - Adds a "Code Column" strip: A transparent, interactive overlay on the right edge of code blocks.
+      * Hover to see options, Click to copy, Drag to move content.
+      * The icon inside the strip vertically follows the viewport (sticky behavior).
+    - Adds floating copy buttons for chat messages (User/AI).
+    - robustly handles React hydration, SPA navigation, and dynamic resizing of the input area.
 
-        Architecture
-        -----------------------
-        - Uses a "Settle" strategy for React Hydration (waits for form textarea).
-        - Incremental MutationObserver handles new content during streaming/navigation.
-        - ResizeObserver ensures the Code Column never overlaps the text input area.
-    */
+    Architecture
+    -----------------------
+    - Uses a "Settle" strategy for React Hydration (waits for form textarea).
+    - Incremental MutationObserver handles new content during streaming/navigation.
+    - ResizeObserver ensures the Code Column never overlaps the text input area.
+*/
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // CHANGELOG
-    // ═══════════════════════════════════════════════════════════════════════
-    // v1.4
-    // - UX: Removed hold-delay for drag operations (drag starts instantly on movement).
-    //
-    // v1.5 - v1.7
-    // - Feature: Replaced native code block header button with custom implementation.
-    // - Style: Adjusted button to be a flush, non-scaling square (44px) for perfect alignment.
-    //
-    // v1.8
-    // - Cleanup: Completely removed the legacy "Centered Floating Button" mechanism.
-    //
-    // v1.9 - v2.1 [Experimental / Reverted]
-    // - Attempted a "Fixed Header" approach that followed the viewport.
-    // - Reverted due to complexity and cleaner alternatives found in v2.2.
-    //
-    // v2.2
-    // - Major Feature: Introduced the "Code Column" strip.
-    //   (A click/drag strip overlaying the right side of code blocks).
-    // - Logic: Implemented sticky icon positioning within the strip.
-    //
-    // v2.3 - v2.4
-    // - Core: Implemented robust React Stabilization measures.
-    // - Fix: Added logic to handle SPA chat switching (detects placeholder vs hydrated nodes).
-    // - Fix: Solved "disappearing elements" by waiting for React to settle (150-200ms debounce).
-    //
-    // v2.5 - v2.7
-    // - Physics: Added collision detection with the chat input area.
-    // - Feature: Added ResizeObserver to text input; strip height adjusts in real-time as user types.
-    //
-    // v2.8 - v2.9
-    // - Polish: Removed safety padding calculations.
-    // - Result: Strip now extends seamlessly from the site header to the input bar with zero gaps.
-    // - Fix: Restored missing drag handlers for header buttons.
-    //
-    // v3.0
-    // - Cleanup: Removed orphaned function `getElementVisibleBounds` (never called).
-    // - Cleanup: Removed all debug console logging instrumentation (~23 statements).
-    // - Cleanup: Removed debug-only properties (`btn._dragLogged`, `isChatSwitch`).
-    // - Cleanup: Removed buggy/dead `querySelectorAll?.[...]` branch in MutationObserver.
-    // - Cleanup: Removed unused state fields (`state.block`, `state.icon`) from codeColumnMap.
-    // - Performance: Removed unnecessary drag event listener used only for logging.
-    //
-    // v3.1
-    // - Fix: Message buttons now appear for streaming messages during active conversations.
-    //   (MutationObserver was only detecting messages inside newly added `ol` containers,
-    //    not individual message elements added to an existing container.)
-    //
-    // v3.2
-    // - Fix: AI message copy button no longer overlaps code block header buttons.
-    //   * Messages that are predominantly code (>70% height) hide the message button entirely.
-    //   * Mixed-content messages use collision detection to reposition the button safely.
-    //
-    // ═══════════════════════════════════════════════════════════════════════
-    // DISCARDED BRANCH (Concept Only)
-    // ═══════════════════════════════════════════════════════════════════════
-    // v3.0 [Branch Abandoned - Pre-cleanup]
-    // - Experiment: Attempted to replace Floating Message Buttons with "Message Strips".
-    // - Concept: Attached solid-colored strips to the left/right of message containers.
-    // - Reason for discard: Preference for the original floating button design for messages,
-    //   while keeping the Strip design strictly for code blocks.
+// ═══════════════════════════════════════════════════════════════════════
+// CHANGELOG
+// ═══════════════════════════════════════════════════════════════════════
+// v1.4
+// - UX: Removed hold-delay for drag operations (drag starts instantly on movement).
+//
+// v1.5 - v1.7
+// - Feature: Replaced native code block header button with custom implementation.
+// - Style: Adjusted button to be a flush, non-scaling square (44px) for perfect alignment.
+//
+// v1.8
+// - Cleanup: Completely removed the legacy "Centered Floating Button" mechanism.
+//
+// v1.9 - v2.1 [Experimental / Reverted]
+// - Attempted a "Fixed Header" approach that followed the viewport.
+// - Reverted due to complexity and cleaner alternatives found in v2.2.
+//
+// v2.2
+// - Major Feature: Introduced the "Code Column" strip.
+//   (A click/drag strip overlaying the right side of code blocks).
+// - Logic: Implemented sticky icon positioning within the strip.
+//
+// v2.3 - v2.4
+// - Core: Implemented robust React Stabilization measures.
+// - Fix: Added logic to handle SPA chat switching (detects placeholder vs hydrated nodes).
+// - Fix: Solved "disappearing elements" by waiting for React to settle (150-200ms debounce).
+//
+// v2.5 - v2.7
+// - Physics: Added collision detection with the chat input area.
+// - Feature: Added ResizeObserver to text input; strip height adjusts in real-time as user types.
+//
+// v2.8 - v2.9
+// - Polish: Removed safety padding calculations.
+// - Result: Strip now extends seamlessly from the site header to the input bar with zero gaps.
+// - Fix: Restored missing drag handlers for header buttons.
+//
+// v3.0
+// - Cleanup: Removed orphaned function `getElementVisibleBounds` (never called).
+// - Cleanup: Removed all debug console logging instrumentation (~23 statements).
+// - Cleanup: Removed debug-only properties (`btn._dragLogged`, `isChatSwitch`).
+// - Cleanup: Removed buggy/dead `querySelectorAll?.[...]` branch in MutationObserver.
+// - Cleanup: Removed unused state fields (`state.block`, `state.icon`) from codeColumnMap.
+// - Performance: Removed unnecessary drag event listener used only for logging.
+//
+// v3.1
+// - Fix: Message buttons now appear for streaming messages during active conversations.
+//   (MutationObserver was only detecting messages inside newly added `ol` containers,
+//    not individual message elements added to an existing container.)
+//
+// v3.2
+// - Fix: AI message copy button no longer overlaps code block header buttons.
+//   * Messages that are predominantly code (>70% height) hide the message button entirely.
+//   * Mixed-content messages use collision detection to reposition the button safely.
+//
+// v3.3
+// - Renamed LMArena to Arena.ai
+//
+// v3.4
+// - Fix: Updated user message detection (bg-surface-secondary -> bg-surface-raised)
+// - Fix: Added carousel slide scanning for AI messages in compare mode
+//
+// v3.5
+// - Feature: Added feature flags for all custom copy button types
+// - Change: Disabled AI message copy button in side-by-side/battle mode (carousel)
+// ═══════════════════════════════════════════════════════════════════════
+// DISCARDED BRANCH (Concept Only)
+// ═══════════════════════════════════════════════════════════════════════
+// v3.0 [Branch Abandoned - Pre-cleanup]
+// - Experiment: Attempted to replace Floating Message Buttons with "Message Strips".
+// - Concept: Attached solid-colored strips to the left/right of message containers.
+// - Reason for discard: Preference for the original floating button design for messages,
+//   while keeping the Strip design strictly for code blocks.
 
 (function() {
     'use strict';
@@ -101,6 +111,15 @@
     // ═══════════════════════════════════════════════════════════════════════
 
     const CONFIG = {
+        // Feature flags for enabling/disabling custom copy buttons
+        features: {
+            codeColumnButton: true,      // Right-edge column strip on code blocks
+            codeHeaderButton: true,      // Header copy button on code blocks
+            userMessageButton: true,     // Blue button for user messages
+            aiMessageButton: true,       // Purple button for AI messages
+            aiMessageButtonInCarousel: false  // Purple button in side-by-side/battle mode
+        },
+
         // Code block side column (inside code area, right edge)
         codeColumn: {
             width: 44,              // Match header button width
@@ -703,7 +722,7 @@
     function isUserMessage(el) {
         return el.tagName === 'DIV' &&
                el.classList.contains('self-end') &&
-               el.querySelector('.bg-surface-secondary');
+               (el.querySelector('.bg-surface-raised') || el.querySelector('.bg-surface-secondary'));
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -795,7 +814,7 @@
 
     function getMessageContent(el, isUser) {
         const selector = isUser
-            ? '.bg-surface-secondary .prose'
+            ? '.bg-surface-raised .prose, .bg-surface-secondary .prose'
             : '.no-scrollbar .prose';
         const prose = el.querySelector(selector);
         return prose?.textContent?.trim() || '';
@@ -804,7 +823,7 @@
     // Convert prose HTML to Markdown for drag operations
     function getMessageMarkdown(el, isUser) {
         const selector = isUser
-            ? '.bg-surface-secondary .prose'
+            ? '.bg-surface-raised .prose, .bg-surface-secondary .prose'
             : '.no-scrollbar .prose';
         const prose = el.querySelector(selector);
         if (!prose) return '';
@@ -897,6 +916,9 @@
     // ═══════════════════════════════════════════════════════════════════════
 
     function setupCodeColumn(block) {
+        // Check feature flag
+        if (!CONFIG.features.codeColumnButton) return;
+
         // If we think this block is set up, but React removed our column, repair it.
         if (codeColumnMap.has(block)) {
             const existingState = codeColumnMap.get(block);
@@ -1113,6 +1135,9 @@
     }
 
     function setupCodeBlockHeader(block) {
+        // Check feature flag
+        if (!CONFIG.features.codeHeaderButton) return;
+
         // Find the header and native button
         const header = block.querySelector('.flex.items-center.justify-between.border-b');
         if (!header) return;
@@ -1165,15 +1190,28 @@
         setupDragAndClick(btn, data);
     }
 
+    // Detect if element is inside a carousel (side-by-side/battle mode)
+    function isInsideCarousel(el) {
+        return !!el.closest('[role="region"][aria-roledescription="carousel"]');
+    }
+
     function setupMessage(el, isUser) {
         if (buttonMap.has(el)) return;
+
+        // Check feature flags
+        if (isUser && !CONFIG.features.userMessageButton) return;
+        if (!isUser) {
+            if (!CONFIG.features.aiMessageButton) return;
+            // Disable AI message button in carousel/battle mode
+            if (isInsideCarousel(el) && !CONFIG.features.aiMessageButtonInCarousel) return;
+        }
 
         const { size, padding, iconSize, offset } = CONFIG.message;
         const msgConfig = isUser ? CONFIG.message.user : CONFIG.message.ai;
         const className = isUser ? 'fcb-user' : 'fcb-ai';
 
         const target = isUser
-            ? el.querySelector('.bg-surface-secondary') || el
+            ? el.querySelector('.bg-surface-raised') || el.querySelector('.bg-surface-secondary') || el
             : el.querySelector('.no-scrollbar') || el;
 
         const btn = createButton(size, iconSize, className);
@@ -1286,12 +1324,17 @@
             setupCodeColumn(block);
         });
 
-        // Messages
+        // Messages - direct children of ol
         const ol = document.querySelector('ol.flex-col-reverse');
         if (ol) {
             Array.from(ol.children).forEach(child => {
                 if (isAIMessage(child)) setupMessage(child, false);
                 else if (isUserMessage(child)) setupMessage(child, true);
+            });
+
+            // Also scan carousel slides for AI messages (compare mode)
+            ol.querySelectorAll('[role="group"][aria-roledescription="slide"] > .bg-surface-primary').forEach(msg => {
+                if (isAIMessage(msg)) setupMessage(msg, false);
             });
         }
     }

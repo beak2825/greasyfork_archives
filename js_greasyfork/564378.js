@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         Houzz Reviews Exporter (Load + Export JSON/CSV/XLSX + Copy)
 // @namespace    https://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Loads Houzz reviews (scroll + expand) and exports to JSON/CSV/XLSX (plus Copy JSON).
 // @author       sharmanhall
 // @match        https://www.houzz.com/*
-// @grant        GM_registerMenuCommand
-// @grant        GM_download
-// @grant        GM_setClipboard
-// @grant        GM_getValue
+// @grant        GM_addStyle
 // @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
+// @grant        GM_setClipboard
 // @require      https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js
 // @license      MIT
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=houzz.com
@@ -17,353 +17,413 @@
 // @updateURL https://update.greasyfork.org/scripts/564378/Houzz%20Reviews%20Exporter%20%28Load%20%2B%20Export%20JSONCSVXLSX%20%2B%20Copy%29.meta.js
 // ==/UserScript==
 
-(() => {
+(function () {
   'use strict';
 
   // =========================
-  // CONFIG / STATE
+  // CONFIG
   // =========================
   const CONFIG = {
     scrollDelayMs: 900,
     clickDelayMs: 180,
-    maxScrollAttempts: 160,
-    noChangeBreakCount: 6,
-    // Expand buttons commonly seen on Houzz:
-    expandButtonText: ['read more', 'see more', 'more', 'read full review', 'show more'],
-    // If true, try to scroll within a detected reviews container; otherwise scroll the page.
+    maxNoChangeLoops: 7,
+    maxTotalLoops: 260,
+    debug: true,
+    // If Houzz uses an inner scroll container, prefer it.
     preferInnerScrollContainer: true,
+    // Bonus: when true, also click Houzz's dedicated “Read More” buttons during Load.
+    autoExpandReadMoreDuringLoad: false,
   };
 
   const STATE = {
     running: false,
     stop: false,
-    loadedCount: 0,
-    totalEstimate: null,
+    lastCount: 0,
+    noChange: 0,
+    attempt: 0,
     profile: null,
+    totalEstimate: null,
   };
 
-  const log = (...args) => console.log('[Houzz Exporter]', ...args);
-  const warn = (...args) => console.warn('[Houzz Exporter]', ...args);
+  const log = (...a) => CONFIG.debug && console.log('[HZ-Exporter]', ...a);
+  const warn = (...a) => console.warn('[HZ-Exporter]', ...a);
+
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  // =========================
-  // HELPERS
-  // =========================
-  const sanitizeFilename = (name) =>
-    String(name || 'houzz')
-      .replace(/[\\/:*?"<>|]+/g, '')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 140) || 'houzz';
-
-  const dateStamp = () => {
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  };
+  const norm = (s) => (s || '').replace(/\s+/g, ' ').trim();
 
   const parseIntSafe = (v) => {
-    const n = parseInt(String(v || '').replace(/[^\d]/g, ''), 10);
+    const s = String(v ?? '').replace(/[^\d]/g, '');
+    const n = parseInt(s || '0', 10);
     return Number.isFinite(n) ? n : 0;
   };
-
-  const csvEscape = (value) => {
-    const s = String(value ?? '');
-    if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
-    return s;
-  };
-
-  const blobDownload = (content, filename, mime) => {
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    GM_download({
-      url,
-      name: filename,
-      saveAs: true,
-      onload: () => URL.revokeObjectURL(url),
-      onerror: (e) => {
-        URL.revokeObjectURL(url);
-        warn('Download error:', e);
-        alert('Download failed. Check console for details.');
-      },
-    });
-  };
-
-  const norm = (s) => String(s || '').replace(/\s+/g, ' ').trim();
-
-  // =========================
-  // FIND REVIEWS + CONTAINER
-  // =========================
-  function getReviewCards() {
-    // Houzz DOM can vary a lot; keep this broad but targeted.
-    const selectors = [
-      '[data-qa*="review"]',
-      '[class*="review"]',
-      'article',
-      'li',
-    ];
-
-    // Collect candidates and filter to "looks like a review"
-    const nodes = new Set();
-    for (const sel of selectors) {
-      for (const el of document.querySelectorAll(sel)) nodes.add(el);
-    }
-
-    const out = [];
-    for (const el of nodes) {
-      if (!(el instanceof Element)) continue;
-
-      const text = (el.innerText || '').toLowerCase();
-      // Heuristics: star rating or "review" phrasing or common review metadata.
-      const hasStars =
-        el.querySelector('[aria-label*="star"]') ||
-        el.querySelector('[class*="star"]') ||
-        /(\b[1-5](?:\.\d)?\b)\s*(stars?|star rating)/i.test(el.getAttribute('aria-label') || '') ||
-        /\b[1-5](?:\.\d)?\b\s*stars?\b/.test(text);
-
-      const hasReviewerClue =
-        /reviewed|would recommend|project|client|verified|houzz user|homeowner/i.test(text) ||
-        !!el.querySelector('time') ||
-        !!el.querySelector('a[href*="/user/"]');
-
-      const hasBodyClue =
-        (el.querySelector('p') && (el.querySelector('p')?.textContent || '').length > 30) ||
-        /\b(read more|see more)\b/.test(text);
-
-      if (hasStars && (hasReviewerClue || hasBodyClue)) out.push(el);
-    }
-
-    // De-dupe by DOM reference (already) and prefer smaller cards (avoid huge containers)
-    // Sort so inner cards come before giant wrappers.
-    out.sort((a, b) => (a.querySelectorAll('*').length - b.querySelectorAll('*').length));
-
-    // Reduce to distinct cards by preventing parent containers from dominating:
-    const filtered = [];
-    for (const el of out) {
-      if (filtered.some((x) => x.contains(el))) continue; // keep the more specific node
-      filtered.push(el);
-    }
-
-    return filtered;
-  }
-
-  function findReviewsScrollContainer() {
-    if (!CONFIG.preferInnerScrollContainer) return document.scrollingElement || document.documentElement;
-
-    const candidates = [
-      '[data-qa*="reviews"]',
-      '[id*="review"]',
-      '[class*="review"]',
-      'main',
-      'section',
-      'div',
-    ];
-
-    // First: any element that looks like a review list AND actually scrolls.
-    const els = [];
-    for (const sel of candidates) {
-      for (const el of document.querySelectorAll(sel)) {
-        if (!(el instanceof Element)) continue;
-        const style = getComputedStyle(el);
-        const canScroll = /(auto|scroll)/.test(style.overflowY || '') && el.scrollHeight > el.clientHeight + 80;
-        if (!canScroll) continue;
-
-        const t = (el.innerText || '').toLowerCase();
-        if (t.includes('review') || t.includes('reviews')) els.push(el);
-      }
-    }
-    if (els.length) return els.sort((a, b) => (b.scrollHeight - b.clientHeight) - (a.scrollHeight - a.clientHeight))[0];
-
-    // Fallback to page scroll
-    return document.scrollingElement || document.documentElement;
-  }
 
   // =========================
   // PROFILE INFO EXTRACTION
   // =========================
+  const parseFloatSafe = (v) => {
+    const m = String(v ?? '').replace(/,/g, '').match(/-?\d+(?:\.\d+)?/);
+    if (!m) return null;
+    const n = parseFloat(m[0]);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const isSaneRating = (r) => Number.isFinite(r) && r >= 0 && r <= 5;
+  const isSaneTotalReviews = (n) => Number.isFinite(n) && n > 0 && n < 1_000_000;
+
+  function getReviewAggregationContainer() {
+    return (
+      document.querySelector('.hz-review-aggregation') ||
+      document.querySelector('[class*="ReviewAggregation__StyledContainer"]')
+    );
+  }
+
+  function extractAggregationStats(aggEl) {
+    const out = { rating: null, totalReviews: 0 };
+    if (!(aggEl instanceof Element)) return out;
+
+    // Rating sources (best-first)
+    const ratingEl = aggEl.querySelector('[class*="StyledRating"]');
+    const r1 = parseFloatSafe(ratingEl?.textContent);
+    if (isSaneRating(r1)) out.rating = r1;
+
+    if (out.rating == null) {
+      const sr = [...aggEl.querySelectorAll('.sr-only')]
+        .map((el) => norm(el.textContent))
+        .find((t) => /average rating/i.test(t));
+
+      if (sr) {
+        const m =
+          sr.match(/average rating:\s*([0-9]+(?:\.[0-9]+)?)/i) ||
+          sr.match(/([0-9]+(?:\.[0-9]+)?)\s*out of\s*5/i);
+        const r2 = m ? parseFloat(m[1]) : NaN;
+        if (isSaneRating(r2)) out.rating = r2;
+      }
+    }
+
+    // Total reviews sources (best-first)
+    const totalEl = aggEl.querySelector('[class*="StyledReviewNumber"]');
+    const n1 = parseIntSafe(totalEl?.textContent);
+    if (isSaneTotalReviews(n1)) out.totalReviews = n1;
+
+    if (!out.totalReviews) {
+      const t = norm(aggEl.textContent);
+      const m = t.match(/(\d[\d,]*)\s+reviews?\b/i);
+      const n2 = m ? parseIntSafe(m[1]) : 0;
+      if (isSaneTotalReviews(n2)) out.totalReviews = n2;
+    }
+
+    return out;
+  }
+
   function extractProfileInfo() {
     const info = {
       name: '',
-      url: location.href,
       rating: null,
       totalReviews: 0,
       category: '',
       location: '',
-      scraped_at: new Date().toISOString(),
+      url: location.href,
     };
 
-    // Name
-    const h1 = document.querySelector('h1') || document.querySelector('[data-qa="profile-name"]');
-    if (h1?.textContent) info.name = norm(h1.textContent);
+    // Name: try H1 first
+    const h1 = document.querySelector('h1');
+    const name = norm(h1?.textContent);
+    if (name) info.name = name;
 
-    if (!info.name) {
-      const t = document.title || '';
-      info.name = norm(t.replace(/\s*\|\s*Houzz.*$/i, '')) || '';
+    // Rating + total reviews (prefer the review aggregation block)
+    const aggEl = getReviewAggregationContainer();
+    if (aggEl) {
+      const agg = extractAggregationStats(aggEl);
+      if (agg.rating != null) info.rating = agg.rating;
+      if (agg.totalReviews) info.totalReviews = agg.totalReviews;
     }
 
-    // Rating + total reviews: attempt from visible text near "Reviews"
-    const bodyText = document.body?.innerText || '';
-    const ratingMatch = bodyText.match(/(\d+(?:\.\d+)?)\s*(?:out of\s*5)?\s*(?:stars?|star rating)/i);
-    if (ratingMatch) {
-      const r = parseFloat(ratingMatch[1]);
-      if (r >= 0 && r <= 5) info.rating = r;
-    } else {
-      // Some UIs have aria-label like "4.9 star rating"
-      const starEl = document.querySelector('[aria-label*="star rating" i]') || document.querySelector('[aria-label*="stars" i]');
-      const al = starEl?.getAttribute?.('aria-label') || '';
-      const m = al.match(/(\d+(?:\.\d+)?)/);
-      if (m) {
-        const r = parseFloat(m[1]);
-        if (r >= 0 && r <= 5) info.rating = r;
+    // LAST resort: scan body text for a review count (only if aggregation-based methods failed)
+    if (!info.totalReviews) {
+      // Exclude our own UI from text matching (it can contain "### reviews")
+      let bodyText = document.body?.innerText || '';
+      const ui = document.querySelector('#hzr-exporter-ui');
+      if (ui?.innerText) bodyText = bodyText.replace(ui.innerText, '');
+
+      const totalMatch =
+        bodyText.match(/([\d,]+)\s+reviews?\b/i) ||
+        bodyText.match(/Reviews?\s*\(?([\d,]+)\)?/i);
+
+      if (totalMatch) {
+        const n = parseIntSafe(totalMatch[1]);
+        if (isSaneTotalReviews(n)) info.totalReviews = n;
       }
     }
 
-    const totalMatch =
-      bodyText.match(/([\d,]+)\s+reviews?\b/i) ||
-      bodyText.match(/Reviews?\s*\(?([\d,]+)\)?/i);
-    if (totalMatch) {
-      const n = parseIntSafe(totalMatch[1]);
-      if (n > 0 && n < 5_000_000) info.totalReviews = n;
+    // Category/location (best-effort from breadcrumbs / meta)
+    const metaDesc = document.querySelector('meta[name="description"]')?.getAttribute('content');
+    if (metaDesc) {
+      // Often: "Colorado Homes & Design - ... - Denver, CO"
+      const parts = metaDesc.split(' - ').map((x) => norm(x)).filter(Boolean);
+      if (parts.length >= 2) {
+        info.location = parts[parts.length - 1] || '';
+      }
     }
 
-    // Category/location (best-effort: look for common header subtext blocks)
-    const headerTextCandidates = [
-      '[data-qa*="pro-category"]',
-      '[data-qa*="category"]',
-      '[class*="category"]',
-      '[class*="location"]',
-      '[data-qa*="location"]',
-    ];
-
-    for (const sel of headerTextCandidates) {
-      const el = document.querySelector(sel);
-      const t = norm(el?.textContent);
-      if (!t) continue;
-
-      // crude split; Houzz often shows "Category • Location"
-      if (!info.category && /[A-Za-z]/.test(t) && t.length < 80 && !/review/i.test(t)) info.category = t;
-      if (!info.location && /[A-Za-z]/.test(t) && t.length < 80 && !/review/i.test(t)) info.location = t;
+    // Category from URL path segment "professionals/<category>/..."
+    const pathParts = location.pathname.split('/').filter(Boolean);
+    const idx = pathParts.indexOf('professionals');
+    if (idx >= 0 && pathParts[idx + 1]) {
+      info.category = norm(pathParts[idx + 1].replace(/-/g, ' '));
     }
 
     return info;
   }
 
   // =========================
-  // REVIEW EXTRACTION
+  // FIND REVIEW CARDS
   // =========================
-  function parseReviewDateRaw(raw) {
-    const text = norm(raw);
-    if (!text) return { raw: '', estimated: 'unknown', timestamp: null };
+  function getReviewCards() {
+    // Houzz uses .review-item on many pages (as in saved HTML).
+    const candidates = [
+      '.review-item',
+      '[data-objid]',
+      '[class*="review-item"]',
+      '[class*="ReviewItem"]',
+      '[class*="ReviewCard"]',
+      '[data-qa*="review"]',
+    ];
 
-    // Try <time datetime="">
-    const parsed = new Date(text);
-    if (!Number.isNaN(parsed.getTime())) {
-      return { raw: text, estimated: parsed.toISOString().slice(0, 10), timestamp: parsed.getTime() };
+    for (const sel of candidates) {
+      const nodes = Array.from(document.querySelectorAll(sel));
+      if (nodes.length >= 3) return nodes;
     }
 
-    return { raw: text, estimated: 'unknown', timestamp: null };
+    // Fallback: any element that looks like a review container
+    const nodes = Array.from(document.querySelectorAll('article, li, div'));
+    return nodes.filter((n) => {
+      const t = norm(n.textContent);
+      return t.length > 120 && /helpful|read more|read less|stars/i.test(t);
+    });
   }
 
+  function getScrollableContainer() {
+    if (!CONFIG.preferInnerScrollContainer) return window;
+
+    // Houzz sometimes uses inner scroll containers for review lists.
+    const candidates = [
+      '[data-qa*="reviews" i]',
+      '[class*="reviews" i]',
+      '.reviews-wrapper',
+      '[class*="Reviews" i]',
+      '[class*="Scroll" i]',
+    ];
+
+    for (const sel of candidates) {
+      const el = document.querySelector(sel);
+      if (!el) continue;
+      const style = window.getComputedStyle(el);
+      const overflowY = style.overflowY;
+      if (!/auto|scroll/i.test(overflowY)) continue;
+      if (el.scrollHeight <= el.clientHeight + 50) continue;
+      return el;
+    }
+
+    return window;
+  }
+
+  function scrollToBottom(scroller) {
+    if (scroller === window) {
+      window.scrollTo(0, document.documentElement.scrollHeight);
+      return;
+    }
+    scroller.scrollTop = scroller.scrollHeight;
+  }
+
+  // =========================
+  // EXPAND + LOAD
+  // =========================
+  async function expandAllReadMoreButtons(opts = {}) {
+    const { onStatus, maxPasses = 12 } = opts;
+
+    let clicked = 0;
+    let passes = 0;
+
+    while (!STATE.stop && passes < maxPasses) {
+      passes++;
+
+      const btns = [...document.querySelectorAll('button[data-compid="read_more"]')];
+      if (onStatus) onStatus(`Expand All: found ${btns.length} Read More button(s)…`);
+
+      if (!btns.length) break;
+
+      for (const btn of btns) {
+        if (STATE.stop) break;
+        try {
+          btn.click();
+          clicked++;
+        } catch (_) {}
+        await sleep(CONFIG.clickDelayMs);
+      }
+
+      // Give the DOM a moment to update/remove clicked buttons
+      await sleep(60);
+    }
+
+    if (onStatus) onStatus(`Expand All: clicked ${clicked} button(s).`);
+    return { clicked, passes };
+  }
+
+  async function expandAllVisible() {
+    // Expand any "Read more" toggles inside loaded reviews.
+    // This is conservative and tries not to click random site buttons.
+
+    const cards = getReviewCards();
+    let clicks = 0;
+
+    // Prefer Houzz peekable toggle button inside each card
+    for (const card of cards) {
+      if (STATE.stop) break;
+
+      const expandButtonSelectors = [
+        'button[data-compid="read_more"]',
+        'button[data-component*="Read More" i]',
+        'button.hz-peekable__toggle',
+        'button',
+        '[role="button"]',
+        'a',
+      ];
+
+      for (const sel of expandButtonSelectors) {
+        const btns = Array.from(card.querySelectorAll(sel));
+        for (const btn of btns) {
+          const t = norm(btn.textContent);
+          if (!t) continue;
+          if (!/read more|more/i.test(t)) continue;
+          if (/read less/i.test(t)) continue;
+          try {
+            btn.click();
+            clicks++;
+            await sleep(CONFIG.clickDelayMs);
+          } catch (_) {}
+        }
+      }
+    }
+
+    if (clicks) log(`Expanded ${clicks} “Read more” toggles`);
+    return clicks;
+  }
+
+  async function loadAllReviews(onProgress) {
+    const scroller = getScrollableContainer();
+
+    STATE.noChange = 0;
+    STATE.attempt = 0;
+    STATE.lastCount = getReviewCards().length;
+
+    while (!STATE.stop && STATE.attempt < CONFIG.maxTotalLoops) {
+      STATE.attempt++;
+
+      // Expand currently visible cards (helps extract full text)
+      await expandAllVisible();
+      if (CONFIG.autoExpandReadMoreDuringLoad) {
+        await expandAllReadMoreButtons({ maxPasses: 2 });
+      }
+
+      // Scroll down
+      scrollToBottom(scroller);
+
+      await sleep(CONFIG.scrollDelayMs);
+
+      // Count loaded reviews
+      const count = getReviewCards().length;
+      if (count <= STATE.lastCount) {
+        STATE.noChange++;
+      } else {
+        STATE.noChange = 0;
+      }
+      STATE.lastCount = count;
+
+      onProgress && onProgress(count, STATE.totalEstimate, STATE.attempt, STATE.noChange);
+
+      if (STATE.noChange >= CONFIG.maxNoChangeLoops) break;
+    }
+  }
+
+  // =========================
+  // SCRAPE REVIEWS
+  // =========================
   function extractStars(card) {
-    // Try aria-labels first
-    const ariaStar =
-      card.querySelector('[aria-label*="star" i]') ||
-      card.querySelector('[role="img"][aria-label*="star" i]') ||
-      card.querySelector('[class*="star"][aria-label]');
-
-    const aria = ariaStar?.getAttribute?.('aria-label') || '';
-    let m = aria.match(/(\d+(?:\.\d+)?)/);
-    if (m) {
-      const r = parseFloat(m[1]);
-      if (r >= 0 && r <= 5) return r;
+    // Try to parse "Average rating: X out of 5 stars" from sr-only, but avoid using the aggregation one.
+    const sr = card.querySelector('.sr-only');
+    const srText = norm(sr?.textContent);
+    if (srText && /average rating/i.test(srText)) {
+      const m = srText.match(/average rating:\s*([0-9]+(?:\.[0-9]+)?)/i);
+      if (m) {
+        const n = parseFloat(m[1]);
+        if (Number.isFinite(n) && n >= 0 && n <= 5) return n;
+      }
     }
 
-    // Try counting filled stars by classes (very variable)
-    const stars = card.querySelectorAll('[class*="star"]');
-    if (stars?.length) {
-      // If there are 5 icons and some are "filled"/"active"
-      const filled = [...stars].filter((s) => /(filled|active|on)/i.test(s.className)).length;
-      if (filled >= 0 && filled <= 5) return filled || null;
-    }
-
-    // Text fallback: "5 stars"
-    const t = (card.innerText || '').match(/\b([1-5](?:\.\d)?)\s*stars?\b/i);
-    if (t) return parseFloat(t[1]);
+    // Fallback: count highlighted stars
+    const stars = card.querySelectorAll('.hz-star-rate--highlighted, .hz-star-rate--highlighted');
+    if (stars && stars.length) return Math.min(5, stars.length);
 
     return null;
   }
 
-  function extractReviewer(card) {
-    const out = { name: '', profileUrl: '', location: '' };
+  function parseReviewDateRaw(raw) {
+    const t = norm(raw);
+    if (!t) return { raw: '', estimated: 'unknown', timestamp: null };
 
-    // Name
-    const nameCandidates = [
-      '[data-qa*="reviewer" i]',
-      '[class*="reviewer" i]',
-      'a[href*="/user/"]',
-      'a[href*="/users/"]',
-      'strong',
-    ];
-
-    for (const sel of nameCandidates) {
-      const el = card.querySelector(sel);
-      const txt = norm(el?.textContent);
-      if (!txt) continue;
-      // avoid grabbing "Read more" etc
-      if (txt.length < 2) continue;
-      if (/read more|see more|more$/i.test(txt)) continue;
-
-      out.name = txt;
-      if (el?.closest('a')?.href) out.profileUrl = el.closest('a').href;
-      if (el?.tagName === 'A' && el.href) out.profileUrl = el.href;
-      break;
+    // Try ISO date in <time datetime>
+    if (/^\d{4}-\d{2}-\d{2}/.test(t)) {
+      const d = new Date(t);
+      return { raw: t, estimated: 'iso', timestamp: isNaN(d) ? null : d.getTime() };
     }
 
-    // Location (sometimes near name)
-    const locEl =
-      card.querySelector('[data-qa*="reviewer-location" i]') ||
-      card.querySelector('[class*="reviewerLocation" i]') ||
-      card.querySelector('[class*="location" i]');
-    const loc = norm(locEl?.textContent);
-    if (loc && loc.length < 80 && !/review/i.test(loc)) out.location = loc;
+    // "January 12, 2025" etc
+    const d2 = new Date(t);
+    if (!isNaN(d2)) {
+      return { raw: t, estimated: 'parsed', timestamp: d2.getTime() };
+    }
 
-    return out;
+    return { raw: t, estimated: 'unknown', timestamp: null };
+  }
+
+  function extractReviewer(card) {
+    // Prefer .hzHouzzer name within reviewer block
+    const nameEl =
+      card.querySelector('.hzHouzzer') ||
+      card.querySelector('.hz-user-name') ||
+      card.querySelector('[class*="user-name" i]') ||
+      card.querySelector('a');
+
+    const name = norm(nameEl?.textContent);
+    return name || '';
   }
 
   function extractReviewText(card) {
-    // Prefer longer text blocks
-    const candidates = [
-      '[data-qa*="review-text" i]',
-      '[class*="reviewText" i]',
-      '[class*="review-text" i]',
-      'p',
-      'div',
-    ];
+    // Common in saved HTML: .review-item__body-string
+    const bodyEl =
+      card.querySelector('.review-item__body-string') ||
+      card.querySelector('[class*="body-string" i]') ||
+      card.querySelector('[class*="ReviewText" i]') ||
+      card.querySelector('[data-qa*="reviewText" i]');
 
-    let best = '';
-    for (const sel of candidates) {
-      const els = card.querySelectorAll(sel);
-      for (const el of els) {
-        const t = norm(el?.textContent);
-        if (!t) continue;
-        // avoid UI labels
-        if (/read more|see more|helpful|report|share/i.test(t) && t.length < 40) continue;
-        if (t.length > best.length) best = t;
-      }
-      if (best.length > 120) break;
-    }
-    return best;
+    const t = norm(bodyEl?.textContent);
+    if (t && t.length > 5) return t;
+
+    // Fallback: find a big block of text inside the card
+    const text = norm(card.textContent);
+    return text;
   }
 
   function extractReviewTitle(card) {
-    // Some Houzz reviews have a short title/headline
+    // Many Houzz cards don't have explicit title; try for a bold/heading within card
     const titleCandidates = [
-      '[data-qa*="review-title" i]',
-      '[class*="reviewTitle" i]',
       'h3',
       'h4',
+      '[class*="title" i]',
+      '[data-qa*="title" i]',
+      'strong',
+      'b',
     ];
 
     for (const sel of titleCandidates) {
@@ -466,163 +526,76 @@
     const photos = extractPhotos(card);
     const response = extractProResponse(card);
 
-    // Project details (best effort from the card text)
-    const raw = card.innerText || '';
-    const projectTypeMatch = raw.match(/\bProject\s*(?:Type)?\s*[:\-]\s*(.+?)(?:\n|$)/i);
-    const projectLocationMatch = raw.match(/\bProject\s*(?:Location)?\s*[:\-]\s*(.+?)(?:\n|$)/i);
+    const helpfulEl = card.querySelector('[data-component="Like"]')?.parentElement;
+    const helpfulText = norm(helpfulEl?.textContent);
+    let helpfulCount = null;
+    if (helpfulText) {
+      const m = helpfulText.match(/Helpful\s*\(?(\d+)\)?/i);
+      if (m) helpfulCount = parseInt(m[1], 10);
+      else if (/Helpful/i.test(helpfulText)) helpfulCount = 0;
+    }
 
     return {
       review_id: makeStableReviewId(card, idx),
-      reviewer_name: reviewer.name,
-      reviewer_profile_url: reviewer.profileUrl,
-      reviewer_location: reviewer.location,
-      star_rating: stars,
+      reviewer_name: reviewer,
+      stars,
+      title,
+      review_text: text,
       review_date_raw: dateInfo.raw,
       review_date_estimated: dateInfo.estimated,
-      review_date_timestamp: dateInfo.timestamp,
-      review_title: title,
-      review_text: text,
-      review_photos: photos,
-      review_photo_count: photos.length,
-      project_type: projectTypeMatch ? norm(projectTypeMatch[1]) : '',
-      project_location: projectLocationMatch ? norm(projectLocationMatch[1]) : '',
+      review_timestamp: dateInfo.timestamp,
+      helpful_count: helpfulCount,
+      photos,
       pro_response: response,
-      has_pro_response: !!response,
-      scraped_at: new Date().toISOString(),
     };
   }
 
-  // =========================
-  // EXPAND + LOAD
-  // =========================
-  async function expandAllVisible() {
-    const cards = getReviewCards();
-    if (!cards.length) return;
-
-    let clicked = 0;
-    const texts = CONFIG.expandButtonText.map((t) => t.toLowerCase());
-    const seen = new Set();
-
-    for (const card of cards) {
-      if (STATE.stop) break;
-
-      // buttons/links inside the card that match our "expand" text
-      const clickable = [
-        ...card.querySelectorAll('button'),
-        ...card.querySelectorAll('a'),
-        ...card.querySelectorAll('[role="button"]'),
-      ];
-
-      for (const el of clickable) {
-        if (STATE.stop) break;
-        if (!el || seen.has(el)) continue;
-
-        const t = (el.textContent || '').trim().toLowerCase();
-        if (!t) continue;
-        if (!texts.some((x) => t === x || t.includes(x))) continue;
-
-        // Avoid clicking unrelated "More" in nav/menus
-        const rect = el.getBoundingClientRect();
-        if (rect.width < 20 || rect.height < 10) continue;
-
-        seen.add(el);
-        try {
-          el.click();
-          clicked++;
-          await sleep(CONFIG.clickDelayMs);
-        } catch (_) {}
-      }
-    }
-
-    if (clicked) log(`Expanded ${clicked} truncated review(s).`);
-  }
-
-  async function loadAllReviews(update) {
-    const scrollEl = findReviewsScrollContainer();
-
-    let attempts = 0;
-    let noChange = 0;
-    let lastCount = 0;
-
-    while (!STATE.stop && attempts < CONFIG.maxScrollAttempts) {
-      attempts++;
-
-      // Scroll down
-      try {
-        if (scrollEl === document.scrollingElement || scrollEl === document.documentElement || scrollEl === document.body) {
-          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-        } else {
-          scrollEl.scrollTo({ top: scrollEl.scrollHeight, behavior: 'smooth' });
-        }
-      } catch (_) {}
-
-      await sleep(CONFIG.scrollDelayMs);
-      await expandAllVisible();
-
-      const count = getReviewCards().length;
-      STATE.loadedCount = count;
-      if (update) update(count, STATE.totalEstimate, attempts, noChange);
-
-      if (count <= lastCount) {
-        noChange++;
-        if (noChange >= CONFIG.noChangeBreakCount) break;
-      } else {
-        noChange = 0;
-        lastCount = count;
-      }
-    }
-
-    // slight scroll up so the page doesn't look "stuck" at the bottom
-    try {
-      if (scrollEl !== document.scrollingElement && scrollEl !== document.documentElement && scrollEl !== document.body) {
-        scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    } catch (_) {}
-
-    log(`Load complete. Review cards detected: ${STATE.loadedCount}`);
-  }
-
-  // =========================
-  // SCRAPE + EXPORT
-  // =========================
   function scrapeAllLoadedReviews() {
     const cards = getReviewCards();
-
     const out = [];
-    const seen = new Set();
-
-    cards.forEach((card, idx) => {
+    for (let i = 0; i < cards.length; i++) {
       try {
-        const r = extractReview(card, idx);
-
-        // De-dupe key
-        const key = [
-          r.reviewer_name || '',
-          r.review_date_estimated || '',
-          r.star_rating ?? '',
-          (r.review_text || '').slice(0, 80),
-        ].join('|');
-
-        if (seen.has(key)) return;
-        seen.add(key);
-
-        out.push(r);
+        out.push(extractReview(cards[i], i));
       } catch (e) {
-        warn('Failed extracting a review:', e);
+        warn('Failed to parse review idx', i, e);
       }
-    });
-
+    }
     return out;
   }
 
+  // =========================
+  // EXPORT
+  // =========================
+  function dateStamp() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+  }
+
+  function sanitizeFilename(s) {
+    return (s || 'houzz_profile')
+      .replace(/[\\/:*?"<>|]+/g, '_')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 80);
+  }
+
+  function blobDownload(data, filename, mime) {
+    const blob = data instanceof Blob ? data : new Blob([data], { type: mime || 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+  }
+
   function buildPayload(reviews) {
+    const profile = STATE.profile || extractProfileInfo();
     return {
-      metadata: {
-        profile: STATE.profile,
-        exported_at: new Date().toISOString(),
-        review_count: reviews.length,
-        source: 'Houzz DOM scrape (client-side)',
-      },
+      exported_at: new Date().toISOString(),
+      source_url: location.href,
+      profile,
       reviews,
     };
   }
@@ -631,103 +604,85 @@
     const reviews = scrapeAllLoadedReviews();
     const payload = buildPayload(reviews);
     const name = `${sanitizeFilename(STATE.profile?.name)}_houzz_reviews_${dateStamp()}.json`;
-    blobDownload(JSON.stringify(payload, null, 2), name, 'application/json;charset=utf-8');
+    blobDownload(JSON.stringify(payload, null, 2), name, 'application/json');
   }
 
   function exportCSV() {
     const reviews = scrapeAllLoadedReviews();
-    const p = STATE.profile || {};
+    const payload = buildPayload(reviews);
 
-    const headers = [
-      'profile_name',
-      'profile_url',
-      'profile_rating',
-      'profile_total_reviews',
-      'profile_category',
-      'profile_location',
+    const rows = [];
+    const cols = [
       'review_id',
       'reviewer_name',
-      'reviewer_profile_url',
-      'reviewer_location',
-      'star_rating',
+      'stars',
+      'title',
+      'review_text',
       'review_date_raw',
       'review_date_estimated',
-      'review_title',
-      'review_text',
-      'review_photo_count',
-      'review_photos',
-      'project_type',
-      'project_location',
-      'has_pro_response',
+      'review_timestamp',
+      'helpful_count',
+      'photos',
       'pro_response_text',
-      'scraped_at',
+      'pro_response_date_raw',
     ];
+    rows.push(cols.join(','));
 
-    const rows = reviews.map((r) => ([
-      p.name || '',
-      p.url || location.href,
-      p.rating ?? '',
-      p.totalReviews ?? '',
-      p.category || '',
-      p.location || '',
-      r.review_id || '',
-      r.reviewer_name || '',
-      r.reviewer_profile_url || '',
-      r.reviewer_location || '',
-      r.star_rating ?? '',
-      r.review_date_raw || '',
-      r.review_date_estimated || '',
-      r.review_title || '',
-      r.review_text || '',
-      r.review_photo_count ?? 0,
-      (r.review_photos || []).join(' | '),
-      r.project_type || '',
-      r.project_location || '',
-      r.has_pro_response ? 'yes' : 'no',
-      r.pro_response?.response_text || '',
-      r.scraped_at || '',
-    ]));
+    for (const r of payload.reviews) {
+      const photos = Array.isArray(r.photos) ? r.photos.join(' | ') : '';
+      const proText = r.pro_response?.response_text || '';
+      const proDate = r.pro_response?.response_date_raw || '';
 
-    const csv =
-      headers.map(csvEscape).join(',') + '\n' +
-      rows.map((row) => row.map(csvEscape).join(',')).join('\n');
+      const vals = [
+        r.review_id,
+        r.reviewer_name,
+        r.stars ?? '',
+        r.title ?? '',
+        r.review_text ?? '',
+        r.review_date_raw ?? '',
+        r.review_date_estimated ?? '',
+        r.review_timestamp ?? '',
+        r.helpful_count ?? '',
+        photos,
+        proText,
+        proDate,
+      ].map((v) => {
+        const s = String(v ?? '');
+        // CSV escape
+        if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+        return s;
+      });
 
-    const name = `${sanitizeFilename(STATE.profile?.name)}_houzz_reviews_${dateStamp()}.csv`;
-    blobDownload(csv, name, 'text/csv;charset=utf-8');
-  }
-
-  function exportXLSX() {
-    if (typeof XLSX === 'undefined') {
-      alert('XLSX library not available. Use CSV export instead.');
-      return;
+      rows.push(vals.join(','));
     }
 
-    const reviews = scrapeAllLoadedReviews();
-    const p = STATE.profile || {};
+    const name = `${sanitizeFilename(STATE.profile?.name)}_houzz_reviews_${dateStamp()}.csv`;
+    blobDownload(rows.join('\n'), name, 'text/csv');
+  }
 
-    const flat = reviews.map((r) => ({
-      profile_name: p.name || '',
-      profile_url: p.url || location.href,
-      profile_rating: p.rating ?? '',
-      profile_total_reviews: p.totalReviews ?? '',
-      profile_category: p.category || '',
-      profile_location: p.location || '',
-      review_id: r.review_id || '',
-      reviewer_name: r.reviewer_name || '',
-      reviewer_profile_url: r.reviewer_profile_url || '',
-      reviewer_location: r.reviewer_location || '',
-      star_rating: r.star_rating ?? '',
-      review_date_raw: r.review_date_raw || '',
-      review_date_estimated: r.review_date_estimated || '',
-      review_title: r.review_title || '',
-      review_text: r.review_text || '',
-      review_photo_count: r.review_photo_count ?? 0,
-      review_photos: (r.review_photos || []).join(' | '),
-      project_type: r.project_type || '',
-      project_location: r.project_location || '',
-      has_pro_response: r.has_pro_response ? 'yes' : 'no',
+  // XLSX export using SheetJS if present (optional)
+  // You can paste a minified SheetJS into this script if you already do; keeping structure unchanged.
+  function exportXLSX() {
+    if (typeof XLSX === 'undefined') {
+      alert('XLSX export requires SheetJS (XLSX) to be available on the page or bundled into the script.');
+      return;
+    }
+    const reviews = scrapeAllLoadedReviews();
+    const payload = buildPayload(reviews);
+
+    const flat = payload.reviews.map((r) => ({
+      review_id: r.review_id,
+      reviewer_name: r.reviewer_name,
+      stars: r.stars ?? '',
+      title: r.title ?? '',
+      review_text: r.review_text ?? '',
+      review_date_raw: r.review_date_raw ?? '',
+      review_date_estimated: r.review_date_estimated ?? '',
+      review_timestamp: r.review_timestamp ?? '',
+      helpful_count: r.helpful_count ?? '',
+      photos: Array.isArray(r.photos) ? r.photos.join(' | ') : '',
       pro_response_text: r.pro_response?.response_text || '',
-      scraped_at: r.scraped_at || '',
+      pro_response_date_raw: r.pro_response?.response_date_raw || '',
     }));
 
     const ws = XLSX.utils.json_to_sheet(flat);
@@ -786,6 +741,7 @@
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
         <button id="hzr-run" style="cursor:pointer;border:0;border-radius:8px;padding:8px 10px;background:#1f6feb;color:#fff;font-weight:700;">Load + Export</button>
         <button id="hzr-stop" style="cursor:pointer;border:0;border-radius:8px;padding:8px 10px;background:#b42318;color:#fff;font-weight:700;">Stop</button>
+        <button id="hzr-expand" style="cursor:pointer;border:0;border-radius:8px;padding:8px 10px;background:#333;color:#fff;font-weight:700;">Expand All</button>
       </div>
 
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
@@ -809,7 +765,7 @@
 
     const setStatus = (s) => { statusEl.textContent = s; };
     const setProgress = (loaded, totalMaybe, attempt, noChange) => {
-      const total = totalMaybe && totalMaybe > 0 ? totalMaybe : null;
+      const total = isSaneTotalReviews(totalMaybe) && totalMaybe >= loaded ? totalMaybe : null;
       countEl.textContent = `Loaded: ${loaded}${total ? ` / ~${total}` : ''}  (scroll ${attempt}, no-change ${noChange})`;
       const pct = total ? Math.min(100, Math.round((loaded / total) * 100)) : Math.min(100, loaded > 0 ? 30 : 0);
       barEl.style.width = `${pct}%`;
@@ -818,15 +774,15 @@
     function refreshProfileDisplay() {
       STATE.profile = extractProfileInfo();
       const p = STATE.profile || {};
-      const rating = p.rating != null ? `⭐ ${p.rating}` : '';
-      const total = p.totalReviews ? `(${p.totalReviews} reviews)` : '';
+      const rating = isSaneRating(p.rating) ? `⭐ ${p.rating}` : '';
+      const total = isSaneTotalReviews(p.totalReviews) ? `(${p.totalReviews} reviews)` : '';
       const meta = [p.category, p.location].filter(Boolean).join(' • ');
       profEl.innerHTML = `
         <div style="font-weight:700;">${(p.name || 'Unknown profile')}</div>
         <div style="margin-top:4px;opacity:0.9;">${rating} ${total}</div>
         ${meta ? `<div style="margin-top:4px;opacity:0.85;">${meta}</div>` : ''}
       `;
-      STATE.totalEstimate = p.totalReviews || null;
+      STATE.totalEstimate = isSaneTotalReviews(p.totalReviews) ? p.totalReviews : null;
     }
 
     refreshProfileDisplay();
@@ -843,6 +799,22 @@
       STATE.stop = true;
       STATE.running = false;
       setStatus('Stopping...');
+    });
+
+    // Expand All (Read More)
+    wrap.querySelector('#hzr-expand').addEventListener('click', async () => {
+      const found = document.querySelectorAll('button[data-compid="read_more"]').length;
+      setStatus(`Expand All: found ${found} Read More button(s)…`);
+
+      try {
+        const res = await expandAllReadMoreButtons({ onStatus: setStatus });
+        const count = getReviewCards().length;
+        setProgress(count, STATE.totalEstimate, 0, 0);
+        if (!STATE.running) setStatus(`Expand All: clicked ${res.clicked} button(s).`);
+      } catch (e) {
+        warn('Expand All failed:', e);
+        setStatus('Expand All failed (see console).');
+      }
     });
 
     // Exports
@@ -888,64 +860,67 @@
         return;
       }
 
-      const finalCount = getReviewCards().length;
-      setProgress(finalCount, STATE.totalEstimate, 0, 0);
+      // Final expand pass
+      await expandAllVisible();
 
-      setStatus('Exporting JSON + CSV + XLSX…');
-      try { exportJSON(); } catch (e) { warn('JSON export failed:', e); }
-      try { exportCSV(); } catch (e) { warn('CSV export failed:', e); }
-      try { exportXLSX(); } catch (e) { warn('XLSX export failed:', e); }
+      const count = getReviewCards().length;
+      setProgress(count, STATE.totalEstimate, STATE.attempt, STATE.noChange);
 
-      setStatus(`Done. Extracted ${scrapeAllLoadedReviews().length} review(s).`);
+      setStatus(`Done. Extracted ${count} review container(s).`);
+
+      // Auto-export JSON after load (existing behavior)
+      try {
+        exportJSON();
+        setStatus(`Done. Exported ${count} review(s) to JSON.`);
+      } catch (e) {
+        warn('Export failed', e);
+        setStatus('Loaded, but export failed (see console).');
+      }
+
       STATE.running = false;
     });
-
-    // Initial hidden state
-    if (GM_getValue('uiHiddenHouzz', false)) wrap.style.display = 'none';
 
     return { setStatus, setProgress, refreshProfileDisplay };
   }
 
   // =========================
-  // MENU COMMANDS
+  // INIT
   // =========================
-  GM_registerMenuCommand('Houzz: Load reviews (scroll + expand)', async () => {
-    if (STATE.running) return;
-    STATE.stop = false;
-    STATE.running = true;
-    STATE.profile = extractProfileInfo();
-    await loadAllReviews();
-    STATE.running = false;
-    alert(`Load done. Review cards detected: ${getReviewCards().length}`);
-  });
+  function init() {
+    const uiHidden = GM_getValue('uiHiddenHouzz', false);
+    const ui = makeUI();
+    if (uiHidden) document.querySelector('#hzr-exporter-ui').style.display = 'none';
 
-  GM_registerMenuCommand('Houzz: Export JSON (loaded only)', () => {
-    STATE.profile = extractProfileInfo();
-    exportJSON();
-  });
+    // Menu command for quick action
+    GM_registerMenuCommand('Houzz Exporter: Load reviews (JSON)', async () => {
+      if (STATE.running) return;
+      STATE.stop = false;
+      STATE.running = true;
 
-  GM_registerMenuCommand('Houzz: Export CSV (loaded only)', () => {
-    STATE.profile = extractProfileInfo();
-    exportCSV();
-  });
+      ui.refreshProfileDisplay();
 
-  GM_registerMenuCommand('Houzz: Export XLSX (loaded only)', () => {
-    STATE.profile = extractProfileInfo();
-    exportXLSX();
-  });
+      const initial = getReviewCards().length;
+      ui.setProgress(initial, STATE.totalEstimate, 0, 0);
 
-  GM_registerMenuCommand('Houzz: Copy JSON (loaded only)', () => {
-    STATE.profile = extractProfileInfo();
-    copyJSONToClipboard();
-  });
+      ui.setStatus('Loading reviews (scrolling + expanding)…');
+      await loadAllReviews(ui.setProgress);
 
-  // =========================
-  // BOOT
-  // =========================
-  function boot() {
-    makeUI();
-    log('Ready. Open a Houzz page with visible reviews, then export.');
+      if (STATE.stop) {
+        ui.setStatus('Stopped.');
+        STATE.running = false;
+        return;
+      }
+
+      await expandAllVisible();
+
+      const count = getReviewCards().length;
+      ui.setProgress(count, STATE.totalEstimate, STATE.attempt, STATE.noChange);
+      ui.setStatus(`Done. Exporting ${count} reviews…`);
+      exportJSON();
+      ui.setStatus(`Done. Exported ${count} review(s).`);
+      STATE.running = false;
+    });
   }
 
-  setTimeout(boot, 1200);
+  init();
 })();

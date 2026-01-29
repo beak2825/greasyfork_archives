@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Nitro Type - Racing Accuracy Alt Metric
-// @version      0.1.1
+// @version      0.2.0
 // @description  Changes the Accuracy score based on errors against the whole typing test.
 // @author       Toonidy
 // @match        *://*.nitrotype.com/race
@@ -64,21 +64,23 @@ server.on("status", (e) => {
 
     server.on("update", refreshAccuracy)
 
-    const originalSendPlayerUpdate = server.sendPlayerUpdate
-    server.sendPlayerUpdate = (data) => {
-        originalSendPlayerUpdate(data)
+    const originalIncrementTyped = reactObj.incrementTyped
+    reactObj.incrementTyped = (data) => {
+        originalIncrementTyped(data)
+
+        skipped = reactObj.typedStats.skipped
+        errors = reactObj.typedStats.errors
+
         let canRefresh = false
-        if (typeof data.s === "number") {
-            skipped = data.s
-            canRefresh = !!errors
+        if (typeof data.skipped === "number") {
+            canRefresh = errors > 0
         }
-        if (typeof data.e === "number") {
-            errors = data.e
+        if (typeof data.error === "number") {
             canRefresh = true
         }
+
         if (canRefresh) {
             refreshAccuracy()
         }
     }
 })
-

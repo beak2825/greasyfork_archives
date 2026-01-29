@@ -2,7 +2,7 @@
 // @name         Embedded YouTube fix
 // @description  this monitors and auto-refreshes crashed embedded YouTube players in the background for a seamless viewing experience
 // @namespace    https://htsign.hateblo.jp
-// @version      0.4.2
+// @version      0.4.3
 // @author       htsign
 // @match        *://*/*
 // @match        https://www.youtube.com/embed/*
@@ -42,6 +42,11 @@
 
       const iframe = Array.prototype.find.call(iframes, el => el.contentWindow === source);
       if (iframe == null) return;
+
+      if (!iframe.hasAttribute('referrerpolicy')) {
+        iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        return;
+      }
 
       const url = new URL(iframe.src);
 

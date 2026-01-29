@@ -1,17 +1,16 @@
 // ==UserScript==
-// @name         [USING] Torn Armory Cleaner
+// @name         Torn Armory Cleaner
 // @namespace    http://tampermonkey.net/
-// @version      2.3
-// @description  Batch disposal cleaner. Features "Keep Best", "Exclude RW", Smart "Tricky Items" settings, and manual scroll. // 11/01/2026
+// @version      2.4
+// @description  Batch disposal cleaner. Fixed for 2026 Layout. Features "Keep Best", "Exclude RW", Smart "Tricky Items" settings.
 // @author       LOKaa [2834316]
 // @match        https://www.torn.com/factions.php?step=your*
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @license MIT
-
-// @downloadURL https://update.greasyfork.org/scripts/562282/%5BUSING%5D%20Torn%20Armory%20Cleaner.user.js
-// @updateURL https://update.greasyfork.org/scripts/562282/%5BUSING%5D%20Torn%20Armory%20Cleaner.meta.js
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/562282/Torn%20Armory%20Cleaner.user.js
+// @updateURL https://update.greasyfork.org/scripts/562282/Torn%20Armory%20Cleaner.meta.js
 // ==/UserScript==
 
 (function() {
@@ -148,10 +147,14 @@
 
     // --- Helpers ---
 
+    // FIX: Updated to look for the currently visible tab panel using aria-hidden
     function getActiveTabSelector() {
-        if (document.querySelector('#armoury-weapons') && document.querySelector('#armoury-weapons').style.display !== 'none') return '#armoury-weapons';
-        if (document.querySelector('#armoury-armour') && document.querySelector('#armoury-armour').style.display !== 'none') return '#armoury-armour';
-        if (document.querySelector('#armoury-temporary') && document.querySelector('#armoury-temporary').style.display !== 'none') return '#armoury-temporary';
+        const activeTab = document.querySelector('#faction-armoury-tabs > .ui-tabs-panel[aria-hidden="false"]');
+        if (activeTab) {
+            // We return a CSS selector string that targets this specific element
+            // We use the ID but escape the special chars, or just use the aria selector which is safer
+            return '#faction-armoury-tabs > .ui-tabs-panel[aria-hidden="false"]';
+        }
         return null;
     }
 
@@ -182,11 +185,12 @@
             let isTricky = trickyList.includes(name);
 
             // 1. Check Visual Glow (Gold/Orange/Red is ALWAYS special/RW)
-            const imgWrap = li.querySelector('.img-wrap');
-            if (imgWrap) {
-                if (imgWrap.classList.contains('glow-yellow') ||
-                    imgWrap.classList.contains('glow-orange') ||
-                    imgWrap.classList.contains('glow-red')) {
+            // FIX: The glow class is now on the IMG tag, not the .img-wrap
+            const imgEl = li.querySelector('.img-wrap img');
+            if (imgEl) {
+                if (imgEl.classList.contains('glow-yellow') ||
+                    imgEl.classList.contains('glow-orange') ||
+                    imgEl.classList.contains('glow-red')) {
                     isRW = true;
                 }
             }
@@ -414,9 +418,6 @@
                 parsed = JSON.parse(raw);
             } catch (e) {
                 // Attempt 2: Smart Recovery
-                // User might have messed up syntax or used simple list.
-                // We split by newline, then strip standard JSON syntax chars (brackets, quotes, commas)
-                // This converts `["Item",` or `Item,` or `[Item]` into just `Item`
                 parsed = raw.split('\n')
                     .map(line => line.replace(/[\[\]",]/g, '').trim())
                     .filter(line => line.length > 0);
@@ -484,7 +485,7 @@
     function init() {
         const target = document.getElementById('faction-armoury-tabs');
         if (target) {
-            observer.observe(target, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class', 'aria-expanded'] });
+            observer.observe(target, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class', 'aria-expanded', 'aria-hidden'] });
             buildDashboard();
         } else {
             setTimeout(init, 500);

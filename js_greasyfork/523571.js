@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TwitchTranslate
 // @namespace    MrSelenix
-// @version      1.0.9
+// @version      1.0.10
 // @description  Automatically translates messages in Twitch chat to other languages.
 // @author       MrSelenix
 // @match        https://www.twitch.tv/*
@@ -155,7 +155,7 @@
     setInterval(reset, 1000);
 
     function reset() {
-        if (!document.querySelector('div[data-a-player-type="site"]')) {
+        if (!document.querySelector('div[data-a-player-type="site"]') && !window.location.href.includes("chat?popout=") && !document.querySelector('div[data-a-player-type="dashboard"]')) {
             prev = null;
             return
         }
@@ -171,6 +171,13 @@
         else if (document.querySelector('h1.tw-title')) {
             if (("https://www.twitch.tv/" + document.querySelector('h1.tw-title').textContent.toLowerCase()) !== prev) {
                 prev = ("https://www.twitch.tv/" + document.querySelector('h1.tw-title').textContent.toLowerCase());
+                initialize();
+                messageExtraction();
+            }
+        }
+        else if (document.querySelector('[data-test-selector="chat-room-header-label"]')) {
+            if (prev !== ("https://www.twitch.tv/popout/" + document.title.split(" ")[0].toLowerCase())) {
+                prev = ("https://www.twitch.tv/popout/" + document.title.split(" ")[0].toLowerCase());
                 initialize();
                 messageExtraction();
             }

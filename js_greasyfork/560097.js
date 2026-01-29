@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Holotower TS
 // @namespace    Holotower-TS
-// @version      2.1
+// @version      2.1.1
 // @author       Anonymous
 // @license      MIT
 // @description  Adds various features to Holotower
@@ -1154,7 +1154,8 @@
         font-size: 13px;
       }
       div.boardlist.fixed {
-      position: fixed !important;
+        position: fixed !important;
+        margin-top: 0;
         box-shadow: -5px 1px 10px rgba(0, 0, 0, 0.20) !important;
         border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent) !important;
       }
@@ -1184,7 +1185,8 @@
         margin-top: 0;
       }
       :where(.desktop-floating-mode) :where(.boardlist:nth-child(1)),
-      :where(html:not(.desktop-style) .boardlist:nth-child(1)) {
+      :where(html:not(.desktop-style) .boardlist:nth-child(1)),
+      :where(.boardlist.fixed) {
         position: static;
         top: 0;
         left: 0;
@@ -3707,12 +3709,12 @@
 
     const icon = document.createElement('i');
     icon.className = 'fa fa-caret-down';
+    icon.style.cssText = 'margin: 0px 6px;';
     toggle.appendChild(icon);
 
     const menu = document.createElement('div');
     menu.className = 'hb-menu';
 
-    optionsLink.style.marginRight = '4px';
     boardlist.insertBefore(menu, optionsLink);
     boardlist.insertBefore(toggle, optionsLink);
 

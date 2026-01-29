@@ -3,7 +3,7 @@
 // @name:ja      Amazonレビュー信頼度判定 & 無限スクロール (サクラ識別/品質チェック)
 // @name:en      Amazon Reviewer Trust Badge & Infinite Scroll (Quality Check)
 // @namespace    https://github.com/koyasi777/amazon-review-trust-badge
-// @version      1.6.9
+// @version      1.7.1
 // @description  Amazonのレビュアー投稿履歴を分析し、信頼度をS〜Dランクで視覚化（サクラ/やらせ/バイアス検出＆詳細レポート）。信頼度フィルタリング機能や、レビュー一覧の無限スクロール化も提供します。
 // @description:ja  Amazonのレビュアー投稿履歴を分析し、信頼度をS〜Dランクで視覚化（サクラ/やらせ/バイアス検出＆詳細レポート）。信頼度フィルタリング機能や、レビュー一覧の無限スクロール化も提供します。
 // @description:en Visualizes the reliability of Amazon reviewers (detects suspicious behavior/bias) and enables infinite scrolling for review pages.
@@ -14,7 +14,7 @@
 // @exclude      https://www.amazon.co.jp/gp/buy/*
 // @exclude      https://www.amazon.co.jp/ap/*
 // @exclude      https://www.amazon.co.jp/gp/help/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.co.jp
+// @icon         https://raw.githubusercontent.com/koyasi777/amazon-review-trust-badge/refs/heads/main/icons/icon.png
 // @supportURL   https://github.com/koyasi777/amazon-review-trust-badge/issues
 // @connect      amazon.co.jp
 // @connect      www.amazon.co.jp
@@ -38,7 +38,7 @@
     // =============================================================================
     const CONFIG = {
         APP_NAME: 'TrustBadge',
-        VERSION: '1.6.9',
+        VERSION: '1.7.1',
         CACHE: { PREFIX: 'tr4:', TTL_SUCCESS: 604800000, TTL_FAIL: 86400000 },
         NETWORK: {
             MIN_INTERVAL: 2400,
@@ -956,8 +956,12 @@
 
                 // ▼ Context Tag Injection ▼
                 let ctxConf = null;
-                if (context.isVine) ctxConf = CONFIG.TEXT.CONTEXT.VINE;
-                else if (!context.isVP) ctxConf = CONFIG.TEXT.CONTEXT.NON;
+
+                if (context.isVine) {
+                    ctxConf = null;
+                } else if (!context.isVP) {
+                    ctxConf = CONFIG.TEXT.CONTEXT.NON;
+                }
 
                 if (ctxConf) {
                     tags.unshift({
@@ -1261,82 +1265,99 @@
         },
 
         scan() {
-            // プロフィールリンクを持つ要素を取得
-            const profiles = document.querySelectorAll('.review .a-profile, .review-card .a-profile, .celwidget .a-profile, [data-hook="genome-widget"] .a-profile');
+            // モーダル対応のセレクタを含めて取得（レビューリスト、カード、ウィジェット、モーダル）
+            const selector = '.review .a-profile, .review-card .a-profile, .celwidget .a-profile, [data-hook="genome-widget"] .a-profile, [data-reviewbind="ProfileBlock"] .a-profile';
+            const profiles = document.querySelectorAll(selector);
 
             profiles.forEach(p => {
-                if (p.dataset.tb || !p.href) return;
-                p.dataset.tb = '1';
+                // 既に処理済み(tb=1)ならスキップ
+                if (p.dataset.tb === '1') return;
 
+                // hrefがない、または "javascript" で始まる（ロード前/無効）場合は
+                // 処理済みにせずスキップ（後で有効なリンクになった時に再検知させるため）
+                if (!p.href || p.href.includes('javascript')) return;
+
+                // URLからユーザーID抽出
                 const m = p.href.match(/amzn1\.account\.[A-Z0-9]+/);
+
                 if (m) {
+                    // IDが見つかった場合のみ「処理済み」としてマーク
+                    p.dataset.tb = '1';
+
                     const name = p.querySelector('.a-profile-name');
                     if (name) {
                         // ---------------------------------------------------------
-                        // 1. コンテナ探索ロジックの強化 (Desktop & Mobile 対応)
+                        // 1. コンテナ探索 (Desktop / Mobile / Modal 対応)
                         // ---------------------------------------------------------
                         let reviewContainer = p.closest('div.review, li.review, div.review-card');
 
-                        // モバイル対応: プロフィールとレビュー本文が兄弟要素の場合、共通の親(mobley-review-content)を探す
+                        // Mobile対応: プロフィールと本文が兄弟要素の場合
                         if (!reviewContainer) {
                             reviewContainer = p.closest('[data-hook="mobley-review-content"]');
                         }
-                        // 最終手段: 直近のLI要素またはcelwidgetの親を探す
+
+                        // Modal対応: サイドパネル全体をコンテナとみなす
+                        if (!reviewContainer) {
+                            reviewContainer = p.closest('.a-section') || p.closest('[data-reviewbind="ProfileBlock"]')?.parentElement;
+                        }
+
+                        // 最終手段: リストアイテムやWidget全体
                         if (!reviewContainer) {
                             reviewContainer = p.closest('li[role="listitem"]') || p.closest('.celwidget');
                         }
 
+                        // コンテナが見つからなければ解析不能なのでスキップ
+                        if (!reviewContainer) return;
+
+                        // ---------------------------------------------------------
+                        // 2. 判定ロジック (DOM属性 & テキスト検索)
+                        // ---------------------------------------------------------
                         let isVine = false;
                         let isVP = false;
 
-                        if (reviewContainer) {
-                            // ---------------------------------------------------------
-                            // 2. 判定ロジックの強化 (DOM属性 & テキスト検索)
-                            // ---------------------------------------------------------
-
-                            // A. Amazonで購入 (VP) 判定
-                            // Desktop: avp-badge, avp-badge-linkless
-                            // Mobile: msrp-avp-badge-linkless
-                            const vpBadgeNode = reviewContainer.querySelector('span[data-hook*="avp-badge"]');
-                            if (vpBadgeNode) {
+                        // --- A. Amazonで購入 (VP) 判定 ---
+                        // 優先度1: バッジフック (Desktop/Mobile)
+                        if (reviewContainer.querySelector('span[data-hook*="avp-badge"]')) {
+                            isVP = true;
+                        }
+                        // 優先度2: フォーマットストリップ内のテキスト
+                        else if ((reviewContainer.querySelector('.review-format-strip')?.textContent || '').includes('Amazonで購入')) {
+                            isVP = true;
+                        }
+                        // 優先度3: 特定クラスのテキスト (Mobile等)
+                        else if (reviewContainer.querySelector('.a-color-state.a-text-bold')?.textContent.trim() === 'Amazonで購入') {
+                            isVP = true;
+                        }
+                        // 優先度4: モーダル専用バッジ (data-reviewbind内)
+                        else {
+                            const modalBadge = reviewContainer.querySelector('[data-reviewbind="ProfileBadge"]');
+                            if (modalBadge && modalBadge.textContent.includes('Amazonで購入')) {
                                 isVP = true;
-                            } else {
-                                // フォールバック: ストリップテキスト内の確認
-                                const badgeText = reviewContainer.querySelector('.review-format-strip')?.textContent || '';
-                                if (badgeText.includes('Amazonで購入')) isVP = true;
-                                // モバイルのテキスト直書きパターンへの対応
-                                if (!isVP) {
-                                    // a-color-state a-text-bold クラスを持つ要素(VPバッジのスタイル)の中身をチェック
-                                    const stateText = reviewContainer.querySelector('.a-color-state.a-text-bold')?.textContent.trim();
-                                    if (stateText === 'Amazonで購入') isVP = true;
-                                }
-                            }
-
-                            // B. Vine (無償提供) 判定
-                            // 特定のバッジフックがない場合が多いため、テキスト含有チェックを行う
-                            // ただし、レビュー本文(review-body)内の引用等は除外したいが、
-                            // モバイルは構造がフラットなため、コンテナ全体のテキストから"Vine"関連の文言を探すのが最も確実。
-                            // 誤爆を防ぐため、特定のクラス（緑色のテキストなど）を優先してチェックする。
-
-                            const vineBadgeElement = reviewContainer.querySelector('.a-color-success'); // 緑色のテキスト
-                            if (vineBadgeElement && (vineBadgeElement.textContent.includes('Vine') || vineBadgeElement.textContent.includes('無料'))) {
-                                isVine = true;
-                            } else {
-                                // 汎用テキストチェック（ヘッダー付近にあることを期待）
-                                const fullText = reviewContainer.textContent;
-                                if (fullText.includes('Vine先取り') || fullText.includes('Vine Customer Review')) {
-                                    isVine = true;
-                                }
                             }
                         }
 
-                        // プロフィール情報の取得
+                        // --- B. Vine (無償提供) 判定 ---
+                        const vineBadgeElement = reviewContainer.querySelector('.a-color-success');
+                        // 緑色のテキストで "Vine" または "無料" を含むかチェック
+                        if (vineBadgeElement && (vineBadgeElement.textContent.includes('Vine') || vineBadgeElement.textContent.includes('無料'))) {
+                            isVine = true;
+                        } else {
+                            // コンテナ全体のテキストから判定 (ヘッダー付近にあることを期待)
+                            const fullText = reviewContainer.textContent;
+                            if (fullText.includes('Vine先取り') || fullText.includes('Vine Customer Review')) {
+                                isVine = true;
+                            }
+                        }
+
+                        // ---------------------------------------------------------
+                        // 3. UI描画
+                        // ---------------------------------------------------------
                         const userName = name.textContent.trim();
                         const imgNode = p.querySelector('.a-profile-avatar img');
 
-                        // data-srcを優先し、grey-pixel(読み込み前画像)を除外する
+                        // プレースホルダー画像(grey-pixel)を除外し、実画像を優先取得
                         let rawImg = (imgNode && (imgNode.getAttribute('data-src') || imgNode.getAttribute('src'))) || '';
-                        if (rawImg.includes('grey-pixel')) rawImg = ''; // プレースホルダーなら破棄
+                        if (rawImg.includes('grey-pixel')) rawImg = '';
 
                         const userImg = rawImg || 'https://images-fe.ssl-images-amazon.com/images/S/amazon-avatars-global/default._CR0,0,1024,1024_SX48_.png';
 

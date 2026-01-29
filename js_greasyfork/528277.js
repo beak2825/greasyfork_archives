@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         TC Bootlegging Plus v2
 // @namespace   DieselBladeScripts
-// @version      0.95
+// @version      0.95.1
 // @description  Tools to help with Bootlegging
 // @license     GPLv3
 // @author       DieselBlade [1701621], Hemicopter [2780600]
-// @match        https://www.torn.com/loader.php?sid=crimes*
-// @match        https://torn.com/loader.php?sid=crimes*
+// @match        https://www.torn.com/page.php?sid=crimes*
+// @match        https://torn.com/page.php?sid=crimes*
 // @grant        unsafeWindow
 // @run-at       document-start
 // @grant        GM_xmlhttpRequest

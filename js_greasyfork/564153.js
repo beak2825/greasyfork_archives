@@ -2,7 +2,7 @@
 // @name         Subject Cheeser
 // @namespace    LA
 // @license      MIT
-// @version      2.0.4
+// @version      2.0.5
 // @description  cheese
 // @author       Azie
 // @match        https://app.subject.com/lti/enrollments/*
@@ -146,7 +146,7 @@
 
         const questions = form.firstElementChild.children;
 
-        for (const i = 0; i < questions.length; i++) {
+        for (let i = 0; i < questions.length; i++) {
             const question = questions[i];
             const questionId = question.id;
 

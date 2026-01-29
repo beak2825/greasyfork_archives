@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         B站一键备注 Rev
+// @name         【有bug建议先用作者的原先版本】B站一键备注 Rev
 // @namespace    https://github.com/kaixinol
 // @icon         https://www.bilibili.com/favicon.ico
-// @version      2.2.1
+// @version      2.2.2
 // @license      AGPL-3.0-or-later
 // @description  Bilibili一键备注用户 | B站备注功能
 // @author       pxoxq
@@ -15,8 +15,8 @@
 // @exclude      https://message.bilibili.com/*
 // ↑暂时移出……
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/563444/B%E7%AB%99%E4%B8%80%E9%94%AE%E5%A4%87%E6%B3%A8%20Rev.user.js
-// @updateURL https://update.greasyfork.org/scripts/563444/B%E7%AB%99%E4%B8%80%E9%94%AE%E5%A4%87%E6%B3%A8%20Rev.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563444/%E3%80%90%E6%9C%89bug%E5%BB%BA%E8%AE%AE%E5%85%88%E7%94%A8%E4%BD%9C%E8%80%85%E7%9A%84%E5%8E%9F%E5%85%88%E7%89%88%E6%9C%AC%E3%80%91B%E7%AB%99%E4%B8%80%E9%94%AE%E5%A4%87%E6%B3%A8%20Rev.user.js
+// @updateURL https://update.greasyfork.org/scripts/563444/%E3%80%90%E6%9C%89bug%E5%BB%BA%E8%AE%AE%E5%85%88%E7%94%A8%E4%BD%9C%E8%80%85%E7%9A%84%E5%8E%9F%E5%85%88%E7%89%88%E6%9C%AC%E3%80%91B%E7%AB%99%E4%B8%80%E9%94%AE%E5%A4%87%E6%B3%A8%20Rev.meta.js
 // ==/UserScript==
 /* 颜色常量与类常量保持不变（便于后续维护、避免破坏逻辑） */
 const BPINK = "#FB7299";

@@ -4,7 +4,7 @@
 // @match        https://www.lingq.com/*
 // @match        https://www.youtube-nocookie.com/*
 // @match        https://www.youtube.com/embed/*
-// @version      9.9.0
+// @version      9.9.3
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       GM_xmlhttpRequest
@@ -466,8 +466,9 @@
         }
     }
     
-    function smoothScrollTo(element, to, duration) {
-        const start = element.scrollTop;
+    function smoothScrollTo(element, to, duration, isHorizontal = false) {
+        const scrollProp = isHorizontal ? "scrollLeft" : "scrollTop";
+        const start = element[scrollProp];
         const change = to - start;
         const startTime = performance.now();
         
@@ -483,12 +484,12 @@
             const progress = Math.min(elapsedTime / duration, 1);
             const easedProgress = easeInOutCubic(progress);
             
-            element.scrollTop = start + change * easedProgress;
+            element[scrollProp] = start + change * easedProgress;
             
             if (elapsedTime < duration) {
                 requestAnimationFrame(animateScroll);
             } else {
-                element.scrollTop = to;
+                element[scrollProp] = to;
             }
         }
         
@@ -1076,7 +1077,7 @@
         
         const body = {
             model: model,
-            temperature: 0.5,
+            temperature: 1.0,
             messages: history
         };
         if (provider === "google" && (model.includes("2.5") || model.includes("3"))) body.reasoning_effort = "none";
@@ -1131,7 +1132,7 @@
         
         const body = {
             model: model,
-            temperature: 0.5,
+            temperature: 1.0,
             messages: history,
             stream: true
         };
@@ -3428,7 +3429,7 @@
                     color: var(--font-color);
                     line-height: normal;
                     margin-bottom: 20px;
-                    height: 200px;
+                    max-height: 200px;
                     overflow-y: scroll;
                     resize: vertical;
                     flex-direction: column;
@@ -3681,7 +3682,7 @@
             /*make prev/next page buttons compact*/
     
             .reader-component {
-                grid-template-columns: ${isPageMode ? "1.5rem" : "0"} 1fr ${isPageMode ? "1.5rem" : "0"} !important;
+                grid-template-columns: ${isPageMode ? "2rem" : "0"} 1fr ${isPageMode ? "2rem" : "0"} !important;
             }
     
             .reader-component > :is(.nav--left, .nav--right) {
@@ -3709,6 +3710,7 @@
                 float: left !important;
                 max-width: unset !important;
                 columns: ${isPageMode ? "100vw auto" : "unset"} !important;
+                overflow-x: ${isPageMode ? "auto" : "unset"} !important;
                 overflow-y: ${isPageMode ? "visible" : "scroll"} !important;
                 height: ${isPageMode ? "100vh" : "100%"} !important;
             }
@@ -4106,10 +4108,24 @@
             
             function setupSentenceFocus(readerContainer) {
                 function focusPlayingSentence(playingSentence) {
-                    const scrolling_div = document.querySelector(".reader-container");
-                    const offsetTop = playingSentence.parentElement.matches(".has-translation") ? playingSentence.parentElement.offsetTop : playingSentence.offsetTop;
-                    const targetScrollTop = offsetTop + Math.floor(playingSentence.offsetHeight / 2) - Math.floor(scrolling_div.offsetHeight / 2);
-                    smoothScrollTo(scrolling_div, targetScrollTop, 300);
+                    const isPageMode = settings.usePageMode;
+                    const wrapper = document.querySelector(".reader-container-wrapper");
+                    const container = document.querySelector(".reader-container");
+                    
+                    const verticalTarget = isPageMode ? wrapper : container;
+                    if (!verticalTarget || !container) return;
+                    
+                    const offsetTop = playingSentence.parentElement.matches(".has-translation")
+                        ? playingSentence.parentElement.offsetTop
+                        : playingSentence.offsetTop;
+                    
+                    const containerHalfWidth = Math.floor(verticalTarget.offsetHeight / 2);
+                    const targetScrollTop = offsetTop + Math.floor(playingSentence.offsetHeight / 2) - containerHalfWidth;
+                    smoothScrollTo(verticalTarget, targetScrollTop, 300);
+                    
+                    if (isPageMode) {
+                        smoothScrollTo(container, playingSentence.offsetLeft, 300, true);
+                    }
                 }
                 
                 const observer = new MutationObserver((mutations) => {
@@ -4152,7 +4168,16 @@
                                 style: "position: relative;",
                                 innerHTML: quickSummary
                             });
-
+                            
+                            const closeButton = createElement("button", {
+                                className: "close-summary-btn",
+                                textContent: "✕",
+                                title: "Close Summary",
+                                style: "position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.2rem; color: var(--font-color); opacity: 0.5; cursor: pointer;"
+                            });
+                            closeButton.addEventListener("click", () => {summaryElement.remove()});
+                            summaryElement.prepend(closeButton);
+                            
                             changeScrollAmount(".quick-summary", 0.2);
                             summaryElement.addEventListener('wheel', (event) => event.stopPropagation());
                             node.parentNode.prepend(summaryElement);
@@ -4191,20 +4216,30 @@
                     ".reader-component .nav--right a"
                 ];
                 
+                function resetScroll() {
+                    setTimeout(() => {
+                        const wrapper = document.querySelector(".reader-container-wrapper");
+                        const container = document.querySelector(".reader-container");
+                        
+                        if (wrapper) wrapper.scrollTop = 0;
+                        if (container) container.scrollLeft = 0;
+                    }, 150);
+                }
+                
+                // Click event
                 navSelectors.forEach((selector) => {
                     waitForElement(selector, 5000).then((button) => {
                         if (!button) return;
-                        
-                        button.addEventListener("click", () => {
-                            setTimeout(() => {
-                                const wrapper = document.querySelector(".reader-container-wrapper");
-                                if (wrapper) {
-                                    wrapper.scrollTop = 0;
-                                }
-                            }, 150);
-                        });
+                        button.addEventListener("click", resetScroll);
                     });
                 });
+                
+                // Keyboard shortcut event (Shift + Arrow keys)
+                window.addEventListener("keydown", (event) => {
+                    if (event.shiftKey && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+                        resetScroll();
+                    }
+                }, true);
             }
             
             const observer = new MutationObserver(function (mutations) {

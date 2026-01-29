@@ -4,9 +4,9 @@
 // @namespace    https://github.com/ChuwuYo
 // @homepageURL  https://github.com/ChuwuYo/misc-files/blob/main/userscripts/HTML%20Content%20to%20Markdown.user.js
 // @supportURL   https://github.com/ChuwuYo/misc-files/issues
-// @version      0.1.3
-// @description  Convert selected HTML Content to Markdown with filtering
-// @description:zh 将选定的HTML内容转换为Markdown（规则过滤）
+// @version      0.2.0
+// @description  Convert selected HTML Content to Markdown
+// @description:zh 将选定的HTML内容转换为Markdown
 // @author       ChuwuYo
 // @match        *://*/*
 // @grant        GM_addStyle
@@ -21,7 +21,6 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/@guyplusplus/turndown-plugin-gfm/dist/turndown-plugin-gfm.js
 // @license      AGPL-3.0
-// @TODO         1.消息国际化 zh-cn/en-us
 // @downloadURL https://update.greasyfork.org/scripts/541987/HTML%20Content%20to%20Markdown.user.js
 // @updateURL https://update.greasyfork.org/scripts/541987/HTML%20Content%20to%20Markdown.meta.js
 // ==/UserScript==
@@ -60,8 +59,7 @@
     };
 
     // --- User-Provided Config (can be empty) ---
-    const shortCutUserConfig = { /* Example: "Key": "s" */ };
-    const filterUserConfig = { /* Example: removeTags: ['script', 'style', 'header'] */ };
+    const shortCutUserConfig = {};
 
     // --- Global Variables ---
     let isSelecting = false;
@@ -70,6 +68,44 @@
     let selectedElements = [];
     let shortCutConfig;
     let filterConfig;
+    const _langs = (Array.isArray(navigator.languages) && navigator.languages.length ? navigator.languages : [navigator.language]).map(l => (l || '').toLowerCase());
+    const lang = _langs.some(l => l.includes('zh')) ? 'zh' : 'en';
+    const I18N = {
+        en: {
+            singleTip: '<b>Single-Select</b><br>Use mouse/arrows. <b>Click</b> to convert.<br>Press <b>Shift</b> to Multi-Select.<br><b>Esc</b> cancel, <b>Enter</b> convert.',
+            multiTip: () => `<b>Multi-Select (${selectedElements.length} selected)</b><br><b>Click</b> adds/removes.<br>Press <b>Shift</b> to toggle mode.<br><b>Enter</b> convert, <b>Esc</b> cancel.`,
+            noElement: 'No element selected.',
+            noContent: 'Selected elements have no valid content',
+            copy: 'Copy to clipboard',
+            copied: 'Copied!',
+            download: 'Download as MD',
+            startSelection: 'Start Selection',
+            reset: 'Reset to Default',
+            resetConfirm: 'Reset settings to default?',
+            resetDone: 'Settings reset. The page will refresh.',
+            gfmError: '[HTML to MD] Error: GFM plugin failed to load. Some Markdown features might not work correctly.',
+            markedError: '[HTML to MD] Error: Markdown preview library (Marked) failed to load.',
+            configErrorAlert: 'Error loading script configuration. Using default settings. Please check console for details.',
+            processError: 'Error processing selection. Check console for details.'
+        },
+        zh: {
+            singleTip: '<b>单选模式</b><br>使用鼠标/方向键导航。<b>点击</b>直接转换。<br>按 <b>Shift</b> 开启多选。<br><b>Esc</b> 取消，<b>Enter</b> 转换。',
+            multiTip: () => `<b>多选模式（已选 ${selectedElements.length}）</b><br><b>点击</b>添加/移除。<br>按 <b>Shift</b> 切换模式。<br><b>Enter</b> 转换，<b>Esc</b> 取消。`,
+            noElement: '未选择任何元素。',
+            noContent: '所选元素没有有效内容',
+            copy: '复制到剪贴板',
+            copied: '已复制！',
+            download: '下载为 MD',
+            startSelection: '开始选择',
+            reset: '重置为默认',
+            resetConfirm: '确定要重置为默认设置吗？',
+            resetDone: '配置已重置！页面将刷新。',
+            gfmError: '[HTML to MD] 错误：GFM 插件加载失败，部分 Markdown 功能可能不可用。',
+            markedError: '[HTML to MD] 错误：Marked 预览库加载失败。',
+            configErrorAlert: '加载配置出错，已使用默认设置。详情请查看控制台。',
+            processError: '处理选择内容时出错，请查看控制台。'
+        }
+    };
 
     const closeButtonSvgIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M2.343 13.657A8 8 0 1 1 13.658 2.343 8 8 0 0 1 2.343 13.657M6.03 4.97a.75.75 0 0 0-1.042.018.75.75 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.75.75 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.75.75 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.75.75 0 0 0-.734.215L8 6.94Z"/></svg>';
 
@@ -101,12 +137,12 @@
     // --- Initialize Configurations ---
     try {
         shortCutConfig = loadConfig('shortCutConfig', DEFAULT_SHORTCUT_CONFIG, shortCutUserConfig);
-        filterConfig = loadConfig('filterConfig', DEFAULT_FILTER_CONFIG, filterUserConfig);
+        filterConfig = { ...DEFAULT_FILTER_CONFIG };
     } catch (e) {
         console.error("[HTML to MD] Critical error loading configuration:", e);
-        shortCutConfig = { ...DEFAULT_SHORTCUT_CONFIG }; // Fallback to defaults
-        filterConfig = { ...DEFAULT_FILTER_CONFIG };   // Fallback to defaults
-        alert("Error loading script configuration. Using default settings. Please check console for details.");
+        shortCutConfig = { ...DEFAULT_SHORTCUT_CONFIG };
+        filterConfig = { ...DEFAULT_FILTER_CONFIG };
+        alert(I18N[lang].configErrorAlert);
     }
 
     // --- Turndown Service Setup ---
@@ -146,8 +182,46 @@
             return title ? `[${content}](${href} "${title}")` : `[${content}](${href})`;
         }
     });
+    turndownService.addRule('mermaidBlocks', {
+        filter: function (node) {
+            const cls = node.classList ? Array.from(node.classList).map(c => c.toLowerCase()) : [];
+            const hasMermaidClass = cls.some(c => c.includes('mermaid'));
+            const isCodeMermaid = node.nodeName === 'CODE' && hasMermaidClass;
+            const isDivMermaid = node.nodeName === 'DIV' && hasMermaidClass;
+            const isPreMermaid = node.nodeName === 'PRE' && node.querySelector('code') && Array.from(node.querySelector('code').classList || []).some(c => c.toLowerCase().includes('mermaid'));
+            const hasAttr = (node.getAttribute && ((node.getAttribute('data-mermaid') !== null) || (node.getAttribute('data-graph-type') || '').toLowerCase() === 'mermaid'));
+            return isCodeMermaid || isDivMermaid || isPreMermaid || hasAttr;
+        },
+        replacement: function (content, node) {
+            let text = '';
+            if (node.nodeName === 'PRE') {
+                const code = node.querySelector('code');
+                text = (code ? code.textContent : node.textContent) || '';
+            } else {
+                text = node.textContent || '';
+            }
+            text = text.trim();
+            if (!text) return `\n[Mermaid diagram]\n`;
+            return `\n\`\`\`mermaid\n${text}\n\`\`\`\n`;
+        }
+    });
 
     // --- Core Functions ---
+    function normalizeMarkdown(md) {
+        let text = md.replace(/\r\n/g, '\n');
+        text = text.replace(/(^|\n)(```[\s\S]*?```)(?=\n|$)/g, (m, lead, block) => {
+            const prefix = lead === '' ? '' : lead + '\n';
+            return `${prefix}\n${block.trim()}\n\n`;
+        });
+        text = text.replace(/(^|\n)(\|.+\|\n\|[ :\-\|]+\|\n(?:\|.*\|\n?)*)/g, (m, lead, table) => {
+            const prefix = lead === '' ? '' : lead + '\n';
+            return `${prefix}\n${table.trim()}\n\n`;
+        });
+        text = text.replace(/\n{3,}/g, '\n\n');
+        text = text.replace(/^\s*\n+|\n+\s*$/g, '');
+        return text;
+    }
+
     function convertToMarkdown(element) {
         if (!element) return '';
         const clonedElement = element.cloneNode(true);
@@ -227,7 +301,7 @@
         turndownMd = turndownMd.replace(/(\*\*|__)\s*\1/g, ''); // Remove empty bold/italic markers
         turndownMd = turndownMd.replace(/`\s*`/g, ''); // Remove empty code spans
 
-        return turndownMd.trim();
+        return normalizeMarkdown(turndownMd.trim());
     }
 
     function showMarkdownModal(markdown) {
@@ -239,8 +313,8 @@
                         <div class="h2m-preview"></div>
                     </div>
                     <div class="h2m-modal-footer">
-                        <button class="h2m-copy">Copy to clipboard</button>
-                        <button class="h2m-download">Download as MD</button>
+                        <button class="h2m-copy"></button>
+                        <button class="h2m-download"></button>
                     </div>
                     <button class="h2m-close">${closeButtonSvgIcon}</button>
                 </div>
@@ -253,6 +327,8 @@
         const $downloadButton = $modal.find('.h2m-download');
         const $closeButton = $modal.find('.h2m-close');
 
+        $copyButton.text(I18N[lang].copy);
+        $downloadButton.text(I18N[lang].download);
         $markdownArea.val(markdown); // Set initial value
         $previewArea.html(marked.parse(markdown));
 
@@ -260,7 +336,7 @@
         const closeModal = () => { $modal.remove(); $(document).off('keydown.h2mModalGlobal'); };
         $modal.on('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
         $(document).on('keydown.h2mModalGlobal', function (e) { if (e.key === 'Escape' && $('.h2m-modal-overlay').length > 0) closeModal(); });
-        $copyButton.on('click', function () { GM_setClipboard($markdownArea.val()); $(this).text('Copied!'); setTimeout(() => $(this).text('Copy to clipboard'), 1000); });
+        $copyButton.on('click', function () { GM_setClipboard($markdownArea.val()); $(this).text(I18N[lang].copied); setTimeout(() => $(this).text(I18N[lang].copy), 1000); });
         $downloadButton.on('click', function () {
             const md = $markdownArea.val(); const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
             const url = URL.createObjectURL(blob); const a = document.createElement('a');
@@ -284,12 +360,7 @@
     }
 
     function updateTip() {
-        let message;
-        if (isMultiSelectMode) {
-            message = `<b>Multi-Select Mode (${selectedElements.length} selected)</b><br><b>Click</b> to add/remove element.<br>Release <b>Shift</b> to exit.<br>Press <b>Enter</b> to convert.<br><b>Esc</b> to cancel.`
-        } else {
-            message = '<b>Single-Select Mode</b><br>Navigate with mouse/arrows. <b>Click</b> to convert.<br>Hold <b>Shift</b> for Multi-Select.<br><b>Esc</b> to cancel.';
-        }
+        const message = isMultiSelectMode ? I18N[lang].multiTip() : I18N[lang].singleTip;
         tip(message);
     }
 
@@ -297,7 +368,7 @@
         try {
             let finalElements = isMultiSelectMode ? selectedElements : [hoveredElement];
             if (finalElements.length === 0 || (finalElements.length === 1 && !finalElements[0])) {
-                tip('No element selected.', 2000);
+                tip(I18N[lang].noElement, 2000);
                 return;
             }
 
@@ -317,19 +388,38 @@
             if (markdown.trim()) {
                 showMarkdownModal(markdown);
             } else {
-                tip('所选元素没有有效内容', 2000);
+                tip(I18N[lang].noContent, 2000);
             }
         } catch (err) {
             console.error("[HTML to MD] Error during conversion or showing modal:", err);
-            alert("Error processing selection. Check console for details.");
+            alert(I18N[lang].processError);
         } finally {
             endSelecting();
         }
     }
 
+    function _interactionBlocker(e) {
+        if (!isSelecting) return;
+        if ($(e.target).closest('#h2m-tip-instance, .h2m-modal-overlay').length) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    }
+    const BLOCKED_EVENTS = ['click','dblclick','mouseup','pointerup','contextmenu','dragstart','touchstart','touchend'];
+    let blockersActive = false;
+    function enableInteractionBlockers() {
+        if (blockersActive) return;
+        blockersActive = true;
+        BLOCKED_EVENTS.forEach(type => document.addEventListener(type, _interactionBlocker, true));
+    }
+    function disableInteractionBlockers() {
+        if (!blockersActive) return;
+        BLOCKED_EVENTS.forEach(type => document.removeEventListener(type, _interactionBlocker, true));
+        blockersActive = false;
+    }
+
     function startSelecting() {
         if (isSelecting) return;
-        $('body').addClass('h2m-no-scroll');
         isSelecting = true;
         isMultiSelectMode = false;
         selectedElements = [];
@@ -338,11 +428,30 @@
             $(hoveredElement).addClass('h2m-selection-box');
         }
         updateTip();
+        enableInteractionBlockers();
     }
-    function endSelecting() { if (!isSelecting) return; isSelecting = false; isMultiSelectMode = false; $('.h2m-selection-box').removeClass('h2m-selection-box'); $('.h2m-selected-item').removeClass('h2m-selected-item'); $('body').removeClass('h2m-no-scroll'); $('#h2m-tip-instance').remove(); hoveredElement = null; selectedElements = []; }
+    function endSelecting() { if (!isSelecting) return; isSelecting = false; isMultiSelectMode = false; $('.h2m-selection-box').removeClass('h2m-selection-box'); $('.h2m-selected-item').removeClass('h2m-selected-item'); $('#h2m-tip-instance').remove(); hoveredElement = null; selectedElements = []; disableInteractionBlockers(); }
     function isContentElement(el) {
         const contentTags = ['P', 'DIV', 'ARTICLE', 'SECTION', 'MAIN', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'PRE', 'CODE', 'TABLE'];
         return contentTags.includes(el.tagName) || el.textContent.trim().length > 20;
+    }
+
+    function getSelectableElement(el) {
+        if (!el) return el;
+        const tableRoot = el.closest ? el.closest('table') : null;
+        if (tableRoot) return tableRoot;
+        const codeMermaid = el.closest ? el.closest('pre, code') : null;
+        if (codeMermaid) {
+            const classes = codeMermaid.classList ? Array.from(codeMermaid.classList).map(c => c.toLowerCase()) : [];
+            const childCode = codeMermaid.querySelector && codeMermaid.querySelector('code');
+            const childClasses = childCode && childCode.classList ? Array.from(childCode.classList).map(c => c.toLowerCase()) : [];
+            if (classes.some(c => c.includes('mermaid')) || childClasses.some(c => c.includes('mermaid'))) {
+                return codeMermaid.nodeName === 'PRE' ? codeMermaid : (codeMermaid.closest('pre') || codeMermaid);
+            }
+        }
+        const divMermaid = el.closest ? el.closest('.mermaid,[data-mermaid],[data-graph-type="mermaid"]') : null;
+        if (divMermaid) return divMermaid;
+        return el;
     }
 
     function isValidElement(el) {
@@ -373,9 +482,7 @@
         switch (e.key) {
             case 'Escape': endSelecting(); return;
             case 'Enter':
-                if (isMultiSelectMode) {
-                    processSelection();
-                }
+                processSelection();
                 return;
             case 'ArrowUp':
                 newEl = hoveredElement.parentElement || hoveredElement;
@@ -419,12 +526,6 @@
             $(hoveredElement).addClass('h2m-selection-box');
         }
     }
-    function handleMouseWheelNavigation(e) {
-        if (!isSelecting || !hoveredElement) return; e.preventDefault(); let newEl = hoveredElement;
-        if (e.originalEvent.deltaY < 0) { newEl = hoveredElement.parentElement || hoveredElement; if (['HTML', 'BODY'].includes(newEl.tagName)) newEl = newEl.firstElementChild || newEl; }
-        else { newEl = hoveredElement.firstElementChild || hoveredElement; }
-        if (newEl && newEl !== hoveredElement) { $(hoveredElement).removeClass('h2m-selection-box'); hoveredElement = newEl; $(hoveredElement).addClass('h2m-selection-box'); }
-    }
     $(document).on('keydown.h2m', function (e) {
         if (e.key.toUpperCase() === shortCutConfig.Key.toUpperCase() &&
             e.ctrlKey === shortCutConfig.Ctrl &&
@@ -440,29 +541,29 @@
         }
 
         if (isSelecting) {
-            if (e.key === 'Shift' && !isMultiSelectMode) {
-                isMultiSelectMode = true;
-                updateTip();
-            }
+            if (e.key === 'Shift' && !e.repeat) { isMultiSelectMode = !isMultiSelectMode; updateTip(); }
             handleKeyboardNavigation(e);
         }
-    }).on('keyup.h2m', function(e) {
-        if (isSelecting && e.key === 'Shift') {
-            isMultiSelectMode = false;
-            updateTip();
-        }
     }).on('mouseover.h2m', function (e) {
-        if (isSelecting && hoveredElement !== e.target && !$(e.target).closest('#h2m-tip-instance, .h2m-modal-overlay').length && isValidElement(e.target)) {
-            $(hoveredElement).removeClass('h2m-selection-box');
-            hoveredElement = e.target;
-            $(hoveredElement).addClass('h2m-selection-box');
+        if (isSelecting && !$(e.target).closest('#h2m-tip-instance, .h2m-modal-overlay').length) {
+            const target = getSelectableElement(e.target);
+            if (target && hoveredElement !== target && isValidElement(target)) {
+                $(hoveredElement).removeClass('h2m-selection-box');
+                hoveredElement = target;
+                $(hoveredElement).addClass('h2m-selection-box');
+            }
         }
-    }).on('wheel.h2m', function (e) {
-        if (isSelecting) handleMouseWheelNavigation(e);
     }).on('mousedown.h2m', function (e) {
         if (isSelecting && hoveredElement && $(e.target).closest('#h2m-tip-instance, .h2m-modal-overlay').length === 0) {
             e.preventDefault();
             e.stopPropagation();
+
+            const selectable = getSelectableElement(hoveredElement);
+            if (selectable && selectable !== hoveredElement) {
+                $(hoveredElement).removeClass('h2m-selection-box');
+                hoveredElement = selectable;
+                $(hoveredElement).addClass('h2m-selection-box');
+            }
 
             if (isMultiSelectMode) {
                 const index = selectedElements.indexOf(hoveredElement);
@@ -479,28 +580,12 @@
             }
         }
     });
-    GM_registerMenuCommand('开始选择 / Start Selection', startSelecting);
-    GM_registerMenuCommand('配置过滤规则 / Configure Filters', () => {
-        const currentFilters = JSON.stringify(filterConfig || DEFAULT_FILTER_CONFIG, null, 2);
-        const newFiltersStr = prompt("编辑过滤规则 (JSON):\n支持的配置项:\n- removeTags: 要移除的HTML标签\n- removeAttributes: 要移除的属性\n- keepAttributesOnTags: 特定标签保留的属性\n- removeElementsWithClasses: 要移除的CSS类\n- removeElementsWithIds: 要移除的ID\n- smartContentDetection: 智能内容检测\n- preserveCodeBlocks: 保留代码块", currentFilters);
-        if (newFiltersStr) {
-            try {
-                const newFilters = JSON.parse(newFiltersStr);
-                filterConfig = { ...DEFAULT_FILTER_CONFIG, ...newFilters };
-                GM_setValue('filterConfig', JSON.stringify(filterConfig));
-                alert("过滤规则已更新！页面将刷新以应用新规则。");
-                location.reload();
-            } catch (err) {
-                alert("无效的JSON格式！规则未更新。\n" + err.message);
-            }
-        }
-    });
+    GM_registerMenuCommand(I18N[lang].startSelection, startSelecting);
 
-    GM_registerMenuCommand('重置为默认配置 / Reset to Default', () => {
-        if (confirm('确定要重置所有配置为默认值吗？')) {
-            GM_setValue('filterConfig', JSON.stringify(DEFAULT_FILTER_CONFIG));
+    GM_registerMenuCommand(I18N[lang].reset, () => {
+        if (confirm(I18N[lang].resetConfirm)) {
             GM_setValue('shortCutConfig', JSON.stringify(DEFAULT_SHORTCUT_CONFIG));
-            alert('配置已重置！页面将刷新。');
+            alert(I18N[lang].resetDone);
             location.reload();
         }
     });
@@ -516,8 +601,8 @@
             transition: all 0.2s ease-in-out !important;
         }
         .h2m-selected-item {
-            outline: 2px solid #D00B0B !important; /* Solid red outline for selected items */
-            background-color: rgba(208, 11, 11, 0.15) !important; /* Light red background */
+            outline: 2px solid #D00B0B !important;
+            background-color: rgba(208, 11, 11, 0.15) !important;
             box-shadow: 0 0 0 9999px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(208, 11, 11, 0.4) !important;
         }
         .h2m-selection-box::before {
@@ -537,7 +622,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .h2m-no-scroll { overflow: hidden !important; }
         .h2m-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999999; display: flex; align-items: center; justify-content: center; }
         .h2m-modal {
             width: 90%; height: 85%; max-width: 1600px; max-height: 95vh;
@@ -607,14 +691,13 @@
         .h2m-modal .h2m-close:hover svg path { fill: #9E221A !important; }
         .h2m-modal .h2m-close:hover { opacity: 0.85; }
 
-        /* Use a high-specificity ID selector to style the tip box, avoiding !important */
         #h2m-tip-instance {
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: rgba(255,255,255,0.95);
-            color: #202124; /* High specificity from ID selector makes !important unnecessary */
-            border: 1px solid #DCDCDC;
+            background-color: rgba(32,33,36,0.95);
+            color: #FFFFFF;
+            border: 1px solid rgba(255,255,255,0.25);
             padding: 10px 15px;
             z-index: 10000000;
             border-radius: 8px;
@@ -622,6 +705,7 @@
             max-width: 300px;
             font-family: sans-serif;
             font-size: 14px;
+            backdrop-filter: saturate(120%) blur(2px);
         }
         #h2m-tip-instance h1, #h2m-tip-instance h2, #h2m-tip-instance h3 { margin-top: 0.5em; margin-bottom: 0.2em; font-weight: 600; }
         #h2m-tip-instance ul { margin-left: 20px; padding-left: 0; }
@@ -631,11 +715,11 @@
     console.log('[HTML Content to Markdown] Script loaded. Version 0.2.0. Shortcut:', shortCutConfig, "Filters:", filterConfig);
     if (!TurndownPluginGfmService || typeof TurndownPluginGfmService.gfm !== 'function') {
         console.error("[HTML to MD] Turndown GFM plugin not loaded correctly!");
-        alert("[HTML to MD] Error: GFM plugin failed to load. Some Markdown features might not work correctly.");
+        alert(I18N[lang].gfmError);
     }
     if (typeof marked === 'undefined' || typeof marked.parse !== 'function') {
         console.error("[HTML to MD] Marked library not loaded correctly!");
-        alert("[HTML to MD] Error: Markdown preview library (Marked) failed to load.");
+        alert(I18N[lang].markedError);
     }
 
 })();

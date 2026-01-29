@@ -1,315 +1,422 @@
 // ==UserScript==
-// @name         Torn Shop & Bazaar Manager (Infrastructure + Item Search + Exclusion List + Disabler + UI)
+// @name         Hasoth's disable for sell
 // @namespace    torn.shop.manager
-// @version      1.0.0
-// @description  Manage shop/bazaar exclusions (Gear Icon + API Key + Item Search + Saved List + Disabling)
+// @version      1.3.3
+// @description  Shop Manager that will disable selected items for sell in shops/market/bazar
 // @author       Hasoth [4042954]
 // @match        https://www.torn.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
+// @grant        GM_registerMenuCommand
 // @run-at       document-start
+// @require      https://www.torn.com/js/script/lib/jquery-1.8.2.js
 // @license      All Rights Reserved
-// @downloadURL https://update.greasyfork.org/scripts/564370/Torn%20Shop%20%20Bazaar%20Manager%20%28Infrastructure%20%2B%20Item%20Search%20%2B%20Exclusion%20List%20%2B%20Disabler%20%2B%20UI%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/564370/Torn%20Shop%20%20Bazaar%20Manager%20%28Infrastructure%20%2B%20Item%20Search%20%2B%20Exclusion%20List%20%2B%20Disabler%20%2B%20UI%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/564370/Hasoth%27s%20disable%20for%20sell.user.js
+// @updateURL https://update.greasyfork.org/scripts/564370/Hasoth%27s%20disable%20for%20sell.meta.js
 // ==/UserScript==
 
 (function() {
-    'use strict';
+'use strict';
 
-    // --- PAGE FILTERING ---
-    const fullUrl = window.location.href.toLowerCase();
-    const keywords = ['bazaar', 'bazar', 'market', 'shop', 'itemmarket', 'sid=itemmarket'];
-    const isRelevant = keywords.some(kw => fullUrl.includes(kw));
-    if (!isRelevant) return;
+/* ================= STATE & SETTINGS ================= */
+let WidgetPos = localStorage.getItem('tsm-widget-pos') || '3'; // Default Top-Right
+let CustomPos = JSON.parse(localStorage.getItem('tsm-widget-custom') || '{"top": "20%", "left": "80%"}');
 
-    // --- CONFIGURATION ---
-    const STORAGE_KEY_API = 'torn_shop_manager_apikey';
-    const STORAGE_KEY_POS = 'torn_shop_manager_pos';
-    const STORAGE_KEY_ITEMS_CACHE = 'torn_shop_manager_items_cache';
-    const STORAGE_KEY_EXCLUDED = 'torn_shop_manager_excluded_items';
-    const CACHE_DURATION = 24 * 60 * 60 * 1000;
+let TORN_API_KEY = GM_getValue('tsm_apikey', '');
+let EXCLUDED_ITEMS = JSON.parse(GM_getValue('tsm_excluded', '[]'));
+let ITEMS_CACHE = JSON.parse(GM_getValue('tsm_items_cache', 'null'));
 
-    // --- STATE ---
-    let apiKey = GM_getValue(STORAGE_KEY_API, '');
-    let widgetPos = JSON.parse(GM_getValue(STORAGE_KEY_POS, '{"top":"100px","left":"100px"}'));
-    let allItems = [];
-    let excludedItems = JSON.parse(GM_getValue(STORAGE_KEY_EXCLUDED, '[]'));
+/* ================= ENVIRONMENT DETECTION ================= */
+function detectEnvironment() {
+    const ua = navigator.userAgent.toLowerCase();
+    const isMobileWidth = window.innerWidth <= 768;
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    // --- CORE LOGIC: SCANNER & DISABLER ---
-    function scanForItems() {
-        if (excludedItems.length === 0) return;
-        const excludedIds = new Set(excludedItems.map(i => i.id));
+    if (/tornpda|dart|flutter/i.test(ua)) return 'pda';
+    if (isMobileWidth && hasTouch) return 'mobile';
+    return 'desktop';
+}
 
-        excludedIds.forEach(id => {
-            const dataItems = document.querySelectorAll(`li[data-item="${id}"], div[data-item="${id}"], tr[data-item="${id}"]`);
-            dataItems.forEach(el => disableElement(el, id));
-        });
+const ENV = detectEnvironment();
+const isMobile = ENV === 'mobile' || ENV === 'pda';
 
-        const images = document.querySelectorAll('img[src*="/images/items/"]');
-        images.forEach(img => {
-            const match = img.src.match(/\/images\/items\/(\d+)\//);
-            if (!match) return;
-            const itemId = parseInt(match[1]);
+/* ================= ICONS ================= */
+const gear_icon_svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#888"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.04.64.09.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.58 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>`;
+const cart_svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#555"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>`;
 
-            if (excludedIds.has(itemId)) {
-                let wrapper = img.closest('[class*="itemRowWrapper"]');
-                if (!wrapper) wrapper = img.closest('li');
-                if (!wrapper) wrapper = img.closest('tr');
-                if (wrapper) disableElement(wrapper, itemId);
-            }
-        });
-    }
+/* ================= CORE LOGIC: SCANNER ================= */
+function isRelevantPage() {
+    const url = window.location.href.toLowerCase();
+    const keywords = ['bazaar', 'bazar', 'market', 'shop', 'itemmarket', 'sid=itemmarket', 'bigal', 'pharmacy', 'post', 'recycling', 'superstore'];
+    return keywords.some(k => url.includes(k));
+}
 
-    function disableElement(el, id) {
-        if (el.classList.contains('tsm-excluded-disabled')) return;
+function scanForItems() {
+    if (EXCLUDED_ITEMS.length === 0) return;
+    const excludedIds = new Set(EXCLUDED_ITEMS.map(i => i.id));
 
-        el.classList.add('tsm-excluded-disabled');
-        el.dataset.tsmItemId = id;
+    // 1. Data Attributes
+    excludedIds.forEach(id => {
+        const els = document.querySelectorAll(`li[data-item="${id}"], div[data-item="${id}"], tr[data-item="${id}"]`);
+        els.forEach(el => disableElement(el, id));
+    });
 
-        el.style.opacity = '0.3';
-        el.style.pointerEvents = 'none';
-        el.style.filter = 'grayscale(100%)';
+    // 2. Images Fallback
+    const images = document.querySelectorAll('img[src*="items/"]');
+    images.forEach(img => {
+        const match = img.src.match(/items\/(\d+)[/.]/);
+        if (!match) return;
+        const itemId = parseInt(match[1]);
 
-        const inputs = el.querySelectorAll('input, button, select, textarea');
-        inputs.forEach(inp => {
-            inp.disabled = true;
-            if (inp.type === 'checkbox') inp.checked = false;
-        });
-    }
-
-    function restoreItem(itemId) {
-        const rows = document.querySelectorAll(`.tsm-excluded-disabled[data-tsm-item-id="${itemId}"]`);
-        rows.forEach(el => {
-            el.classList.remove('tsm-excluded-disabled');
-            el.style.opacity = '';
-            el.style.pointerEvents = '';
-            el.style.filter = '';
-            const inputs = el.querySelectorAll('input, button, select, textarea');
-            inputs.forEach(inp => inp.disabled = false);
-        });
-    }
-
-    // --- OBSERVER ---
-    const observer = new MutationObserver(() => scanForItems());
-    const startObserver = setInterval(() => {
-        if (document.body) {
-            clearInterval(startObserver);
-            observer.observe(document.body, { childList: true, subtree: true });
-            scanForItems();
-            createWidget();
+        if (excludedIds.has(itemId)) {
+            let wrapper = img.closest('[class*="itemRowWrapper"]');
+            if (!wrapper) wrapper = img.closest('li');
+            if (!wrapper) wrapper = img.closest('tr');
+            if (!wrapper) wrapper = img.closest('div[class*="item-"]');
+            if (wrapper) disableElement(wrapper, itemId);
         }
-    }, 200);
+    });
+}
 
-    // --- UI BUILDER ---
-    function createWidget() {
-        if (document.getElementById('tsm-widget')) return;
-        const btn = document.createElement('div');
-        btn.id = 'tsm-widget';
-        // CHANGED: Added text label next to icon
-        btn.innerHTML = '<span class="tsm-icon">⚙️</span><span class="tsm-label">Disable for Sell</span>';
-        btn.title = 'Shop Manager Settings';
-        btn.style.top = widgetPos.top; btn.style.left = widgetPos.left;
-        document.body.appendChild(btn);
-        setupDrag(btn);
-        btn.addEventListener('click', (e) => {
-            if (!btn.classList.contains('is-dragging')) openSettingsModal();
-        });
-    }
+function disableElement(el, id) {
+    if (el.classList.contains('tsm-disabled')) return;
+    el.classList.add('tsm-disabled');
+    el.dataset.tsmId = id;
 
-    function createSettingsModal() {
-        if (document.getElementById('tsm-modal')) return;
-        const modal = document.createElement('div');
-        modal.id = 'tsm-modal'; modal.style.display = 'none';
-        modal.innerHTML = `
-            <div class="tsm-modal-content">
-                <h3>Shop Manager Settings</h3>
-                <div class="tsm-section">
-                    <label>Torn API Key:</label>
-                    <div style="display:flex; gap:5px;">
-                        <input type="text" id="tsm-api-input" placeholder="Enter Public API Key" value="${apiKey}" />
-                        <button id="tsm-save-btn" class="tsm-btn-small">Save</button>
-                    </div>
-                    <div id="tsm-status"></div>
-                </div>
-                <hr style="border:0; border-top:1px solid #444; margin: 10px 0;">
-                <div class="tsm-section">
-                    <label>Excluded Items (Saved):</label>
-                    <div id="tsm-excluded-list"></div>
-                    <div style="display:flex; gap:5px; margin-top:5px;">
-                        <input type="number" id="tsm-manual-id" placeholder="ID" style="width:60px;" />
-                        <button id="tsm-add-manual-btn" class="tsm-btn-small" style="background:#555;">Add ID</button>
-                    </div>
-                </div>
-                <hr style="border:0; border-top:1px solid #444; margin: 10px 0;">
-                <div class="tsm-section" style="flex-grow:1; display:flex; flex-direction:column;">
-                    <label>Search to Add:</label>
-                    <input type="text" id="tsm-item-search" placeholder="Type item name..." disabled />
-                    <div id="tsm-search-results"><div style="color:#666; font-style:italic; padding:5px;">Enter API Key to enable search</div></div>
-                </div>
-                <div class="tsm-footer"><button id="tsm-close-btn">Close</button></div>
-            </div>`;
-        document.body.appendChild(modal);
+    // Visuals
+    el.style.setProperty('opacity', '0.3', 'important');
+    el.style.setProperty('filter', 'grayscale(100%)', 'important');
+    el.style.setProperty('pointer-events', 'none', 'important');
 
-        document.getElementById('tsm-close-btn').onclick = () => { modal.style.display = 'none'; };
-        document.getElementById('tsm-save-btn').onclick = async () => {
-            const inputVal = document.getElementById('tsm-api-input').value.trim();
-            if (inputVal.length < 16) { setStatus('Invalid Key Length', 'red'); return; }
-            setStatus('Verifying...', 'blue');
-            const isValid = await verifyApiKey(inputVal);
-            if (isValid) {
-                apiKey = inputVal; GM_setValue(STORAGE_KEY_API, apiKey);
-                setStatus('Key Verified & Saved!', 'green'); enableSearchInput(); loadItems();
-            } else { setStatus('Invalid Key', 'red'); }
-        };
-        document.getElementById('tsm-add-manual-btn').onclick = () => {
-            const idVal = parseInt(document.getElementById('tsm-manual-id').value);
-            if (idVal) {
-                const found = allItems.find(i => i.id === idVal);
-                const name = found ? found.name : `Item #${idVal}`;
-                addItemToExcluded(idVal, name);
-                document.getElementById('tsm-manual-id').value = '';
-            }
-        };
-        document.getElementById('tsm-item-search').addEventListener('input', (e) => handleSearch(e.target.value));
-        document.getElementById('tsm-search-results').addEventListener('click', (e) => {
-            const row = e.target.closest('.tsm-result-row');
-            if (row && !row.classList.contains('tsm-added')) {
-                addItemToExcluded(parseInt(row.dataset.id), row.dataset.name);
-                handleSearch(document.getElementById('tsm-item-search').value);
-            }
-        });
-    }
+    // Inputs
+    const inputs = el.querySelectorAll('input, button, select, textarea');
+    inputs.forEach(i => { i.disabled = true; if(i.type==='checkbox') i.checked=false; });
+}
 
-    function openSettingsModal() {
-        createSettingsModal();
-        const modal = document.getElementById('tsm-modal');
-        document.getElementById('tsm-api-input').value = apiKey;
-        document.getElementById('tsm-status').textContent = '';
-        renderExcludedList();
-        if (apiKey) { enableSearchInput(); if (allItems.length === 0) loadItems(); }
-        modal.style.display = 'flex';
-    }
+function restoreItem(id) {
+    const els = document.querySelectorAll(`.tsm-disabled[data-tsm-id="${id}"]`);
+    els.forEach(el => {
+        el.classList.remove('tsm-disabled');
+        el.style.removeProperty('opacity');
+        el.style.removeProperty('filter');
+        el.style.removeProperty('pointer-events');
+        el.querySelectorAll('input, button').forEach(i => i.disabled = false);
+    });
+}
 
-    function renderExcludedList() {
-        const listEl = document.getElementById('tsm-excluded-list');
-        if (!listEl) return;
-        if (excludedItems.length === 0) { listEl.innerHTML = '<div style="color:#666; font-style:italic; padding:5px;">No items excluded yet.</div>'; return; }
-        let html = '';
-        excludedItems.forEach(item => {
-            html += `<div class="tsm-excluded-row"><span class="tsm-ex-name"><b>[${item.id}]</b> ${item.name}</span><span class="tsm-remove-btn" data-id="${item.id}">✕</span></div>`;
-        });
-        listEl.innerHTML = html;
-        listEl.querySelectorAll('.tsm-remove-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                const idToRemove = parseInt(btn.getAttribute('data-id'));
-                excludedItems = excludedItems.filter(i => i.id !== idToRemove);
-                GM_setValue(STORAGE_KEY_EXCLUDED, JSON.stringify(excludedItems));
-                restoreItem(idToRemove);
-                renderExcludedList();
-                if(document.getElementById('tsm-item-search').value) handleSearch(document.getElementById('tsm-item-search').value);
-            };
-        });
-    }
-
-    function addItemToExcluded(id, name) {
-        if (excludedItems.some(i => i.id === id)) return;
-        excludedItems.push({ id: id, name: name });
-        excludedItems.sort((a,b) => a.name.localeCompare(b.name));
-        GM_setValue(STORAGE_KEY_EXCLUDED, JSON.stringify(excludedItems));
-        renderExcludedList();
+/* ================= UI LOGIC ================= */
+// Watchdog for URL changes & DOM updates
+setInterval(() => {
+    if (isRelevantPage()) {
+        if (!document.getElementById('tsmFloat')) insertFloat();
         scanForItems();
+    } else {
+        const btn = document.getElementById('tsmFloat');
+        if (btn) btn.style.display = 'none';
+    }
+}, 1000);
+
+const observer = new MutationObserver(() => {
+    if (isRelevantPage()) scanForItems();
+});
+// Start Observer
+const startObs = setInterval(() => {
+    if (document.body) {
+        clearInterval(startObs);
+        observer.observe(document.body, { childList: true, subtree: true });
+        if(isRelevantPage()) insertFloat();
+    }
+}, 500);
+
+
+/* ================= WIDGET BUILDER ================= */
+function insertFloat() {
+    if(document.getElementById('tsmFloat')) {
+        document.getElementById('tsmFloat').style.display = 'flex';
+        return;
     }
 
-    function handleSearch(query) {
-        const resultsDiv = document.getElementById('tsm-search-results');
-        if (!query || query.length < 2) { resultsDiv.innerHTML = ''; return; }
-        const lowerQ = query.toLowerCase();
-        const matches = allItems.filter(item => item.name.toLowerCase().includes(lowerQ)).slice(0, 20);
-        if (matches.length === 0) { resultsDiv.innerHTML = '<div style="padding:5px; color:#999;">No matches found</div>'; return; }
-        let html = '';
-        matches.forEach(item => {
-            const isAdded = excludedItems.some(e => e.id === item.id);
-            const style = isAdded ? 'opacity:0.5; cursor:default;' : 'cursor:pointer;';
-            const extraClass = isAdded ? 'tsm-added' : '';
-            html += `<div class="tsm-result-row ${extraClass}" style="${style}" data-id="${item.id}" data-name="${item.name.replace(/"/g, '&quot;')}"><span class="tsm-id">[${item.id}]</span><span class="tsm-name">${item.name}</span>${isAdded ? '<span style="margin-left:auto; font-size:10px;">(Added)</span>' : ''}</div>`;
-        });
-        resultsDiv.innerHTML = html;
+    // Using Prayer Script structure
+    const widgetHTML = `
+        <div id="tsmFloat" class="tsm-float ${isMobile ? 'tsm-compact' : ''}">
+            <span class="tsm-icon">${cart_svg}</span>
+            <div class="tsm-info">
+                <span class="tsm-text">SHOP MANAGER</span>
+                <span class="tsm-status">${EXCLUDED_ITEMS.length} Excluded</span>
+            </div>
+            <div class="tsm-gear" id="tsmGear">${gear_icon_svg}</div>
+            <div class="tsm-drag-label">drag</div>
+        </div>
+    `;
+
+    $('body').append(widgetHTML);
+    setFloatPosition();
+    insertStyle();
+    createSettingsModal();
+
+    const btn = document.getElementById('tsmFloat');
+    setupDrag(btn);
+
+    // Click on main body opens modal too, unless dragging
+    btn.addEventListener('click', (e) => {
+        if (!btn.classList.contains('is-dragging')) openSettingsModal(e);
+    });
+}
+
+function setupDrag(el) {
+    let isDragging = false;
+    let startX, startY;
+
+    const start = (cx, cy) => { isDragging = false; startX = cx; startY = cy; };
+    const move = (cx, cy, e) => {
+        if (Math.abs(cx - startX) > 5 || Math.abs(cy - startY) > 5) {
+            isDragging = true;
+            el.classList.add('is-dragging');
+            if(e) e.preventDefault();
+            el.style.left = (cx - el.offsetWidth/2) + 'px';
+            el.style.top = (cy - el.offsetHeight/2) + 'px';
+            el.classList.remove('tsm-top','tsm-bottom','tsm-left','tsm-right');
+        }
+    };
+    const end = () => {
+        if (isDragging) {
+            const lp = (parseInt(el.style.left)/window.innerWidth*100).toFixed(1)+'%';
+            const tp = (parseInt(el.style.top)/window.innerHeight*100).toFixed(1)+'%';
+            CustomPos = {top:tp, left:lp};
+            localStorage.setItem('tsm-widget-custom', JSON.stringify(CustomPos));
+            WidgetPos = 'custom';
+            localStorage.setItem('tsm-widget-pos', 'custom');
+            setTimeout(() => { isDragging = false; el.classList.remove('is-dragging'); }, 50);
+        }
+    };
+
+    el.addEventListener('mousedown', e => { if(e.button===0) {
+        start(e.clientX, e.clientY);
+        const mm = ev => move(ev.clientX, ev.clientY, ev);
+        const mu = () => { end(); document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu); };
+        document.addEventListener('mousemove', mm); document.addEventListener('mouseup', mu);
+    }});
+
+    el.addEventListener('touchstart', e => start(e.touches[0].clientX, e.touches[0].clientY), {passive:false});
+    el.addEventListener('touchmove', e => move(e.touches[0].clientX, e.touches[0].clientY, e), {passive:false});
+    el.addEventListener('touchend', end);
+}
+
+/* ================= SETTINGS MODAL ================= */
+function createSettingsModal() {
+    if(document.getElementById('tsmSettingsModal')) return;
+    const modalHTML = `
+        <div id="tsmSettingsModal" class="tsm-modal" style="display:none;">
+            <div class="tsm-modal-content">
+                <span id="tsmCloseModal" class="tsm-close">&times;</span>
+                <h3>Shop Manager</h3>
+
+                <!-- API -->
+                <div class="tsm-group">
+                    <label>API Key:</label>
+                    <input type="text" id="tsmApiKey" placeholder="Public API Key" value="${TORN_API_KEY}" />
+                    <button id="tsmSaveKey" class="tsm-btn tsm-btn-green" style="width:100%; margin-top:5px;">Save Key</button>
+                </div>
+
+                <!-- ADD ITEM -->
+                <div class="tsm-group">
+                    <label>Add Item:</label>
+                    <input type="text" id="tsmSearch" placeholder="Search item name..." disabled />
+                    <div id="tsmResults">Save API Key to search</div>
+
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <input type="number" id="tsmManualId" placeholder="ID" style="width:70px;" />
+                        <button id="tsmAddManual" class="tsm-btn">Add ID</button>
+                    </div>
+                </div>
+
+                <!-- LIST -->
+                <div class="tsm-group">
+                    <label>Excluded Items:</label>
+                    <div id="tsmList"></div>
+                </div>
+
+                <div class="tsm-footer">
+                   <button id="tsmCloseBtn" class="tsm-btn">Close</button>
+                   <div style="margin-top: 10px; font-size: 10px; color: #666;">
+                      Founded by generous <p style="font-size: 12px;">megalomaniacal</p>
+                   </div>
+                </div>
+
+            </div>
+        </div>
+    `;
+    $('body').append(modalHTML);
+
+    // Events
+    $('#tsmCloseModal, #tsmCloseBtn').click(() => $('#tsmSettingsModal').fadeOut(200));
+    $('#tsmSaveKey').click(async () => {
+        const k = $('#tsmApiKey').val().trim();
+        if(await verifyKey(k)) {
+            TORN_API_KEY = k; GM_setValue('tsm_apikey', k);
+            alert('Saved!'); enableSearch(); loadItems();
+        } else alert('Invalid Key');
+    });
+
+    $('#tsmSearch').on('input', (e) => handleSearch(e.target.value));
+
+    // Add Manual
+    $('#tsmAddManual').click(() => {
+        const id = parseInt($('#tsmManualId').val());
+        if(id) addItem(id, `Item ${id}`);
+    });
+
+    // Result Click
+    $(document).on('click', '.tsm-res-row', function() {
+        addItem($(this).data('id'), $(this).data('name'));
+    });
+
+    // Remove Click
+    $(document).on('click', '.tsm-del-btn', function(e) {
+        e.stopPropagation();
+        delItem($(this).data('id'));
+    });
+
+    if(TORN_API_KEY) { enableSearch(); if(!ITEMS_CACHE) loadItems(); }
+    renderList();
+}
+
+function openSettingsModal(e) {
+    if(e) { e.stopPropagation(); e.preventDefault(); }
+    $('#tsmSettingsModal').fadeIn(200);
+}
+
+/* ================= DATA HELPERS ================= */
+async function verifyKey(k) {
+    try { const r = await fetch(`https://api.torn.com/user/?selections=basic&key=${k}`); return !(await r.json()).error; } catch{return false;}
+}
+
+async function loadItems() {
+    if(ITEMS_CACHE && (Date.now() - ITEMS_CACHE.ts < 24*60*60*1000)) return;
+    try {
+        const r = await fetch(`https://api.torn.com/v2/torn/items?key=${TORN_API_KEY}`);
+        const d = await r.json();
+        if(d.items) {
+            ITEMS_CACHE = { ts: Date.now(), data: d.items.map(i=>({id:i.id, name:i.name})) };
+            GM_setValue('tsm_items_cache', JSON.stringify(ITEMS_CACHE));
+            $('#tsmResults').html('<span style="color:green">Items Loaded</span>');
+        }
+    } catch(e){}
+}
+
+function handleSearch(q) {
+    if(!q || q.length<2 || !ITEMS_CACHE) { $('#tsmResults').empty(); return; }
+    const res = ITEMS_CACHE.data.filter(i=>i.name.toLowerCase().includes(q.toLowerCase())).slice(0,10);
+    let h='';
+    res.forEach(i => {
+        h += `<div class="tsm-res-row" data-id="${i.id}" data-name="${i.name.replace(/"/g,'&quot;')}"><b>[${i.id}]</b> ${i.name}</div>`;
+    });
+    $('#tsmResults').html(h || 'No match');
+}
+
+function addItem(id, name) {
+    if(EXCLUDED_ITEMS.some(i=>i.id===id)) return;
+    EXCLUDED_ITEMS.push({id,name});
+    GM_setValue('tsm_excluded', JSON.stringify(EXCLUDED_ITEMS));
+    renderList(); scanForItems();
+    $('.tsm-status').text(`${EXCLUDED_ITEMS.length} Excluded`);
+}
+
+function delItem(id) {
+    EXCLUDED_ITEMS = EXCLUDED_ITEMS.filter(i=>i.id!==id);
+    GM_setValue('tsm_excluded', JSON.stringify(EXCLUDED_ITEMS));
+    renderList(); restoreItem(id);
+    $('.tsm-status').text(`${EXCLUDED_ITEMS.length} Excluded`);
+}
+
+function renderList() {
+    let h='';
+    EXCLUDED_ITEMS.forEach(i=>{
+        h+=`<div class="tsm-list-row"><span><b>[${i.id}]</b> ${i.name}</span> <span class="tsm-del-btn" data-id="${i.id}">X</span></div>`;
+    });
+    $('#tsmList').html(h||'<i>None</i>');
+}
+
+
+function enableSearch() { $('#tsmSearch').prop('disabled', false); }
+
+/* ================= STYLE & POSITION ================= */
+function setFloatPosition() {
+    const btn = document.getElementById('tsmFloat');
+    if (!btn) return;
+    btn.classList.remove('tsm-top', 'tsm-bottom', 'tsm-left', 'tsm-right');
+    btn.style.top=''; btn.style.left='';
+
+    if(WidgetPos === 'custom') {
+        btn.style.top = CustomPos.top;
+        btn.style.left = CustomPos.left;
+    } else {
+        btn.classList.add('tsm-top', 'tsm-right');
     }
+}
 
-    function enableSearchInput() {
-        const inp = document.getElementById('tsm-item-search');
-        if(inp) { inp.disabled = false; inp.placeholder = "Type item name..."; if(document.getElementById('tsm-search-results').innerText.includes('Enter API Key')) document.getElementById('tsm-search-results').innerHTML = ''; }
-    }
-
-    function setStatus(msg, color) { const el = document.getElementById('tsm-status'); if (el) { el.textContent = msg; el.style.color = color || '#888'; } }
-
-    async function loadItems() {
-        const resultsDiv = document.getElementById('tsm-search-results');
-        const cached = JSON.parse(GM_getValue(STORAGE_KEY_ITEMS_CACHE, 'null'));
-        if (cached && (Date.now() - cached.timestamp < CACHE_DURATION)) { allItems = cached.data; return; }
-        if (!apiKey) return;
-        resultsDiv.innerHTML = '<div style="color:#aaa;">Loading item list...</div>';
-        try {
-            const response = await fetch(`https://api.torn.com/v2/torn/items?key=${apiKey}`);
-            const data = await response.json();
-            if (data.items) {
-                allItems = data.items.map(i => ({ id: i.id, name: i.name }));
-                GM_setValue(STORAGE_KEY_ITEMS_CACHE, JSON.stringify({ timestamp: Date.now(), data: allItems }));
-                resultsDiv.innerHTML = '<div style="color:green;">Items Loaded! Type to search.</div>';
-            }
-        } catch (e) { resultsDiv.innerHTML = '<div style="color:red;">Network Error.</div>'; }
-    }
-
-    function setupDrag(el) {
-        let isDown = false, startX, startY;
-        el.addEventListener('mousedown', (e) => { if(e.button!==0) return; isDown=true; startX=e.clientX-el.offsetLeft; startY=e.clientY-el.offsetTop; el.style.cursor='grabbing'; e.preventDefault(); });
-        document.addEventListener('mouseup', () => { if(isDown) { isDown=false; el.style.cursor='pointer'; setTimeout(()=>el.classList.remove('is-dragging'),0); GM_setValue(STORAGE_KEY_POS, JSON.stringify({top:el.style.top, left:el.style.left})); } });
-        document.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); el.classList.add('is-dragging'); el.style.left=(e.clientX-startX)+'px'; el.style.top=(e.clientY-startY)+'px'; });
-    }
-
-    async function verifyApiKey(key) { try { const r = await fetch(`https://api.torn.com/user/?selections=basic&key=${key}`); const d = await r.json(); return !d.error; } catch { return false; } }
-
+function insertStyle() {
     GM_addStyle(`
-        #tsm-widget {
-            position: fixed; width: auto; height: 34px; padding: 0 12px;
-            background: #333; color: #fff; border-radius: 20px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            cursor: pointer; z-index: 999999;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 2px solid #555;
-            user-select: none; font-family: Arial, sans-serif;
-        }
-        #tsm-widget:hover { background: #444; border-color: #777; }
-        .tsm-icon { font-size: 18px; }
-        .tsm-label { font-size: 12px; font-weight: bold; white-space: nowrap; }
+    /* Remove arrows from number inputs */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    -moz-appearance: textfield;
+}
 
-        #tsm-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000000; display: flex; align-items: center; justify-content: center; }
-        .tsm-modal-content { background: #222; padding: 20px; border-radius: 8px; width: 350px; color: #eee; border: 1px solid #444; font-family: Arial, sans-serif; max-height: 85vh; display: flex; flex-direction: column; }
-        .tsm-modal-content h3 { margin-top: 0; color: #fff; border-bottom: 1px solid #444; padding-bottom: 10px; }
-        .tsm-section { margin-bottom: 10px; flex-shrink: 0; }
-        .tsm-section label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 12px; color:#aaa; }
-        input[type="text"], input[type="number"] {
-            padding: 8px; background: #444; border: 1px solid #555; color: #fff; border-radius: 4px; box-sizing: border-box; width: 100%;
-            -moz-appearance: textfield;
+/* ... existing #tsmFloat styles start here ... */
+        #tsmFloat {
+            z-index: 2147483647; position: fixed; font-family: Arial, sans-serif; font-size: 12px;
+            cursor: pointer; background: #f2f2f2; color: #333;
+            border: 1px solid #999; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            user-select: none; touch-action: none;
+            display: flex; align-items: center;
         }
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input:disabled { background: #333; color: #666; cursor: not-allowed; }
-        .tsm-btn-small { padding: 0 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; flex-shrink: 0; }
-        .tsm-btn-small:hover { background: #45a049; }
-        #tsm-excluded-list { background: #1a1a1a; border: 1px solid #333; border-radius: 4px; height: 120px; overflow-y: auto; padding: 5px; margin-bottom: 5px; }
-        .tsm-excluded-row { display: flex; justify-content: space-between; align-items: center; padding: 4px; border-bottom: 1px solid #333; font-size: 12px; }
-        .tsm-excluded-row:last-child { border-bottom: none; }
-        .tsm-remove-btn { color: #f44336; cursor: pointer; font-weight: bold; padding: 0 5px; }
-        .tsm-remove-btn:hover { color: #d32f2f; }
-        #tsm-search-results { margin-top: 10px; background: #1a1a1a; border: 1px solid #333; border-radius: 4px; flex-grow: 1; overflow-y: auto; min-height: 100px; max-height: 200px; }
-        .tsm-result-row { padding: 6px 8px; border-bottom: 1px solid #333; font-size: 12px; display: flex; align-items: center; }
-        .tsm-result-row:hover { background: #333; }
-        .tsm-id { color: #4CAF50; font-weight: bold; margin-right: 8px; min-width: 35px; }
-        .tsm-footer { margin-top: 15px; text-align: right; }
-        #tsm-close-btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; background: #555; color: white; }
-        #tsm-close-btn:hover { background: #666; }
+        /* Desktop Mode */
+        #tsmFloat:not(.tsm-compact) { padding: 8px 12px; gap: 10px; }
+        #tsmFloat:not(.tsm-compact) .tsm-icon svg { width: 24px; height: 24px; }
+        #tsmFloat:not(.tsm-compact) .tsm-info { display: flex; flex-direction: column; }
+        #tsmFloat:not(.tsm-compact) .tsm-text { font-weight: bold; }
+        #tsmFloat:not(.tsm-compact) .tsm-status { font-size: 10px; color: #666; }
+        #tsmFloat:not(.tsm-compact) .tsm-gear { opacity: 0.3; margin-left: auto; width: 20px; }
+        #tsmFloat:not(.tsm-compact) .tsm-drag-label {
+             position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+             font-size: 8px; background: #fff; border: 1px solid #ccc; padding: 0 4px; border-radius: 3px;
+        }
+
+        /* Mobile/Compact Mode */
+        #tsmFloat.tsm-compact { width: 42px; height: 42px; justify-content: center; border-radius: 50%; padding:0; }
+        #tsmFloat.tsm-compact .tsm-info, #tsmFloat.tsm-compact .tsm-text, #tsmFloat.tsm-compact .tsm-status { display: none; }
+        #tsmFloat.tsm-compact .tsm-icon svg { width: 24px; height: 24px; }
+        #tsmFloat.tsm-compact .tsm-gear { position: absolute; bottom: -5px; right: -5px; width: 16px; background:#fff; border-radius:50%; border:1px solid #999; }
+        #tsmFloat.tsm-compact .tsm-drag-label { position: absolute; top: -8px; left: 0; font-size: 8px; background: #fff; padding: 0 4px; border:1px solid #ccc; }
+
+        .tsm-top { top: 15%; } .tsm-right { right: 5%; }
+
+        /* Modal */
+        .tsm-modal { position: fixed; z-index: 2147483647; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+        .tsm-modal-content { background: #222; color: #eee; margin: 15% auto; padding: 20px; width: 90%; max-width: 320px; border-radius: 8px; font-family: Arial; }
+        .tsm-close { float: right; font-size: 24px; cursor: pointer; color: #aaa; }
+        .tsm-group { margin-bottom: 15px; }
+        .tsm-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #aaa; font-size: 11px; }
+        .tsm-group input { width: 100%; padding: 8px; background: #333; border: 1px solid #555; color: #fff; box-sizing: border-box; }
+        .tsm-btn { padding: 8px 12px; background: #555; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .tsm-btn-green { background: #4CAF50; }
+
+        #tsmResults { max-height: 100px; overflow-y: auto; background: #111; margin-top: 5px; }
+        .tsm-res-row { padding: 6px; border-bottom: 1px solid #333; cursor: pointer; font-size: 12px; }
+        .tsm-res-row:hover { background: #333; }
+
+        #tsmList { max-height: 120px; overflow-y: auto; background: #111; padding: 5px; border: 1px solid #333; }
+        .tsm-list-row { display: flex; justify-content: space-between; padding: 4px; border-bottom: 1px solid #333; font-size: 12px; }
+        .tsm-del-btn { color: red; cursor: pointer; font-weight: bold; padding: 0 5px; }
+
+        .tsm-footer { text-align: right; margin-top: 10px; border-top: 1px solid #444; padding-top: 10px; }
     `);
+}
 
-    const initInterval = setInterval(() => { if (document.body) { clearInterval(initInterval); createWidget(); } }, 100);
 })();

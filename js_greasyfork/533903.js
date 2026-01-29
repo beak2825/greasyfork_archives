@@ -5,7 +5,7 @@
 // @description        Convert relative times on GitHub to absolute date and time
 // @description:zh-CN  将 GitHub 页面上的相对时间转换为绝对日期和时间
 // @description:zh-TW  將 GitHub 頁面上的相對時間轉換成絕對日期與時間
-// @version            1.3.0
+// @version            1.3.1
 // @icon               https://raw.githubusercontent.com/MiPoNianYou/UserScripts/main/Icons/Github-Time-Format-Converter-Icon.svg
 // @author             念柚
 // @namespace          https://github.com/MiPoNianYou/UserScripts
@@ -36,6 +36,7 @@
     CLASSES: {
       PROCESSED: "time-converter-processed",
       VISIBLE: "time-converter-visible",
+      NO_TRANSLATE: "notranslate",
     },
     SELECTORS: {
       RELATIVE_TIME: "relative-time:not(.time-converter-processed)",
@@ -163,6 +164,8 @@
       tooltip.id = CONFIG.IDS.TOOLTIP;
       tooltip.setAttribute("role", "tooltip");
       tooltip.setAttribute("aria-hidden", "true");
+      tooltip.setAttribute("translate", "no");
+      tooltip.classList.add(CONFIG.CLASSES.NO_TRANSLATE);
 
       document.body?.appendChild(tooltip);
       state.tooltip = tooltip;
@@ -273,6 +276,8 @@
       span.textContent = dateText;
       span.dataset.tooltipTime = timeText;
       span.classList.add(CONFIG.CLASSES.PROCESSED);
+      span.classList.add(CONFIG.CLASSES.NO_TRANSLATE);
+      span.setAttribute("translate", "no");
 
       el.parentNode?.replaceChild(span, el);
     },

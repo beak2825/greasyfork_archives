@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Shiki collection bookmarks and some improvements
-// @version      0.9
+// @version      0.9.1
 // @description  Добавляет возможность сохранять коллекции в закладки, редиректит 404 страниц на .rip и убирает размытие с постеров
 // @author       corviciuz
 // @match        https://shikimori.one/*
@@ -44,6 +44,7 @@
     document.addEventListener('turbo:load', handleRedirect);
 
     const STORAGE_KEY = 'shiki_fav_collections_v2';
+    const MODAL_POS_KEY = 'shiki_fav_modal_position';
     const styles = `
         :root {
             --font-size-base-desktop: 13px;
@@ -55,20 +56,20 @@
         }
 
         @keyframes favOverlayOpen {
-            0%   { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
-            100% { background: rgba(0,0,0,0.3); backdrop-filter: blur(3px); }
+            0%   { background: rgba(0,0,0,0); }
+            100% { background: rgba(0,0,0,0); }
         }
         @keyframes favOverlayClose {
-            0%   { background: rgba(0,0,0,0.3); backdrop-filter: blur(3px); }
-            100% { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
+            0%   { background: rgba(0,0,0,0); }
+            100% { background: rgba(0,0,0,0); }
         }
 
         @keyframes favModalOpen {
             0%   { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1); backdrop-filter: blur(100px); }
         }
         @keyframes favModalClose {
-            0%   { opacity: 1; transform: scale(1); }
+            0%   { opacity: 1; transform: scale(1); backdrop-filter: blur(100px); }
             100% { opacity: 0; transform: scale(0.95); }
         }
 
@@ -77,16 +78,16 @@
             z-index: 999999;
             display: flex; justify-content: center; align-items: center;
             -webkit-text-size-adjust: 100%;
+            pointer-events: none;
         }
         .shiki-fav-overlay.open { animation: favOverlayOpen 0.1s ease-out forwards; }
         .shiki-fav-overlay.close { animation: favOverlayClose 0.2s ease-in forwards; }
 
         .shiki-fav-modal {
-            background: var(--background-color, #fff);
             width: 35%;
             max-width: 95%;
             max-height: 85vh;
-            border-radius: 4px;
+            border-radius: 2%;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
@@ -94,34 +95,55 @@
             font-family: var(--font-main);
             font-size: var(--font-size-base-desktop);
             line-height: 1.65;
-            color: var(--headline-color, #123);
+            border: 1px solid var(--headline-border-color, rgba(0,0,0,0.1));
+            position: fixed;
+            pointer-events: auto;
         }
         .shiki-fav-modal.open { animation: favModalOpen 0.1s ease-out forwards; }
         .shiki-fav-modal.close { animation: favModalClose 0.2s ease-in forwards; }
 
         .shiki-fav-header {
             padding: 12px 20px;
-            border-bottom: 1px solid var(--headline-border-color, #d8dde4);
+            border-bottom: 0px solid var(--headline-border-color, #d8dde4);
             display: flex;
             justify-content: space-between;
             font-weight: bold;
             font-size: 18px;
             align-items: center;
-            background: var(--headline-background-color, #e8ebef);
-            color: var(--headline-color, #123);
+            background-color: rgba(0, 0, 0, 0.25);
             letter-spacing: var(--font-alt-hadline-letter-spacing);
+            cursor: move;
+		    user-select: none;
         }
 
         .shiki-fav-close { cursor: pointer; font-size: 20px; opacity: 0.5; }
-        .shiki-fav-list { padding: 0; overflow-y: auto; flex: 1; background: var(--background-color, #fff); }
+        .shiki-fav-list {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+		.shiki-fav-list::-webkit-scrollbar {
+			width: 10px;
+		}
+
+		.shiki-fav-list::-webkit-scrollbar-track {
+			background-color: rgba(255,255,255,0.1);
+		}
+
+		.shiki-fav-list::-webkit-scrollbar-thumb {
+			background-color: rgba(255,255,255,0.45);
+		}
 
         .shiki-fav-item {
             padding: 15px 20px;
-            border-bottom: 1px solid var(--headline-border-color, #eee);
+            border-bottom: 0px solid var(--headline-border-color, #eee);
             display: flex;
             flex-direction: column;
             position: relative;
             gap: 6px;
+            background: transparent;
         }
 
         .fav-title-line {
@@ -136,7 +158,7 @@
         .fav-title:hover { color: var(--link-hover-color, #dd5202); }
 
         .fav-author-info-block { display: flex; gap: 12px; align-items: flex-start; }
-        .fav-author-avatar { width: 48px; height: 48px; border-radius: 2px; object-fit: cover; flex-shrink: 0; }
+        .fav-author-avatar { width: 48px; height: 48px; object-fit: cover; flex-shrink: 0; }
         .fav-meta-col { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
 
         .shiki-fav-modal .additionals { margin: 0; padding: 0; border: none; }
@@ -167,10 +189,21 @@
         .b-topic header .shiki-fav-heart.is-saved { opacity: 1; }
         .b-topic header .shiki-fav-heart:hover { opacity: 1; }
 
-        .shiki-fav-del { position: absolute; top: 15px; right: 15px; cursor: pointer; color: #ccc; transition: color 0.2s; font-size: 18px; }
-        .shiki-fav-del:hover { color: #e74c3c; }
+        .shiki-fav-del {
+            position: absolute; top: 15px; right: 15px;
+            cursor: pointer;
+            opacity: 0.35; transition: opacity 0.2s, color 0.2s; font-size: 18px;
+        }
+        .shiki-fav-del:hover { color: #e74c3c; opacity: 1; }
 
-        .shiki-fav-menu-link { color: #ffffff !important; }
+        .shiki-fav-menu-link {
+            display: flex !important;
+            align-items: center;
+        }
+
+        .shiki-fav-menu-link::before {
+            color: currentColor !important;
+        }
 
         @keyframes favPulse {
 			0%   { transform: translateY(-1px) scale(1.1); opacity: 0.8; filter: blur(1.5px); color: #95a5a6; }
@@ -212,17 +245,17 @@
         const authorMeta = document.querySelector('meta[itemprop="author"]');
         const avatarImg = document.querySelector('.author-avatar img');
         const posterImg = document.querySelector('.poster img');
-        
+
         let title = 'Без названия';
         if (h1 && h1.firstChild && h1.firstChild.textContent) {
             title = h1.firstChild.textContent.trim();
         }
-        
+
         const data = {
             title: title,
             url: location.pathname,
             authorName: authorEl ? authorEl.textContent.trim() : (authorMeta ? authorMeta.content : 'Аноним'),
-            authorUrl: authorEl ? authorEl.getAttribute('href') : '',
+            authorUrl: authorEl || authorMeta ? `https://shikimori.one/${authorEl ? authorEl.textContent.trim() : authorMeta.content}` : '',
             authorAvatar: avatarImg ? avatarImg.src : (posterImg ? posterImg.src : ''),
             isCensored: !!document.querySelector(
                 '.status-tags .censored, .b-anime_status_tag.censored'),
@@ -231,7 +264,7 @@
                 .map(t => t.dataset.text || t.textContent.trim())
                 .filter(Boolean)
         };
-        
+
         return data;
     }
 
@@ -241,19 +274,19 @@
 
         const authorMeta = article.querySelector('meta[itemprop="author"]');
         const posterImg = article.querySelector('.poster img');
-        
+
         const data = {
             title: nameLink.title || nameLink.textContent.trim() || 'Без названия',
             url: nameLink.getAttribute('href') || '',
             authorName: authorMeta ? authorMeta.content : 'Аноним',
-            authorUrl: '',
+            authorUrl: authorMeta ? `https://shikimori.one/${authorMeta.content}` : '',
             authorAvatar: posterImg ? posterImg.src : '',
             isCensored: !!article.querySelector('.censored'),
             tags: Array.from(article.querySelectorAll('.collection-tag'))
                 .map(t => t.dataset.text || t.textContent.trim())
                 .filter(Boolean)
         };
-        
+
         return data;
     }
 
@@ -276,29 +309,40 @@
 
         let listHtml = '';
         if (keys.length === 0) {
-            listHtml = '<div style="text-align:center; padding:50px; color:#888;">Здесь пока пусто, ня...</div>';
+            listHtml = '<div style="text-align:center; padding:50px; opacity:0.6;">Здесь пока пусто, ня...</div>';
         } else {
             listHtml = keys.reverse().map(id => {
                 const item = favs[id];
+                if (!item.authorUrl || item.authorUrl === '#' || item.authorUrl === '') {
+                    item.authorUrl = `https://shikimori.one/${item.authorName}`;
+                }
                 return `
                 <div class="shiki-fav-item" id="fav-row-${id}">
                     <div class="fav-title-line">
                         ${item.isCensored ? '<div class="b-anime_status_tag censored" data-text="18+" style="font-size:12px; padding:1px 4px;"></div>' : ''}
                         <a href="${item.url}" class="fav-title">${item.title}</a>
                     </div>
-                    <div class="fav-author-info-block">
-                        ${item.authorAvatar ? `<img src="${item.authorAvatar}" class="fav-author-avatar">` : ''}
-                        <div class="fav-meta-col">
-                            <div class="additionals">
-                                <div class="tags">
-                                    ${(item.tags || []).map(t => `<a class="b-anime_status_tag collection-tag" data-text="${t}" href="/collections?search=%23${encodeURIComponent(t)}"></a>`).join('')}
-                                </div>
-                            </div>
-                            <div class="name-date">
-                                <a class="name" href="${item.authorUrl || '#'}">${item.authorName}</a>
-                            </div>
-                        </div>
-                    </div>
+					<div class="fav-author-info-block">
+						${item.authorAvatar ? `
+							<a href="${item.authorUrl || '#'}" class="b-user_avatar">
+								<img src="${item.authorAvatar}" alt="">
+							</a>
+						` : ''}
+						<div class="fav-meta-col">
+							<div class="additionals">
+								<div class="tags">
+									${(item.tags || []).map(t =>
+										`<a class="b-anime_status_tag collection-tag"
+											data-text="${t}"
+											href="/collections?search=%23${encodeURIComponent(t)}"></a>`
+									).join('')}
+								</div>
+							</div>
+							<div class="name-date">
+								<a class="name" href="${item.authorUrl || '#'}">${item.authorName}</a>
+							</div>
+						</div>
+					</div>
                     <span class="shiki-fav-del" data-id="${id}" title="Удалить">✕</span>
                 </div>
                 `;
@@ -318,6 +362,51 @@
         `;
 
         const modal = overlay.querySelector('.shiki-fav-modal');
+        const header = modal.querySelector('.shiki-fav-header');
+
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let startLeft = 0, startTop = 0;
+
+        header.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+
+            const rect = modal.getBoundingClientRect();
+            startLeft = rect.left;
+            startTop = rect.top;
+
+            modal.style.left = `${startLeft}px`;
+            modal.style.top = `${startTop}px`;
+            modal.style.transform = 'none';
+
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+
+        function onMove(e) {
+            if (!isDragging) return;
+            modal.style.left = `${startLeft + (e.clientX - startX)}px`;
+            modal.style.top = `${startTop + (e.clientY - startY)}px`;
+        }
+
+        function clamp(v, min, max) {
+            return Math.min(Math.max(v, min), max);
+        }
+
+        function onUp() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+
+            const rect = modal.getBoundingClientRect();
+            GM_setValue(MODAL_POS_KEY, {
+                left: rect.left,
+                top: rect.top
+            });
+        }
+
         const closeModal = () => {
             overlay.classList.replace('open', 'close');
             modal.classList.replace('open', 'close');
@@ -346,12 +435,51 @@
                 });
 
                 if (Object.keys(getFavs()).length === 0) {
-                    overlay.querySelector('.shiki-fav-list').innerHTML = '<div style="text-align:center; padding:50px; color:#888;">Здесь пока пусто, ня...</div>';
+                    overlay.querySelector('.shiki-fav-list').innerHTML = '<div style="text-align:center; padding:50px; opacity:0.6;">Здесь пока пусто, ня...</div>';
                 }
             };
         });
 
         document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            const savedPos = GM_getValue(MODAL_POS_KEY, null);
+            if (!savedPos || typeof savedPos.left !== 'number') return;
+
+            modal.style.position = 'fixed';
+            modal.style.transform = 'none';
+            modal.style.left = savedPos.left + 'px';
+            modal.style.top = savedPos.top + 'px';
+
+            const rect = modal.getBoundingClientRect();
+            const fixed = ensureVisible(savedPos, rect, 0.3);
+
+            modal.style.left = fixed.left + 'px';
+            modal.style.top = fixed.top + 'px';
+        });
+    }
+
+    function ensureVisible(pos, rect, ratio = 0.3) {
+        const minVisibleW = rect.width * ratio;
+        const minVisibleH = rect.height * ratio;
+
+        let left = pos.left;
+        let top = pos.top;
+
+        if (left + minVisibleW > window.innerWidth) {
+            left = window.innerWidth - minVisibleW;
+        }
+        if (top + minVisibleH > window.innerHeight) {
+            top = window.innerHeight - minVisibleH;
+        }
+        if (left + rect.width - minVisibleW < 0) {
+            left = -rect.width + minVisibleW;
+        }
+        if (top + rect.height - minVisibleH < 0) {
+            top = -rect.height + minVisibleH;
+        }
+
+        return { left, top };
     }
 
 	function createHeartFor(container, id, isHeader = false, article = null) {

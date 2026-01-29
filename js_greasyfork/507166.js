@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         moomoo.io esp
 // @description  gives you magical powers
-// @version      1
+// @version      1.1
 // @author       Wealthy
 // @match        *://*.moomoo.io/*
 // @grant        none
@@ -113,15 +113,17 @@ const esp = (delta) => {
     xOffset = camX - (1920 / 2);
     yOffset = camY - (1080 / 2);
 
+    if(!owner.visible) return null
+
     if(checked("health")) {
         showHealth(owner.x, owner.y + owner.scale + 66.5, owner.health, owner.maxHealth);
 
         for(let animal of animals) animal.visible && showHealth(animal.x, animal.y + animal.scale + 66.5, animal.health, animal.maxHealth);
-        for(let enemy of enemies) showHealth(enemy.x, enemy.y + enemy.scale + 66.5, enemy.health, enemy.maxHealth);
+        for(let enemy of enemies) enemy.visible && showHealth(enemy.x, enemy.y + enemy.scale + 66.5, enemy.health, enemy.maxHealth);
     }
 
     if(checked("animal")) for(let animal of animals) animal.visible && showLine(owner.x, owner.y, animal.x, animal.y, "#221abf");
-    if(checked("enemy")) for(let enemy of enemies) showLine(owner.x, owner.y, enemy.x, enemy.y, "#000000");
+    if(checked("enemy")) for(let enemy of enemies) enemy.visible && showLine(owner.x, owner.y, enemy.x, enemy.y, "#000000");
 }
 
 let lastUpdate;

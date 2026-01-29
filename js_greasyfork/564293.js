@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         视频默认静音-缓冲自动恢复播放
+// @name         解决陕西干部学院单视频播放，不计入时长问题。
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.5
 // @license      GPL-3.0
-// @description  默认静音播放
+// @description  本脚本实现默认静音 + 缓冲自动恢复播放的功能，全程无需用户手动交互。无数据修改，0%封号
 // @author       蟑螂恶霸
 // @match        https://www.sqgj.gov.cn/*
 // @grant        none
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/564293/%E8%A7%86%E9%A2%91%E9%BB%98%E8%AE%A4%E9%9D%99%E9%9F%B3-%E7%BC%93%E5%86%B2%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D%E6%92%AD%E6%94%BE.user.js
-// @updateURL https://update.greasyfork.org/scripts/564293/%E8%A7%86%E9%A2%91%E9%BB%98%E8%AE%A4%E9%9D%99%E9%9F%B3-%E7%BC%93%E5%86%B2%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D%E6%92%AD%E6%94%BE.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/564293/%E8%A7%A3%E5%86%B3%E9%99%95%E8%A5%BF%E5%B9%B2%E9%83%A8%E5%AD%A6%E9%99%A2%E5%8D%95%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%EF%BC%8C%E4%B8%8D%E8%AE%A1%E5%85%A5%E6%97%B6%E9%95%BF%E9%97%AE%E9%A2%98%E3%80%82.user.js
+// @updateURL https://update.greasyfork.org/scripts/564293/%E8%A7%A3%E5%86%B3%E9%99%95%E8%A5%BF%E5%B9%B2%E9%83%A8%E5%AD%A6%E9%99%A2%E5%8D%95%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%EF%BC%8C%E4%B8%8D%E8%AE%A1%E5%85%A5%E6%97%B6%E9%95%BF%E9%97%AE%E9%A2%98%E3%80%82.meta.js
 // ==/UserScript==
 
 (function() {
@@ -18,134 +18,123 @@
     window.videoMuteListenerInjected = true;
 
     let isVideoOperating = false;
-    let isPageInteracted = false;
-    let retryPlayTimer = null;
     const TIP_ID = 'video-buffer-tip';
+    const OBSERVER_CONFIG = { childList: true, subtree: true };
+    let lastBufferPercent = -1;
 
     function debounce(fn, delay) {
         let timer = null;
         return function(...args) {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = null;
-            }, delay);
+            timer && clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
         };
-    }
-
-    function createInteractTip() {
-        if (document.getElementById(TIP_ID)) return;
-        const tip = document.createElement('div');
-        tip.id = TIP_ID;
-        tip.style.cssText = `
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: #2196F3; color: #fff; padding: 10px 20px; border-radius: 8px;
-            font-size: 14px; font-weight: 500; z-index: 99999; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            cursor: pointer; transition: opacity 0.3s;
-        `;
-        tip.innerText = '检测到视频缓冲，已静音自动恢复播放（点击页面可取消静音）';
-        tip.onclick = handlePageFirstInteract;
-        document.body.appendChild(tip);
-        return tip;
     }
 
     function removeInteractTip() {
         const tip = document.getElementById(TIP_ID);
         tip && tip.remove();
-        if (retryPlayTimer) clearTimeout(retryPlayTimer);
     }
 
-    function handlePageFirstInteract() {
-        if (isPageInteracted) return;
-        isPageInteracted = true;
-        removeInteractTip();
-        window.originalConsole.log('%c【授权】用户已交互，播放授权成功', 'color: #4CAF50; font-weight: bold;');
-
-        const videoElements = document.querySelectorAll('video');
-        videoElements.forEach(video => {
-            if (video.paused) {
-                video.play().then(() => {
-                    window.originalConsole.log('%c【重试】交互后播放视频成功', 'color: #4CAF50;');
-                }).catch(err => {
-                    window.originalConsole.error('%c【重试】播放失败：', 'color: #f44336;', err.message);
-                });
-            }
-        });
-
-        document.removeEventListener('click', handlePageFirstInteract);
-        document.removeEventListener('touchstart', handlePageFirstInteract);
+    function getVideo() {
+        return document.querySelector('video');
     }
 
     function setVideoMute() {
-        const videoElements = document.querySelectorAll('video');
-        videoElements.forEach(video => {
-            video.muted = true;
-             window.originalConsole.log('%c【视频静音成功】视频已静音', 'color: #4CAF50; font-weight: bold;');
-        });
+        const video = getVideo();
+        video && (video.muted = true);
     }
 
     setVideoMute();
     document.addEventListener('DOMContentLoaded', setVideoMute);
-    document.addEventListener('click', setVideoMute);
-    document.addEventListener('touchstart', setVideoMute);
-    const observer = new MutationObserver(setVideoMute);
-    observer.observe(document.body, { childList: true, subtree: true });
-    document.addEventListener('click', handlePageFirstInteract, { once: true });
-    document.addEventListener('touchstart', handlePageFirstInteract, { once: true });
+    new MutationObserver(setVideoMute).observe(document.body, OBSERVER_CONFIG);
 
-    function handleVideoBuffer() {
-        if (isVideoOperating) return;
-        isVideoOperating = true;
-
-        const videoElements = document.querySelectorAll('video');
-        if (videoElements.length === 0) {
-            window.originalConsole.log('%c【视频】页面无视频元素', 'color: #f44336; font-weight: bold;');
-            isVideoOperating = false;
-            return;
-        }
-
-        let hasPausedVideo = false;
-        videoElements.forEach(video => {
-            if (!video.paused) {
-                video.pause();
-                hasPausedVideo = true;
-                window.originalConsole.log('%c【视频】检测缓冲，执行暂停', 'color: #ff9800; font-weight: bold;');
-            }
+    function waitVideoBuffered(video) {
+        return new Promise(resolve => {
+            const checkBuffer = () => {
+                if (!video.duration || isNaN(video.duration) || video.duration === 0) {
+                    requestAnimationFrame(checkBuffer);
+                    return;
+                }
+                const bufferedEnd = video.buffered.length > 0 ? video.buffered.end(0) : 0;
+                const bufferPercent = Math.floor((bufferedEnd / video.duration) * 100);
+                if (bufferPercent !== lastBufferPercent) {
+                    lastBufferPercent = bufferPercent;
+                    window.originalConsole.log('%c【缓冲进度】' + bufferPercent + '%', 'color: #ffa500; font-weight: bold;');
+                }
+                const hasEnoughBuffer = bufferedEnd > video.currentTime + 1;
+                if (hasEnoughBuffer) {
+                    lastBufferPercent = -1;
+                    resolve();
+                } else {
+                    requestAnimationFrame(checkBuffer);
+                }
+            };
+            checkBuffer();
         });
-        if (!hasPausedVideo) {
-            isVideoOperating = false;
-            return;
-        }
-
-        setTimeout(() => {
-            if (isPageInteracted) {
-                videoElements.forEach(video => {
-                    if (video.paused) {
-                        video.play().then(() => {
-                            window.originalConsole.log('%c【视频】200ms间隔后，播放视频（已授权）', 'color: #4CAF50; font-weight: bold;');
-                        }).catch(err => {
-                            window.originalConsole.error('%c【播放】授权后播放失败：', 'color: #f44336;', err.message);
-                        });
-                    }
-                });
-            } else {
-                videoElements.forEach(video => {
-                    if (video.paused) {
-                        video.play().then(() => {
-                            window.originalConsole.log('%c【视频】未交互，自动播放成功（浏览器允许）', 'color: #4CAF50; font-weight: bold;');
-                            removeInteractTip();
-                        }).catch(err => {
-                            window.originalConsole.log('%c【提示】未交互播放被限制，引导用户点击', 'color: #ff9800; font-weight: bold;');
-                            createInteractTip();
-                        });
-                    }
-                });
-            }
-            isVideoOperating = false;
-        }, 200);
     }
 
-    const debouncedHandleVideoBuffer = debounce(handleVideoBuffer, 500);
+    async function handleVideoBuffer() {
+        if (isVideoOperating) return;
+        isVideoOperating = true;
+        removeInteractTip();
+        window.originalConsole.log('%c【匹配】捕获到缓冲中日志，正在处理', 'color: #2196F3; font-weight: bold;');
+
+        const video = getVideo();
+        if (!video) {
+            window.originalConsole.log('%c【视频】页面无视频元素', 'color: #f44336; font-weight: bold;');
+            isVideoOperating = false;
+            removeInteractTip();
+            return;
+        }
+
+        let isPausedByBuffer = false;
+        if (!video.paused) {
+            video.pause();
+            isPausedByBuffer = true;
+            window.originalConsole.log('%c【视频】检测缓冲，执行暂停', 'color: #ff9800; font-weight: bold;');
+        }
+
+        if (!isPausedByBuffer) {
+            const tipText = document.getElementById(TIP_ID);
+            tipText && (tipText.innerText = '视频已暂停，3秒后尝试自动播放...');
+            window.originalConsole.log('%c【视频】视频已暂停，无需处理，3秒后尝试播放', 'color: #9c27b0; font-weight: bold;');
+            setTimeout(() => {
+                video.play().then(() => {
+                    window.originalConsole.log('%c【视频】3秒延迟后，静音自动播放成功', 'color: #4CAF50; font-weight: bold;');
+                }).catch(err => {
+                    window.originalConsole.error('%c【视频】3秒延迟后播放失败：' + err.message, 'color: #f44336; font-weight: bold;');
+                }).finally(() => {
+                    isVideoOperating = false;
+                    removeInteractTip();
+                });
+            }, 3000);
+            return;
+        }
+
+        try {
+            window.originalConsole.log('%c【缓冲】开始监听视频缓冲状态...', 'color: #2196F3; font-weight: bold;');
+            await waitVideoBuffered(video);
+            window.originalConsole.log('%c【缓冲】视频缓冲成功，即将1秒后播放', 'color: #4CAF50; font-weight: bold;');
+
+            setTimeout(() => {
+                video.play().then(() => {
+                    window.originalConsole.log('%c【视频】延迟1秒后，静音自动播放成功', 'color: #4CAF50; font-weight: bold;');
+                }).catch(err => {
+                    window.originalConsole.error('%c【播放】静音播放失败：' + err.message, 'color: #f44336; font-weight: bold;');
+                }).finally(() => {
+                    isVideoOperating = false;
+                    removeInteractTip();
+                });
+            }, 1000);
+        } catch (err) {
+            window.originalConsole.error('%c【缓冲】监听缓冲失败：' + err.message, 'color: #f44336; font-weight: bold;');
+            isVideoOperating = false;
+            removeInteractTip();
+            lastBufferPercent = -1;
+        }
+    }
+
+    const debouncedHandleVideoBuffer = debounce(handleVideoBuffer, 1000);
 
     const listenConsole = (callback) => {
         const methods = ["log", "info", "warn", "error", "debug"];
@@ -161,31 +150,21 @@
 
     const restoreConsole = () => {
         if (!window.originalConsole) return;
-        Object.keys(window.originalConsole).forEach(method => {
-            console[method] = window.originalConsole[method];
-        });
+        Object.keys(window.originalConsole).forEach(method => console[method] = window.originalConsole[method]);
         window.originalConsole = null;
         window.videoMuteListenerInjected = false;
         removeInteractTip();
+        lastBufferPercent = -1;
         window.originalConsole?.log("%c【监听】已恢复原生控制台", "color: #f44336; font-weight: bold;");
     };
 
     listenConsole((method, args) => {
-        window.originalConsole.log(
-            `%c[${method}]`,
-            "color: #9c27b0; font-weight: bold; background: #f3e5f5; padding: 2px 6px; border-radius: 3px;",
-            ...args
-        );
-
-        const logContent = args.map(item => {
-            return typeof item === 'object' ? JSON.stringify(item) : String(item);
-        }).join(' ');
+        const logContent = args.map(item => typeof item === 'object' ? JSON.stringify(item) : String(item)).join(' ');
         if (logContent.includes('缓冲中')) {
-            window.originalConsole.log('%c【匹配】捕获到缓冲中日志，500ms防抖后处理视频', 'color: #2196F3; font-weight: bold;');
             debouncedHandleVideoBuffer();
         }
     });
 
     window.restoreConsole = restoreConsole;
-    window.originalConsole.log("%c【监听】视频默认静音+缓冲监控已启动，执行 restoreConsole() 可取消", "color: #9c27b0; font-weight: bold;");
+    window.originalConsole.log('%c【监听】视频默认静音+缓冲监控已启动，执行 restoreConsole() 可取消', 'color: #9c27b0; font-weight: bold;');
 })();

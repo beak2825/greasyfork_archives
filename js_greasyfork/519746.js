@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMDB 한국 지원 강화
 // @namespace    http://tampermonkey.net/
-// @version      3.1.9
+// @version      3.2.0
 // @description  TMDB 영화/TV 시리즈 페이지에 한국어, 영어, 원어 제목 추가, 개별 클립보드 복사 기능, 한국 시청등급 및 제작국 표시
 // @match        https://www.themoviedb.org/*
 // @grant        GM_xmlhttpRequest
@@ -281,6 +281,8 @@ titleContainer.innerHTML = `
                         <a href="https://1337x.to/search/${encodeURIComponent(enTitle)}%20${year}%20tigole/1/" target="_blank">🌐</a>
                         <a href="https://bt4gprx.com/search?q=${encodeURIComponent(enTitle)}%20${year}" target="_blank">BT4G</a>
                         <a href="https://bt4gprx.com/search?q=${encodeURIComponent(enTitle)}%20${year}%20tigole" target="_blank">🌐</a>
+                        <a href="https://uindex.org/search.php?search=${encodeURIComponent(enTitle)}+${year}&c=0" target="_blank">uindex</a>
+                        <a href="https://uindex.org/search.php?search=${encodeURIComponent(enTitle)}+${year}+tigole&c=0" target="_blank">🌐</a>
                         <a href="https://torrentquest.com/${tqPathPrefix}/${encodedTqSearchTerm}" target="_blank">TQ</a>
                         <a href="https://torrentquest.com/${tqPathPrefix}/${encodedTqSearchTermTigole}" target="_blank">🌐</a>
                         <a href="https://nyaa.si/?f=0&c=0_0&q=${encodeURIComponent(originalTitle)}" target="_blank">Nyaa</a>

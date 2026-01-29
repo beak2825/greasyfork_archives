@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTube to Bilibili Style
 // @namespace    http://tampermonkey.net/
-// @version      1.9
-// @description  油管爆改哔哩哔哩：将YouTube的标签页图标、logo替换为哔哩哔哩的，修改进度条颜色，并将标题中的"YouTube"替换为"哔哩哔哩"。
-// @author       BlingCc (Modified by Gemini)
+// @version      2.0
+// @description  油管爆改哔哩哔哩。
+// @author       BlingCc
 // @match        https://www.youtube.com/*
 // @grant        none
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=YouTube.com
@@ -24,7 +24,6 @@
      */
     function injectCustomStyles() {
         const styleId = 'bilibili-style-injector';
-        // 如果样式已经注入，则不再重复执行
         if (document.getElementById(styleId)) {
             return;
         }
@@ -34,6 +33,24 @@
                 --yt-spec-static-brand-red: #05A3D7 !important;
             }
 
+            /* --- 强制隐藏YouTube动图(Yoodles) --- */
+            /* 隐藏顶栏的动图容器 */
+            ytd-yoodle-renderer,
+            .ytd-topbar-logo-renderer #promo-img,
+            /* 某些情况下动图会作为背景或图片存在 */
+            #logo-icon-container img {
+                display: none !important;
+            }
+
+            /* --- 修复 Logo 显示 --- */
+            /* 确保我们替换后的 Logo 容器始终可见（因为YT可能会为了显示动图而隐藏它） */
+            #logo-icon.bili-logo-replaced {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+
+            /* --- Bilibili 配色风格 --- */
             .ytp-play-progress.ytp-swatch-background-color, .ytp-play-progress {
                 background: #05A3D7 !important;
             }
@@ -42,7 +59,6 @@
                 background: #05A3D7 !important;
             }
 
-            /* 进度条已播放部分 */
             .ytp-play-progress.ytp-swatch-background-color {
                 background: #05A3D7 !important;
             }
@@ -51,7 +67,6 @@
                 background:linear-gradient(to right,#05A3D7 50%,#fff 100%) !important;
             }
 
-            /* 去除拖动圆点周围的白色边框，使其更融合 */
             .ytp-scrubber-button {
                 border: none !important;
             }
@@ -82,7 +97,6 @@
             .ytp-menuitem[aria-checked=true] .ytp-menuitem-toggle-checkbox {
                 background: #06AEEC !important;
             }
-
         `;
 
         const style = document.createElement('style');
@@ -90,7 +104,6 @@
         style.textContent = css;
         document.head.appendChild(style);
     }
-
 
     /**
      * 替换网站图标 (Favicon)
@@ -108,28 +121,39 @@
     }
 
     /**
-     * 替换 Logo
+     * 替换 Logo (遍历所有存在的 #logo-icon)
      */
     function changeLogo() {
-        const logoElement = document.querySelector('#logo-icon');
-        if (logoElement && !logoElement.classList.contains('bili-logo-replaced')) {
-            logoElement.innerHTML = logoSvg;
-            logoElement.classList.add('bili-logo-replaced');
-        }
+        // 使用 querySelectorAll 选取所有ID为 logo-icon 的元素
+        // YouTube 在侧边栏和顶栏都会使用这个ID
+        const logoElements = document.querySelectorAll('#logo-icon');
+
+        logoElements.forEach(logoElement => {
+            // 避免重复处理
+            if (!logoElement.classList.contains('bili-logo-replaced')) {
+                // 替换 SVG 内容
+                logoElement.innerHTML = logoSvg;
+                logoElement.classList.add('bili-logo-replaced');
+
+                // 移除 hidden 属性（如果有），防止 YT 隐藏标准 Logo
+                if (logoElement.hasAttribute('hidden')) {
+                    logoElement.removeAttribute('hidden');
+                }
+            }
+        });
     }
 
     /**
      * 替换标题
      */
     function changeTitle() {
-        // 使用正则表达式 /youtube/gi 进行全局、不区分大小写的替换
         if (document.title.toLowerCase().includes('youtube')) {
             document.title = document.title.replace(/youtube/gi, '哔哩哔哩 (゜-゜)つロ 干杯~~bilibili');
         }
     }
 
     /**
-     * 执行所有动态修改（会被重复调用）
+     * 执行所有动态修改
      */
     function applyDynamicChanges() {
         changeFavicon();
@@ -139,20 +163,17 @@
 
     // --- 脚本执行入口 ---
 
-    // 1. 立即注入样式，这是最优先的
     injectCustomStyles();
-
-    // 2. 初始执行所有修改
     applyDynamicChanges();
 
-    // 3. 使用 MutationObserver 来监控DOM变化，确保在YouTube动态加载内容后脚本依然生效
+    // 监控DOM变化
     const observer = new MutationObserver(applyDynamicChanges);
     observer.observe(document.documentElement, {
         childList: true,
         subtree: true,
     });
 
-    // 4. 专门监控标题变化
+    // 监控标题变化
     const titleObserver = new MutationObserver(changeTitle);
     const titleElement = document.querySelector('title');
     if (titleElement) {

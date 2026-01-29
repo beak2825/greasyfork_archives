@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoHideLZT + Enter
 // @namespace    http://tampermonkey.net/
-// @version      5.88
+// @version      5.89
 // @description  Автоматически добавляет хайд при создании тем и отправке сообщений на сайтах zelenka и lolz, так же отправляет хайд по Enter.
 // @author       eretly & Timka241 & Toil & llimonix
 // @match        https://zelenka.guru/*
@@ -46,7 +46,7 @@
     let yourWords = ""
     let wordsPosition = "none"
     let addWordsOnCreate = false
-    const storageKey = "eretlyHIDEnew" // Ключ для localStorage
+    const storageKey = "eretlyHIDE" // Ключ для localStorage
     const availableWordsPositions = ["none", "left", "right", "both"]
     const wordsPositionPhrases = {
         none: "Отключено",
@@ -1080,7 +1080,7 @@
     settingsMenu.style.zIndex = "9999"
     settingsMenu.style.right = "0px"
     settingsMenu.style.top = "0px"
-    settingsMenu.style.height = "326px"
+    settingsMenu.style.height = "336px"
     settingsMenu.style.width = "350px"
     settingsMenu.style.transition = "opacity 100ms linear, transform 100ms linear, visibility 100ms linear"
     settingsMenu.style.outline = "1px solid #363636"

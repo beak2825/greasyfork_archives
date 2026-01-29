@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         I'm not a robot neal.fun level selector
+// @name         I'm not a robot neal.fun level-controller
 // @namespace    http://tampermonkey.net/
-// @version      3.6
+// @version      3.8
 // @description  Adds buttons and controls to skip levels or end the game.
 // @author       Suomynona589
 // @match        https://neal.fun/not-a-robot/*
 // @grant        unsafeWindow
 // @icon         https://neal.fun/favicons/not-a-robot.png
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/558454/I%27m%20not%20a%20robot%20nealfun%20level%20selector.user.js
-// @updateURL https://update.greasyfork.org/scripts/558454/I%27m%20not%20a%20robot%20nealfun%20level%20selector.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/558454/I%27m%20not%20a%20robot%20nealfun%20level-controller.user.js
+// @updateURL https://update.greasyfork.org/scripts/558454/I%27m%20not%20a%20robot%20nealfun%20level-controller.meta.js
 // ==/UserScript==
 
 (function() {
@@ -38,15 +38,37 @@
     document.body.appendChild(container);
 
     const topRow = document.createElement('div');
-    topRow.style.position = 'fixed';
-    topRow.style.bottom = '125px';
+    topRow.style.position = 'absolute';
     topRow.style.left = '50%';
     topRow.style.transform = 'translateX(-50%)';
     topRow.style.zIndex = '9999';
     topRow.style.display = 'flex';
     topRow.style.flexDirection = 'row';
-    topRow.style.gap = '20px';
+    topRow.style.gap = '150px';
     document.body.appendChild(topRow);
+
+    let positionTimeout = null;
+
+    function positionButtons() {
+        const captcha = document.querySelector('.captcha-container');
+        if (!captcha) return;
+
+        if (positionTimeout) clearTimeout(positionTimeout);
+
+        positionTimeout = setTimeout(() => {
+            const rect = captcha.getBoundingClientRect();
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+            topRow.style.top = (rect.bottom + scrollY + 50) + 'px';
+        }, 150);
+    }
+
+    positionButtons();
+    window.addEventListener('resize', positionButtons);
+    window.addEventListener('scroll', positionButtons);
+
+    const obs = new MutationObserver(positionButtons);
+    obs.observe(document.body, { childList: true, subtree: true });
 
     const endBtn = document.createElement('button');
     endBtn.textContent = 'End Game';
@@ -61,17 +83,19 @@
     endBtn.addEventListener('click', () => setLevel(47));
     container.appendChild(endBtn);
 
-    // Previous Level button
     const prevBtn = document.createElement('button');
     prevBtn.textContent = '⏪';
-    prevBtn.style.padding = '10px 20px';
-    prevBtn.style.fontSize = '30px';
-    prevBtn.style.background = 'transparent';
+    prevBtn.style.padding = '0';
+    prevBtn.style.margin = '0';
+    prevBtn.style.background = 'none';
+    prevBtn.style.border = 'none';
+    prevBtn.style.fontSize = '32px';
     prevBtn.style.color = '#fff';
-    prevBtn.style.border = '2px solid #fff';
-    prevBtn.style.borderRadius = '8px';
     prevBtn.style.cursor = 'pointer';
     prevBtn.style.boxShadow = 'none';
+    prevBtn.style.lineHeight = '1';
+    prevBtn.style.display = 'inline';
+
     prevBtn.addEventListener('click', () => {
         let current = parseInt(localStorage.getItem('not-a-robot-level') || '0', 10);
         if (isNaN(current)) current = 0;
@@ -81,17 +105,19 @@
     });
     topRow.appendChild(prevBtn);
 
-    // Next Level button
     const nextBtn = document.createElement('button');
     nextBtn.textContent = '⏩';
-    nextBtn.style.padding = '10px 20px';
-    nextBtn.style.fontSize = '30px';
-    nextBtn.style.background = 'transparent';
+    nextBtn.style.padding = '0';
+    nextBtn.style.margin = '0';
+    nextBtn.style.background = 'none';
+    nextBtn.style.border = 'none';
+    nextBtn.style.fontSize = '32px';
     nextBtn.style.color = '#fff';
-    nextBtn.style.border = '2px solid #fff';
-    nextBtn.style.borderRadius = '8px';
     nextBtn.style.cursor = 'pointer';
     nextBtn.style.boxShadow = 'none';
+    nextBtn.style.lineHeight = '1';
+    nextBtn.style.display = 'inline';
+
     nextBtn.addEventListener('click', () => {
         let current = parseInt(localStorage.getItem('not-a-robot-level') || '0', 10);
         if (isNaN(current)) current = 0;
@@ -237,4 +263,26 @@
     skipVideosToEnd();
     const observer = new MutationObserver(() => skipVideosToEnd());
     observer.observe(document.body, { childList: true, subtree: true });
+
+    window.addEventListener('keydown', (e) => {
+        let current = parseInt(localStorage.getItem('not-a-robot-level') || '0', 10);
+        if (isNaN(current)) current = 0;
+
+        const ctrlRequiredLevels = [14, 25, 37];
+        const ctrlRequired = ctrlRequiredLevels.includes(current);
+
+        if (ctrlRequired && !e.ctrlKey) return;
+        if (!ctrlRequired && e.ctrlKey) return;
+
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextBtn.click();
+        }
+
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevBtn.click();
+        }
+    });
+
 })();

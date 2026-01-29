@@ -36,7 +36,6 @@
 // @updateURL https://update.greasyfork.org/scripts/564281/junior%20parkrun%20Group%20Sunday%20Link.meta.js
 // ==/UserScript==
 // DO NOT EDIT - generated from src/ by scripts/build-scripts.js
-// Built: 2026-01-27T23:51:00.906Z
 
 function findConsolidatedClubLink() {
   var doc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;

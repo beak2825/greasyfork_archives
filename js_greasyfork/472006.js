@@ -4,7 +4,7 @@
 // @author         Blaff, Blatomi, Atlantis, Rand0max
 // @namespace      JV_Chat_MP
 // @license        MIT
-// @version        0.1.112.v659_MP
+// @version        0.1.112.v675_MP
 // @icon           https://images.emojiterra.com/google/noto-emoji/unicode-15/color/128px/2709.png
 // @match          https://*.jeuxvideo.com/messages-prives/message.php*
 // @grant          none
@@ -167,7 +167,7 @@ body {
     margin: 0;
 }
 
-.jv-editor > .messageEditor__containerEdit {
+.messageEditor__containerEdit {
     background-color: var(--jv-bg-color);
     border: unset;
     box-shadow: none;
@@ -294,6 +294,7 @@ label {
 #message {
     resize: none;
     min-width: unset;
+    height: 8.6em !important;
 }
 
 .jvchat-edition-textarea {
@@ -301,11 +302,12 @@ label {
     width: 100%;
     max-height: 6.5rem;
     min-height: 3.5rem;
+    height: 8.6em !important;
 }
 
 .jvchat-reduced #message {
     padding: 0.3rem;
-    height: 1.7rem !important;
+    height: var(--height-reduce-chat, 1.7rem) !important;
     max-height: 6.5rem;
     overflow: auto;
 }
@@ -370,7 +372,6 @@ label {
     border-right-width: 0!important;
     color: inherit!important;
     background-color: var(--jv-input-bg-color);
-    height : 8.6em !important;
 }
 
 .jvchat-buttons button:hover {
@@ -1438,7 +1439,7 @@ function parseMessage(elem) {
     let conteneur = conteneurs[conteneurs.length - 1];
     let author = conteneur.getElementsByClassName("bloc-pseudo-msg")[0].textContent.trim();
     //let blacklisted = conteneurs[0].classList.contains("conteneur-message-blacklist");
-    let blacklisted = conteneurs[0].closest(".bloc-message-forum.msg-pseudo-blacklist") !== null;
+    let blacklisted = conteneurs[0].closest(".msg-pseudo-blacklist") !== null;
     let avatar = conteneur.getElementsByClassName("user-avatar-msg")[0];
     if (avatar !== undefined) {
         avatar = avatar.getAttribute("data-src");
@@ -1446,7 +1447,9 @@ function parseMessage(elem) {
     let date = conteneur.getElementsByClassName("bloc-date-msg")[0].textContent.trim();
     let content = conteneur.getElementsByClassName("txt-msg")[0];
     let id = parseInt(elem.getAttribute("data-id"));
+    let toQuoteJvCode = conteneur?.getElementsByClassName("bloc-jvcode-msg")[0]?.innerHTML.trim() ?? " ";
     return {
+        toQuoteJvCode: toQuoteJvCode, //MP JVChat toQuoteJvCode
         author: author, dateString: date, date: parseDate(date), avatar: avatar,
         id: id, content: content, blacklisted: blacklisted
     };
@@ -1904,20 +1907,21 @@ function countLines(text) {
 }
 
 function computeHeight(lines) {
-    return 1 * lines + 0.6;
+    return 1.1 * lines + 0.9;
 }
 
 function setTextareaHeight(plusOne) {
+    // "--height-reduce-chat" === "height" FORCED
     let textarea = document.getElementById("message");
     if (!isReduced) {
-        textarea.style["height"] = "";
+        textarea.style.removeProperty("--height-reduce-chat");
         return;
     }
     plusOne = !!plusOne;
     let lines = countLines(textarea.value);
 
     if (!plusOne && lines === 1) {
-        textarea.style["height"] = "";
+        textarea.style.removeProperty("--height-reduce-chat");
         return;
     }
 
@@ -1926,7 +1930,7 @@ function setTextareaHeight(plusOne) {
     }
 
     let height = computeHeight(lines);
-    textarea.style["height"] = `${height}rem`;
+    textarea.style.setProperty("--height-reduce-chat", `${height}rem`);
 }
 
 function postMessageIfEnter(event) {
@@ -1996,6 +2000,7 @@ function formatDate(date) {
 }
 
 function makeMessage(message) {
+    let toQuoteJvCode = message.toQuoteJvCode;
     let content = message.content;
     fixMessage(content);
     detectMosaic(content);
@@ -2035,6 +2040,8 @@ function makeMessage(message) {
                         </div>
                     </div>
                     <div class="jvchat-content">${content.outerHTML}</div>
+                    <!--jvchat-msg-jv-code -- Citation -->
+                    <div class="jvchat-msg-jv-code jvchat-hide">${toQuoteJvCode}</div>
                     <div class="jvchat-edition jvchat-hide">
                         <textarea class="jvchat-edition-textarea jvchat-textarea"></textarea>
                         <div class="jvchat-buttons">
@@ -2100,31 +2107,14 @@ function addMessages(messages, editing, requestTimestamp) {
         let edited = message.edited;
 
         if (referenced) {
-            let [timestamp, edition, deleted] = lastEditionTime[id];
-            if (deleted) {
-                continue;
-            }
-            if (timestamp >= requestTimestamp || edition === edited) {
-                continue;
-            }
+            continue;
         }
 
         let newBloc = makeMessage(message);
 
         lastEditionTime[id] = [requestTimestamp, edited, false];
 
-        if (referenced) {
-            let selector = `.jvchat-message[jvchat-id="${id}"]`;
-            let oldBloc = main.querySelector(selector).closest(".jvchat-bloc-message");
-            let isDown = isScrollDown();
-            oldBloc.outerHTML = newBloc;
-            if (isDown) {
-                setScrollDown();
-            }
-            let event = new CustomEvent('jvchat:newmessage', { 'detail': { id: id, isEdit: true } });
-            dispatchEvent(event);
-            continue;
-        }
+
         hasNewMessages = true;
         if (nbNewMessage === 0 && document.hidden) {
             let hrs = document.getElementsByClassName("jvchat-ruler");

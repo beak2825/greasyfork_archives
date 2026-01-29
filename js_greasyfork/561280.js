@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Resolucion inteligente GDriveLatinoHD - Sistema Intuitivo
+// @author       Moebius
 // @namespace    Violentmonkey Scripts
 // @version      1.2
 // @description  Sistema intuitivo de filtrado por capas: Resolución → Calidad

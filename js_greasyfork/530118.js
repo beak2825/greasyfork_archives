@@ -3,7 +3,7 @@
 // @description  Set playback speed for Read Aloud on ChatGPT.com, navigate between messages, and open a settings menu by clicking the speed display to toggle additional UI tweaks. Features include color-coded icons under ChatGPT's responses, highlighted color for bold text, compact sidebar, square design, and more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      5.15.7
+// @version      5.15.8
 // @namespace    TimMacy.ReadAloudSpeedster
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=chatgpt.com
 // @match        https://*.chatgpt.com/*
@@ -20,7 +20,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 5.15.7 - Read Aloud Speedster             *
+*                    Version: 5.15.8 - Read Aloud Speedster             *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -889,6 +889,7 @@
         :root:has(.bg-token-bg-primary.absolute.start-0.z-20.h-full.overflow-hidden) div.sticky:has([data-testid="accounts-profile-button"]) {
             opacity: 0;
             z-index: -1;
+            pointer-events: none;
         }
 
         :root:has(section [data-testid="bar-search-sources-header"]) .bg-token-sidebar-surface-primary button:has(svg path[d^="M14.2548"]) {
@@ -1055,15 +1056,6 @@
             left: 0;
         }
 
-        div[data-radix-popper-content-wrapper][style*="--radix-popper-transform-origin: 0% 86px"] {
-            margin: 85px 0 0 50px;
-        }
-
-        div[data-radix-popper-content-wrapper][style*="--radix-popper-transform-origin: 0% 86px"] > div {
-            display: flex;
-            flex-direction: column-reverse;
-        }
-
         #thread-bottom form div.no-scrollbar.horizontal-scroll-fade-mask {
             margin: 10px 0 -10px 0;
             padding-bottom: unset;
@@ -1073,9 +1065,14 @@
             height: unset !important;
         }
 
-        div[aria-label="Report message"],
-        button[aria-label="Report message"] {
-            display: none;
+        /* move 'More actions' menu */
+        [data-radix-popper-content-wrapper]:has([aria-label="Branch in new chat"]) {
+            margin: 120px 0 0 40px;
+        }
+
+        [data-radix-popper-content-wrapper]:has([aria-label="Branch in new chat"]) > div {
+            display: flex;
+            flex-direction: column-reverse;
         }
     `;
 

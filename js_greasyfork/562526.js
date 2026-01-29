@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         Tools Extension
 // @namespace    https://github.com/aoi-umi
-// @version      0.0.3
+// @version      0.0.4
 // @description  tools插件
 // @author       aoi-umi
 // @match        http://*/*
 // @match        https://*/*
-// @grant        none
-// @require https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @run-at       document-end
+// @grant        unsafeWindow
+// @require https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.min.js
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/562526/Tools%20Extension.user.js
 // @updateURL https://update.greasyfork.org/scripts/562526/Tools%20Extension.meta.js
@@ -21,6 +22,8 @@
 
 	var lib = {};
 
+	var ToolsExtension = {};
+
 	var utils = {};
 
 	var hasRequiredUtils;
@@ -32,6 +35,8 @@
 		utils.throttle = throttle;
 		utils.isElementAtPoint = isElementAtPoint;
 		utils.formatTime = formatTime;
+		utils.createHtmlElement = createHtmlElement;
+		utils.svgToDataURL = svgToDataURL;
 		function throttle(func, wait, options) {
 		    let context, args, result;
 		    let timeout = null;
@@ -83,6 +88,29 @@
 		        hourStr = `${String(h).padStart(2, "0")}:`;
 		    }
 		    return `${hourStr}${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+		}
+		function createHtmlElement(options) {
+		    const dom = document.createElement(options.tag || "div");
+		    if (options.attrs) {
+		        Object.keys(options.attrs).forEach((key) => {
+		            dom.setAttribute(key, options.attrs[key]);
+		        });
+		    }
+		    if (options.textContent) {
+		        dom.textContent = options.textContent;
+		    }
+		    if (options.children) {
+		        options.children.forEach((child) => {
+		            dom.appendChild(createHtmlElement(child));
+		        });
+		    }
+		    return dom;
+		}
+		function svgToDataURL(svgString) {
+		    const encodedSVG = encodeURIComponent(svgString)
+		        .replace(/'/g, "%27") // 替换单引号
+		        .replace(/"/g, "%22"); // 替换双引号
+		    return `data:image/svg+xml,${encodedSVG}`;
 		}
 		
 		return utils;
@@ -219,9 +247,10 @@
 		                dom.css("background-color", "#bec8ff");
 		                let level = dom.parent(`.${that.contextMenuName}`).data("level");
 		                if ((_a = item.children) === null || _a === void 0 ? void 0 : _a.length) {
+		                    let rect = dom[0].getBoundingClientRect();
 		                    let pos = {
-		                        x: dom.offset().left + dom.outerWidth(),
-		                        y: dom.offset().top,
+		                        x: rect.right,
+		                        y: rect.top,
 		                    };
 		                    that.createMenu(item.children, pos, level + 1);
 		                }
@@ -320,9 +349,19 @@
 		    getMenu(level = 0) {
 		        let menu = jQuery(`.${this.contextMenuName}[data-level=${level}]`);
 		        if (!menu.length) {
-		            menu = jQuery(`<div class="${this.contextMenuName} ${this.floatMenuName} ${this.defaultMenuName}" data-level=${level}></div>`);
 		            let target = document.fullscreenElement || document.body;
-		            jQuery(target).append(menu);
+		            const menuEle = utils.createHtmlElement({
+		                attrs: {
+		                    class: [
+		                        this.contextMenuName,
+		                        this.floatMenuName,
+		                        this.defaultMenuName,
+		                    ].join(" "),
+		                    "data-level": level.toString(),
+		                },
+		            });
+		            target.appendChild(menuEle);
+		            menu = jQuery(menuEle);
 		        }
 		        return menu;
 		    }
@@ -333,20 +372,34 @@
 		            left: pos.x + "px",
 		            top: pos.y + "px",
 		        })
-		            .empty()
-		            .append(item.map((ele) => {
+		            .empty();
+		        item.forEach((ele) => {
 		            var _a;
-		            let dom = jQuery([
-		                `<div class="${this.contextMenuItemName}">`,
-		                `${ele.text}`,
-		                ((_a = ele.children) === null || _a === void 0 ? void 0 : _a.length) &&
-		                    `<span style="flex: 1;"></span><i class="${this.moreName} ${this.iconName}">${icons_1.ArrowRight}</i>`,
-		                "</div>",
-		            ].join(""));
-		            dom.data("item", ele);
-		            return dom;
-		        }))
-		            .show();
+		            const dom = utils.createHtmlElement({
+		                textContent: [`${ele.text}`].join(""),
+		                attrs: {
+		                    class: `${this.contextMenuItemName}`,
+		                },
+		                children: !((_a = ele.children) === null || _a === void 0 ? void 0 : _a.length)
+		                    ? null
+		                    : [
+		                        {
+		                            tag: "span",
+		                            attrs: { style: "flex:1;" },
+		                        },
+		                        {
+		                            tag: "img",
+		                            attrs: {
+		                                class: `${this.moreName} ${this.iconName}`,
+		                                src: utils.svgToDataURL(icons_1.ArrowRight),
+		                            },
+		                        },
+		                    ],
+		            });
+		            jQuery(dom).data("item", ele);
+		            menu[0].appendChild(dom);
+		        });
+		        menu.show();
 		    }
 		    handleMenuItemClick(item) {
 		        item.fn && item.fn();
@@ -381,27 +434,24 @@
 		return menu;
 	}
 
-	var hasRequiredLib;
+	var hasRequiredToolsExtension;
 
-	function requireLib () {
-		if (hasRequiredLib) return lib;
-		hasRequiredLib = 1;
-		Object.defineProperty(lib, "__esModule", { value: true });
-		jQuery.noConflict();
+	function requireToolsExtension () {
+		if (hasRequiredToolsExtension) return ToolsExtension;
+		hasRequiredToolsExtension = 1;
+		Object.defineProperty(ToolsExtension, "__esModule", { value: true });
+		ToolsExtension.ToolsExtension = void 0;
 		const utils = requireUtils();
 		const menu_1 = requireMenu();
-		class ToolsExtension {
+		let ToolsExtension$1 = class ToolsExtension {
 		    constructor() {
 		        this.prefix = "tools-";
 		        this.init();
 		    }
 		    init() {
-		        // 等待原网站css js加载
-		        setTimeout(() => {
-		            this.menu = new menu_1.Menu({ prefix: this.prefix });
-		            this.bindEvents();
-		            console.log("ToolsExtension initialized");
-		        }, 1000);
+		        this.menu = new menu_1.Menu({ prefix: this.prefix });
+		        this.bindEvents();
+		        console.log("ToolsExtension initialized on", location.href);
 		    }
 		    getVideoAtPoint(pos) {
 		        return jQuery("video")
@@ -446,7 +496,9 @@
 		            let opt = { event, type: "video", el: video, data: null };
 		            let danmaku = this.getDanmakuAtPoint(event);
 		            if (danmaku) {
-		                let matchRs = /((?<hour>[\d]+):)?(?<minute>[\d]+):(?<second>[\d]+)/.exec(danmaku.innerText);
+		                let text = danmaku.innerText || "";
+		                text = text.replace(/：/g, ":");
+		                let matchRs = /((?<hour>[\d]+):)?(?<minute>[\d]+):(?<second>[\d]+)/.exec(text);
 		                if (matchRs && matchRs.groups) {
 		                    let hour = parseInt(matchRs.groups.hour || "0");
 		                    let minute = parseInt(matchRs.groups.minute);
@@ -461,11 +513,23 @@
 		                }
 		            }
 		            this.menu.conetextMenuHandler(opt);
-		        }, true // 使用捕获阶段
-		        );
+		        }, true);
 		    }
-		}
-		window.tools = new ToolsExtension();
+		};
+		ToolsExtension.ToolsExtension = ToolsExtension$1;
+		
+		return ToolsExtension;
+	}
+
+	var hasRequiredLib;
+
+	function requireLib () {
+		if (hasRequiredLib) return lib;
+		hasRequiredLib = 1;
+		Object.defineProperty(lib, "__esModule", { value: true });
+		jQuery.noConflict();
+		const ToolsExtension_1 = requireToolsExtension();
+		window.tools = new ToolsExtension_1.ToolsExtension();
 		
 		return lib;
 	}

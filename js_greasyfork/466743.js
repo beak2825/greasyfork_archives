@@ -3,7 +3,7 @@
 // @namespace    https://greasyfork.org/es/scripts/466743
 // @version      2.1
 // @description  Descarga y gestiona archivos JSON desde ps4trainer.com con buscador, filtros, historial y carga optimizada.
-// @author       Shu2Ouma
+// @author       Moebius
 // @icon         http://ps4trainer.com/Trainer/favicon.png
 // @match        http://ps4trainer.com/Trainer/index.html
 // @grant        none

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fortnite.gg Locker Importer
 // @namespace    https://fortnite.gg/
-// @version      2.6
+// @version      2.7
 // @description  Import your Fortnite locker to Fortnite.gg
 // @author       ItsReepze
 // @match        https://fortnite.gg/*
@@ -45,7 +45,7 @@
     if (!location.pathname.toLowerCase().includes('/locker')) return;
 
     var SAC = 'Reepze';
-    var VERSION = '2.6';
+    var VERSION = '2.7';
     var switchToken = 'OThmN2U0MmMyZTNhNGY4NmE3NGViNDNmYmI0MWVkMzk6MGEyNDQ5YTItMDAxYS00NTFlLWFmZWMtM2U4MTI5MDFjNGQ3';
     var epicBase = 'https://account-public-service-prod.ol.epicgames.com';
     var fnBase = 'https://fortnite-public-service-prod11.ol.epicgames.com';
@@ -410,7 +410,6 @@
     async function fetchCurrentSkin() {
         if (!session) return;
         try {
-            // Get the avatar image from fortnite.gg (class="avatar")
             var avatarImg = document.querySelector('img.avatar');
             if (avatarImg && avatarImg.src) {
                 session.skinIcon = avatarImg.src;
@@ -611,17 +610,46 @@
             });
 
             setStatus('Building URL...');
-            var ids = [], diffs = [];
+            var ids = [];
             for (var i = 0; i < items.length; i++) ids.push(items[i].fid);
+            
+            var diffs = [];
             for (i = 0; i < ids.length; i++) diffs.push(i === 0 ? ids[i] : ids[i] - ids[i-1]);
 
             var str = created + ',' + diffs.join(',');
-            var comp = window.pako.deflateRaw(str, { level: -1 });
+            var comp = window.pako.deflateRaw(str, { level: 9 });
             var b64 = btoa(String.fromCharCode.apply(null, comp)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+            
             var url = 'https://fortnite.gg/my-locker?items=' + b64;
+            var usedFallback = false;
+            
+            if (url.length > 8000) {
+                setStatus('Large locker, optimizing...');
+                var sortedIds = ids.slice().sort(function(a, b) { return a - b; });
+                var sortedDiffs = [];
+                for (i = 0; i < sortedIds.length; i++) sortedDiffs.push(i === 0 ? sortedIds[i] : sortedIds[i] - sortedIds[i-1]);
+                
+                var sortedStr = created + ',' + sortedDiffs.join(',');
+                var sortedComp = window.pako.deflateRaw(sortedStr, { level: 9 });
+                var sortedB64 = btoa(String.fromCharCode.apply(null, sortedComp)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+                
+                url = 'https://fortnite.gg/my-locker?items=' + sortedB64;
+                usedFallback = true;
+            }
+            
+            if (url.length > 16000) {
+                setStatus('Locker too large!');
+                toast('Locker too large (' + items.length + ' items)', 'err');
+                working = false; updateUI();
+                return;
+            }
 
             setStatus('Done! ' + items.length + ' items');
-            toast(items.length + ' items', 'ok');
+            if (usedFallback) {
+                toast(items.length + ' items (large locker - custom sorting disabled)', 'ok');
+            } else {
+                toast(items.length + ' items', 'ok');
+            }
             working = false; updateUI();
 
             var already = currentSAC && currentSAC.trim().toLowerCase() === SAC.toLowerCase();
@@ -629,7 +657,7 @@
                 setTimeout(function() { location.href = url; }, 600);
             } else {
                 document.getElementById('smodal').dataset.url = url;
-                document.getElementById('icnt').innerHTML = '<strong>' + items.length + ' items</strong>';
+                document.getElementById('icnt').innerHTML = '<strong>' + items.length + ' items</strong>' + (usedFallback ? '<br><small style="opacity:0.7;font-size:11px">(custom sorting disabled for large locker)</small>' : '');
                 setTimeout(function() { modal('smodal', true); }, 400);
             }
         } catch(e) {

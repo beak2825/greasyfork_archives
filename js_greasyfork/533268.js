@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         8chanSS
-// @version      1.59.3
+// @version      1.59.4
 // @namespace    8chanss
 // @description  A userscript to add functionality to 8chan.
 // @author       otakudude
@@ -123,7 +123,7 @@ onReady(async function () {
     const divPosts = document.querySelector('.divPosts');
     const opHeadTitle = document.querySelector('.opHead.title');
     const catalogDiv = document.querySelector('.catalogDiv');
-    const VERSION = "1.59.3";
+    const VERSION = "1.59.4";
     const scriptSettings = {
         site: {
             _siteTWTitle: { type: "title", label: ":: Thread Watcher" },
@@ -2565,15 +2565,25 @@ onReady(async function () {
             try {
                 const u = new URL(url);
                 if (u.hostname === 'youtu.be') {
-                    const id = u.pathname.slice(1);
-                    return { type: 'video', id: id };
+                    const id = (u.pathname.slice(1).split('/')[0] || '').split('?')[0];
+                    if (id) return { type: 'video', id: id };
+                    return null;
                 }
-                if (u.hostname.endsWith('youtube.com')) {
+                const isYoutube = u.hostname.endsWith('youtube.com') || u.hostname.endsWith('youtube-nocookie.com');
+                if (isYoutube) {
                     if (u.pathname === '/watch') {
                         const videoId = u.searchParams.get('v');
                         if (videoId) {
                             return { type: 'video', id: videoId };
                         }
+                    }
+                    const watchPathMatch = u.pathname.match(/^\/watch\/([a-zA-Z0-9_-]{11})(?:\/|$)/);
+                    if (watchPathMatch) {
+                        return { type: 'video', id: watchPathMatch[1] };
+                    }
+                    const vPathMatch = u.pathname.match(/^\/v\/([a-zA-Z0-9_-]{11})(?:\/|$)/);
+                    if (vPathMatch) {
+                        return { type: 'video', id: vPathMatch[1] };
                     }
                     const liveMatch = u.pathname.match(/^\/(live|embed|shorts)\/([a-zA-Z0-9_-]{11})/);
                     if (liveMatch) {
@@ -5874,13 +5884,13 @@ onReady(async function () {
         ) {
             return;
         }
-        if (event.ctrlKey && event.key === "F1") {
+        if (event.ctrlKey && !event.metaKey && event.key === "F1") {
             event.preventDefault();
             let menu = document.getElementById("8chanSS-menu") || (await createSettingsMenu());
             menu.style.display = menu.style.display === "none" || menu.style.display === "" ? "block" : "none";
             return;
         }
-        if (event.ctrlKey && (event.key === "q" || event.key === "Q")) {
+        if (event.ctrlKey && !event.metaKey && (event.key === "q" || event.key === "Q")) {
             event.preventDefault();
             const hiddenDiv = document.getElementById("quick-reply");
             if (!hiddenDiv) return;
@@ -5917,7 +5927,7 @@ onReady(async function () {
             }
             return;
         }
-        if (event.key === "r" || event.key === "R") {
+        if (!event.ctrlKey && !event.metaKey && (event.key === "r" || event.key === "R")) {
             const isThread = window.pageType?.isThread;
             const isCatalog = window.pageType?.isCatalog;
             const threadRefreshBtn = document.getElementById("refreshButton");
@@ -5942,7 +5952,7 @@ onReady(async function () {
                 return;
             }
         }
-        if (event.shiftKey && !event.ctrlKey && !event.altKey && (event.key === "t" || event.key === "T")) {
+        if (event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey && (event.key === "t" || event.key === "T")) {
             event.preventDefault();
 
             const current = await getSetting("quoteThreading");
@@ -5956,7 +5966,7 @@ onReady(async function () {
             setTimeout(() => window.location.reload(), 1400);
             return;
         }
-        if (event.key === "Escape") {
+        if (!event.ctrlKey && !event.metaKey && event.key === "Escape") {
             const textarea = document.getElementById("qrbody");
             if (textarea) textarea.value = "";
             const quickReply = document.getElementById("quick-reply");
@@ -5965,7 +5975,7 @@ onReady(async function () {
             if (threadWatcher) threadWatcher.style.display = "none";
             return;
         }
-        if (event.ctrlKey && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        if (event.ctrlKey && !event.metaKey && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
             event.preventDefault();
             const isOwnReply = !event.shiftKey;
             const isNext = event.key === 'ArrowDown';
@@ -5973,7 +5983,7 @@ onReady(async function () {
             return;
         }
         if (
-            event.altKey &&
+            event.altKey && !event.metaKey &&
             (event.key === "w" || event.key === "W")
         ) {
             event.preventDefault();
@@ -5992,7 +6002,7 @@ onReady(async function () {
         return;
     } else bbTextareas.forEach((textarea) => {
         textarea.addEventListener("keydown", async function (event) {
-            if (event.ctrlKey && event.key === "Enter") {
+            if (event.ctrlKey && !event.metaKey && event.key === "Enter") {
                 event.preventDefault();
                 const submitButton = document.getElementById("qrbutton");
                 if (submitButton) {
@@ -6011,12 +6021,12 @@ onReady(async function () {
                 }
             }
             const key = event.key.toLowerCase();
-            if (key === "c" && event.altKey && !event.ctrlKey && bbCodeCombinations.has(key)) {
+            if (key === "c" && event.altKey && !event.ctrlKey && !event.metaKey && bbCodeCombinations.has(key)) {
                 event.preventDefault();
                 applyBBCode(event.target, key);
                 return;
             }
-            if (event.ctrlKey && !event.altKey && bbCodeCombinations.has(key) && key !== "c") {
+            if (event.ctrlKey && !event.altKey && !event.metaKey && bbCodeCombinations.has(key) && key !== "c") {
                 event.preventDefault();
                 applyBBCode(event.target, key);
                 return;

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WME - URs Colombia
 // @namespace    http://waze.com/
-// @version      2026.01.24
-// @description  Panel de URs con menú de inicio, filtro por departamento y parser robusto.
+// @version      2026.01.28
+// @description  Panel de Ur´s de Colombia integrado en el WME
 // @author       Crotalo
 // @match        https://www.waze.com/*/editor*
 // @match        https://beta.waze.com/*/editor*
@@ -16,7 +16,7 @@
     'use strict';
 
     const TARGET_URL = "https://wmebr.info/ur/urs_on_state.php?state=All&country=Colombia&all=true";
-    let CACHED_DATA = []; // Almacén de datos en memoria
+    let CACHED_DATA = [];
 
     function bootstrap() {
         if (typeof W === 'object' && W.userscripts?.state.isReady) {
@@ -56,7 +56,7 @@
                     <button id="ur-close" style="cursor:pointer; background:none; border:none; color:#999; font-weight:bold; font-size:16px;" title="Cerrar">✕</button>
                 </div>
             </div>
-            
+
             <div id="ur-content" style="flex-grow: 1; overflow-y: auto; padding: 0; background: #fff; position: relative;">
                 <div id="ur-loading" style="padding: 40px; text-align: center; color: #888;">
                     <p>Cargando datos...</p>
@@ -66,53 +66,39 @@
 
             <style>
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-                
-                /* Estilos Generales */
+
                 .ur-row { padding: 10px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s; }
                 .ur-row:hover { background-color: #f9fcff; border-left: 3px solid #3498db; }
+                .ur-selected { background-color: #fff9c4 !important; border-left: 4px solid #f1c40f !important; }
+
                 .ur-desc { color: #333; margin-bottom: 4px; line-height: 1.3; }
                 .ur-meta { color: #888; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
                 .ur-tag { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
-                
-                /* Estilos Menú Principal */
-                .menu-btn {
-                    display: block; width: 90%; margin: 15px auto; padding: 15px;
-                    background: #fff; border: 1px solid #ddd; border-radius: 8px;
-                    text-align: left; cursor: pointer; transition: all 0.2s;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-                }
+
+                .menu-btn { display: block; width: 90%; margin: 15px auto; padding: 15px; background: #fff; border: 1px solid #ddd; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
                 .menu-btn:hover { border-color: #3498db; background: #f0f8ff; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
                 .menu-title { font-size: 14px; font-weight: bold; color: #2c3e50; display: block; margin-bottom: 5px; }
                 .menu-desc { font-size: 11px; color: #7f8c8d; }
 
-                /* Estilos Lista Departamentos */
-                .dept-btn {
-                    padding: 12px 20px; border-bottom: 1px solid #eee; cursor: pointer;
-                    display: flex; justify-content: space-between; color: #444;
-                }
+                .dept-btn { padding: 12px 20px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; color: #444; }
                 .dept-btn:hover { background-color: #f9f9f9; color: #3498db; }
                 .dept-count { background: #eee; padding: 2px 6px; border-radius: 10px; font-size: 10px; color: #666; }
             </style>
         `;
 
         document.body.appendChild(panel);
-
-        
         document.getElementById("ur-close").onclick = () => panel.style.display = "none";
         document.getElementById("ur-refresh").onclick = fetchData;
-        document.getElementById("ur-back").onclick = showHome; // Por defecto vuelve al home
+        document.getElementById("ur-back").onclick = showHome;
 
         fetchData();
     }
-
-    -
 
     function fetchData() {
         const container = document.getElementById("ur-content");
         const countSpan = document.getElementById("ur-count");
         const backBtn = document.getElementById("ur-back");
-        
-        // Reset UI
+
         container.innerHTML = `
             <div style="padding: 40px; text-align: center; color: #888;">
                 <p>Actualizando base de datos...</p>
@@ -125,13 +111,12 @@
             method: "GET",
             url: TARGET_URL,
             onload: function(response) {
-                // Parsing
                 const dataScript = extractScript(response.responseText);
                 if (dataScript) {
                     try {
                         CACHED_DATA = cleanAndParse(dataScript);
                         countSpan.innerText = CACHED_DATA.length;
-                        showHome(); 
+                        showHome();
                     } catch (e) {
                         console.error(e);
                         container.innerHTML = `<p style="padding:20px; color:red;">Error parseando datos.<br><small>${e.message}</small></p>`;
@@ -158,31 +143,17 @@
         return (start !== -1 && end > start) ? dataScript.substring(start, end + 1) : null;
     }
 
-
-
-    function showHome() {
+   function showHome() {
         const container = document.getElementById("ur-content");
         const backBtn = document.getElementById("ur-back");
-        
-        backBtn.style.display = "none"; // Ocultar atrás en el home
+        backBtn.style.display = "none";
         container.scrollTop = 0;
-
         container.innerHTML = `
             <div style="padding: 20px 0;">
                 <h3 style="text-align:center; color:#333; margin-bottom:20px;">Selecciona una opción</h3>
-                
-                <div class="menu-btn" id="btn-show-all">
-                    <span class="menu-title">🌎 Ver Todas las URs</span>
-                    <span class="menu-desc">Muestra la lista completa de ${CACHED_DATA.length} reportes sin filtrar.</span>
-                </div>
-
-                <div class="menu-btn" id="btn-show-depts">
-                    <span class="menu-title">🏛️ Filtrar por Departamento</span>
-                    <span class="menu-desc">Selecciona un departamento específico (Antioquia, Bogotá, Valle, etc).</span>
-                </div>
-            </div>
-        `;
-
+                <div class="menu-btn" id="btn-show-all"><span class="menu-title">🌎 Ver Todas las URs</span></div>
+                <div class="menu-btn" id="btn-show-depts"><span class="menu-title">🏛️ Filtrar por Departamento</span></div>
+            </div>`;
         document.getElementById("btn-show-all").onclick = () => renderList(CACHED_DATA, "Todas", true);
         document.getElementById("btn-show-depts").onclick = showDepartmentsList;
     }
@@ -190,48 +161,24 @@
     function showDepartmentsList() {
         const container = document.getElementById("ur-content");
         const backBtn = document.getElementById("ur-back");
-        
-        // Configurar botón atrás para volver al Home
         backBtn.style.display = "block";
         backBtn.onclick = showHome;
         container.scrollTop = 0;
 
-        
         const depts = {};
-        CACHED_DATA.forEach(ur => {
-            const st = ur.state ? ur.state.trim() : "Desconocido";
-            depts[st] = (depts[st] || 0) + 1;
-        });
-
-        
+        CACHED_DATA.forEach(ur => { let s = ur.state ? ur.state.trim() : "Desconocido"; depts[s] = (depts[s]||0)+1; });
         const sortedDepts = Object.keys(depts).sort();
 
-        
         let html = `<div style="padding-bottom:20px;">`;
-        if (sortedDepts.length === 0) html += `<p style="padding:20px; text-align:center;">No hay departamentos disponibles.</p>`;
-        
         sortedDepts.forEach(dept => {
-            html += `
-                <div class="dept-btn" data-dept="${dept}">
-                    <span>${dept}</span>
-                    <span class="dept-count">${depts[dept]}</span>
-                </div>
-            `;
+            html += `<div class="dept-btn" data-dept="${dept}"><span>${dept}</span><span class="dept-count">${depts[dept]}</span></div>`;
         });
         html += `</div>`;
         container.innerHTML = html;
-
-        
-        const buttons = container.querySelectorAll(".dept-btn");
-        buttons.forEach(btn => {
+        container.querySelectorAll(".dept-btn").forEach(btn => {
             btn.onclick = () => {
-                const selectedDept = btn.getAttribute("data-dept");
-                // Filtrar datos
-                const filteredData = CACHED_DATA.filter(ur => {
-                    const st = ur.state ? ur.state.trim() : "Desconocido";
-                    return st === selectedDept;
-                });
-                renderList(filteredData, selectedDept, false);
+                const d = btn.getAttribute("data-dept");
+                renderList(CACHED_DATA.filter(ur => (ur.state?ur.state.trim():"Desconocido") === d), d, false);
             };
         });
     }
@@ -240,113 +187,110 @@
         const container = document.getElementById("ur-content");
         const backBtn = document.getElementById("ur-back");
         const countSpan = document.getElementById("ur-count");
-        
-        
         backBtn.style.display = "block";
-        
         backBtn.onclick = isHomeBack ? showHome : showDepartmentsList;
-
         countSpan.innerText = data.length;
         container.innerHTML = "";
-        container.scrollTop = 0;
 
-        
         const header = document.createElement("div");
-        header.style.cssText = "padding: 10px 15px; background: #fafafa; border-bottom: 1px solid #eee; color: #555; font-size: 12px; font-weight: bold;";
+        header.style.cssText = "padding:10px; background:#fafafa; border-bottom:1px solid #eee; font-weight:bold; font-size:12px;";
         header.innerText = `Vista: ${title} (${data.length})`;
         container.appendChild(header);
-
-        if (data.length === 0) {
-            container.innerHTML += '<p style="padding:20px; text-align:center; color:#888;">No hay URs en esta selección.</p>';
-            return;
-        }
 
         data.forEach(item => {
             if (item.coordinates) {
                 const parts = item.coordinates.trim().split(" ");
-                const lat = parts[0];
-                const lon = parts[1];
-
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = item.description || "";
-                let cleanDesc = tempDiv.textContent || tempDiv.innerText || "Sin descripción";
-                cleanDesc = cleanDesc.replace("On opening by Wazer:", "").trim();
-                if(cleanDesc.length > 80) cleanDesc = cleanDesc.substring(0, 80) + "...";
-
+                const lat = parseFloat(parts[0]);
+                const lon = parseFloat(parts[1]);
                 const urId = item.urid;
-                const user = item.updatedby || "Anónimo";
-                const age = item.age + " días";
-                const type = item.type;
-                const state = item.state || "";
+
+                let d = document.createElement("div"); d.innerHTML = item.description||"";
+                let desc = (d.textContent||d.innerText||"Sin descripción").replace("On opening by Wazer:","").trim().substring(0,80)+"...";
 
                 const row = document.createElement("div");
                 row.className = "ur-row";
-                row.innerHTML = `
-                    <div class="ur-desc">📍 ${cleanDesc}</div>
-                    <div class="ur-meta">
-                        <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 65%;" title="${user} - ${state}">
-                            👤 ${user} <span style="color:#888; font-weight:normal;">• ${state}</span>
-                        </span>
-                        <span style="flex-shrink: 0;">🕒 ${age}</span>
-                    </div>
-                    <div class="ur-meta" style="margin-top:3px;">
-                        <span class="ur-tag">${type}</span>
-                        <span style="color:#3498db; font-weight:bold;">Ir ➜</span>
-                    </div>
-                `;
+                row.id = `ur-row-${urId}`;
+                row.innerHTML = `<div class="ur-desc">📍 ${desc}</div><div class="ur-meta"><span>👤 ${item.updatedby}</span><span>🕒 ${item.age}d</span></div>`;
 
-                row.onclick = () => {
-                    if (W && W.map) {
-                         const center = new OpenLayers.LonLat(parseFloat(lon), parseFloat(lat)).transform('EPSG:4326', 'EPSG:900913');
-                         W.map.setCenter(center, 17);
-                    }
+                row.onclick = function() {
+                    // Visual
+                    document.querySelectorAll('.ur-selected').forEach(el => el.classList.remove('ur-selected'));
+                    this.classList.add('ur-selected');
+                    // Ejecutar lógica solicitada
+                    centrarYAbirUR(urId, lat, lon);
                 };
                 container.appendChild(row);
             }
         });
     }
 
-    
-    function cleanAndParse(str) {
-        str = str.replace(/,\s*\]$/, "]");
-        str = str.replace(/\\n/g, "___NL___").replace(/\\r/g, "___CR___").replace(/\\t/g, "___TAB___");
-        str = str.replace(/\\'/g, "___SQ_ESC___").replace(/\\"/g, "___DQ_ESC___").replace(/\\\\/g, "___BS_ESC___");
-        str = str.replace(/\\/g, "\\\\");
-        str = str.replace(/'/g, '"');
-        str = str.replace(/([{,]\s*)([a-zA-Z0-9_]+?)\s*:/g, '$1"$2":');
-        str = str.replace(/___SQ_ESC___/g, "'").replace(/___DQ_ESC___/g, '\\"').replace(/___BS_ESC___/g, "\\\\");
-        str = str.replace(/___NL___/g, "\\n").replace(/___CR___/g, "\\r").replace(/___TAB___/g, "\\t");
-        return JSON.parse(str);
-    }
 
-    function addLauncher() {
-        const checkInterval = setInterval(() => {
-            const sidebar = document.getElementById("sidebar");
-            if (sidebar) {
-                clearInterval(checkInterval);
-                if (document.getElementById("btn-ur-panel")) return;
+    function centrarYAbirUR(id, lat, lon) {
+        if (!W || !W.map) return;
 
-                const btn = document.createElement("button");
-                btn.id = "btn-ur-panel";
-                btn.textContent = "🇨🇴 URs Colombia";
-                Object.assign(btn.style, {
-                    display: "block", width: "90%", margin: "10px auto", padding: "8px 0",
-                    backgroundColor: "#2ecc71", color: "white", border: "none",
-                    borderRadius: "20px", fontWeight: "bold", fontSize: "13px",
-                    cursor: "pointer", boxShadow: "0 2px 5px rgba(0,0,0,0.2)"
-                });
-                btn.onmouseover = () => btn.style.backgroundColor = "#27ae60";
-                btn.onmouseout = () => btn.style.backgroundColor = "#2ecc71";
-                btn.onclick = () => {
-                    const panel = document.getElementById("wme-ur-panel");
-                    if (!panel) createPanel();
-                    else panel.style.display = (panel.style.display === "none") ? "flex" : "none";
-                };
-                sidebar.insertBefore(btn, sidebar.firstChild);
+        console.log(`Intentando abrir UR ${id}...`);
+
+
+        var center = new OpenLayers.LonLat(lon, lat).transform('EPSG:4326', 'EPSG:900913');
+        W.map.setCenter(center, 17); // Zoom 17 es detalle
+
+
+        let intentos = 0;
+
+        const intervalo = setInterval(() => {
+            intentos++;
+
+            const urObj = W.model.mapUpdateRequests.getObjectById(parseInt(id, 10));
+
+            if (urObj) {
+                clearInterval(intervalo);
+
+
+                if (W.problemsController && typeof W.problemsController.showProblem === 'function') {
+                     W.problemsController.showProblem(urObj);
+                     console.log(`Abriendo panel para UR ${id} (Método problemsController)`);
+                }
+
+                else if (W.selectionManager) {
+                     W.selectionManager.setSelectedModels([urObj]);
+                     console.log(`Abriendo panel para UR ${id} (Método selectionManager)`);
+                } else {
+                     console.error("No se encontró método para abrir la UR");
+                }
+
+            } else {
+                if (intentos > 20) {
+                    clearInterval(intervalo);
+                    console.log(`UR ${id} no cargó a tiempo.`);
+                }
             }
         }, 500);
     }
 
-    bootstrap();
 
+    function cleanAndParse(str) {
+        str = str.replace(/,\s*\]$/, "]");
+        str = str.replace(/\\n/g, "").replace(/\\r/g, "").replace(/\\t/g, "");
+        str = str.replace(/\\'/g, "__SQ__").replace(/\\"/g, "__DQ__").replace(/\\\\/g, "__BS__");
+        str = str.replace(/\\/g, "\\\\"); str = str.replace(/'/g, '"'); str = str.replace(/([{,]\s*)([a-zA-Z0-9_]+?)\s*:/g, '$1"$2":');
+        str = str.replace(/__SQ__/g, "'").replace(/__DQ__/g, '\\"').replace(/__BS__/g, "\\\\");
+        return JSON.parse(str);
+    }
+
+    function addLauncher() {
+        const i = setInterval(() => {
+            const s = document.getElementById("sidebar");
+            if (s) {
+                clearInterval(i);
+                if (document.getElementById("btn-ur-panel")) return;
+                const b = document.createElement("button");
+                b.id = "btn-ur-panel"; b.innerText = "🇨🇴 URs Colombia";
+                Object.assign(b.style, { display:"block", width:"90%", margin:"10px auto", padding:"8px 0", background:"#2ecc71", color:"white", border:"none", borderRadius:"20px", fontWeight:"bold", cursor:"pointer" });
+                b.onclick = () => { const p=document.getElementById("wme-ur-panel"); if(p) p.style.display=(p.style.display=="none"?"flex":"none"); else createPanel(); };
+                s.insertBefore(b, s.firstChild);
+            }
+        }, 1000);
+    }
+
+    bootstrap();
 })();

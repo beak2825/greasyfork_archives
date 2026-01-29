@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Nitro Type - Sandbagging Tool
-// @version      0.3.1
+// @version      0.4.1
 // @description  Displays a WPM countdown allowing you to closely reach your intended sandbagging target.
 // @author       Toonidy
 // @match        *://*.nitrotype.com/race
@@ -17,7 +17,7 @@
 /* globals interact */
 
 const config = {
-    targetWPM: 109.49,
+    targetWPM: 89.49,
     indicateWPMWithin: 9,
     timerRefreshIntervalMS: 10,
     raceLatencyMS: 140,
@@ -422,14 +422,16 @@ server.on("status", (e) => {
     } else if (e.status === "racing") {
         RaceTimer.start(e.startStamp - config.raceLatencyMS)
 
-        const originalSendPlayerUpdate = server.sendPlayerUpdate
-        server.sendPlayerUpdate = (data) => {
-            originalSendPlayerUpdate(data)
-            if (data.t >= RaceTimer.getLessonLength()) {
+        // Inject code to track progress
+        const originalIncrementTyped = raceObj.incrementTyped
+        raceObj.incrementTyped = (data) => {
+            originalIncrementTyped(data)
+
+            if (raceObj.typedStats.typed >= RaceTimer.getLessonLength()) {
                 RaceTimer.stop()
             }
-            if (typeof data.s === "number") {
-                RaceTimer.setSkipLength(data.s)
+            if (typeof data.skipped === "number") {
+                RaceTimer.setSkipLength(data.skipped)
             }
         }
     }
@@ -455,3 +457,4 @@ server.on("update", (e) => {
 /////////////
 
 raceContainer.append(RaceTimer.root)
+

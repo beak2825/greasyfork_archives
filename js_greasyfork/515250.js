@@ -20,7 +20,7 @@
 // @updateURL https://update.greasyfork.org/scripts/515250/GoFile%20%E5%A2%9E%E5%BC%BA.meta.js
 // ==/UserScript==
 
-;(function () {
+; (function () {
     'use strict'
 
     const SUPPORTED_DOWNLOADERS = ['Direct', 'ABDM', 'Aria2', 'IDM']
@@ -778,8 +778,8 @@
                     <form id="${GE_GORM_ID_PREFIX}_${config.id}" class="space-y-4">
 
                     ${Object.entries(config.settings)
-                        .map(([_key, setting]) => utils.getFormInputItemTemplate(setting))
-                        .join('')}
+                    .map(([_key, setting]) => utils.getFormInputItemTemplate(setting))
+                    .join('')}
 
                         <button
                             id="GofileEnhanced_${config.id}_Submit"

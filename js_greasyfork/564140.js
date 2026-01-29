@@ -1,10 +1,14 @@
 // ==UserScript==
 // @name         Domain Access Timer (Breathe In, Breathe Out)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.1.0
 // @description  Show 15-second timer before accessing specified domains
 // @author       You
-// @match        *://*/*
+// @match        *://*.reddit.com/*
+// @match        *://*.facebook.com/*
+// @match        *://*.x.com/*
+// @match        *://*.youtube.com/*
+// @exclude      *://music.youtube.com/*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/564140/Domain%20Access%20Timer%20%28Breathe%20In%2C%20Breathe%20Out%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/564140/Domain%20Access%20Timer%20%28Breathe%20In%2C%20Breathe%20Out%29.meta.js
@@ -13,17 +17,9 @@
 (function () {
     'use strict';
 
-    // Configuration - Add your domains here
+    // Configuration
     const STORAGE_KEY_LAST_COMPLETION = 'domainTimerLastCompletion';
     const STORAGE_KEY_COOLDOWN_PERIOD = 'domainTimerCooldownPeriod';
-
-    const BLOCKED_DOMAINS = [
-        'reddit.com',
-        'facebook.com',
-        'x.com',
-        'youtube.com'
-        // Add more domains as needed
-    ];
 
     const TIMER_DURATION = 15; // seconds
     const COOLDOWN_OPTIONS = {
@@ -31,14 +27,6 @@
         '20min': 20 * 60 * 1000,    // 20 minutes
         '2hours': 2 * 60 * 60 * 1000 // 2 hours
     };
-
-    // Check if current domain should be blocked
-    function shouldBlockDomain() {
-        const currentDomain = window.location.hostname.replace('www.', '');
-        return BLOCKED_DOMAINS.some(domain =>
-            currentDomain === domain || currentDomain.endsWith('.' + domain)
-        );
-    }
 
     // Get last successful timer completion time
     function getLastTimerCompletion() {
@@ -366,11 +354,6 @@
 
     // Initialize the script
     function init() {
-        // Only run on domains in our list
-        if (!shouldBlockDomain()) {
-            return;
-        }
-
         // Check if we're in cooldown period
         if (isInCooldownPeriod()) {
             return;

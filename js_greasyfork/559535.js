@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         I'm not a robot neal.fun cheats
 // @namespace    http://tampermonkey.net/
-// @version      14.5
-// @description  Adds features to help with certain levels.
+// @version      14.6
+// @description  Codes auto-complete some levels.
 // @author       Suomynona589
 // @match        https://neal.fun/not-a-robot/*
 // @icon         https://neal.fun/favicons/not-a-robot.png
@@ -60,58 +60,6 @@ function clickAt(x, y) {
 }
 
     //----Cheats----
-
-//----Circle Cheat----
-
-    function runCircleCheat() {
-        if (document.getElementById("circle-cheat-btn")) return;
-
-        function drawCircle() {
-            const svg = document.querySelector("main svg");
-            const drawDiv = document.querySelector("main div");
-            if (!svg || !drawDiv) return;
-
-            const s = svg.getBoundingClientRect();
-            const cx = s.width / 2 + s.x;
-            const cy = s.height / 2 + s.y;
-            const r = s.width / 3;
-            let a = 0;
-
-            for (let e = 0; e < 50; e++) {
-                a += Math.acos(1 - Math.pow(60 / r, 2) / 2);
-                const t = Math.round(cx + r * Math.cos(a));
-                const n = Math.round(cy + r * Math.sin(a));
-                if (e === 0) {
-                    drawDiv.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, clientX: t, clientY: n }));
-                }
-                drawDiv.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: t, clientY: n }));
-            }
-            drawDiv.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
-        }
-
-        const btn = document.createElement("button");
-        btn.id = "circle-cheat-btn";
-        btn.textContent = "Press this or click Ctrl+Z";
-        btn.style.position = "fixed";
-        btn.style.top = "20px";
-        btn.style.right = "20px";
-        btn.style.zIndex = "9999";
-        btn.style.padding = "12px 20px";
-        btn.style.fontSize = "16px";
-        btn.style.background = "#4CAF50";
-        btn.style.color = "#fff";
-        btn.style.border = "none";
-        btn.style.borderRadius = "8px";
-        btn.style.cursor = "pointer";
-        btn.style.boxShadow = "0 4px 6px rgba(0,0,0,0.2)";
-        btn.title = "Shortcut: Ctrl+Z";
-        btn.addEventListener("click", drawCircle);
-        document.body.appendChild(btn);
-
-        document.addEventListener("keydown", e => {
-            if (e.ctrlKey && e.key.toLowerCase() === "z") drawCircle();
-        });
-    }
 
 //----Stop sign cheat----
 
@@ -442,10 +390,7 @@ async function runMoleCheat() {
     const x = Math.floor(rect.left + rect.width / 2);
     const y = Math.floor(rect.top + rect.height / 2);
     const opts = { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y };
-    el.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new MouseEvent("mousedown", opts));
-    el.dispatchEvent(new MouseEvent("click", opts));
-    el.dispatchEvent(new MouseEvent("mouseup", opts));
+    simulateClick(el);
   }
 
   const ready = await waitFor(".mole-wrapper");
@@ -637,6 +582,39 @@ async function runRecaptchaCheat() {
     log('recaptcha: clicked checkbox linked to "I\'m not a robot"');
 }
 
+//----Circle Cheat----
+
+async function runCircleCheat() {
+    await waitFor(".container");
+    await waitFor("main svg");
+    await waitFor("main div");
+
+    const svg = document.querySelector("main svg");
+    const drawDiv = document.querySelector("main div");
+
+    const s = svg.getBoundingClientRect();
+    const cx = s.width / 2 + s.x;
+    const cy = s.height / 2 + s.y;
+    const r = s.width / 5;
+    let a = 0;
+
+    for (let e = 0; e < 50; e++) {
+        a += Math.acos(1 - Math.pow(60 / r, 2) / 2);
+        const t = Math.round(cx + r * Math.cos(a));
+        const n = Math.round(cy + r * Math.sin(a));
+
+        if (e === 0) {
+            drawDiv.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, clientX: t, clientY: n }));
+        }
+
+        drawDiv.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: t, clientY: n }));
+    }
+
+    drawDiv.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
+}
+
+runCircleCheat();
+
 //----Hydrants Cheat----
 
 function runHydrantCheat() {
@@ -679,18 +657,12 @@ function runHydrantCheat() {
 
   let clicked = new Set();
 
-  function clickElement(el) {
-    ["pointerdown", "mousedown", "click", "mouseup"].forEach(type => {
-      el.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
-    });
-  }
-
   function clickVisibleTargets() {
     const items = document.querySelectorAll(".sisyphus-item");
     items.forEach(item => {
       const src = item.getAttribute("src");
       if (src && targets.includes(src) && !clicked.has(src)) {
-        clickElement(item);
+        simulateClick(item);
         clicked.add(src);
         log("runHydrantCheat: clicked " + src);
       }
@@ -857,14 +829,6 @@ async function runCatchDucksCheat() {
         });
     }
 
-    function clickElement(el) {
-        const opts = { bubbles: true, cancelable: true };
-        el.dispatchEvent(new PointerEvent("pointerdown", opts));
-        el.dispatchEvent(new MouseEvent("mousedown", opts));
-        el.dispatchEvent(new PointerEvent("pointerup", opts));
-        el.dispatchEvent(new MouseEvent("mouseup", opts));
-        el.dispatchEvent(new MouseEvent("click", opts));
-    }
 
     const ducks = await waitForSelector(".duck.roaming");
     if (!ducks.length) {
@@ -872,7 +836,7 @@ async function runCatchDucksCheat() {
         return;
     }
 
-    ducks.forEach(el => clickElement(el));
+    ducks.forEach(el => simulateClick(el));
     console.log("duck cheat: clicked", ducks.length, "ducks");
 
     const container = document.querySelector(".duck-container");
@@ -901,6 +865,102 @@ async function runCatchDucksCheat() {
     }
 }
 
+//----Panorama Cheat----
+
+async function runPanoramaCheat() {
+    const ok = await waitFor('.captcha-title-type');
+    if (!ok) return;
+
+    if (localStorage.getItem("not-a-robot-level") !== "22") {
+        const old = document.getElementById("panorama-cheat-video");
+        if (old) old.remove();
+        return;
+    }
+
+    const titleEl = document.querySelector('.captcha-title-type');
+    if (!titleEl) return;
+
+    const title = titleEl.textContent.trim();
+    let url = "";
+
+    if (title === "Couple Kissing") {
+        url = "https://suomynona589.github.io/videos/couple.mp4";
+    } else if (title === "Guitar Cat") {
+        url = "https://suomynona589.github.io/videos/guitarcat.mp4";
+    } else if (title === "Chilli's Sign") {
+        url = "https://suomynona589.github.io/videos/chillis.mp4";
+    } else {
+        return;
+    }
+
+    const old = document.getElementById("panorama-cheat-video");
+    if (old) old.remove();
+
+    const vid = document.createElement("video");
+    vid.id = "panorama-cheat-video";
+    vid.src = url;
+    vid.autoplay = true;
+    vid.loop = true;
+    vid.muted = true;
+    vid.controls = true;
+    vid.controlsList = "nodownload";
+
+    vid.style.position = "fixed";
+    vid.style.left = "95px";
+    vid.style.top = "calc(50% - 50px)";
+    vid.style.transform = "translateY(-50%)";
+    vid.style.width = "425px";
+    vid.style.height = "auto";
+    vid.style.zIndex = 999999;
+    vid.style.cursor = "grab";
+
+    document.body.appendChild(vid);
+
+    let drag = false;
+    let offX = 0;
+    let offY = 0;
+
+    vid.addEventListener("mousedown", e => {
+        drag = true;
+        offX = e.clientX - vid.getBoundingClientRect().left;
+        offY = e.clientY - vid.getBoundingClientRect().top;
+        vid.style.cursor = "grabbing";
+    });
+
+    document.addEventListener("mousemove", e => {
+        if (!drag) return;
+        vid.style.left = e.clientX - offX + "px";
+        vid.style.top = e.clientY - offY + "px";
+        vid.style.transform = "";
+    });
+
+    document.addEventListener("mouseup", () => {
+        drag = false;
+        vid.style.cursor = "grab";
+    });
+}
+
+let lastTitle = null;
+
+setInterval(() => {
+    if (localStorage.getItem("not-a-robot-level") !== "22") {
+        const old = document.getElementById("panorama-cheat-video");
+        if (old) old.remove();
+        return;
+    }
+
+    const el = document.querySelector('.captcha-title-type');
+    if (!el) return;
+
+    const title = el.textContent.trim();
+    if (!title) return;
+
+    if (title !== lastTitle) {
+        lastTitle = title;
+        runPanoramaCheat();
+    }
+}, 1);
+
 //----Eye Exam Cheat----
 
 async function runEyeExamCheat() {
@@ -917,19 +977,6 @@ async function runEyeExamCheat() {
         el.dispatchEvent(new Event("input", { bubbles: true }));
       }, i * 75);
     });
-  }
-
-  function clickAtCenter(el) {
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    const opts = { bubbles: true, cancelable: true, clientX: x, clientY: y };
-    el.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new MouseEvent("mousedown", opts));
-    el.dispatchEvent(new PointerEvent("pointerup", opts));
-    el.dispatchEvent(new MouseEvent("mouseup", opts));
-    el.dispatchEvent(new MouseEvent("click", opts));
   }
 
   const interval = setInterval(() => {
@@ -972,7 +1019,7 @@ async function runEyeExamCheat() {
           if (style.includes("rgb(84, 255, 41)")) target = sq;
         });
         if (target) {
-          clickAtCenter(target);
+          simulateClick(target);
           clearInterval(interval);
           console.log("eye exam cheat: finished");
         }
@@ -1034,12 +1081,6 @@ async function runSoulCheat() {
     "/not-a-robot/soul/8.webp"
   ];
 
-  function simulateClick(el) {
-    ["pointerdown", "mousedown", "click", "mouseup"].forEach(type => {
-      el.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
-    });
-  }
-
   const tiles = Array.from(document.querySelectorAll(".grid-item"));
   let clicks = 0;
 
@@ -1063,17 +1104,6 @@ async function runSoulCheat() {
 async function runTrafficTreeCheat() {
   log("runTrafficTreeCheat: starting");
 
-  function clickAtCenter(el) {
-    const rect = el.getBoundingClientRect();
-    const x = Math.floor(rect.left + rect.width / 2);
-    const y = Math.floor(rect.top + rect.height / 2);
-    const opts = { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y };
-    el.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new MouseEvent("mousedown", opts));
-    el.dispatchEvent(new MouseEvent("click", opts));
-    el.dispatchEvent(new MouseEvent("mouseup", opts));
-  }
-
   function getBackgroundPos(styleStr) {
     const m = styleStr.match(/background-position:\s*([0-9.]+%)\s+([0-9.]+%)/);
     return m ? `${m[1]} ${m[2]}` : null;
@@ -1092,7 +1122,7 @@ async function runTrafficTreeCheat() {
     if (!/tree\/tree\.webp/.test(style)) return;
     const bp = getBackgroundPos(style);
     if (!bp || exclude.has(bp)) return;
-    clickAtCenter(tile);
+    simulateClick(tile);
     clicks++;
     log("traffic-tree: clicked", bp);
   });
@@ -1229,17 +1259,6 @@ async function runBrandsCheat() {
 async function runMathCheat() {
   log("runMathCheat: starting");
 
-  function clickAtCenter(el) {
-    const rect = el.getBoundingClientRect();
-    const x = Math.floor(rect.left + rect.width / 2);
-    const y = Math.floor(rect.top + rect.height / 2);
-    const opts = { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y };
-    el.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new MouseEvent("mousedown", opts));
-    el.dispatchEvent(new MouseEvent("click", opts));
-    el.dispatchEvent(new MouseEvent("mouseup", opts));
-  }
-
   const ready = await waitFor(".math-grid-item");
   if (!ready) {
     log("math-cheat: tiles not found");
@@ -1253,7 +1272,6 @@ async function runMathCheat() {
     if (!valEl) return { tile, value: Infinity };
 
     let raw = valEl.textContent.trim();
-
     let value = raw === "Infinity" ? Infinity : parseFloat(raw);
 
     return { tile, value };
@@ -1263,9 +1281,10 @@ async function runMathCheat() {
 
   let clicks = 0;
   for (const entry of tileData) {
-    clickAtCenter(entry.tile);
+    simulateClick(entry.tile);
     clicks++;
     log("math-cheat: clicked", entry.value);
+    await new Promise(r => setTimeout(r, 25));
   }
 
   log("math-cheat: total clicked =", clicks);
@@ -1306,17 +1325,6 @@ async function runCupCheat() {
 async function runImpostorCheat() {
   log("runImpostorCheat: starting");
 
-  function clickAtCenter(el) {
-    const rect = el.getBoundingClientRect();
-    const x = Math.floor(rect.left + rect.width / 2);
-    const y = Math.floor(rect.top + rect.height / 2);
-    const opts = { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y };
-    el.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new MouseEvent("mousedown", opts));
-    el.dispatchEvent(new MouseEvent("click", opts));
-    el.dispatchEvent(new MouseEvent("mouseup", opts));
-  }
-
   const ready = await waitFor(".grid-item.grid-item");
   if (!ready) { log("impostor: tiles not found"); return; }
 
@@ -1335,7 +1343,7 @@ async function runImpostorCheat() {
     const src = img.getAttribute("src") || "";
     if (targets.has(src)) {
       if (!tile.classList.contains("grid-item-selected")) {
-        clickAtCenter(tile);
+        simulateClick(tile);
         clicks++;
         log("impostor: clicked", src);
       }
@@ -1374,7 +1382,7 @@ async function runConvoCheat() {
   input.focus();
   console.log("Input focused");
 
-  input.value = "Start at 95%";
+  input.value = "Start at 97%";
   input.dispatchEvent(new Event("input", { bubbles: true }));
   console.log("Input set to Start at 95%");
 }
@@ -1540,18 +1548,9 @@ async function runDDRCheat() {
 
     //----Orchestrator----
 
-    function runCheatsForLevel(level) {
+function runCheatsForLevel(level) {
     log('level', level, 'detected');
-    if (level === 16) {
-        runCircleCheat();
-    } else {
-        // cleanup: remove circle cheat button if it exists
-        const btn = document.getElementById("circle-cheat-btn");
-        if (btn) {
-            btn.remove();
-            log('circle-cheat: button removed after leaving level 16');
-        }
-    }
+
     if (level === 1) runStopSignCheat();
     if (level === 3) runVegetableCheat();
     if (level === 4) runIntersectionCheat();
@@ -1563,11 +1562,13 @@ async function runDDRCheat() {
     if (level === 11) runChihuahuaCheat();
     if (level === 12) runWithoutCheat();
     if (level === 13) runRecaptchaCheat();
+    if (level === 16) runCircleCheat();
     if (level === 17) runHydrantCheat();
     if (level === 18) runInDarkCheat();
     if (level === 19) runWhatYouSeeCheat();
     if (level === 20) runMinecraftCheat();
     if (level === 21) runCatchDucksCheat();
+    if (level === 22) runPanoramaCheat();
     if (level === 23) runEyeExamCheat();
     if (level === 26) runNetworkCheat();
     if (level === 28) runSoulCheat();
@@ -1583,23 +1584,24 @@ async function runDDRCheat() {
     if (level === 46) runDDRCheat();
 }
 
-    let lastLevel = -1;
-    function checkLevelAndRun() {
-        const level = parseInt(localStorage.getItem('not-a-robot-level') || '0', 10);
-        if (level !== lastLevel) {
-            lastLevel = level;
-            runCheatsForLevel(level);
-        }
+let lastLevel = -1;
+
+function checkLevelAndRun() {
+    const level = parseInt(localStorage.getItem('not-a-robot-level') || '0', 10);
+    if (level !== lastLevel) {
+        lastLevel = level;
+        runCheatsForLevel(level);
     }
+}
 
-    const bodyObserver = new MutationObserver(() => checkLevelAndRun());
-    bodyObserver.observe(document.body, { childList: true, subtree: true });
+const bodyObserver = new MutationObserver(() => checkLevelAndRun());
+bodyObserver.observe(document.body, { childList: true, subtree: true });
 
-    setInterval(checkLevelAndRun, 400);
+setInterval(checkLevelAndRun, 400);
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', checkLevelAndRun, { once: true });
-    } else {
-        checkLevelAndRun();
-    }
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkLevelAndRun, { once: true });
+} else {
+    checkLevelAndRun();
+}
 })();

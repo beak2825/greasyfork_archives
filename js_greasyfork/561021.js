@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multiplayer Piano Optimizations [Drawing]
 // @namespace    https://tampermonkey.net/
-// @version      2.5.3
+// @version      2.6.2
 // @description  Draw on the screen!
 // @author       zackiboiz
 // @match        *://*.multiplayerpiano.com/*
@@ -119,6 +119,16 @@
 
     strings are prefixed with <uleb128 length>
     * Denotes multiple allowed
+
+    ### OP 9: Stroked polygon
+    - <uint8 op> <uint24 color> <uint8 transparency> <uleb128 lineWidth> <uleb128 lifeMs> <uleb128 fadeMs> <uleb128 length*> <<uint16 x> <uint16 y>>* <uint32 uuid>
+    1. Tells clients to draw a stroked polygon
+    with a multitude of points
+
+    ### OP 10: Filled polygon
+    - <uint8 op> <uint24 color> <uint8 transparency> <uleb128 lifeMs> <uleb128 fadeMs> <uleb128 length*> <<uint16 x> <uint16 y>>* <uint32 uuid>
+    1. Tells clients to draw a filled polygon
+    with a multitude of points
 */
 
 (async () => {
@@ -735,6 +745,39 @@
             return bytes;
         }
 
+        #buildPolygonStrokePacket = (color, transparency, lineWidth, lifeMs, fadeMs, vertices, uuid) => {
+            const bytes = [];
+            this.#writeUint8(bytes, 9);
+            this.#writeColor(bytes, color);
+            this.#writeUint8(bytes, Math.floor(Math.clamp(0, transparency, 1) * 255) & 0xFF);
+            this.#writeULEB128(bytes, Math.max(0, Math.floor(lineWidth)));
+            this.#writeULEB128(bytes, Math.max(0, Math.floor(lifeMs)));
+            this.#writeULEB128(bytes, Math.max(0, Math.floor(fadeMs)));
+            this.#writeULEB128(bytes, vertices.length);
+            for (const v of vertices) {
+                this.#writeUint16(bytes, v.xu & 0xFFFF);
+                this.#writeUint16(bytes, v.yu & 0xFFFF);
+            }
+            this.#writeUint32(bytes, uuid >>> 0);
+            return bytes;
+        }
+
+        #buildPolygonFillPacket = (color, transparency, lifeMs, fadeMs, vertices, uuid) => {
+            const bytes = [];
+            this.#writeUint8(bytes, 10);
+            this.#writeColor(bytes, color);
+            this.#writeUint8(bytes, Math.floor(Math.clamp(0, transparency, 1) * 255) & 0xFF);
+            this.#writeULEB128(bytes, Math.max(0, Math.floor(lifeMs)));
+            this.#writeULEB128(bytes, Math.max(0, Math.floor(fadeMs)));
+            this.#writeULEB128(bytes, vertices.length);
+            for (const v of vertices) {
+                this.#writeUint16(bytes, v.xu & 0xFFFF);
+                this.#writeUint16(bytes, v.yu & 0xFFFF);
+            }
+            this.#writeUint32(bytes, uuid >>> 0);
+            return bytes;
+        }
+
         #sendCustomData = (payload) => {
             if (!MPP?.client?.sendArray || !Drawboard.connected) return;
 
@@ -904,6 +947,31 @@
                         i++;
                         break;
                     }
+                    case 9: {
+                        builtOps.push(this.#buildPolygonStrokePacket(
+                            item.color,
+                            item.transparency,
+                            item.lineWidth,
+                            item.lifeMs,
+                            item.fadeMs,
+                            item.vertices,
+                            item.uuid >>> 0
+                        ));
+                        i++;
+                        break;
+                    }
+                    case 10: {
+                        builtOps.push(this.#buildPolygonFillPacket(
+                            item.color,
+                            item.transparency,
+                            item.lifeMs,
+                            item.fadeMs,
+                            item.vertices,
+                            item.uuid >>> 0
+                        ));
+                        i++;
+                        break;
+                    }
                     default: {
                         i++;
                         break;
@@ -960,6 +1028,19 @@
             const v = (dot00 * dot12 - dot01 * dot02) * invDenom;
             return (u >= 0) && (v >= 0) && (u + v < 1);
         }
+
+        #pointInPolygon = (px, py, vertices) => {
+            if (!Array.isArray(vertices) || vertices.length < 3) return false;
+
+            const a = vertices[0];
+            for (let i = 1; i < vertices.length - 1; i++) {
+                const b = vertices[i];
+                const c = vertices[i + 1];
+                if (this.#pointInTriangle(px, py, a.x, a.y, b.x, b.y, c.x, c.y)) return true;
+            }
+            return false;
+        };
+
 
         #clear = () => {
             this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
@@ -1121,6 +1202,39 @@
                         }
                         break;
                     }
+                    case "polygon": {
+                        this.#ctx.globalCompositeOperation = "source-over";
+
+                        this.#ctx.beginPath();
+                        for (let i = 0; i < shape.vertices.length; i++) {
+                            const vertex = shape.vertices[i];
+                            if (i === 0) {
+                                this.#ctx.moveTo(vertex.x * this.#canvas.width, vertex.y * this.#canvas.height);
+                            } else {
+                                this.#ctx.lineTo(vertex.x * this.#canvas.width, vertex.y * this.#canvas.height);
+                            }
+                        }
+                        this.#ctx.closePath();
+
+                        switch (shape.subType) {
+                            case "fill": {
+                                this.#ctx.fillStyle = shape.color;
+                                this.#ctx.fill();
+                                break;
+                            }
+                            case "stroke": {
+                                this.#ctx.strokeStyle = shape.color;
+                                this.#ctx.lineWidth = shape.lineWidth;
+                                this.#ctx.stroke();
+                                break;
+                            }
+                            default: {
+                                console.warn("Unknown drawboard shape subtype:", shape.subType);
+                                break;
+                            }
+                        }
+                        break;
+                    }
                     default: {
                         console.warn("Unknown drawboard shape type:", shape.type);
                         break;
@@ -1237,8 +1351,8 @@
 
             return uuid >>> 0;
         }
-
-        drawLines = (segments = [], { color = null, transparency = null, lineWidth = null, lifeMs = null, fadeMs = null } = {}) => {
+        
+        drawLines = (segments = [], { color = null, transparency = null, lineWidth = null, lifeMs = null, fadeMs = null, chain = undefined } = {}) => {
             if (!Array.isArray(segments) || !segments.length) return [];
 
             const segs = segments.map(s => ({
@@ -1254,7 +1368,7 @@
             }));
 
             const eps = 1e-6;
-            const chainable = segs.length > 1 && (() => {
+            const autoChainable = segs.length > 1 && (() => {
                 for (let i = 0; i < segs.length - 1; i++) {
                     const a = segs[i], b = segs[i + 1];
                     if (Math.abs(a.x2 - b.x1) > eps || Math.abs(a.y2 - b.y1) > eps) return false;
@@ -1262,7 +1376,12 @@
                 return true;
             })();
 
-            if (chainable) {
+            // - if chain === true => force chaining
+            // - if chain === false => never chain
+            // - if chain === undefined => chain only when autoChainable
+            const useChain = chain === true ? true : (chain === false ? false : autoChainable);
+
+            if (useChain) {
                 const first = segs[0];
                 const xu = Math.round(first.x1 * 65535);
                 const yu = Math.round(first.y1 * 65535);
@@ -1609,6 +1728,106 @@
             return uuid >>> 0;
         }
 
+        renderPolygon = ({ vertices = [], color, transparency, lineWidth, lifeMs, fadeMs, subType = "fill", uuid = this.generateUUID(), owner = null } = {}) => {
+            const shape = {
+                type: "polygon",
+                subType,
+                vertices,
+                color,
+                transparency: Math.clamp(0, transparency, 1),
+                lineWidth,
+                lifeMs,
+                fadeMs,
+                timestamp: Date.now(),
+                uuid: uuid >>> 0,
+                owner: owner || null
+            };
+            this.#shapeBuffer.push(shape);
+            return uuid >>> 0;
+        }
+
+        drawPolygon = ({ vertices = [], color = null, transparency = null, lineWidth = null, lifeMs = null, fadeMs = null, fill = true } = {}) => {
+            color = color ?? this.#color;
+            transparency = transparency ?? this.#transparency;
+            lineWidth = (Number.isFinite(lineWidth) ? lineWidth : this.#lineWidth) >>> 0;
+            lifeMs = (Number.isFinite(lifeMs) ? lifeMs : this.#lifeMs) >>> 0;
+            fadeMs = (Number.isFinite(fadeMs) ? fadeMs : this.#fadeMs) >>> 0;
+
+            const sv = Array.isArray(vertices) ? vertices.map(v => {
+                const nx = Number(v?.x) || 0;
+                const ny = Number(v?.y) || 0;
+                return {
+                    x: Math.clamp(0, nx, 1),
+                    y: Math.clamp(0, ny, 1)
+                };
+            }) : [];
+
+            const uuid = this.generateUUID();
+
+            this.renderPolygon({
+                vertices: sv,
+                color: color,
+                transparency: transparency,
+                lineWidth: lineWidth,
+                lifeMs: lifeMs,
+                fadeMs: fadeMs,
+                subType: fill ? "fill" : "stroke",
+                uuid: uuid,
+                owner: MPP?.client?.participantId || null
+            });
+
+            const vu = sv.map(v => ({
+                xu: (Math.round(v.x * 65535) >>> 0) & 0xFFFF,
+                yu: (Math.round(v.y * 65535) >>> 0) & 0xFFFF
+            }));
+
+            if (fill) {
+                this.#pushOp({
+                    op: 10,
+                    color: color,
+                    transparency: transparency,
+                    lifeMs: lifeMs,
+                    fadeMs: fadeMs,
+                    vertices: vu,
+                    uuid: uuid >>> 0
+                });
+            } else {
+                this.#pushOp({
+                    op: 9,
+                    color: color,
+                    transparency: transparency,
+                    lineWidth: lineWidth,
+                    lifeMs: lifeMs,
+                    fadeMs: fadeMs,
+                    vertices: vu,
+                    uuid: uuid >>> 0
+                });
+            }
+
+            return uuid >>> 0;
+        }
+
+        drawPolygons = (polygons = [], { color = null, transparency = null, lineWidth = null, lifeMs = null, fadeMs = null } = {}) => {
+            if (!Array.isArray(polygons) || !polygons.length) return [];
+            const results = [];
+            for (const p of polygons) {
+                const id = this.drawPolygon({
+                    vertices: p.vertices?.map(v => ({
+                        x: Math.clamp(0, Number(v.x) || 0, 1),
+                        y: Math.clamp(0, Number(v.y) || 0, 1)
+                    })),
+                    color: p.color ?? color,
+                    transparency: p.transparency ?? transparency,
+                    lineWidth: Number.isFinite(p.lineWidth) ? p.lineWidth : lineWidth,
+                    lifeMs: Number.isFinite(p.lifeMs) ? p.lifeMs : lifeMs,
+                    fadeMs: Number.isFinite(p.fadeMs) ? p.fadeMs : fadeMs,
+                    fill: p.fill
+                });
+                results.push(id);
+            }
+            return results;
+        }
+
         renderErase = ({ x, y, radius } = {}) => {
             if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(radius)) return [];
             const removed = [];
@@ -1741,6 +1960,53 @@
                         if (distSq <= radiusPx * radiusPx) {
                             if (shape.uuid) removed.push(shape.uuid);
                             this.#shapeBuffer.splice(i, 1);
+                        }
+                        break;
+                    }
+                    case "polygon": {
+                        const verts = shape.vertices;
+                        if (!Array.isArray(verts) || verts.length < 3) break;
+
+                        switch (shape.subType) {
+                            case "fill": {
+                                const inside = this.#pointInPolygon(x, y, verts);
+                                if (inside) {
+                                    if (shape.uuid) removed.push(shape.uuid);
+                                    this.#shapeBuffer.splice(i, 1);
+                                    break;
+                                }
+
+                                let minDist = Infinity;
+                                for (let j = 0; j < verts.length; j++) {
+                                    const v1 = verts[j];
+                                    const v2 = verts[(j + 1) % verts.length];
+                                    const d = this.#pointToSegmentDistance(x, y, v1.x, v1.y, v2.x, v2.y);
+                                    if (d < minDist) minDist = d;
+                                }
+                                if (minDist <= radius) {
+                                    if (shape.uuid) removed.push(shape.uuid);
+                                    this.#shapeBuffer.splice(i, 1);
+                                }
+                                break;
+                            }
+                            case "stroke": {
+                                let minDist = Infinity;
+                                for (let j = 0; j < verts.length; j++) {
+                                    const v1 = verts[j];
+                                    const v2 = verts[(j + 1) % verts.length];
+                                    const d = this.#pointToSegmentDistance(x, y, v1.x, v1.y, v2.x, v2.y);
+                                    if (d < minDist) minDist = d;
+                                }
+                                if (minDist <= radius) {
+                                    if (shape.uuid) removed.push(shape.uuid);
+                                    this.#shapeBuffer.splice(i, 1);
+                                }
+                                break;
+                            }
+                            default: {
+                                console.warn("Unknown drawboard shape subtype:", shape.subType);
+                                break;
+                            }
                         }
                         break;
                     }
@@ -2055,6 +2321,68 @@
                                 lifeMs: lifeMs,
                                 fadeMs: fadeMs,
                                 options,
+                                uuid: uuid >>> 0,
+                                owner: senderId
+                            });
+                            break;
+                        }
+                        case 9: {
+                            const color = this.#readColor(bytes, state);
+                            const transparency = Math.clamp(0, this.#readUint8(bytes, state) / 255, 1);
+                            const lineWidth = this.#readULEB128(bytes, state);
+                            const lifeMs = this.#readULEB128(bytes, state);
+                            const fadeMs = this.#readULEB128(bytes, state);
+                            const len = this.#readULEB128(bytes, state);
+
+                            const vertices = [];
+                            for (let i = 0; i < len; i++) {
+                                const xu = this.#readUint16(bytes, state);
+                                const yu = this.#readUint16(bytes, state);
+                                const x = Math.clamp(0, xu / 65535, 1);
+                                const y = Math.clamp(0, yu / 65535, 1);
+
+                                vertices.push({ x, y });
+                            }
+                            const uuid = this.#readUint32(bytes, state);
+
+                            this.renderPolygon({
+                                vertices,
+                                color,
+                                transparency,
+                                lineWidth,
+                                lifeMs: lifeMs,
+                                fadeMs: fadeMs,
+                                subType: "stroke",
+                                uuid: uuid >>> 0,
+                                owner: senderId
+                            });
+                            break;
+                        }
+                        case 10: {
+                            const color = this.#readColor(bytes, state);
+                            const transparency = Math.clamp(0, this.#readUint8(bytes, state) / 255, 1);
+                            const lifeMs = this.#readULEB128(bytes, state);
+                            const fadeMs = this.#readULEB128(bytes, state);
+                            const len = this.#readULEB128(bytes, state);
+
+                            const vertices = [];
+                            for (let i = 0; i < len; i++) {
+                                const xu = this.#readUint16(bytes, state);
+                                const yu = this.#readUint16(bytes, state);
+                                const x = Math.clamp(0, xu / 65535, 1);
+                                const y = Math.clamp(0, yu / 65535, 1);
+
+                                vertices.push({ x, y });
+                            }
+                            const uuid = this.#readUint32(bytes, state);
+
+                            this.renderPolygon({
+                                vertices,
+                                color,
+                                transparency,
+                                lifeMs: lifeMs,
+                                fadeMs: fadeMs,
+                                subType: "fill",
                                 uuid: uuid >>> 0,
                                 owner: senderId
                             });

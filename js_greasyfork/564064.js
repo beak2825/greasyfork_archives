@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QS2 Custom Display
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.4
 // @description  Custom display
 // @author       acershaw
 // @match        https://v2.queslar.com/*
@@ -64,27 +64,36 @@
             const levelGroups = container.querySelectorAll('span.flex.items-center.gap-1.tracking-wider');
             
             if (levelGroups.length === 3) {
-                // find and remove the name/bp at the top
+                // hide name/bp at the top by moving off-screen instead of display:none
                 const combatNameDiv = container.querySelector('.flex.justify-between');
                 if (combatNameDiv) {
-                    combatNameDiv.style.display = 'none';
+                    combatNameDiv.style.position = 'absolute';
+                    combatNameDiv.style.left = '-9999px';
                 }
                 
                 // hide the exp text below progress bar
                 const expText = container.querySelector('.flex.justify-between.font-mono.text-muted-foreground.text-xs');
                 if (expText) {
-                    expText.style.display = 'none';
+                    expText.style.position = 'absolute';
+                    expText.style.left = '-9999px';
                 }
                 
                 // find the space-y-1 container
                 const spaceDiv = container.querySelector('.space-y-1');
                 
                 if (spaceDiv) {
-                    // save only the progress bar
-                    const progressParent = spaceDiv.querySelector('.absolute.inset-0');
+                    // check if we already created our custom display
+                    let customDisplay = spaceDiv.querySelector('.custom-levels-display');
                     
-                    // function to get current levels
-                    const getLevels = () => {
+                    if (!customDisplay) {
+                        // create custom display container
+                        customDisplay = document.createElement('div');
+                        customDisplay.className = 'custom-levels-display';
+                        spaceDiv.insertBefore(customDisplay, spaceDiv.firstChild);
+                    }
+                    
+                    // function to update the custom display
+                    const updateLevels = () => {
                         let battling = '0', forging = '0', sanctum = '0';
                         
                         const groups = container.querySelectorAll('span.flex.items-center.gap-1.tracking-wider');
@@ -101,40 +110,28 @@
                             sanctum = span ? span.textContent.trim() : '0';
                         }
                         
-                        return {battling, forging, sanctum};
-                    };
-                    
-                    // function to update the display
-                    const updateLevels = () => {
-                        const levels = getLevels();
-                        
-                        // rebuild
-                        spaceDiv.innerHTML = `
+                        // update custom display
+                        customDisplay.innerHTML = `
                             <div class="flex justify-between items-center">
                                 <span>Battling</span>
-                                <span class="font-mono">${levels.battling}</span>
+                                <span class="font-mono">${battling}</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span>Forging</span>
-                                <span class="font-mono">${levels.forging}</span>
+                                <span class="font-mono">${forging}</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span>Sanctum</span>
-                                <span class="font-mono">${levels.sanctum}</span>
+                                <span class="font-mono">${sanctum}</span>
                             </div>
                         `;
-                        
-                        // re-add progress bar only
-                        if (progressParent && progressParent.parentElement && progressParent.parentElement.parentElement) {
-                            spaceDiv.appendChild(progressParent.parentElement.parentElement);
-                        }
-                        
-                        // hide exp text again
-                        setTimeout(() => {
-                            const expText2 = container.querySelector('.flex.justify-between.font-mono.text-muted-foreground.text-xs');
-                            if (expText2) expText2.style.display = 'none';
-                        }, 100);
                     };
+                    
+                    // move original level groups off-screen instead of hiding
+                    levelGroups.forEach(group => {
+                        group.style.position = 'absolute';
+                        group.style.left = '-9999px';
+                    });
                     
                     // initial update
                     updateLevels();
@@ -143,7 +140,7 @@
                     combatObservers.forEach(obs => obs.disconnect());
                     combatObservers = [];
                     
-                    // watch for level changes
+                    // watch for level changes on the ORIGINAL elements
                     levelGroups.forEach(group => {
                         const span = group.querySelector('span.hover-card-text');
                         if (span) {

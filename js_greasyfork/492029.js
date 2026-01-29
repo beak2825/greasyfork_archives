@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        AniLINK - Episode Link Extractor
 // @namespace   https://greasyfork.org/en/users/781076-jery-js
-// @version     6.21.7
+// @version     6.22.0
 // @description Stream or download your favorite anime series effortlessly with AniLINK! Unlock the power to play any anime series directly in your preferred video player or download entire seasons in a single click using popular download managers like IDM. AniLINK generates direct download links for all episodes, conveniently sorted by quality. Elevate your anime-watching experience now!
 // @icon        https://www.google.com/s2/favicons?domain=animepahe.ru
 // @author      Jery
@@ -53,6 +53,7 @@
 // @grant       GM_addStyle
 // @grant       GM_getValue
 // @grant       GM_setValue
+// @grant       GM_download
 // @downloadURL https://update.greasyfork.org/scripts/492029/AniLINK%20-%20Episode%20Link%20Extractor.user.js
 // @updateURL https://update.greasyfork.org/scripts/492029/AniLINK%20-%20Episode%20Link%20Extractor.meta.js
 // ==/UserScript==
@@ -306,7 +307,7 @@ const Websites = [
                     const epNumber = (epNum - firstEpNum + 1).toString();
                     const thumbnail = page.querySelector(this.thumbnail).src;
                     status.text = `Extracting episodes ${epNumber - Math.min(epNumber, this._chunkSize) + 1} - ${epNumber}...`;
-                    const links = Object.fromEntries(await Promise.all([...page.querySelectorAll(this.linkElems)].map(async elm => [elm.textContent, { stream: await Extractors.use(elm.getAttribute('data-src')), type: 'm3u8' }])));
+                    const links = Object.fromEntries(await Promise.all([...page.querySelectorAll(this.linkElems)].map(async elm => [elm.textContent, { stream: await Extractors.use(elm.getAttribute('data-src')), type: 'm3u8', referer: 'https://kwik.cx/' }])));
                     return new Episode(epNumber, animeTitle, links, thumbnail);
                 }));
         },
@@ -524,25 +525,21 @@ const Websites = [
                 Object.entries(episodes).forEach(([type, list]) => list.forEach(ep => (a[ep.number] ??= []).push({ ...ep, provider, type }))), a
             ), {});
 
-            showToast('Found Providers: ' + Object.entries(Object.values(eps).flat().reduce((m, ep) => ((m[this._getLocalSourceName(ep.provider)] ??= new Set()).add(ep.type), m), {})).map(([p, t]) => `${p.toLowerCase()} (${[...t].join(', ')})`).join(', '));
+            const allSources = [...new Set(Object.values(eps).flat().map(e => this._getLocalSourceName(e.provider, e.type)))];
+            const srcCfg = await showSourceSelector(allSources, 'miruro', { sources: allSources.filter(s => s.startsWith('kiwi')), mode: 'single' });
 
             for (const epNum of await applyEpisodeRangeFilter(Object.keys(eps).sort((a, b) => a - b))) {
-                const baseEp = eps[epNum][0];
-                status.text = `Fetching Ep ${epNum}...`;
-                const links = {};
-                const selProv = [...document.querySelectorAll('select')][2].value.toLowerCase();
-                const useProvider = eps[epNum].some(e => selProv.includes(e.provider.toLowerCase())) ? selProv : 'ALL'; // Use the current selected provider or ALL if not available
-                await Promise.all(eps[epNum].map(async ({ id, provider, type }) => {
-                    if ((useProvider === 'ALL' || useProvider === provider.toLowerCase()) && [...document.querySelectorAll('select')][1].value.includes(type)) { // Filter by selected provider and type (sub/dub)
-                        const source = this._getLocalSourceName(provider, type);
-                        try {
-                            const sresJson = await this._secureFetch(`${this.baseApiUrl}/sources`, { query: { episodeId: id, provider, category: type } });
-                            const referer = provider == 'KICKASSANIME' ? 'https://kaa.to/' : provider == 'ZORO' ? 'https://megacloud.blog/' : location.href;
-                            links[this._getLocalSourceName(source)] = { stream: sresJson.streams[0].url, type: "m3u8", tracks: sresJson.tracks || sresJson.subtitles || [], referer };
-                            useProvider == 'ALL' && (await lastPromise, lastPromise = Promise.resolve()); // If fetching all providers, make fetch sequential to avoid rate limit 
-                        } catch (e) { showToast(`Failed to fetch ep-${epNum} from ${source}: ${e}`); }
-                    }
-                }));
+                const baseEp = eps[epNum][0]; status.text = `Fetching Ep ${epNum}...`;
+                const links = {}, fetchSource = async ({ id, provider, type }) => {
+                    const source = this._getLocalSourceName(provider, type);
+                    try {
+                        const sresJson = await this._secureFetch(`${this.baseApiUrl}/sources`, { query: { episodeId: id, provider, category: type } });
+                        const referer = provider == 'KICKASSANIME' ? 'https://kaa.to/' : provider == 'ZORO' ? 'https://megacloud.blog/' : provider == 'ANIMEPAHE' ? 'https://kwik.cx/' : location.href;
+                        links[source] = { stream: sresJson.streams[0].url, type: "m3u8", tracks: sresJson.tracks || sresJson.subtitles || [], referer };
+                    } catch (e) { showToast(`Failed to fetch ep-${epNum} from ${source}: ${e}`); }
+                };
+                if (srcCfg?.mode === 'single') { for (const src of srcCfg.sources) { const e = eps[epNum].find(ep => this._getLocalSourceName(ep.provider, ep.type) === src); if (e) { await fetchSource(e); if (Object.keys(links).length) break; } } }
+                else for (const src of srcCfg.sources) { const e = eps[epNum].find(ep => this._getLocalSourceName(ep.provider, ep.type) === src); if (e) await fetchSource(e); } // Sequential to avoid rate limit
                 yield new Episode(epNum, animeTitle, links, baseEp.image, baseEp.title);
             }
         },
@@ -647,20 +644,29 @@ const Websites = [
         url: ['hianime.to/', 'hianimez.is/', 'hianimez.to/', 'hianime.nz/', 'hianime.bz/', 'hianime.pe/', 'hianime.cx/', 'hianime.gs/'],
         _chunkSize: 1, // Number of episodes to extract in parallel
         extractEpisodes: async function* (status) {
-            for (let i = 0, epList = await applyEpisodeRangeFilter($('.ss-list > a').get()); i < epList.length; i += this._chunkSize) {
+            const epList = await applyEpisodeRangeFilter($('.ss-list > a').get());
+            if (!epList || !epList.length) return; // User cancelled or no episodes
+            
+            // Get source preferences (show modal using first episode's sources)
+            const sourceConfig = await (async () => {
+                const servers = await $((await $.get(`/ajax/v2/episode/servers?episodeId=${$(epList[0]).data('id')}`, r => $(r).responseJSON)).html)
+                    .find('.server-item').map((_, i) => `${$(i).text().trim()}-${$(i).data('type')}`).get();
+                return await showSourceSelector(servers, 'hianime', { sources: servers.filter(s => !s.match(/^HD-[13]-/)), mode: 'single' });   // Exclude HD-1/HD-3 from default sources (CORS issues)
+            })();
+            
+            for (let i = 0; i < epList.length; i += this._chunkSize) {
                 yield* yieldEpisodesFromPromises(epList.slice(i, i + this._chunkSize).map(async e => {
                     const [epId, epNum, epTitle] = [$(e).data('id'), $(e).data('number'), $(e).find('.ep-name').text()]; let thumbnail = '';
                     status.text = `Extracting Episode ${epNum - Math.min(this._chunkSize, epNum) + 1}...`;
                     const servers = await $((await $.get(`/ajax/v2/episode/servers?episodeId=${epId}`, r => $(r).responseJSON)).html).find('.server-item').map((_, i) => [[$(i).text().trim(), { id: $(i).data('id'), type: $(i).data('type') }]]).get();
-                    // Prefer HD-2 if available. (HD-1 and HD-3 might have CORS issues)
-                    const filteredServers = servers.filter(([s]) => !['HD-1', 'HD-3'].includes(s));
-                    const links = await (filteredServers.length ? filteredServers : servers).reduce(async (linkAcc, [server, { id, type }]) => {
-                        try {
-                            const data = await fetch(`/ajax/v2/episode/sources?id=${id}`).then(r => r.json());
-                            const src = await Extractors.use(data.link, location.href);
-                            return { ...await linkAcc, [`${server}-${type}`]: { stream: src.file, type: 'm3u8', tracks: src.tracks, referer: src.referer || location.href } };
-                        } catch (e) { showToast(`Failed to fetch Ep ${epNum} from ${server}-${type}: (${e.status}): ${e.message || e}`); return linkAcc; }
-                    }, Promise.resolve({}));
+                    const links = {}, fetchSource = async ([server, { id, type }]) => { const key = `${server}-${type}`; try { const data = await fetch(`/ajax/v2/episode/sources?id=${id}`).then(r => r.json()); const src = await Extractors.use(data.link, location.href); links[key] = { stream: src.file, type: 'm3u8', tracks: src.tracks, referer: src.referer || location.href }; } catch (e) { showToast(`Failed to fetch Ep ${epNum} from ${key}: ${e.message || e}`); } };
+                    if (sourceConfig?.mode === 'single') { 
+                        for (const key of sourceConfig.sources) { const s = servers.find(([srv, { type }]) => `${srv}-${type}` === key); 
+                        if (s) { await fetchSource(s); if (Object.keys(links).length) break; } } 
+                    } else await Promise.all(sourceConfig.sources.map(key => { 
+                        const s = servers.find(([srv, { type }]) => `${srv}-${type}` === key); 
+                        return s ? fetchSource(s) : Promise.resolve(); 
+                    }));
                     return new Episode(epNum, ($('.film-name > a').first().text()), links, thumbnail, epTitle);
                 }))
             }
@@ -694,12 +700,14 @@ const Websites = [
         url: ['animegg.org/'],
         extractEpisodes: async function* (status) {
             const epLinks = $((!!$('.anm_det_pop').length) ? document : $(await fetchPage($('.nap > a[href^="/series/"]').get(0).href))).find('.newmanga > li > div').get().reverse();
-            for (let i = 0, l = await applyEpisodeRangeFilter(epLinks); i < l.length; i += 1)
+            const l = await applyEpisodeRangeFilter(epLinks); if (!l?.length) return;
+            const srcCfg = await showSourceSelector([...(await fetchPage($(l[0]).find('.anm_det_pop').get(0).href)).querySelectorAll('#videos a')].map(a => a.dataset.version), 'animegg', { mode: 'single' });
+            for (let i = 0; i < l.length; i += 1)
                 yield* yieldEpisodesFromPromises(l.slice(i, i + 1).map(async div => {
-                    const pg = $(await fetchPage($(div).find('.anm_det_pop').get(0).href));
-                    const epNum = pg.find('.info > a').text().split(' ').pop();
+                    const pg = $(await fetchPage($(div).find('.anm_det_pop').get(0).href)), epNum = pg.find('.info > a').text().split(' ').pop();
                     status.text = `Extracting Episodes ${(epNum - Math.min(1, epNum) + 1)} - ${epNum}...`;
-                    const links = Object.fromEntries(await Promise.all(pg.find('#videos a').get().map(async a => [a.dataset.version, { stream: (await fetch((await fetchPage('/embed/' + a.dataset.id)).querySelector('[property="og:video"]')?.content, { method: 'HEAD' }).catch(e => showToast(`Error fetching ep ${epNum} - ${a.dataset.version}: ${e}`)))?.url, type: 'mp4', referer: location.origin }])).then(r => r.filter(([_, v]) => v.stream)));
+                    const links = {}, videoLinks = pg.find('#videos a').get(), fetchSource = async a => { if (srcCfg && !srcCfg.sources.includes(a.dataset.version)) return; try { const stream = (await fetch((await fetchPage('/embed/' + a.dataset.id)).querySelector('[property="og:video"]')?.content, { method: 'HEAD' }))?.url; if (stream) links[a.dataset.version] = { stream, type: 'mp4', referer: location.origin }; } catch (e) { showToast(`Error fetching ep ${epNum} - ${a.dataset.version}: ${e}`); } };
+                    if (srcCfg?.mode === 'single') { for (const a of videoLinks) { await fetchSource(a); if (Object.keys(links).length) break; } } else await Promise.all(videoLinks.map(fetchSource));
                     return new Episode(epNum, pg.find('.titleep a').text().trim(), links, $('a > img').get(0).src, $(div).find('.anititle').text());
                 }));
         },
@@ -723,18 +731,23 @@ const Websites = [
         name: "Kaido",
         url: ["kaido.to"],
         extractEpisodes: async function* (status) {
-            for (let i = 0, epLinks = await applyEpisodeRangeFilter([..._$$('a.ep-item')]); i < epLinks.length; i += 12)
+            const epLinks = await applyEpisodeRangeFilter([..._$$('a.ep-item')]); if (!epLinks?.length) return;
+            const srcCfg = await (async () => {
+                const servers = await fetch(`/ajax/episode/servers?episodeId=${epLinks[0].dataset.id}`).then(async r => (await r.json()).html).then(t => (new DOMParser()).parseFromString(t, 'text/html')).then(h => [...h.querySelectorAll('[data-server-id]')].map(e => `${e.textContent.trim()}-${e.dataset.type}`));
+                return await showSourceSelector(servers, 'kaido', { mode: 'single' });
+            })();
+            for (let i = 0; i < epLinks.length; i += 12)
                 yield* yieldEpisodesFromPromises(epLinks.slice(i, i + 12).map(async epLink => {
-                    const epNum = epLink.dataset.number;
-                    status.text = `Extracting Episodes ${(epNum - Math.min(12, epNum) + 1)} - ${epNum}...`;
-                    return await fetch(`/ajax/episode/servers?episodeId=${epLink.dataset.id}`).then(async r => (await r.json()).html).then(t => (new DOMParser()).parseFromString(t, 'text/html'))
-                        .then(h => [...h.querySelectorAll('[data-server-id]')].map(e => ({ id: e.dataset.id, type: e.dataset.type, name: e.textContent.trim() })))
-                        .then(async servers => {
-                            const links = Object.fromEntries(await Promise.all(servers.map(async s => fetch(`/ajax/episode/sources?id=${s.id}`).then(r => r.json())
-                                .then(d => GM_fetch(d.link.replace('/e-1/', '/e-1/getSources?id=').replace('?z=', '')).then(r => r.json())
-                                    .then(src => src.encrypted ? undefined : [`${s.name}-${s.type}`, { stream: src.sources[0].file, tracks: src.tracks, type: 'm3u8', referer: src.server == 4 ? 'https://megacloud.blog/' : undefined }])))));
-                            return new Episode(epNum, _$('h2.film-name > a').textContent, links, _$('.film-poster > img').src, epLink.querySelector('.ep-name').textContent)
-                        });
+                    const epNum = epLink.dataset.number; status.text = `Extracting Episodes ${(epNum - Math.min(12, epNum) + 1)} - ${epNum}...`;
+                    const servers = await fetch(`/ajax/episode/servers?episodeId=${epLink.dataset.id}`).then(async r => (await r.json()).html).then(t => (new DOMParser()).parseFromString(t, 'text/html')).then(h => [...h.querySelectorAll('[data-server-id]')].map(e => ({ id: e.dataset.id, type: e.dataset.type, name: e.textContent.trim() })));
+                    const links = {}, fetchSource = async s => { try { 
+                        const d = await fetch(`/ajax/episode/sources?id=${s.id}`).then(r => r.json()); 
+                        const src = await GM_fetch(d.link.replace('/e-1/', '/e-1/getSources?id=').replace('?z=', '')).then(r => r.json()); 
+                        if (!src.encrypted) links[`${s.name}-${s.type}`] = { stream: src.sources[0].file, tracks: src.tracks, type: 'm3u8', referer: src.server == 4 ? 'https://megacloud.blog/' : undefined };
+                    } catch (e) { showToast(`Failed to fetch ep ${epNum} from ${s.name}-${s.type}: ${e}`); } };
+                    if (srcCfg?.mode === 'single') { for (const key of srcCfg.sources) { const s = servers.find(srv => `${srv.name}-${srv.type}` === key); if (s) { await fetchSource(s); if (Object.keys(links).length) break; } } } 
+                    else await Promise.all(srcCfg.sources.map(key => { const s = servers.find(srv => `${srv.name}-${srv.type}` === key); return s ? fetchSource(s) : Promise.resolve(); }));
+                    return new Episode(epNum, _$('h2.film-name > a').textContent, links, _$('.film-poster > img').src, epLink.querySelector('.ep-name').textContent);
                 }));
         }
     },
@@ -1182,10 +1195,11 @@ async function extractEpisodes() {
 
     // --- Process Episodes using Generator ---
     window._anilink_episodes = [];
+    let startTime = Date.now();
     try {
         const episodeGenerator = site.extractEpisodes(status);
         const qualityLinkLists = {};
-        const startTime = Date.now();
+        startTime = Date.now(); // Reset start time after initialization
 
         for await (const episode of episodeGenerator) {
             if (!status.isExtracting) { // Check if extraction is stopped
@@ -1214,6 +1228,7 @@ async function extractEpisodes() {
         }
     } catch (error) {
         console.error('Error during episode extraction:', error);
+        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
         status = { isExtracting: false, text: `Extraction Failed after ${duration} seconds.`, error: error.message || error.toString() };
     }
 
@@ -1323,13 +1338,15 @@ async function extractEpisodes() {
                 });
                 epnumSpan.addEventListener('click', e => {
                     e.preventDefault();
-                    location.replace(`${MPV_PROTOCOL}://play/` + safeBtoa(link) + `/?v_title=${safeBtoa(name)}&cookies=${location.hostname}.txt` + (ep.links[quality].tracks?.some(t => t.kind === 'caption') ? `&subfile=${safeBtoa(ep.links[quality].tracks.filter(t => /^caption/.test(t.kind)).map(t => t.file).join(';'))}` : ''));
+                    location.replace(`${MPV_PROTOCOL}://play/` + safeBtoa(link) + `/?v_title=${safeBtoa(name)}&cookies=${location.hostname}.txt&referer=${safeBtoa(ep.links[quality].referer || location.href)}` + (ep.links[quality].tracks?.some(t => t.kind === 'caption') ? `&subfile=${safeBtoa(ep.links[quality].tracks.filter(t => /^caption/.test(t.kind)).map(t => t.file).join(';'))}` : ''));
                     showToast('Sent to MPV. If nothing happened, install v0.4.0+ of <a href="https://github.com/akiirui/mpv-handler" target="_blank" style="color:#1976d2;">mpv-handler</a>.');
                 });
                 episodeLinkElement.addEventListener('click', () => {
-                    fetch(episodeLinkElement.href)
-                        .then(r => r.blob())
-                        .then(b => Object.assign(document.createElement('a'), { href: URL.createObjectURL(b), download: decodeURIComponent(episodeLinkElement.download) }).click());    // workaround to force download with correct filename (some browsers ignore download attr for cross-origin links)
+                    // fetch(episodeLinkElement.href, { method: 'HEAD', headers })
+                    //     .then(r => r.blob())
+                    //     .then(b => Object.assign(document.createElement('a'), { href: URL.createObjectURL(b), download: decodeURIComponent(episodeLinkElement.download) }).click())    // workaround to force download with correct filename (some browsers ignore download attr for cross-origin links)
+                    //     .catch(err => window.open(episodeLinkElement.href, '_blank') && showToast(`Could not download file directly, opened in new tab instead. Error: ${err}`));
+                    window.open(episodeLinkElement.href, '_blank');
                 });
 
                 // Subtitle toggle functionality
@@ -1468,87 +1485,125 @@ async function extractEpisodes() {
 }
 
 /***************************************************************
- * Modern Episode Range Selector with Keyboard Navigation
+ * Shared Modal Builder - DRY base for all selection modals
  ***************************************************************/
-async function showEpisodeRangeSelector(total) {
-    return new Promise(resolve => {
-        const modal = Object.assign(document.createElement('div'), {
-            innerHTML: `
-                <div class="anlink-modal-backdrop">
-                    <div class="anlink-modal">
-                        <div class="anlink-modal-header">
-                            <div class="anlink-modal-icon">📺</div>
-                            <h2>Episode Range</h2>
-                            <div class="anlink-episode-count">${total} episodes found</div>
-                            <small style="display:block;color:#ccc;font-size:11px;margin-top:2px;">
-                                Note: Range is by episode count, not episode number<br>(e.g., 1-6 means the first 6 episodes listed).
-                            </small>
-                        </div>                        
-                        <div class="anlink-modal-body">
-                            <div class="anlink-range-inputs">
-                                <div class="anlink-input-group">
-                                    <label>From</label>
-                                    <input type="number" id="start" min="1" max="${total}" value="1" tabindex="1">
-                                </div>
-                                <div class="anlink-range-divider">—</div>
-                                <div class="anlink-input-group">
-                                    <label>To</label>
-                                    <input type="number" id="end" min="1" max="${total}" value="${Math.min(24, total)}" tabindex="2">
-                                </div>
-                            </div>
-                            <div class="anlink-quick-select">
-                                <button class="anlink-quick-btn" data-range="1,24" tabindex="3">First 24</button>
-                                <button class="anlink-quick-btn" data-range="${Math.max(1, total - 23)},${total}" tabindex="4">Last 24</button>
-                                <button class="anlink-quick-btn" data-range="1,${total}" tabindex="5">All ${total}</button>
-                            </div>
-                            <div class="anlink-help-text">
-                                Use <kbd>Tab</kbd> to navigate • <kbd>↑↓</kbd> to adjust values • <kbd>Enter</kbd> to extract • <kbd>Esc</kbd> to cancel
-                            </div>
-                        </div>                        
-                        <div class="anlink-modal-footer">
-                            <button class="anlink-btn anlink-btn-cancel" data-key="Escape" tabindex="6"><kbd>Esc</kbd> Cancel</button>
-                            <button class="anlink-btn anlink-btn-primary" data-key="Enter" tabindex="7"><kbd>Enter</kbd> Extract</button>
-                        </div>
+function createModal({ title, icon, subtitle, bodyHTML, width = '420px', onConfirm, onCancel }) {
+    const modal = Object.assign(document.createElement('div'), {
+        innerHTML: `
+            <div class="anlink-modal-backdrop">
+                <div class="anlink-modal" style="width:${width};">
+                    <div class="anlink-modal-header">
+                        <div class="anlink-modal-icon">${icon}</div>
+                        <h2>${title}</h2>
+                        ${subtitle ? `<div class="anlink-episode-count">${subtitle}</div>` : ''}
+                    </div>
+                    <div class="anlink-modal-body">${bodyHTML}</div>
+                    <div class="anlink-modal-footer">
+                        <button class="anlink-btn anlink-btn-cancel"><kbd>Esc</kbd> Cancel</button>
+                        <button class="anlink-btn anlink-btn-primary"><kbd>Enter</kbd> Confirm</button>
                     </div>
                 </div>
-            `,
-            style: 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:1001;'
-        });
+            </div>
+        `,
+        style: 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:1001;'
+    });
 
-        // Enhanced styling with keyboard indicators
+    // Inject shared modal styles (only once)
+    if (!document.getElementById('anlink-modal-styles')) {
         GM_addStyle(`
             .anlink-modal-backdrop { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
-            .anlink-modal { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); width: 420px; max-width: 90vw; color: #fff; overflow: hidden; }
+            .anlink-modal { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); max-width: 90vw; color: #fff; overflow: hidden; }
             .anlink-modal-header { text-align: center; padding: 24px 24px 16px; background: linear-gradient(135deg, #26a69a 0%, #20847a 100%); }
             .anlink-modal-icon { font-size: 48px; margin-bottom: 8px; }
             .anlink-modal h2 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
             .anlink-episode-count { opacity: 0.9; font-size: 14px; }
             .anlink-modal-body { padding: 24px; }
+            .anlink-modal-footer { display: flex; gap: 12px; padding: 0 24px 24px; }
+            .anlink-btn { flex: 1; padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+            .anlink-btn:focus { outline: 2px solid #26a69a; outline-offset: 2px; }
+            .anlink-btn-cancel { background: #444; color: #ccc; }
+            .anlink-btn-cancel:hover, .anlink-btn-cancel:focus { background: #555; }
+            .anlink-btn-primary { background: linear-gradient(135deg, #26a69a 0%, #20847a 100%); color: #fff; }
+            .anlink-btn-primary:hover, .anlink-btn-primary:focus { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(38,166,154,0.3); }
+            .anlink-quick-select { display: flex; gap: 8px; margin-bottom: 16px; }
+            .anlink-quick-btn { flex: 1; padding: 8px 12px; border: 1px solid #444; border-radius: 6px; background: transparent; color: #ccc; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+            .anlink-quick-btn:hover, .anlink-quick-btn:focus { border-color: #26a69a; color: #26a69a; background: rgba(38,166,154,0.1); outline: none; }
+            .anlink-help-text { font-size: 11px; color: #888; text-align: center; margin-top: 12px; }
+            kbd { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 3px; padding: 1px 4px; font-size: 10px; margin-right: 4px; }
+        `);
+        const tag = document.createElement('style'); tag.id = 'anlink-modal-styles'; document.head.appendChild(tag);
+    }
+
+    document.body.appendChild(modal);
+    const primaryBtn = modal.querySelector('.anlink-btn-primary');
+    const cancelBtn = modal.querySelector('.anlink-btn-cancel');
+    
+    const cleanup = () => modal.remove();
+    const handleConfirm = () => { const result = onConfirm?.(modal); if (result !== false) cleanup(); };
+    const handleCancel = () => { onCancel?.(modal); cleanup(); };
+
+    modal.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { e.preventDefault(); handleCancel(); }
+        else if (e.key === 'Enter' && !e.target.matches('input[type="radio"], input[type="checkbox"]')) { e.preventDefault(); handleConfirm(); }
+    });
+    cancelBtn.addEventListener('click', handleCancel);
+    primaryBtn.addEventListener('click', handleConfirm);
+
+    return { modal, primaryBtn, cancelBtn, cleanup };
+}
+
+/***************************************************************
+ * Modern Episode Range Selector with Keyboard Navigation
+ ***************************************************************/
+async function showEpisodeRangeSelector(total) {
+    return new Promise((resolve, reject) => {
+        const bodyHTML = `
+            <small style="display:block;color:#ccc;font-size:11px;margin-bottom:16px;text-align:center;">
+                Note: Range is by episode count, not episode number<br>(e.g., 1-6 means the first 6 episodes listed).
+            </small>
+            <div class="anlink-range-inputs">
+                <div class="anlink-input-group">
+                    <label>From</label>
+                    <input type="number" id="start" min="1" max="${total}" value="1" tabindex="1">
+                </div>
+                <div class="anlink-range-divider">—</div>
+                <div class="anlink-input-group">
+                    <label>To</label>
+                    <input type="number" id="end" min="1" max="${total}" value="${Math.min(24, total)}" tabindex="2">
+                </div>
+            </div>
+            <div class="anlink-quick-select">
+                <button class="anlink-quick-btn" data-range="1,24" tabindex="3">First 24</button>
+                <button class="anlink-quick-btn" data-range="${Math.max(1, total - 23)},${total}" tabindex="4">Last 24</button>
+                <button class="anlink-quick-btn" data-range="1,${total}" tabindex="5">All ${total}</button>
+            </div>
+            <div class="anlink-help-text">
+                Use <kbd>Tab</kbd> to navigate • <kbd>↑↓</kbd> to adjust values • <kbd>Enter</kbd> to extract • <kbd>Esc</kbd> to cancel
+            </div>
+        `;
+
+        const { modal, primaryBtn } = createModal({
+            title: 'Episode Range',
+            icon: '📺',
+            subtitle: `${total} episodes found`,
+            bodyHTML,
+            onConfirm: () => {
+                validate();
+                resolve({ start: +startInput.value, end: +endInput.value });
+            },
+            onCancel: () => reject(new Error('Episode range selection cancelled.'))
+        });
+
+        GM_addStyle(`
             .anlink-range-inputs { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
             .anlink-input-group { flex: 1; }
             .anlink-input-group label { display: block; margin-bottom: 8px; font-size: 14px; color: #26a69a; font-weight: 500; }
             .anlink-input-group input { width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: #1a1a1a; color: #fff; font-size: 16px; text-align: center; transition: all 0.2s; }
             .anlink-input-group input:focus { outline: none; border-color: #26a69a; box-shadow: 0 0 0 3px rgba(38,166,154,0.1); }
             .anlink-range-divider { color: #26a69a; font-weight: bold; font-size: 18px; margin-top: 24px; }
-            .anlink-quick-select { display: flex; gap: 8px; margin-bottom: 16px; }
-            .anlink-quick-btn { flex: 1; padding: 8px 12px; border: 1px solid #444; border-radius: 6px; background: transparent; color: #ccc; cursor: pointer; font-size: 12px; transition: all 0.2s; position: relative; }
-            .anlink-quick-btn:hover, .anlink-quick-btn:focus { border-color: #26a69a; color: #26a69a; background: rgba(38,166,154,0.1); outline: none; }            .anlink-help-text { font-size: 11px; color: #888; text-align: center; margin-top: 12px; }
-            .anlink-modal-footer { display: flex; gap: 12px; padding: 0 24px 24px; }
-            .anlink-btn { flex: 1; padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; position: relative; }
-            .anlink-btn:focus { outline: 2px solid #26a69a; outline-offset: 2px; }
-            .anlink-btn-cancel { background: #444; color: #ccc; }
-            .anlink-btn-cancel:hover, .anlink-btn-cancel:focus { background: #555; }
-            .anlink-btn-primary { background: linear-gradient(135deg, #26a69a 0%, #20847a 100%); color: #fff; }
-            .anlink-btn-primary:hover, .anlink-btn-primary:focus { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(38,166,154,0.3); }
-            kbd { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 3px; padding: 1px 4px; font-size: 10px; margin-right: 4px; }
         `);
 
-        document.body.appendChild(modal);
-
         const [startInput, endInput] = modal.querySelectorAll('input');
-        const buttons = modal.querySelectorAll('button');
-        const primaryBtn = modal.querySelector('.anlink-btn-primary');
-        const cancelBtn = modal.querySelector('.anlink-btn-cancel');
 
         const validate = () => {
             const s = Math.max(1, Math.min(total, +startInput.value));
@@ -1556,90 +1611,26 @@ async function showEpisodeRangeSelector(total) {
             startInput.value = s; endInput.value = e;
         };
 
-        const cleanup = () => modal.remove();
-        const accept = () => { validate(); cleanup(); resolve({ start: +startInput.value, end: +endInput.value }); };
-        const cancel = () => { cleanup(); resolve(null); };
-
-        // Keyboard navigation with arrow keys for number inputs
-        modal.addEventListener('keydown', e => {
-            switch (e.key) {
-                case 'Escape': e.preventDefault(); cancel(); break;
-                case 'Enter': e.preventDefault(); accept(); break;
-                case 'f': case 'F':
-                    if (!e.target.matches('input') && !e.ctrlKey && !e.altKey) {
-                        e.preventDefault();
-                        startInput.focus();
-                        startInput.select();
-                    }
-                    break;
-            }
-        });
-
         // Input validation and arrow key navigation for number inputs
         [startInput, endInput].forEach(input => {
             input.addEventListener('input', validate);
             input.addEventListener('keydown', e => {
-                if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    input.value = Math.min(total, (+input.value || 0) + 1);
-                    validate();
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    input.value = Math.max(1, (+input.value || 2) - 1);
-                    validate();
-                } else if (e.key === 'Tab' && !e.shiftKey && input === endInput) {
-                    e.preventDefault();
-                    modal.querySelector('.anlink-quick-btn').focus();
-                }
+                if (e.key === 'ArrowUp') { e.preventDefault(); input.value = Math.min(total, (+input.value || 0) + 1); validate(); }
+                else if (e.key === 'ArrowDown') { e.preventDefault(); input.value = Math.max(1, (+input.value || 2) - 1); validate(); }
             });
         });
         // Quick select buttons
-        modal.querySelectorAll('.anlink-quick-btn').forEach((btn, index) => {
+        modal.querySelectorAll('.anlink-quick-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const [s, e] = btn.dataset.range.split(',').map(Number);
-                startInput.value = s;
-                endInput.value = e;
+                startInput.value = s; endInput.value = e;
                 validate();
-                // Focus extract button after quick select
-                setTimeout(() => primaryBtn.focus(), 100);
+                setTimeout(() => primaryBtn.focus(), 100); // Focus extract button after quick select
             });
-
-            // Arrow key navigation between quick select buttons
-            btn.addEventListener('keydown', e => {
-                if (e.key === 'ArrowLeft' && index > 0) {
-                    e.preventDefault();
-                    modal.querySelectorAll('.anlink-quick-btn')[index - 1].focus();
-                } else if (e.key === 'ArrowRight' && index < 2) {
-                    e.preventDefault();
-                    modal.querySelectorAll('.anlink-quick-btn')[index + 1].focus();
-                } else if (e.key === 'Tab' && !e.shiftKey && index === 2) {
-                    e.preventDefault();
-                    cancelBtn.focus();
-                }
-            });
-        });
-        // Button handlers with enhanced keyboard navigation
-        cancelBtn.addEventListener('click', cancel);
-        cancelBtn.addEventListener('keydown', e => {
-            if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                primaryBtn.focus();
-            }
-        });
-
-        primaryBtn.addEventListener('click', accept);
-        primaryBtn.addEventListener('keydown', e => {
-            if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                cancelBtn.focus();
-            }
         });
 
         // Focus management - start with first input and select all text
-        setTimeout(() => {
-            startInput.focus();
-            startInput.select();
-        }, 100);
+        setTimeout(() => { startInput.focus(); startInput.select(); }, 100);
     });
 }
 
@@ -1655,12 +1646,141 @@ async function applyEpisodeRangeFilter(allEpLinks) {
 
     if (!selection) {
         status.text = 'Cancelled by user.';
-        return null;
+        throw new Error('Episode range selection cancelled by user.');
     }
 
     const filtered = allEpLinks.slice(selection.start - 1, selection.end);
     status.text = `Extracting episodes ${selection.start}-${selection.end} of ${allEpLinks.length}...`;
     return filtered;
+}
+
+/***************************************************************
+ * Source Picker Modal - Select preferred sources and fallback order
+ ***************************************************************/
+async function showSourceSelector(sourcesGetter, siteKey, defaults = {}) {
+    const storageKey = `anlink_sources_${siteKey}`;
+    const saved = JSON.parse(GM_getValue(storageKey, 'null'));
+    const availableSources = await (typeof sourcesGetter === 'function' ? sourcesGetter() : sourcesGetter);
+    if (!availableSources?.length) throw new Error('No available sources found.');
+
+    return new Promise(resolve => {
+        const defaultSources = defaults.sources || availableSources;
+        const config = saved || { sources: defaultSources, mode: defaults.mode || 'single' };
+        
+        const bodyHTML = `
+            <small style="display:block;color:#ccc;font-size:11px;margin-bottom:12px;text-align:center;">Drag to reorder • Top = highest priority</small>
+            <div class="anlink-source-mode">
+                <label><input type="radio" name="mode" value="single" ${config.mode === 'single' ? 'checked' : ''}> Single (1st available)</label>
+                <label><input type="radio" name="mode" value="multi" ${config.mode === 'multi' ? 'checked' : ''}> Multi (all selected)</label>
+            </div>
+            <div class="anlink-source-list" data-mode="${config.mode}">
+                ${config.sources.map((s, i) => `<div class="anlink-source-item" draggable="true" data-source="${s}">
+                    <span class="anlink-drag-handle">☰</span>
+                    <input type="checkbox" id="src_${i}" checked>
+                    <label for="src_${i}">${s}</label>
+                    <span class="anlink-priority">#${i + 1}</span>
+                </div>`).join('')}
+                ${availableSources.filter(s => !config.sources.includes(s)).map((s, i) => `<div class="anlink-source-item" draggable="true" data-source="${s}">
+                    <span class="anlink-drag-handle">☰</span>
+                    <input type="checkbox" id="src_new_${i}">
+                    <label for="src_new_${i}">${s}</label>
+                    <span class="anlink-priority"></span>
+                </div>`).join('')}
+            </div>
+            <div class="anlink-quick-select">
+                <button class="anlink-quick-btn" data-action="all">Select All</button>
+                <button class="anlink-quick-btn" data-action="none">Deselect All</button>
+                <button class="anlink-quick-btn" data-action="reset">Reset</button>
+            </div>
+            <div class="anlink-help-text">Sources tried in order until one succeeds</div>
+        `;
+
+        const { modal, primaryBtn } = createModal({
+            title: 'Source Preferences',
+            icon: '🎬',
+            subtitle: `${availableSources.length} sources available`,
+            bodyHTML,
+            width: '480px',
+            onConfirm: () => {
+                const mode = modal.querySelector('input[name="mode"]:checked').value;
+                const sources = [...list.querySelectorAll('.anlink-source-item')]
+                    .filter(item => item.querySelector('input[type="checkbox"]').checked)
+                    .map(item => item.dataset.source);
+                if (!sources.length) { showToast('⚠️ Please select at least one source'); return false; }
+                const config = { sources, mode };
+                GM_setValue(storageKey, JSON.stringify(config));
+                resolve(config);
+            },
+            onCancel: () => resolve(saved || { sources: availableSources, mode: 'single' })
+        });
+
+        GM_addStyle(`
+            .anlink-source-mode { display: flex; gap: 16px; margin-bottom: 16px; padding: 12px; background: rgba(38,166,154,0.1); border-radius: 8px; }
+            .anlink-source-mode label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #ccc; transition: color 0.2s; }
+            .anlink-source-mode input[type="radio"] { accent-color: #26a69a; }
+            .anlink-source-mode label:has(input:checked) { color: #26a69a; font-weight: 600; }
+            .anlink-source-list { max-height: 320px; overflow-y: auto; margin-bottom: 16px; border: 1px solid #444; border-radius: 8px; padding: 8px; background: #1a1a1a; }
+            .anlink-source-item { display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 6px; background: #2d2d2d; border: 1px solid #444; border-radius: 6px; cursor: move; transition: all 0.2s; }
+            .anlink-source-item:hover { border-color: #26a69a; background: #333; }
+            .anlink-source-item.dragging { opacity: 0.5; }
+            .anlink-drag-handle { color: #666; cursor: grab; font-size: 18px; }
+            .anlink-drag-handle:active { cursor: grabbing; }
+            .anlink-source-item input[type="checkbox"] { accent-color: #26a69a; width: 18px; height: 18px; cursor: pointer; }
+            .anlink-source-item label { flex: 1; cursor: pointer; color: #eee; user-select: none; }
+            .anlink-priority { font-size: 12px; color: #26a69a; font-weight: 600; min-width: 28px; text-align: right; }
+            .anlink-source-list[data-mode="single"] .anlink-source-item:has(input:not(:checked)) { opacity: 0.4; }
+        `);
+        const list = modal.querySelector('.anlink-source-list');
+        const modeInputs = modal.querySelectorAll('input[name="mode"]');
+        let draggedItem = null;
+        
+        list.addEventListener('dragstart', e => {
+            const item = e.target.closest('.anlink-source-item');
+            if (!item) return;
+            draggedItem = item;
+            item.classList.add('dragging');
+        });
+        
+        list.addEventListener('dragend', e => {
+            const item = e.target.closest('.anlink-source-item');
+            if (item) item.classList.remove('dragging');
+            updatePriorities();
+        });
+        
+        list.addEventListener('dragover', e => {
+            e.preventDefault();
+            if (!draggedItem) return;
+            const afterElement = [...list.querySelectorAll('.anlink-source-item:not(.dragging)')]
+                .find(el => e.clientY < el.getBoundingClientRect().top + el.offsetHeight / 2);
+            if (afterElement) list.insertBefore(draggedItem, afterElement);
+            else list.appendChild(draggedItem);
+        });
+        const updatePriorities = () => {
+            list.querySelectorAll('.anlink-source-item').forEach((item, i) => {
+                const priority = item.querySelector('.anlink-priority');
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                priority.textContent = checkbox.checked ? `#${i + 1}` : '';
+            });
+        };
+        
+        modeInputs.forEach(input => input.addEventListener('change', e => { list.dataset.mode = e.target.value; updatePriorities(); }));
+        list.addEventListener('change', e => { if (e.target.type === 'checkbox') updatePriorities(); });
+        modal.querySelectorAll('.anlink-quick-btn').forEach(btn => btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            const checkboxes = list.querySelectorAll('input[type="checkbox"]');
+            if (action === 'all') checkboxes.forEach(cb => cb.checked = true);
+            else if (action === 'none') checkboxes.forEach(cb => cb.checked = false);
+            else if (action === 'reset') {
+                const items = [...list.querySelectorAll('.anlink-source-item')];
+                const defaultOrder = defaults.sources || availableSources;
+                items.forEach(item => item.querySelector('input[type="checkbox"]').checked = defaultOrder.includes(item.dataset.source));
+                defaultOrder.forEach(source => { const item = items.find(i => i.dataset.source === source); if (item) list.appendChild(item); });
+            }
+            updatePriorities();
+        }));
+        updatePriorities();
+        setTimeout(() => primaryBtn.focus(), 100);
+    });
 }
 
 /***************************************************************

@@ -21,7 +21,7 @@
 // @description:es     Selecciona automáticamente la calidad de vídeo preferida y activa la reproducción Premium cuando esté disponible. (Compatible con YouTube Desktop, Music y Móvil)
 // @description:de     Wählt automatisch die bevorzugte Videoqualität und aktiviert Premium-Wiedergabe, wenn verfügbar. (Unterstützt YouTube Desktop, Music & Mobile)
 // @description:ru     Автоматически выбирает предпочтительное качество видео и включает воспроизведение Premium, если доступно. (Поддерживает YouTube Desktop, Music и Mobile)
-// @version            2.7.3
+// @version            2.7.4
 // @run-at             document-end
 // @inject-into        content
 // @match              https://www.youtube.com/*
@@ -97,7 +97,7 @@
     function createNS(name, attributes = {}, append = []) {
         const el = document.createElementNS("http://www.w3.org/2000/svg", name);
         for (const k in attributes) el.setAttributeNS(null, k, attributes[k]);
-        return el.append(...append), el;
+        return (el.append(...append), el);
     }
 
     for (const name in icons) {
@@ -332,21 +332,21 @@
         return (options.preferred_premium && quality.premium) || quality.normal;
     }
 
-    /** @type {(() => Promise<void>)[]} */
-    let stackSequence = [];
-    let isSequenceRun = false;
+    /** @type {(() => Promise<void>) | null} */
+    let pendingTask = null;
+    let isExecuting = false;
 
-    async function runSequence() {
-        if (isSequenceRun) return;
-        isSequenceRun = true;
-        for (let fn; (fn = stackSequence.pop()); ) await fn();
-        isSequenceRun = false;
+    async function runTasks() {
+        if (isExecuting) return;
+        isExecuting = true;
+        while (pendingTask) await pendingTask((pendingTask = null));
+        isExecuting = false;
     }
 
     function setVideoQuality() {
         if (manualOverride) return;
 
-        stackSequence.push(async () => {
+        pendingTask = async () => {
             const id = this.id;
             const qualityData = await API(id, "getAvailableQualityData");
             const selected = getQuality(qualityData || []);
@@ -360,9 +360,9 @@
                     selected.formatId
                 );
             }
-        });
+        };
 
-        runSequence();
+        runTasks();
     }
 
     /**
@@ -401,7 +401,7 @@
         if (clearOverride) manualOverride = false;
         saveOption(optionKey, newValue);
         saveOption("updated_id", generateId());
-        togglePremium(), setTextQuality();
+        (togglePremium(), setTextQuality());
         setVideoQuality.call(player);
     }
 
@@ -413,7 +413,7 @@
     function itemElement(className = "", append = []) {
         const el = document.createElement("div");
         el.className = "ytp-menuitem" + (className ? "-" + className : "");
-        return el.append(...append), el;
+        return (el.append(...append), el);
     }
 
     /**
@@ -571,7 +571,7 @@
 
     async function syncOptions() {
         if ((await GM.getValue("updated_id")) !== options.updated_id) {
-            await loadOptions(), togglePremium(), setTextQuality();
+            (await loadOptions(), togglePremium(), setTextQuality());
             for (const id in caches.player) {
                 const [player, video] = caches.player[id];
                 if (!video.paused) setVideoQuality.call(player);
@@ -608,7 +608,8 @@
             });
 
             find(item, "yt-icon:last-child").style.marginLeft = 0;
-            return !observer(addItem, menu, { childList: true });
+            observer(addItem, menu, { childList: true });
+            return true;
         }
 
         function musicSetSettingsClicked(/** @type {MouseEvent} */ ev) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AO3 FicTracker
 // @author       infiniMotis
-// @version      1.6.6.2
+// @version      1.6.6.3
 // @namespace    https://github.com/infiniMotis/AO3-FicTracker
 // @description  Track your favorite, finished, to-read and disliked fanfics on AO3 with sync across devices. Customizable tags and highlights make it easy to manage and spot your tracked works. Full UI customization on the preferences page.
 // @license      GNU GPLv3
@@ -128,8 +128,8 @@
         syncWidgetOpacity: .5,
         exportStatusesConfig: true,
         collapseAndHideOnBookmarks: false,
-        displayMyNotesButton: true
-
+        displayMyNotesButton: true,
+        displayOnPageSorting: true
     };
 
     // Toggle debug info
@@ -1507,7 +1507,10 @@
             // Listen for clicks on quick tag buttons
             this.setupQuickTagListener();
 
-            this.setupOnPageSorting();
+            // Display on page sorting controls if enabled
+            if (settings.displayOnPageSorting) {
+                this.setupOnPageSorting();
+            }
         }
 
 
@@ -2018,6 +2021,13 @@
                             <label for="toggle_displayMyNotesBtn" 
                                 title="Show or hide the 'My Notes' button in the navigation bar for quick access/search">
                                 Display "My Notes" button at the navigation bar
+                            </label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="toggle_displayOnPageSorting" v-model="ficTrackerSettings.displayOnPageSorting">
+                            <label for="toggle_displayOnPageSorting" 
+                                title="On-page sort lets you dynamically sort the works currently loaded on page. Note: it only sorts the works visible on this page, not across multiple pages">
+                                Display on-page sort conrols
                             </label>
                         </li>
                         <li>
@@ -2934,11 +2944,10 @@
                         );
                     }
                 });
+                DEBUG && console.log('[FicTracker] Successfully added dropdown options!');
             } else {
                 DEBUG && console.warn('[FicTracker] Cannot parse the username!');
             }
-
-            DEBUG && console.log('[FicTracker] Successfully added dropdown options!');
         }
 
 
@@ -2986,7 +2995,7 @@
 
             // Handler for fanfic pages (chapters, entire work, one shot)
             urlHandler.addHandler(
-                [/\/works\/.*(?:chapters|view_full_work)/, /works\/\d+(#\w+-?\w*)?$/, /\/chapters\/\d+\?show_comments/],
+                [/\/works\/.*(?:chapters|view_full_work)/, /works\/\d+(#\w+-?\w*)?(\?.*)?$/, /\/chapters\/\d+\?show_comments/],
                 () => {
                     const bookmarkManager = new BookmarkManager("https://archiveofourown.org/");
                 }

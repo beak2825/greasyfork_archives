@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Npm Userscript
-// @version      0.3.5
+// @version      0.3.6
 // @description  Various improvements and fixes for npmjs.com
 // @license      MIT
 // @author       Bjorn Lu
@@ -4637,6 +4637,16 @@ in the package.json.
     }
   });
 
+  // node_modules/semver/functions/lte.js
+  var require_lte = __commonJS({
+    "node_modules/semver/functions/lte.js"(exports, module) {
+      "use strict";
+      var compare = require_compare();
+      var lte = (a2, b2, loose) => compare(a2, b2, loose) <= 0;
+      module.exports = lte;
+    }
+  });
+
   // node_modules/semver/internal/lrucache.js
   var require_lrucache = __commonJS({
     "node_modules/semver/internal/lrucache.js"(exports, module) {
@@ -4702,16 +4712,6 @@ in the package.json.
       var compare = require_compare();
       var gt = (a2, b2, loose) => compare(a2, b2, loose) > 0;
       module.exports = gt;
-    }
-  });
-
-  // node_modules/semver/functions/lte.js
-  var require_lte = __commonJS({
-    "node_modules/semver/functions/lte.js"(exports, module) {
-      "use strict";
-      var compare = require_compare();
-      var lte = (a2, b2, loose) => compare(a2, b2, loose) <= 0;
-      module.exports = lte;
     }
   });
 
@@ -5317,6 +5317,7 @@ in the package.json.
       top: 0;
       left: 0;
       background: var(--background-color);
+      color: black;
       font-size: 90%;
       padding: 4px 8px;
       border-radius: 4px;
@@ -5416,9 +5417,16 @@ in the package.json.
     const matched = [];
     for (const vuln of vulnerabilities) {
       for (const affected of vuln.affected) {
-        if ((0, import_gte.default)(version, affected[0]) && (0, import_lt.default)(version, affected[1])) {
-          matched.push(vuln);
-          break;
+        if (affected[2] === "i") {
+          if ((0, import_gte.default)(version, affected[0]) && (0, import_lte.default)(version, affected[1])) {
+            matched.push(vuln);
+            break;
+          }
+        } else {
+          if ((0, import_gte.default)(version, affected[0]) && (0, import_lt.default)(version, affected[1])) {
+            matched.push(vuln);
+            break;
+          }
         }
       }
     }
@@ -5449,11 +5457,12 @@ in the package.json.
     const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
     return settings.featureSettings;
   }
-  var import_gte, import_lt, import_max_satisfying, description21, warningSvg;
+  var import_gte, import_lt, import_lte, import_max_satisfying, description21, warningSvg;
   var init_show_vulnerabilities = __esm({
     "src/features/show-vulnerabilities.ts"() {
       import_gte = __toESM(require_gte(), 1);
       import_lt = __toESM(require_lt(), 1);
+      import_lte = __toESM(require_lte(), 1);
       import_max_satisfying = __toESM(require_max_satisfying(), 1);
       init_utils_fetch();
       init_utils_npm_context();

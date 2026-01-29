@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Nitro Type - Racing Mini Map
-// @version      0.1.0
+// @version      0.2.0
 // @description  Displays a mini map of the Race Track.
 // @author       Toonidy
 // @match        *://*.nitrotype.com/race
@@ -14,9 +14,9 @@
 // @downloadURL https://update.greasyfork.org/scripts/458372/Nitro%20Type%20-%20Racing%20Mini%20Map.user.js
 // @updateURL https://update.greasyfork.org/scripts/458372/Nitro%20Type%20-%20Racing%20Mini%20Map.meta.js
 // ==/UserScript==
- 
+
 /* globals PIXI findReact createLogger */
- 
+
 const config = {
      colors: {
         me: 0xf2887f,
@@ -35,7 +35,7 @@ const config = {
         alpha: 0.5, // range 0.0 - 1.0 (the lower the value, the more transparent)
     },
 }
- 
+
 const logging = createLogger("Nitro Type Racing Mini Map"),
       raceContainer = document.querySelector("#raceContainer"),
       raceObj = raceContainer ? findReact(raceContainer) : null
@@ -47,9 +47,9 @@ if (!raceObj.props.user.loggedIn) {
     logging.error("Init")("This userscript is not available for Guest Racing")
     return
 }
- 
+
 PIXI.utils.skipHello()
- 
+
 const style = document.createElement("style")
 style.appendChild(
         document.createTextNode(`
@@ -57,42 +57,42 @@ style.appendChild(
     display: block;
 }`))
 document.head.appendChild(style)
- 
+
 const racingMiniMap = new PIXI.Application({ width: 1024, height: 100, backgroundColor: config.colors.background }),
       container = document.createElement("div");
- 
+
 container.className = "nt-racing-mini-map-root"
- 
+
 ///////////////////////
 //  Prepare Objects  //
 ///////////////////////
- 
+
 const RACER_WIDTH = 28,
       CROSSING_LINE_WIDTH = 32,
       PADDING = 2,
       racers = Array(5).fill(null),
       server = raceObj.server,
       currentUserID = raceObj.props.user.userID
- 
+
 // Draw mini racetrack
 const raceTrackBG = new PIXI.TilingSprite.from("/dist/site/images/backgrounds/bg-noise.png", { width: racingMiniMap.renderer.width, height: racingMiniMap.renderer.height} ),
       startLine = PIXI.Sprite.from(PIXI.Texture.WHITE),
       finishLine = PIXI.Sprite.from(PIXI.Texture.WHITE)
- 
+
 startLine.x = CROSSING_LINE_WIDTH
 startLine.y = 0
 startLine.width = 1
 startLine.height = racingMiniMap.renderer.height
 startLine.tint = config.colors.startLine
- 
+
 finishLine.x = racingMiniMap.renderer.width - CROSSING_LINE_WIDTH - 1
 finishLine.y = 0
 finishLine.width = 1
 finishLine.height = racingMiniMap.renderer.height
 finishLine.tint = config.colors.finishLine
- 
+
 raceTrackBG.addChild(startLine, finishLine)
- 
+
 for (let i = 1; i < 5; i++) {
     const lane = PIXI.Sprite.from(PIXI.Texture.WHITE)
     lane.x = 0
@@ -102,9 +102,9 @@ for (let i = 1; i < 5; i++) {
     lane.tint = config.colors.raceLane
     raceTrackBG.addChild(lane)
 }
- 
+
 racingMiniMap.stage.addChild(raceTrackBG)
- 
+
 /* Mini Map movement animation update. */
 function animateRacerTicker() {
     const r = this
@@ -114,7 +114,7 @@ function animateRacerTicker() {
         r.sprite.x = r.fromX + Math.min(distance, distance * (lapse / r.moveMS))
         if (r.ghostSprite && r.sprite.x === r.ghostSprite.x) {
             r.ghostSprite.renderable = false
-        }
+        }server
     }
     if (r.skipped > 0) {
         const nitroTargetWidth = r.nitroToX - r.nitroFromX
@@ -131,11 +131,11 @@ function animateRacerTicker() {
         racingMiniMap.ticker.remove(animateRacerTicker, this)
     }
 }
- 
+
 /* Handle adding in players on the mini map. */
 server.on("joined", (e) => {
     const { lane, userID } = e
- 
+
     let color = config.colors.opponentBot
     if (userID === currentUserID) {
         color = config.colors.me
@@ -144,7 +144,7 @@ server.on("joined", (e) => {
     } else if (e.profile.specialRobot === "wampus") {
         color = config.colors.opponentWampus
     }
- 
+
     if (racers[lane]) {
         racers[lane].ghostSprite.tint = color
         racers[lane].sprite.tint = color
@@ -155,21 +155,21 @@ server.on("joined", (e) => {
         racers[lane].sprite.renderable = true
         return
     }
- 
+
     const r = PIXI.Sprite.from(PIXI.Texture.WHITE)
     r.x = 0 - RACER_WIDTH + PADDING
     r.y = PADDING + (lane > 0 ? 1 : 0) + (lane * (racingMiniMap.renderer.height / 5))
     r.tint = color
     r.width = RACER_WIDTH
     r.height = 16 - (lane > 0 ? 1 : 0)
- 
+
     const n = PIXI.Sprite.from(PIXI.Texture.WHITE)
     n.y = r.y + ((16 - (lane > 0 ? 1 : 0)) / 2) - 1
     n.renderable = false
     n.tint = config.colors.nitro
     n.width = 1
     n.height = 2
- 
+
     racers[lane] = {
         lane,
         sprite: r,
@@ -187,7 +187,7 @@ server.on("joined", (e) => {
         moveMS: 500,
         completeStamp: null,
     }
- 
+
     if (config.moveDestination.enabled) {
         const g = PIXI.Sprite.from(PIXI.Texture.WHITE)
         g.x = PADDING
@@ -197,17 +197,17 @@ server.on("joined", (e) => {
         g.width = RACER_WIDTH
         g.height = 16 - (lane > 0 ? 1 : 0)
         g.renderable = false
- 
+
         racers[lane].ghostSprite = g
         racingMiniMap.stage.addChild(g)
     }
- 
+
     racingMiniMap.stage.addChild(n)
     racingMiniMap.stage.addChild(r)
- 
+
     racingMiniMap.ticker.add(animateRacerTicker, racers[lane])
 })
- 
+
 /* Handle any players leaving the race track. */
 server.on("left", (e) => {
     const lane = racers.findIndex((r) => r?.userID === e)
@@ -217,11 +217,11 @@ server.on("left", (e) => {
         racers[lane].nitroSprite.renderable = false
     }
 })
- 
+
 /* Handle race map progress position updates. */
 server.on("update", (e) => {
     let moveFinishMS = 500
- 
+
     const payloadUpdateRacers = e.racers.slice().sort((a, b) => {
         if (a.progress.completeStamp === b.progress.completeStamp) {
             return 0
@@ -231,7 +231,7 @@ server.on("update", (e) => {
         }
         return a.progress.completeStamp > 0 && b.progress.completeStamp > 0 && a.progress.completeStamp > b.progress.completeStamp ? 1 : -1
     })
- 
+
     for (let i = 0; i < payloadUpdateRacers.length; i++) {
         const r = payloadUpdateRacers[i],
               { completeStamp, skipped } = r.progress,
@@ -239,7 +239,7 @@ server.on("update", (e) => {
         if (!racerObj || racerObj.completeStamp > 0 || (r.userID === currentUserID && completeStamp <= 0 && config.trackLocally)) {
             continue
         }
- 
+
         if (r.disqualified) {
             racingMiniMap.ticker.remove(animateRacerTicker, racerObj)
             racingMiniMap.stage.removeChild(racerObj.sprite, racerObj.nitroSprite)
@@ -249,19 +249,19 @@ server.on("update", (e) => {
             racerObj.sprite.destroy()
             racerObj.ghostSprite.destroy()
             racerObj.nitroSprite.destroy()
- 
+
             racers[r.lane] = null
             continue
         }
- 
+
         racerObj.lastUpdated = Date.now()
         racerObj.fromX = racerObj.sprite.x
- 
+
         if (racerObj.completeStamp === null && completeStamp > 0) {
             racerObj.completeStamp = completeStamp
             racerObj.toX = racingMiniMap.renderer.width - RACER_WIDTH - PADDING
             racerObj.moveMS = moveFinishMS
- 
+
             if (racerObj.nitroDisableFade) {
                 racerObj.nitroToX = racingMiniMap.renderer.width - RACER_WIDTH - PADDING
                 racerObj.nitroDisableFade = false
@@ -271,12 +271,12 @@ server.on("update", (e) => {
             racerObj.toX = r.progress.percentageFinished * (racingMiniMap.renderer.width - RACER_WIDTH - CROSSING_LINE_WIDTH - PADDING - 1)
             racerObj.sprite.x = racerObj.fromX
         }
- 
+
         if (racerObj.ghostSprite) {
             racerObj.ghostSprite.x = racerObj.toX
             racerObj.ghostSprite.renderable = true
         }
- 
+
         if (skipped !== racerObj.skipped) {
             if (racerObj.skipped === 0) {
                 racerObj.nitroFromX = racerObj.fromX
@@ -290,7 +290,7 @@ server.on("update", (e) => {
                 racerObj.nitroToX = racingMiniMap.renderer.width - RACER_WIDTH - PADDING
             }
         }
- 
+
         if (completeStamp > 0 && i + 1 < payloadUpdateRacers.length) {
             const nextRacer = payloadUpdateRacers[i + 1],
                   nextRacerObj = racers[nextRacer?.lane]
@@ -300,7 +300,7 @@ server.on("update", (e) => {
         }
     }
 })
- 
+
 if (config.trackLocally) {
     let lessonLength = 0
     server.on("status", (e) => {
@@ -308,48 +308,48 @@ if (config.trackLocally) {
             lessonLength = e.lessonLength
         }
     })
- 
-    const originalSendPlayerUpdate = server.sendPlayerUpdate
-    server.sendPlayerUpdate = (data) => {
-        originalSendPlayerUpdate(data)
+
+    const originalIncrementTyped = raceObj.incrementTyped
+    raceObj.incrementTyped = (data) => {
+        originalIncrementTyped(data)
         const racerObj = racers.find((r) => r?.userID === currentUserID)
         if (!racerObj) {
             return
         }
- 
-        const percentageFinished = (data.t / (lessonLength || 1))
+
+        const percentageFinished = (raceObj.typedStats.typed / (lessonLength || 1))
         racerObj.lastUpdated = Date.now()
         racerObj.fromX = racerObj.sprite.x
         racerObj.moveMS = 500
         racerObj.toX = percentageFinished * (racingMiniMap.renderer.width - RACER_WIDTH - CROSSING_LINE_WIDTH - PADDING - 1)
         racerObj.sprite.x = racerObj.fromX
- 
+
         if (racerObj.ghostSprite) {
             racerObj.ghostSprite.x = racerObj.toX
             racerObj.ghostSprite.renderable = true
         }
- 
-        if (data.s) {
+
+        if (data.skipped) {
             if (racerObj.skipped === 0) {
                 racerObj.nitroFromX = racerObj.fromX
                 racerObj.nitroSprite.x = racerObj.fromX
                 racerObj.nitroSprite.renderable = true
             }
-            racerObj.skipped = data.s // because infinite nitros exist? but I'm not going to test that! :/
+            racerObj.skipped = data.skipped // because infinite nitros exist? but I'm not going to test that! :/
             racerObj.nitroToX = racerObj.toX
             racerObj.nitroSprite.alpha = 1
             racerObj.nitroDisableFade = percentageFinished === 1
- 
+
             if (racerObj.completeStamp !== null) {
                 racerObj.nitroToX = racingMiniMap.renderer.width - RACER_WIDTH - PADDING
             }
         }
     }
 }
- 
+
 /////////////
 //  Final  //
 /////////////
- 
+
 container.append(racingMiniMap.view)
 raceContainer.before(container)

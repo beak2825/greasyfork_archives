@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Magnet Link to Real-Debrid
-// @version       2.8.1
+// @version       2.9.0
 // @description   Automatically send magnet links to Real-Debrid
 // @author        Journey Over
 // @license       MIT
@@ -47,7 +47,8 @@
     allowedExtensions: ['mp3', 'm4b', 'mp4', 'mkv', 'cbz', 'cbr'],
     filterKeywords: ['sample', 'bloopers', 'trailer'],
     manualFileSelection: false,
-    debugEnabled: false
+    debugEnabled: false,
+    enableTorrentSupport: false
   };
 
   class ConfigurationError extends Error {
@@ -98,6 +99,7 @@
       if (!Array.isArray(config.filterKeywords)) errors.push('filterKeywords must be an array');
       if (typeof config.manualFileSelection !== 'boolean') errors.push('manualFileSelection must be a boolean');
       if (typeof config.debugEnabled !== 'boolean') errors.push('debugEnabled must be a boolean');
+      if (typeof config.enableTorrentSupport !== 'boolean') errors.push('enableTorrentSupport must be a boolean');
       return errors;
     },
   };
@@ -176,17 +178,28 @@
 
         return new Promise((resolve, reject) => {
           const url = `${API_BASE}${endpoint}`;
-          const payload = data ? new URLSearchParams(data).toString() : null;
+          let payload = null;
+          let headers = {
+            Authorization: `Bearer ${this.#apiKey}`,
+            Accept: 'application/json'
+          };
+          if (data) {
+            if (data instanceof FormData) {
+              payload = data;
+            } else if (data instanceof Blob) {
+              payload = data;
+              headers['Content-Type'] = 'application/x-bittorrent';
+            } else {
+              payload = new URLSearchParams(data).toString();
+              headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            }
+          }
           logger.debug(`[Real-Debrid API] ${method} ${endpoint} (attempt ${attempt + 1})`);
 
           GM_xmlhttpRequest({
             method,
             url,
-            headers: {
-              Authorization: `Bearer ${this.#apiKey}`,
-              Accept: 'application/json',
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
+            headers,
             data: payload,
             onload: (response) => {
               logger.debug(`[Real-Debrid API] Response: ${response.status}`);
@@ -255,6 +268,11 @@
       return this.#request('POST', '/torrents/addMagnet', {
         magnet
       });
+    }
+
+    async addTorrent(torrentBlob) {
+      logger.debug('[Real-Debrid API] Adding torrent file');
+      return this.#request('PUT', '/torrents/addTorrent', torrentBlob);
     }
 
     async getTorrentInfo(torrentId) {
@@ -492,6 +510,68 @@
       await this.#realDebridApi.selectFiles(torrentId, selectedFileIds.join(','));
       return selectedFileIds.length;
     }
+
+    async processTorrentLink(torrentUrl) {
+      const torrentBlob = await this.fetchTorrentFile(torrentUrl);
+
+      const addResult = await this.#realDebridApi.addTorrent(torrentBlob);
+      if (!addResult || typeof addResult.id === 'undefined') {
+        throw new RealDebridError('Failed to add torrent');
+      }
+      const torrentId = addResult.id;
+
+      const info = await this.#realDebridApi.getTorrentInfo(torrentId);
+      const files = Array.isArray(info.files) ? info.files : [];
+
+      let selectedFileIds;
+      if (this.#config.manualFileSelection) {
+        if (files.length === 1) {
+          selectedFileIds = [files[0].id];
+        } else {
+          selectedFileIds = await UIManager.createFileSelectionDialog(files);
+          if (selectedFileIds === null) {
+            await this.#realDebridApi.deleteTorrent(torrentId);
+            throw new RealDebridError('File selection cancelled');
+          }
+          if (!selectedFileIds.length) {
+            await this.#realDebridApi.deleteTorrent(torrentId);
+            throw new RealDebridError('No files selected');
+          }
+        }
+      } else {
+        selectedFileIds = this.filterFiles(files).map(f => f.id);
+        if (!selectedFileIds.length) {
+          await this.#realDebridApi.deleteTorrent(torrentId);
+          throw new RealDebridError('No matching files found after filtering');
+        }
+      }
+
+      logger.debug(`[Torrent Processor] Selected files: ${selectedFileIds.map(id => files.find(f => f.id === id)?.path || `ID:${id}`).join(', ')}`);
+      await this.#realDebridApi.selectFiles(torrentId, selectedFileIds.join(','));
+      return selectedFileIds.length;
+    }
+
+    async fetchTorrentFile(url) {
+      return new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+          method: 'GET',
+          url,
+          responseType: 'blob',
+          onload: (response) => {
+            if (response.status >= 200 && response.status < 300) {
+              resolve(response.response);
+            } else {
+              reject(new RealDebridError(`Failed to fetch torrent file: ${response.status}`));
+            }
+          },
+          onerror: () => reject(new RealDebridError('Network request failed for torrent file'))
+        });
+      });
+    }
+
+    isTorrentSupportEnabled() {
+      return this.#config.enableTorrentSupport;
+    }
   }
 
   const UIManager = {
@@ -568,6 +648,13 @@
                 </label>
                 <div class="rd-help">Log debug messages to console</div>
               </div>
+              <div class="rd-form-group">
+                <label class="rd-checkbox-label">
+                  <input type="checkbox" id="enableTorrentSupportCheckbox" ${currentConfig.enableTorrentSupport ? 'checked' : ''}>
+                  Enable Torrent File Support
+                </label>
+                <div class="rd-help">Allow Alt+click on magnet links to send torrent files</div>
+              </div>
             </div>
             <div class="rd-footer">
               <button class="rd-button rd-primary" id="saveButton">Save Settings</button>
@@ -614,7 +701,8 @@
           allowedExtensions: dialog.querySelector('#allowedExtensionsTextarea').value.split(',').map(extension => extension.trim()).filter(Boolean),
           filterKeywords: dialog.querySelector('#filterKeywordsTextarea').value.split(',').map(k => k.trim()).filter(Boolean),
           manualFileSelection: dialog.querySelector('#manualFileSelectionCheckbox').checked,
-          debugEnabled: dialog.querySelector('#debugEnabledCheckbox').checked
+          debugEnabled: dialog.querySelector('#debugEnabledCheckbox').checked,
+          enableTorrentSupport: dialog.querySelector('#enableTorrentSupportCheckbox').checked
         };
         try {
           await ConfigManager.saveConfig(newConfig);
@@ -907,6 +995,7 @@
       icon.textContent = 'RD';
       icon.style.cssText = `cursor:pointer;display:inline-block;width:18px;height:18px;margin-left:6px;vertical-align:middle;border-radius:3px;background:#3b82f6;color:white;text-align:center;line-height:18px;font-size:11px;font-weight:bold;`;
       icon.setAttribute(INSERTED_ICON_ATTR, '1');
+      icon.title = 'Click to send magnet to Real-Debrid, Alt+click to send torrent file';
       return icon;
     },
 
@@ -923,6 +1012,7 @@
       icon.className = 'rd-icon';
       icon.textContent = 'RD';
       icon.style.cssText = `cursor:pointer;display:inline-block;width:18px;height:18px;border-radius:3px;background:#3b82f6;color:white;text-align:center;line-height:18px;font-size:11px;font-weight:bold;`;
+      icon.title = 'Click to send magnet to Real-Debrid, Alt+click to send torrent file';
 
       container.appendChild(checkbox);
       container.appendChild(icon);
@@ -1085,8 +1175,25 @@
       const icon = iconContainer.querySelector('.rd-icon') || iconContainer;
       const checkbox = iconContainer.querySelector('input[type="checkbox"]');
 
-      const processMagnet = async () => {
+      const processLink = async (event) => {
         if (icon.textContent === '✓') return; // Already processed
+        const isMagnet = link.href.startsWith('magnet:');
+        let linkToProcess = link;
+        if (isMagnet && event.altKey) {
+          if (!this.processor?.isTorrentSupportEnabled()) {
+            UIManager.showToast('Torrent support not enabled. Enable it in settings.', 'info');
+            return;
+          }
+          const container = link.closest('tr') || link.closest('div') || link.closest('li') || link.parentElement;
+          const torrentLink = container?.querySelector('a[href$=".torrent"]');
+          if (torrentLink) {
+            linkToProcess = torrentLink;
+          } else {
+            UIManager.showToast('No torrent link found nearby', 'info');
+            return;
+          }
+        }
+        const isProcessingMagnet = linkToProcess.href.startsWith('magnet:');
         const key = this._magnetKeyFor(link.href);
         const isInitialized = await ensureApiInitialized();
 
@@ -1095,7 +1202,7 @@
           return;
         }
 
-        if (key?.startsWith('hash:') && this.processor?.isTorrentExists(key.split(':')[1])) {
+        if (isProcessingMagnet && key?.startsWith('hash:') && this.processor?.isTorrentExists(key.split(':')[1])) {
           UIManager.showToast('Torrent already exists on Real-Debrid', 'info');
           UIManager.setIconState(icon, 'existing');
           return;
@@ -1104,19 +1211,21 @@
         UIManager.setIconState(icon, 'processing');
 
         try {
-          const fileCount = await this.processor.processMagnetLink(link.href);
+          const fileCount = isProcessingMagnet ?
+            await this.processor.processMagnetLink(linkToProcess.href) :
+            await this.processor.processTorrentLink(linkToProcess.href);
           UIManager.showToast(`Added to Real-Debrid — ${fileCount} file(s) selected`, 'success');
           UIManager.setIconState(icon, 'added');
         } catch (error) {
           UIManager.setIconState(icon, 'default');
-          UIManager.showToast(error?.message || 'Failed to process magnet', 'error');
-          logger.error('[Magnet Processor] Failed to process magnet link', error);
+          UIManager.showToast(error?.message || 'Failed to process link', 'error');
+          logger.error('[Link Processor] Failed to process link', error);
         }
       };
 
       icon.addEventListener('click', (event_) => {
         event_.preventDefault();
-        processMagnet();
+        processLink(event_);
       });
 
       // Handle checkbox selection for batch processing

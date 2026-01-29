@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoGrind: Intelligent Bing Rewards Auto-Grinder
 // @namespace    https://github.com/jeryjs/
-// @version      5.3.6
+// @version      5.3.7
 // @description  This user script automatically finds random words from the current search results and searches Bing with them. Additionally, it auto clicks the unclaimed daily points from your rewards dashboard too.
 // @icon         https://www.bing.com/favicon.ico
 // @author       Jery
@@ -9,6 +9,7 @@
 // @match        https://rewards.bing.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        window.close
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/498482/AutoGrind%3A%20Intelligent%20Bing%20Rewards%20Auto-Grinder.user.js
 // @updateURL https://update.greasyfork.org/scripts/498482/AutoGrind%3A%20Intelligent%20Bing%20Rewards%20Auto-Grinder.meta.js

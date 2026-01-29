@@ -9,7 +9,7 @@
 // @run-at      document-start
 // @license     MIT
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @version     1.9.2
+// @version     1.9.3
 // @grant       GM_info
 // @grant       GM_addStyle
 // @grant       GM_setValue

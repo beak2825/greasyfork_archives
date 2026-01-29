@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MMA in GeoGuessr
-// @version      4.2
-// @description  Display Map Making App (MMA) tags on GeoGuessr game map. Supports tag filtering, searching, sorting.
+// @version      4.6
+// @description  Display Map Making App (MMA) tags on GeoGuessr game map. Supports tag filtering, searching, sorting, and WebGL rendering for large datasets.
 // @author       wang
 // @license      MIT
 // @match        https://www.geoguessr.com/game/*
@@ -39,17 +39,14 @@
     let mmaTagSearch = '';
     let mmaTagSort = GM_getValue('mmaTagSort', 'default');
     let mmaTagOrder = [];
+    let mmaAndMode = false;
 
-    const COLORS = [
-        [254, 205, 25], [108, 185, 40], [232, 60, 75], [26, 151, 240], [245, 129, 66],
-        [164, 94, 229], [25, 254, 205], [240, 75, 160], [66, 245, 129], [229, 164, 94],
-        [40, 185, 197], [205, 25, 254], [151, 240, 26], [75, 15, 232], [254, 66, 25]
-    ];
-    const COLORS_HEX = [
-        '#fecd19', '#6cb928', '#e83c4b', '#1a97f0', '#f58142',
-        '#a45ee5', '#19fecd', '#f04ba0', '#42f581', '#e5a45e',
-        '#28b9c5', '#cd19fe', '#97f01a', '#4b0fe8', '#fe4219'
-    ];
+    const DEFAULT_COLOR = { rgb: [85, 85, 85], hex: '#555555' };
+
+    function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [85, 85, 85];
+    }
 
     function loadDeckGL() {
         return new Promise((resolve) => {
@@ -108,6 +105,7 @@
             </div>
             <div id="mma-tag-toolbar">
                 <input type="text" id="mma-tag-search" placeholder="Search...">
+                <button id="mma-and-btn" title="AND mode: show only locations with ALL selected tags">&amp;</button>
                 <div id="mma-sort-btns">
                     <button id="mma-sort-default" class="${mmaTagSort === 'default' ? 'active' : ''}" title="Default order">D</button>
                     <button id="mma-sort-count" class="${mmaTagSort === 'count' ? 'active' : ''}" title="Sort by count">#</button>
@@ -271,6 +269,21 @@
             }
             #mma-tag-search:focus { outline: none; background: var(--ds-color-white-20, rgba(255,255,255,0.2)); }
             #mma-tag-search::placeholder { color: var(--ds-color-white-40, rgba(255,255,255,0.4)); }
+            #mma-and-btn {
+                background: var(--ds-color-white-10, rgba(255,255,255,0.1));
+                border: none;
+                color: var(--ds-color-white, #fff);
+                width: 22px;
+                height: 22px;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: 700;
+                opacity: 0.5;
+                flex-shrink: 0;
+            }
+            #mma-and-btn:hover { opacity: 0.8; }
+            #mma-and-btn.active { opacity: 1; background: var(--ds-color-brand-70, #4a2399); }
             #mma-sort-btns { display: flex; gap: 2px; }
             #mma-sort-btns button {
                 background: var(--ds-color-white-10, rgba(255,255,255,0.1));
@@ -424,6 +437,12 @@
             renderTags();
         });
 
+        document.getElementById('mma-and-btn').addEventListener('click', () => {
+            mmaAndMode = !mmaAndMode;
+            document.getElementById('mma-and-btn').classList.toggle('active', mmaAndMode);
+            updateOverlay();
+        });
+
         const sortBtns = ['default', 'count', 'name'];
         sortBtns.forEach(type => {
             document.getElementById(`mma-sort-${type}`).addEventListener('click', () => {
@@ -437,6 +456,8 @@
         });
     }
 
+    let mmaApiTagColors = {};
+
     function loadMap() {
         const mapId = document.getElementById('mma-map-id').value.trim();
         if (!mapId) return;
@@ -444,6 +465,7 @@
         mmaMapId = mapId;
         GM_setValue('mmaMapId', mmaMapId);
         setStatus('Loading...');
+        mmaApiTagColors = {};
 
         GM_xmlhttpRequest({
             method: 'GET',
@@ -456,11 +478,26 @@
                         mmaMapName = info.name || info.title || '';
                         GM_setValue('mmaMapName', mmaMapName);
                         updateMapNameUI();
+                        if (info.tags && typeof info.tags === 'object') {
+                            Object.entries(info.tags).forEach(([name, data]) => {
+                                if (data.color && Array.isArray(data.color)) {
+                                    const rgb = data.color;
+                                    const hex = '#' + rgb.map(c => c.toString(16).padStart(2, '0')).join('');
+                                    mmaApiTagColors[name] = { hex: hex, rgb: rgb };
+                                }
+                            });
+                        }
                     } catch(e) {}
                 }
+                loadLocations(mapId);
+            },
+            onerror: function() {
+                loadLocations(mapId);
             }
         });
+    }
 
+    function loadLocations(mapId) {
         GM_xmlhttpRequest({
             method: 'GET',
             url: `https://map-making.app/api/maps/${mapId}/locations`,
@@ -499,6 +536,7 @@
         mmaLocations = Array.isArray(data) ? data : (data.customCoordinates || data.locations || []);
 
         mmaTags = {};
+        mmaTagColors = {};
         mmaTagOrder = [];
         let untaggedCount = 0;
 
@@ -523,19 +561,12 @@
             mmaTagOrder.push('Untagged');
         }
 
-        const sorted = Object.keys(mmaTags).sort((a, b) => {
-            if (a === 'Untagged') return 1;
-            if (b === 'Untagged') return -1;
-            return mmaTags[b] - mmaTags[a];
-        });
-        
-        mmaTagColors = {};
-        sorted.forEach((t, i) => {
-            const idx = t === 'Untagged' ? -1 : i % COLORS.length;
-            mmaTagColors[t] = {
-                rgb: idx < 0 ? [85, 85, 85] : COLORS[idx],
-                hex: idx < 0 ? '#555' : COLORS_HEX[idx]
-            };
+        Object.keys(mmaTags).forEach(t => {
+            if (mmaApiTagColors[t]) {
+                mmaTagColors[t] = mmaApiTagColors[t];
+            } else {
+                mmaTagColors[t] = DEFAULT_COLOR;
+            }
         });
 
         mmaProcessedData = mmaLocations.map(loc => {
@@ -554,7 +585,7 @@
         mmaSelectedTags = [];
         renderTags();
         setStatus(`${mmaLocations.length}`);
-        
+
         if (mmaOverlay) {
             mmaOverlay.setMap(null);
             mmaOverlay = null;
@@ -568,7 +599,7 @@
         container.innerHTML = '';
 
         let entries = Object.entries(mmaTags);
-        
+
         if (mmaTagSearch) {
             entries = entries.filter(([tag]) => tag.toLowerCase().includes(mmaTagSearch));
         }
@@ -672,10 +703,13 @@
             mmaOverlay.setProps({ layers: [] });
             return;
         }
-        
-        const filteredData = mmaProcessedData.filter(loc => 
-            loc.tags.some(t => mmaSelectedTags.includes(t))
-        ).map(loc => {
+
+        const filteredData = mmaProcessedData.filter(loc => {
+            if (mmaAndMode) {
+                return mmaSelectedTags.every(t => loc.tags.includes(t));
+            }
+            return loc.tags.some(t => mmaSelectedTags.includes(t));
+        }).map(loc => {
             let bestTag = null;
             let bestIdx = -1;
             for (const t of loc.tags) {
@@ -724,12 +758,12 @@
         createPanel();
         setStatus('Loading...');
         await loadDeckGL();
-        
+
         if (!unsafeWindow.deck) {
             setStatus('Lib error');
             return;
         }
-        
+
         setStatus('Ready');
         if (mmaMapId) setTimeout(loadMap, 500);
 

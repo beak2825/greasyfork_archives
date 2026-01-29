@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnMe
 // @author       zjw
-// @version      9.8.3
+// @version      9.8.5
 // @namespace    https://github.com/Zhu-junwei/AnMe
 // @description  通用多网站多账号切换器
 // @description:zh  通用多网站多账号切换器
@@ -790,7 +790,10 @@
 
         createPanel() {
             if (this.qs('#acc-mgr-panel')) return;
-            panel = document.createElement('div'); panel.id = 'acc-mgr-panel'; panel.className = 'acc-panel';
+            panel = document.createElement('div');
+            panel.id = 'acc-mgr-panel';
+            panel.className = 'acc-panel';
+            panel.setAttribute('tabindex', '-1'); // Make it focusable to capture key events
             panel.innerHTML = Templates.panel();
             uiRoot.appendChild(panel); // Append to Shadow Root
             this.bindPanelEvents(); this.updateSaveBtnState();
@@ -848,7 +851,13 @@
 
             // Close
             $('#acc-close-btn').onclick = this.closePanel;
-            panel.onclick = (e) => e.stopPropagation();
+            panel.onclick = (e) => {
+                e.stopPropagation();
+                // If clicked on empty space, focus the panel to capture keyboard events
+                if (document.activeElement !== panel && !panel.contains(uiRoot.activeElement)) {
+                    panel.focus();
+                }
+            };
 
             // Settings: Fab Mode & Language
             $$('.fab-mode-btn').forEach(btn => {
@@ -910,7 +919,17 @@
             // Save & Clean Logic
             ['#c-ck', '#c-ls', '#c-ss'].forEach(id => $(id).addEventListener('change', this.updateSaveBtnState));
             // 监听输入框打字事件，实时更新保存按钮状态
-            $('#acc-new-name').addEventListener('input', () => this.updateSaveBtnState());
+            const newNameInput = $('#acc-new-name');
+            newNameInput.addEventListener('input', () => this.updateSaveBtnState());
+            
+            // 回车保存功能 (事件冒泡已由 Panel 全局拦截)
+            newNameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation(); // 双重保险
+                    $('#do-save').click();
+                }
+            });
             $('#do-save').onclick = async () => {
                 const nameInp = $('#acc-new-name');
                 const name = nameInp.value.trim();

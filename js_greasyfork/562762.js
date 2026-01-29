@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SV HaUI Helper
 // @namespace    https://github.com/vuquan2005/svHaUI-Helper
-// @version      2.2.0
+// @version      2.3.0
 // @author       VuQuan
 // @description  Nâng cao trải nghiệm cho sinh viên HaUI
 // @license      GPL-3.0-only
@@ -35,10 +35,10 @@
 
   const d=new Set;const e = async e=>{d.has(e)||(d.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):(document.head||document.documentElement).appendChild(document.createElement("style")).append(t);})(e));};
 
-  e(" .sv-quick-nav{float:right;display:inline-flex;gap:8px;align-items:center;margin-top:-2px;position:relative;z-index:9}.sv-quick-nav-link{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:4px;text-decoration:none;font-size:13px;font-weight:500;color:#5a6fd6;background:#667eea26;border:1px solid rgba(102,126,234,.25);transition:all .2s ease}@media(max-width:520px){.sv-quick-nav-link-label{display:none}}.sv-quick-nav-link:hover{background:#667eea;color:#fff;border-color:#667eea;text-decoration:none}.sv-quick-nav-link.active{background:#667eea;color:#fff;border-color:#667eea;pointer-events:none;cursor:default} ");
+  e(" .sv-grade-nav{float:right;display:inline-flex;gap:8px;align-items:center;margin-top:-2px;position:relative}.sv-grade-nav-link{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:4px;text-decoration:none;font-size:13px;font-weight:500;color:#5a6fd6;background:#667eea26;border:1px solid rgba(102,126,234,.25);transition:all .2s ease}@media(max-width:520px){.sv-grade-nav-link-label{display:none}}.sv-grade-nav-link:hover{background:#667eea;color:#fff;border-color:#667eea;text-decoration:none}.sv-grade-nav-link.active{background:#667eea;color:#fff;border-color:#667eea;pointer-events:none;cursor:default}.sv-survey-autofill>td{cursor:pointer;transition:background-color .2s ease;position:relative}.sv-survey-autofill>td:hover{background-color:#0000000d} ");
 
   console.log(
-    `%c 🎓 SV HaUI Helper %c 🚀 v${"2.2.0"} %c 🕒 ${"260126130427"} %c 👨‍💻 VuQuan %c
+    `%c 🎓 SV HaUI Helper %c 🚀 v${"2.3.0"} %c 🕒 ${"260128195407"} %c 👨‍💻 VuQuan %c
 %c✨ Cảm thấy hữu ích? Hãy ủng hộ mình nhé! 👇
 %c🏦 TPBank: 07602987000 (VU VIET QUAN)
 %c👉 QR Scan: https://img.vietqr.io/image/TPB-07602987000-qr_only.png`,
@@ -564,6 +564,69 @@ stopFeature(id) {
     }
   }
   const featureManager = new FeatureManager();
+  function observeDomUntil(target, checkCallback, options = {}) {
+    return new Promise((resolve) => {
+      const element = document.querySelector(target);
+      if (!element) {
+        resolve({ success: false, code: "NOT_FOUND" });
+        return;
+      }
+      const {
+        debounceMs = 50,
+        timeoutMs = 1e4,
+        config = { childList: true, subtree: true },
+        signal
+      } = options;
+      if (signal?.aborted) {
+        resolve({ success: false, code: "ABORT" });
+        return;
+      }
+      let debounceTimer = null;
+      let timeoutTimer = null;
+      let observer = null;
+      let done = false;
+      const finish = (result) => {
+        if (done) return;
+        done = true;
+        if (debounceTimer) clearTimeout(debounceTimer);
+        if (timeoutTimer) clearTimeout(timeoutTimer);
+        observer?.disconnect();
+        observer = null;
+        signal?.removeEventListener("abort", onAbort);
+        resolve(result);
+      };
+      const onAbort = () => finish({ success: false, code: "ABORT" });
+      signal?.addEventListener("abort", onAbort, { once: true });
+      Promise.resolve(checkCallback()).then((ok) => {
+        if (ok) finish({ success: true, code: "OK" });
+      }).catch((err) => {
+        console.warn("observeDomUntil initial check error:", err);
+        finish({ success: false, code: "ERROR" });
+      });
+      if (timeoutMs > 0) {
+        timeoutTimer = setTimeout(() => {
+          finish({ success: false, code: "TIMEOUT" });
+        }, timeoutMs);
+      }
+      observer = new MutationObserver(() => {
+        if (done) return;
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+          if (done || signal?.aborted) return;
+          try {
+            const shouldStop = await checkCallback();
+            if (shouldStop) {
+              finish({ success: true, code: "OK" });
+            }
+          } catch (error) {
+            console.warn("observeDomUntil callback error:", error);
+            finish({ success: false, code: "ERROR" });
+          }
+        }, debounceMs);
+      });
+      observer.observe(element, config);
+    });
+  }
   const URL_TITLE_MAP = {
 "/": "🏠 Trang chủ",
 "/student/recharge/cashinqr": "💳 Nạp tiền QR",
@@ -710,8 +773,7 @@ friendInfo: () => {
   ];
   class DynamicTitleFeature extends Feature {
     originalTitle = "";
-    observer = null;
-    debounceTimer = null;
+    abortController = null;
     constructor() {
       super({
         id: "dynamic-title",
@@ -721,10 +783,17 @@ friendInfo: () => {
     }
 run() {
       this.originalTitle = document.title;
-      const found = this.updateTitle();
-      if (!found) {
-        this.observeContentChanges();
-      }
+      this.abortController = new AbortController();
+      observeDomUntil(".be-content", () => this.updateTitle(), {
+        debounceMs: TITLE_UPDATE_DEBOUNCE_MS,
+        signal: this.abortController.signal
+      }).then((result) => {
+        if (result.success) {
+          this.log.d("Title found, stopping observer");
+        } else if (result.code !== "ABORT") {
+          this.log.d(`Observer stopped with code: ${result.code}`);
+        }
+      });
     }
 updateTitle() {
       const pathAndQuery = this.location.pathAndQuery;
@@ -759,37 +828,12 @@ updateTitle() {
         this.log.d(`Title set: ${newTitle}`);
       }
     }
-    observeContentChanges() {
-      const content = document.querySelector(".be-content");
-      if (!content) return;
-      this.observer = new MutationObserver(() => {
-        if (this.debounceTimer) {
-          clearTimeout(this.debounceTimer);
-        }
-        this.debounceTimer = setTimeout(() => {
-          this.debounceTimer = null;
-          const found = this.updateTitle();
-          if (found) {
-            this.log.d("Title found, stopping observer");
-            this.observer?.disconnect();
-            this.observer = null;
-          }
-        }, TITLE_UPDATE_DEBOUNCE_MS);
-      });
-      this.observer.observe(content, {
-        childList: true,
-        subtree: true
-      });
-      this.log.d("Started observing for dynamic content");
-    }
 cleanup() {
       document.title = this.originalTitle;
-      if (this.debounceTimer) {
-        clearTimeout(this.debounceTimer);
-        this.debounceTimer = null;
+      if (this.abortController) {
+        this.abortController.abort();
+        this.abortController = null;
       }
-      this.observer?.disconnect();
-      this.observer = null;
     }
   }
   const COMBINING_TO_TELEX = {
@@ -963,11 +1007,11 @@ cleanup() {
       this.currentHandler = null;
     }
   }
-  const cssPrefix = "sv-quick-nav";
-  const styles = {
-    cssPrefix
+  const cssPrefix$1 = "sv-grade-nav";
+  const styles$1 = {
+    cssPrefix: cssPrefix$1
   };
-  const CSS_PREFIX = styles.cssPrefix;
+  const CSS_PREFIX = styles$1.cssPrefix;
   const URL_PATTERNS = [
 { name: "personal-study", pattern: /^\/student\/result\/studyresults$/ },
     { name: "personal-exam", pattern: /^\/student\/result\/examresult$/ },
@@ -976,12 +1020,12 @@ cleanup() {
 { name: "class-study", pattern: /^\/student\/result\/viewstudyresultclass/ },
     { name: "class-exam", pattern: /^\/student\/result\/viewexamresultclass/ }
   ];
-  class QuickNavFeature extends Feature {
+  class GradeNavigationFeature extends Feature {
     navElement = null;
     constructor() {
       super({
-        id: "quick-nav",
-        name: "Quick Nav",
+        id: "grade-navigation",
+        name: "Grade Navigation",
         description: "Điều hướng nhanh giữa trang Điểm TX và Điểm thi",
         urlMatch: URL_PATTERNS
       });
@@ -1063,10 +1107,74 @@ cleanup() {
       this.navElement = null;
     }
   }
+  const cssPrefix = "sv-survey-autofill";
+  const styles = {
+    cssPrefix
+  };
+  class SurveyAutofillFeature extends Feature {
+    constructor() {
+      super({
+        id: "survey-autofill",
+        name: "Survey Autofill",
+        description: "Đánh giá nhanh bằng cách click vào tiêu đề cột điểm",
+        urlMatch: /^\/survey\/view/
+      });
+    }
+    run() {
+      this.waitForTable();
+    }
+waitForTable() {
+      const check = () => {
+        const table = document.querySelector("div#kbox.modal-content table.table-striped");
+        if (table) {
+          this.log.d("Attached click listeners to survey headers: ", table);
+          this.attachListeners(table);
+        } else {
+          setTimeout(check, 100);
+        }
+      };
+      check();
+    }
+    attachListeners(table) {
+      const headerRow = table.querySelector("thead > tr:nth-child(2)");
+      if (!headerRow) {
+        this.log.w("Header row not found");
+        return;
+      }
+      const cells = headerRow.querySelectorAll("td");
+      if (cells.length < 5) {
+        this.log.w("Not enough header cells found");
+        return;
+      }
+      headerRow.classList.add(styles.cssPrefix);
+      cells.forEach((cell, index) => {
+        const score = index + 1;
+        cell.title = `Click để chọn tất cả mục ${score} điểm`;
+        cell.addEventListener("click", () => {
+          this.fillColumn(table, score);
+        });
+      });
+      this.log.d("Attached click listeners to survey headers");
+    }
+    fillColumn(table, score) {
+      const selector = `input[type="radio"][id$="_${score}"]`;
+      const radios = table.querySelectorAll(selector);
+      let count = 0;
+      radios.forEach((radio) => {
+        if (radio instanceof HTMLInputElement) {
+          radio.click();
+          radio.checked = true;
+          count++;
+        } else this.log.w("Radio not found");
+      });
+      this.log.d(`Selected score ${score} for ${count} questions`);
+    }
+  }
   const allFeatures = [
     new DynamicTitleFeature(),
     new CaptchaHelperFeature(),
-    new QuickNavFeature()
+    new GradeNavigationFeature(),
+    new SurveyAutofillFeature()
   ];
   async function main() {
     log$1.i("Initializing...");

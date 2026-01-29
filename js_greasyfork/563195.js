@@ -2,7 +2,7 @@
 // @name Shimmer All Text
 // @namespace greasyfork.org
 // @version 1.0
-// @description Makes all text on page shimmer
+// @description Makes all text on page shimmer. Why did I do this? I have no idea.
 // @license MIT
 // @grant GM_addStyle
 // @run-at document-start

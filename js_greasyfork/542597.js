@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Outlook Mail 邊框調整，添加快捷鍵
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  邊框調整，添加快捷鍵（Del鍵刪除信件，方向鍵左右上下一封信）
 // @author       Shanlan
 // @match        https://outlook.office.com/mail/*
 // @match        https://outlook.office365.com/mail/*
+// @match        https://outlook.cloud.microsoft/mail/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // @license      MIT

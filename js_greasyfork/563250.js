@@ -6,9 +6,9 @@
 // @description  Remove max-width constraints from LMArena chat containers for a full-width reading experience. Works across all chat modes.
 // @description:zh-TW  讓 LMArena 的聊天訊息延展至全螢幕寬度，獲得更舒適的閱讀體驗。
 // @author       Community
-// @match        https://lmarena.ai/*
+// @match        https://arena.ai/*
 // @match        https://beta.lmarena.ai/*
-// @icon         https://lmarena.ai/favicon.ico
+// @icon         https://arena.ai/favicon.ico
 // @grant        GM_addStyle
 // @run-at       document-start
 // @license      MIT

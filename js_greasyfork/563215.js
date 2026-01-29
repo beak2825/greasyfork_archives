@@ -3,7 +3,7 @@
 // @namespace    https://github.com/snacks-yummy/Greasy-Fork
 // @supportURL   https://github.com/snacks-yummy/Greasy-Fork/issues
 // @homepageURL  https://github.com/snacks-yummy/Greasy-Fork
-// @version      1.5.424
+// @version      1.5.427
 // @author       零食怎么吃都不胖
 // @description  全站网页增强：新标签页打开/去重定向/短链还原/文本裸链转链接/网盘提取码识别填充/已访问变色统计/自动展开/通用登录遮挡/百度搜索净化布局/ CSDN 增强/ QQ邮箱净化/设置面板与备份
 // @note         引用与致谢（参考脚本清单）：
@@ -978,7 +978,7 @@
             let smartRedirectAutoJumpDone = false;
 
             const SCRIPT_LABEL = '新标签页Pro·全站网页增强工具箱';
-            const SCRIPT_VERSION = '1.5.424';
+            const SCRIPT_VERSION = '1.5.427';
             const SCRIPT_INSTALL_URL = 'https://update.greasyfork.org/scripts/563215/%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5Pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js';
             const SCRIPT_INFO_URL = 'https://greasyfork.org/zh-CN/scripts/563215-%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1';
             const SCRIPT_UPDATE_URL = (function() {
@@ -9575,6 +9575,7 @@
             const GO_TB_UI_ID = 'goTopBottom';
             const GO_TB_POS_KEY = 'gtb_pos';
             const GO_TB_IGNORED_KEY = 'goTBIgnoredSites';
+            const GO_TB_ENHANCED_DRAG_SITES_KEY = 'goTBEnhancedDragSites';
             const GO_TB_STYLE_ID = 'goTopBottom-style';
 
             const GoTBState = {
@@ -9620,6 +9621,14 @@
                 return merged;
             }
 
+            function readGoTBEnhancedDragSites() {
+                let list = getValue(GO_TB_ENHANCED_DRAG_SITES_KEY, []);
+                if (!Array.isArray(list)) list = [];
+                return list
+                    .map((x) => String(x || '').trim().toLowerCase())
+                    .filter(Boolean);
+            }
+
             function startGoTopBottomControls() {
                 const existing = document.getElementById(GO_TB_UI_ID);
                 if (existing) {
@@ -9651,6 +9660,8 @@
                     debugLog('goTBSkip', { reason: 'ignoredSite', host: currentHost, url: location.href }, 'INFO');
                     return;
                 }
+                const enhancedSites = readGoTBEnhancedDragSites();
+                const enhancedDrag = !!(currentHost && enhancedSites.indexOf(currentHost) !== -1);
                 GoTBState.retryCount = 0;
                 GoTBState.giveUpLogged = false;
 
@@ -9801,6 +9812,29 @@
                     hideScrollButtons();
                 };
 
+                const setEnhancedDragForCurrentSite = (enabled) => {
+                    const host = getCurrentHost();
+                    if (!host) return;
+                    let sites = readGoTBEnhancedDragSites();
+                    if (!Array.isArray(sites)) sites = [];
+                    const has = sites.includes(host);
+                    let next = sites.slice();
+                    if (enabled && !has) next.push(host);
+                    if (!enabled && has) next = next.filter((x) => x !== host);
+                    try {
+                        setValue(GO_TB_ENHANCED_DRAG_SITES_KEY, next);
+                    } catch (e) {}
+                    hideMenu();
+                    TimerRegistry.setTimeout(() => {
+                        try {
+                            stopGoTopBottomControls();
+                        } catch (e1) {}
+                        try {
+                            startGoTopBottomControls();
+                        } catch (e2) {}
+                    }, 0);
+                };
+
                 const createMenuItem = (text, icon, onClick) => {
                     const item = document.createElement('div');
                     item.style.padding = '8px 12px';
@@ -9871,9 +9905,6 @@
                     menu.style.fontSize = '14px';
                     menu.style.transition = 'opacity 0.2s ease';
 
-                    menu.appendChild(createMenuItem('关闭按钮', '✕', hideScrollButtons));
-                    menu.appendChild(createMenuItem('忽略此网站', '⛔', ignoreCurrentSite));
-
                     try {
                         document.body.appendChild(menu);
                     } catch (e) {
@@ -9891,6 +9922,19 @@
                     } catch (e2) {}
                     menuEl = ensureMenu();
                     if (!menuEl) return;
+                    try {
+                        while (menuEl.firstChild) menuEl.removeChild(menuEl.firstChild);
+                    } catch (e0) {}
+                    const host = getCurrentHost();
+                    const sites = readGoTBEnhancedDragSites();
+                    const isEnhanced = !!(host && sites.indexOf(host) !== -1);
+                    menuEl.appendChild(createMenuItem('关闭按钮', '✕', hideScrollButtons));
+                    menuEl.appendChild(createMenuItem('忽略此网站', '⛔', ignoreCurrentSite));
+                    menuEl.appendChild(
+                        isEnhanced
+                            ? createMenuItem('恢复普通拖拽', '↩', () => setEnhancedDragForCurrentSite(false))
+                            : createMenuItem('启用增强拖拽', '⚡', () => setEnhancedDragForCurrentSite(true))
+                    );
 
                     const viewportWidth = Math.min(document.documentElement.clientWidth, window.innerWidth || 0);
                     const viewportHeight = Math.min(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -9930,15 +9974,38 @@
                 const smoothScrollTo = (top) => {
                     const t = Math.max(0, Number(top) || 0);
                     try {
-                        window.scrollTo({ top: t, behavior: 'smooth' });
+                        const el = document.scrollingElement || document.documentElement || document.body;
+                        if (el && typeof el.scrollTo === 'function') {
+                            el.scrollTo({ top: t, behavior: 'smooth' });
+                        } else {
+                            window.scrollTo({ top: t, behavior: 'smooth' });
+                        }
                     } catch (e) {
                         try {
-                            window.scrollTo(0, t);
+                            const el = document.scrollingElement || document.documentElement || document.body;
+                            if (el && typeof el.scrollTop === 'number') el.scrollTop = t;
+                            else window.scrollTo(0, t);
                         } catch (e2) {}
                     }
                 };
 
+                let goTBLastNativeClickAt = 0;
+                let goTBPendingClickAt = 0;
+                let goTBPendingClickPointerId = null;
+                let goTBPendingClickTarget = null;
+                let goTBPendingClickTimer = 0;
+
                 const onContainerClick = (e) => {
+                    goTBLastNativeClickAt = Date.now();
+                    if (goTBPendingClickTimer) {
+                        try {
+                            clearTimeout(goTBPendingClickTimer);
+                        } catch (e0) {}
+                        goTBPendingClickTimer = 0;
+                    }
+                    goTBPendingClickAt = 0;
+                    goTBPendingClickPointerId = null;
+                    goTBPendingClickTarget = null;
                     if (shouldPreventClick(lastDragEndTime)) {
                         try {
                             e.preventDefault();
@@ -10039,10 +10106,27 @@
                         if (!dragging) return;
                         const dx = latestX - startX;
                         const dy = latestY - startY;
+                        const wasMoved = moved;
                         if (!moved) {
                             const dist = Math.sqrt(dx * dx + dy * dy);
                             if (dist <= dragThreshold) return;
                             moved = true;
+                        }
+                        if (!wasMoved && moved) {
+                            goTBPendingClickAt = 0;
+                            goTBPendingClickPointerId = null;
+                            goTBPendingClickTarget = null;
+                            if (goTBPendingClickTimer) {
+                                try {
+                                    clearTimeout(goTBPendingClickTimer);
+                                } catch (e0) {}
+                                goTBPendingClickTimer = 0;
+                            }
+                            setImportant(container, 'left', `${startLeft}px`);
+                            setImportant(container, 'top', `${startTop}px`);
+                            setImportant(container, 'right', 'auto');
+                            setImportant(container, 'bottom', 'auto');
+                            setImportant(container, 'position', 'fixed');
                         }
                         const vw = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
                         const vh = window.innerHeight || (document.documentElement && document.documentElement.clientHeight) || 0;
@@ -10075,13 +10159,9 @@
                         dragW = 50;
                         dragH = 100;
                     }
-                    setImportant(container, 'right', 'auto');
-                    setImportant(container, 'bottom', 'auto');
-                    setImportant(container, 'position', 'fixed');
                     bindDragMoveListeners();
                     debugLog('goTBDragDown', { x: startX, y: startY, left: startLeft, top: startTop, t: Date.now() }, 'DEBUG');
                     try {
-                        if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
                         if (ev && typeof ev.stopPropagation === 'function') ev.stopPropagation();
                     } catch (e2) {}
                 };
@@ -10123,13 +10203,34 @@
                     latestY = typeof e.clientY === 'number' ? e.clientY : 0;
                     scheduleDragApply();
                     try {
-                        e.preventDefault();
+                        if (moved) e.preventDefault();
                     } catch (e2) {}
                 };
                 const onPointerUp = (e) => {
                     if (!e) return endDrag(e);
                     if (activePointerId != null && e.pointerId !== activePointerId) return;
                     endDrag(e);
+                    if (moved) return;
+                    if (!goTBPendingClickTarget) return;
+                    if (goTBPendingClickPointerId != null && e.pointerId !== goTBPendingClickPointerId) return;
+                    if (goTBPendingClickTimer) return;
+                    goTBPendingClickTimer = TimerRegistry.setTimeout(() => {
+                        goTBPendingClickTimer = 0;
+                        if (!goTBPendingClickTarget) return;
+                        if (goTBLastNativeClickAt && goTBPendingClickAt && goTBLastNativeClickAt >= goTBPendingClickAt) {
+                            goTBPendingClickAt = 0;
+                            goTBPendingClickPointerId = null;
+                            goTBPendingClickTarget = null;
+                            return;
+                        }
+                        const cls = String(goTBPendingClickTarget.className || '');
+                        if (cls.indexOf('gotop') !== -1) smoothScrollTo(0);
+                        else smoothScrollTo(resolveMaxScrollTop());
+                        debugLog('goTBClickFallbackUsed', { url: location.href, t: Date.now() }, 'WARN');
+                        goTBPendingClickAt = 0;
+                        goTBPendingClickPointerId = null;
+                        goTBPendingClickTarget = null;
+                    }, 0);
                 };
                 const onPointerCancel = (e) => {
                     if (!e) return endDrag(e);
@@ -10143,6 +10244,13 @@
                 const onPointerDown = (e) => {
                     if (!e || e.button !== 0) return;
                     lastPointerDownAt = Date.now();
+                    goTBPendingClickAt = lastPointerDownAt;
+                    goTBPendingClickPointerId = e.pointerId;
+                    goTBPendingClickTarget = e && e.target && e.target.closest ? e.target.closest('span') : null;
+                    if (goTBPendingClickTarget) {
+                        const cls = String(goTBPendingClickTarget.className || '');
+                        if (cls.indexOf('gotop') === -1 && cls.indexOf('bottom') === -1 && cls.indexOf('gobottom') === -1) goTBPendingClickTarget = null;
+                    }
                     try {
                         if (container.setPointerCapture) container.setPointerCapture(e.pointerId);
                     } catch (e2) {}
@@ -10152,6 +10260,72 @@
                     if (Date.now() - lastPointerDownAt < 800) return;
                     if (!e || e.button !== 0) return;
                     startDragAt(e.clientX || 0, e.clientY || 0, null, e);
+                };
+
+                let classicDragging = false;
+                let classicMoved = false;
+                let classicStartX = 0;
+                let classicStartY = 0;
+                let classicStartLeft = 0;
+                let classicStartTop = 0;
+                let classicW = 50;
+                let classicH = 100;
+                const classicThreshold = 5;
+                const onClassicDown = (e) => {
+                    if (!e || e.button !== 0) return;
+                    classicDragging = true;
+                    classicMoved = false;
+                    classicStartX = typeof e.pageX === 'number' ? e.pageX : (e.clientX || 0);
+                    classicStartY = typeof e.pageY === 'number' ? e.pageY : (e.clientY || 0);
+                    try {
+                        const rect = container.getBoundingClientRect();
+                        classicStartLeft = rect.left;
+                        classicStartTop = rect.top;
+                        classicW = rect.width || classicW;
+                        classicH = rect.height || classicH;
+                    } catch (e2) {
+                        classicStartLeft = 0;
+                        classicStartTop = 0;
+                        classicW = 50;
+                        classicH = 100;
+                    }
+                };
+                const onClassicMove = (e) => {
+                    if (!classicDragging) return;
+                    const x = typeof e.pageX === 'number' ? e.pageX : (e.clientX || 0);
+                    const y = typeof e.pageY === 'number' ? e.pageY : (e.clientY || 0);
+                    const dx = x - classicStartX;
+                    const dy = y - classicStartY;
+                    if (!classicMoved) {
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist <= classicThreshold) return;
+                        classicMoved = true;
+                    }
+                    const vw = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
+                    const vh = window.innerHeight || (document.documentElement && document.documentElement.clientHeight) || 0;
+                    const maxLeft = vw ? Math.max(6, vw - classicW - 6) : null;
+                    const maxTop = vh ? Math.max(6, vh - classicH - 6) : null;
+                    const nextLeft = maxLeft == null ? classicStartLeft + dx : Math.max(6, Math.min(maxLeft, classicStartLeft + dx));
+                    const nextTop = maxTop == null ? classicStartTop + dy : Math.max(6, Math.min(maxTop, classicStartTop + dy));
+                    setImportant(container, 'left', `${nextLeft}px`);
+                    setImportant(container, 'top', `${nextTop}px`);
+                    setImportant(container, 'right', 'auto');
+                    setImportant(container, 'bottom', 'auto');
+                    setImportant(container, 'position', 'fixed');
+                };
+                const onClassicUp = (e) => {
+                    if (!classicDragging) return;
+                    classicDragging = false;
+                    if (!classicMoved) return;
+                    lastDragEndTime = Date.now();
+                    try {
+                        const rect = container.getBoundingClientRect();
+                        setValue(GO_TB_POS_KEY, { left: rect.left, top: rect.top });
+                        debugLog('goTBDragUp', { left: rect.left, top: rect.top, t: Date.now(), mode: 'classic' }, 'DEBUG');
+                    } catch (e2) {}
+                    try {
+                        if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+                    } catch (e2) {}
                 };
 
                 applySavedPos();
@@ -10191,9 +10365,15 @@
 
                 container.addEventListener('contextmenu', showContextMenu, true);
                 container.addEventListener('click', onContainerClick, true);
-                container.addEventListener('pointerdown', onPointerDown, true);
-                container.addEventListener('mousedown', onMouseDown, true);
-                window.addEventListener('mouseup', onUp, true);
+                if (enhancedDrag) {
+                    container.addEventListener('pointerdown', onPointerDown, true);
+                    container.addEventListener('mousedown', onMouseDown, true);
+                    window.addEventListener('mouseup', onUp, true);
+                } else {
+                    container.addEventListener('mousedown', onClassicDown, true);
+                    window.addEventListener('mousemove', onClassicMove, true);
+                    window.addEventListener('mouseup', onClassicUp, true);
+                }
                 document.addEventListener('click', onDocClick, true);
 
                 GoTBState.stop = function () {
@@ -10210,6 +10390,9 @@
                         container.removeEventListener('click', onContainerClick, true);
                         container.removeEventListener('pointerdown', onPointerDown, true);
                         container.removeEventListener('mousedown', onMouseDown, true);
+                        container.removeEventListener('mousedown', onClassicDown, true);
+                        window.removeEventListener('mousemove', onClassicMove, true);
+                        window.removeEventListener('mouseup', onClassicUp, true);
                         unbindDragMoveListeners();
                         window.removeEventListener('mouseup', onUp, true);
                         document.removeEventListener('click', onDocClick, true);

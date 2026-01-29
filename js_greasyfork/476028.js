@@ -3,7 +3,7 @@
 // @namespace    https://greasyfork.org/es/scripts/476028
 // @version      1.5.5
 // @description  Decode Base64-encoded text in Reddit posts and convert URLs to clickable links.
-// @author       Shu2Ouma
+// @author       Moebius
 // @icon         https://www.redditstatic.com/shreddit/assets/favicon/192x192.png
 // @license      MIT
 // @match        https://new.reddit.com/r/*

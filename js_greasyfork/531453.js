@@ -40,17 +40,22 @@
     // 功能1：重写 EventTarget.prototype.addEventListener 方法
     // 阻止特定的事件监听器被添加到 window 或 document 对象上
     const forbiddenEvents = new Set([
-        'mouseout', // 鼠标指针移出元素或其子元素时触发
-        'mouseleave', // 鼠标指针移出元素时触发 (不冒泡)
-        'blur', // 元素失去焦点时触发
-        'focusout', // 元素即将失去焦点时触发 (冒泡)
-        'visibilitychange', // 页面的可见性状态发生改变时触发
-        'fullscreenchange', // 全屏状态改变时触发
-        'webkitfullscreenchange', // Webkit 内核的全屏状态改变事件
-        'mozfullscreenchange', // Mozilla 内核的全屏状态改变事件
-        'MSFullscreenChange', // IE/Edge 的全屏状态改变事件
-        'beforeunload', // 页面即将卸载时触发
-        'pagehide' // 页面隐藏时触发
+        'mouseout',
+        'mouseleave',
+        'blur',
+        'focus',
+        'focusin',
+        'focusout',
+        'visibilitychange',
+        'webkitvisibilitychange',
+        'mozvisibilitychange',
+        'msvisibilitychange',
+        'fullscreenchange',
+        'webkitfullscreenchange',
+        'mozfullscreenchange',
+        'msfullscreenchange',
+        'beforeunload',
+        'pagehide'
     ]);
 
     // 保存原始的 addEventListener 方法引用
@@ -61,7 +66,10 @@
         // 检查：
         // 1. 事件类型是否在禁止列表中
         // 2. 事件监听的目标 (`this`) 是否是页面的 window 或 document 对象
-        if (forbiddenEvents.has(type) && (this === pageWindow || this === pageWindow.document)) {
+        const typeName = typeof type === 'string' ? type.toLowerCase() : '';
+        const doc = pageWindow.document;
+        const isMainTarget = this === pageWindow || this === doc || this === doc.documentElement || this === doc.body;
+        if (typeName && forbiddenEvents.has(typeName) && isMainTarget) {
             if (DEBUG) console.log(`[${SCRIPT_NAME}] 已阻止向`, this, `添加 "${type}" 事件监听器`);
             // 不调用原始的 addEventListener，从而阻止监听器被添加
             return;
@@ -112,13 +120,51 @@
 
         // --- 2.3 窗口失焦/聚焦事件 (旧版事件处理方式) ---
         // 阻止直接赋值给 window.onblur, window.onfocus 等事件处理器属性
-        const windowEventHandlersToNullify = ['onblur', 'onfocus', 'onfocusout', 'onfocusin'];
+        const windowEventHandlersToNullify = [
+            'onblur',
+            'onfocus',
+            'onfocusout',
+            'onfocusin',
+            'onbeforeunload',
+            'onpagehide',
+            'onvisibilitychange',
+            'onwebkitvisibilitychange',
+            'onmozvisibilitychange',
+            'onmsvisibilitychange',
+            'onfullscreenchange',
+            'onwebkitfullscreenchange',
+            'onmozfullscreenchange',
+            'onmsfullscreenchange'
+        ];
         // 遍历并重写上述定义的各事件处理器属性
         windowEventHandlersToNullify.forEach(handlerName => {
             // 使用 Object.defineProperty 重写 window 的事件处理器属性
             Object.defineProperty(pageWindow, handlerName, {
                 value: null, // 将事件处理器赋值为 null
                 writable: false, // 设置为不可写，以阻止如 `window.onblur = function(){...}` 这样的直接赋值
+                configurable: true
+            });
+        });
+        const documentEventHandlersToNullify = [
+            'onblur',
+            'onfocus',
+            'onfocusout',
+            'onfocusin',
+            'onbeforeunload',
+            'onpagehide',
+            'onvisibilitychange',
+            'onwebkitvisibilitychange',
+            'onmozvisibilitychange',
+            'onmsvisibilitychange',
+            'onfullscreenchange',
+            'onwebkitfullscreenchange',
+            'onmozfullscreenchange',
+            'onmsfullscreenchange'
+        ];
+        documentEventHandlersToNullify.forEach(handlerName => {
+            Object.defineProperty(pageWindow.document, handlerName, {
+                value: null,
+                writable: false,
                 configurable: true
             });
         });

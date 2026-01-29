@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Flight Rising] Sophie Auto Reduce
 // @namespace    http://tampermonkey.net/
-// @version      2.01
+// @version      3.0
 // @description  Automatically reduces items from your list.
 // @author       Triggernometry base code + flight-crime modifications
 // @match        https://www1.flightrising.com/trading/sophie/reduce*
@@ -57,8 +57,9 @@ let foodToggleDisplay = ["Auto Reduce Food: OFF",
     "Auto Reduce Food: ON"];
 
 function buildGUI() {
-    console.log("toggleDisplay:", toggleDisplay);
-    console.log("foodToggleDisplay:", foodToggleDisplay);
+    console.log(`Building Sophie Auto Reduce GUI...`);
+    console.log("Script State:", toggleState);
+    console.log("Auto Reduce State:", foodToggleState);
     // set up GUI box
     $('body').prepend("<div style=\"text-align: center; max-width: 170px;\" id=\"familiariliarbox\">" +
         "    <h3 style=\"color: #e8cc9f; font: bold 9pt tahoma; background: #731d08; margin: -10px -10px 10px; padding: 5px;\">Sophie Auto Reduce</h3>" +
@@ -149,14 +150,13 @@ function buildGUI() {
 }
 
 async function getFood() {
+    console.log("Starting auto reduce process...");
     // switch to food category tab, if not already selected
-    console.log("Swapping to food tab...");
     let chooseCategory = document.querySelector('.item-picker-common-tabs .common-tab[data-category="food"]').click();
     await sleep(2000);
 
     // select not favorited items
     let select = document.querySelector(".item-picker-filter-field > select[name='favorited']");
-    console.log("Select Menu:", select);
     let selectOption = "0";
     select.value = selectOption;
     select.focus();
@@ -164,7 +164,6 @@ async function getFood() {
 
     // sort ascending by treasure value
     select = document.querySelector(".item-picker-filter-field > select[name='sort']");
-    console.log("Select Menu:", select);
     selectOption = 'value_asc';
     select.value = selectOption;
     select.focus();
@@ -176,12 +175,19 @@ async function getFood() {
     let keyUp = new KeyboardEvent('keyup');
     input.addEventListener("build", (e) => { });
     input.dispatchEvent(keyUp);
-    await sleep(2000);
+    await sleep(1000);
 
-    // return item to brew
-    let item = document.querySelector(`.item-picker-items:first-child > .item-picker-item`);
+    // return selected item
+    let item = document.querySelector(`.item-picker-items:first-child > .item-picker-item > .item-picker-item-icon`);
+    // get tooltip name
+    let itemID = item.getAttribute('rel');
+    // get first matching tooltip. this might fail if similar tooltips exist, like #17 and #177? need to test
+    let itemTooltip = document.querySelectorAll(`${itemID} .foodval > strong`)[0];
+    let foodPoints = Number(itemTooltip.firstChild.data);
 
-    if (item) {
+    if (foodPoints <= 2) {
+        // if allowed item found, set and break loop
+        console.log("Found Food:", item);
         return item;
     } else {
         return null;
@@ -189,35 +195,48 @@ async function getFood() {
 }
 
 async function getMatchingReduceables() {
+
     for (const key of Object.keys(reduceItems)) {
         let valueList = reduceItems[key];
-        console.log("key:", key);
-        // switch to category tab
-        let chooseCategory = document.querySelector(`.item-picker-common-tabs .common-tab[data-category="${key}"]`).click();
-        await sleep(1000);
+        console.log(`The ${key} category list is ${valueList}`);
+        let item = null;
 
-        // search for item
-        let input = document.querySelector(".item-picker-filter-field > input");
-        let searchTerm = input.value = valueList;
+        // Skip this logic if the current key list is empty
+        if (valueList.length > 0) {
 
-        if (searchTerm.length > 0) {
-            console.log("Item to search for:", searchTerm);
-            input.focus();
-
-            // simulate keyup event to fire search
-            let keyUp = new KeyboardEvent('keyup');
-            input.addEventListener("build", (e) => { });
-            input.dispatchEvent(keyUp);
+            // switch to category tab
+            let chooseCategory = document.querySelector(`.item-picker-common-tabs .common-tab[data-category="${key}"]`).click();
             await sleep(1000);
+
+            // iterate through item list
+            for (const x of Object.keys(valueList)) {
+                // search for item
+                let input = document.querySelector(".item-picker-filter-field > input");
+                let searchTerm = valueList[x];
+                console.log(`Searching for ${searchTerm}...`);
+                input.focus();
+                input.value = searchTerm;
+
+                // simulate keyup event to fire search
+                let keyUp = new KeyboardEvent('keyup');
+                input.addEventListener("build", (e) => { });
+                input.dispatchEvent(keyUp);
+                await sleep(1000);
+
+                // return item to brew
+                item = document.querySelector(`.item-picker-item-icon[data-name="${searchTerm}"]`);
+
+                // if item is null, continue loop. else, break loop and return item
+                if (item != null) { return item };
+                console.log(`${searchTerm} not found!`)
+            }
+
         }
 
-
-        // return item to brew
-        let item = document.querySelector(`.item-picker-item-icon[data-name="${searchTerm}"]`);
-        if (item) { return item; }
     }
 
     // if reached end of loop without returning, no item found
+    console.log(`Reached end of user defined list with no results found.`)
     return null;
 }
 
@@ -233,14 +252,14 @@ async function collectItem() {
 async function reducingWait() {
     let reducingTime = document.querySelector('#crafter-timer-countdown').getAttribute('data-seconds-left');
     reducingTime = parseInt(reducingTime) + 3;
-    console.log(`Now waiting for ${reducingTime} seconds. Please Stand by.`)
+    console.log(`Waiting for ${reducingTime} seconds. Please stand by...`)
     await sleep(reducingTime * 1000);
     location.reload();
 }
 
 async function reduce() {
+    // click reduce button
     let clickReduceButton = document.querySelector('#crafter-reduce-item');
-    console.log("Click return object:", clickReduceButton);
 
     // wait for item load
     // if reduce button is clicked multiple times, page breaks
@@ -256,7 +275,7 @@ async function reduce() {
         reduceSelection = await getMatchingReduceables();
     }
 
-    if (foodToggleState) {
+    if (foodToggleState & !reduceSelection) {
         reduceSelection = await getFood();
     }
 
@@ -269,7 +288,7 @@ async function reduce() {
         let virtualStack = document.querySelector("#item-picker-back-message");
         if (virtualStack) {
             await sleep(1000);
-            console.log("Item is in a virtual stack.")
+            console.log(`Your ${reduceSelection.getAttribute("data-name")} is in a virtual stack. Unwrapping...`)
             reduceSelection = document.querySelector(".item-picker-item");
             reduceSelection.click();
         };
@@ -277,15 +296,15 @@ async function reduce() {
         // Final Confirmation -- Comment out for testing
         let reduceConfirm = document.querySelector('.beigebutton.thingbutton[value="Okay"]').click();
     }
-    // trinketswise, reached end of items without findin a match. Exit.
+    // Reached end of script without finding a match. Exit.
     else {
-        console.log("Reached end without finding a match. Nothing to reduce.");
+        console.log("Reached end of script without finding any match. Nothing to reduce.");
         return 0;
     }
 }
 
 function sleep(ms) {
-    console.log(`Sleep ${ms}ms`);
+    // console.log(`Sleep ${ms}ms`);
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 

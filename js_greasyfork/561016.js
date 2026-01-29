@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         哔哩哔哩过滤评论区
 // @description  根据关键词过滤评论区
-// @version      2.0.1
+// @version      2.0.2
 // @author       girl-dream
 // @license      The Unlicense
 // @namespace    https://github.com/girl-dream/
@@ -11,7 +11,7 @@
 // @match        https://www.bilibili.com/bangumi/play/*
 // @match        https://t.bilibili.com/*
 // @match        https://www.bilibili.com/opus/*
-// @match        https://space.bilibili.com/*
+// @match        https://space.bilibili.com/*/dynamic
 // @match        https://www.bilibili.com/v/topic/detail/*
 // @match        https://www.bilibili.com/cheese/play/*
 // @match        https://www.bilibili.com/festival/*
@@ -72,14 +72,16 @@
                 每行一个关键词/正则表达式,评论包含任意关键词即被过滤
             </p>
             <textarea id="keywords-input"
-                     style="width: 90%;
-                     background: var(--bg2);
+                     style="background: var(--bg2);
                             height: 200px;
                             padding: 10px;
                             border: 1px solid var(--Ga1);
                             border-radius: 4px;
                             resize: vertical;
-                            margin-bottom: 15px;"></textarea>
+                            margin-bottom: 15px;
+                            color: var(--text1);
+                            box-sizing: border-box;
+                            width: 100%;"></textarea>
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
                 <button id="cancel-btn" style="padding: 8px 16px; border: none; background: var(--bpx-dmsend-disable-button-bg,#e7e7e7); border-radius: 4px; cursor: pointer;">
                     取消
@@ -121,8 +123,16 @@
 
             // 检查是否包含关键词
             const hasKeyword = keyWords.some(keyword => {
-                if (keyword.startsWith('/') && keyword.lastIndexOf('/') > 0 && eval(keyword) instanceof RegExp) {
-                    return eval(keyword).test(msg)
+                if (keyword.startsWith('/') && keyword.lastIndexOf('/') > 1) {
+                    try {
+                        const lastSlash = keyword.lastIndexOf('/')
+                        const pattern = keyword.substring(1, lastSlash)
+                        const flags = keyword.substring(lastSlash + 1)
+                        return new RegExp(pattern, flags).test(msg)
+                    } catch {
+                        console.error('无效的正则表达式:', keyword)
+                        return false
+                    }
                 } else {
                     return msg.includes(keyword)
                 }

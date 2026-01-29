@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio 汉化脚本
 // @namespace    http://tampermonkey.net/
-// @version      1.8.2
+// @version      1.8.3
 // @description  将 Google AI Studio (aistudio.google.com) 页面的主要 UI 元素翻译为中文，已更新Gemini3等
 // @match        https://aistudio.google.com/*
 // @grant        none
@@ -30,6 +30,18 @@
     ['Block low, medium and high probability of being harmful', '阻止低、中、高风险的有害内容'],['The fastest path from prompt to production with Gemini', '使用 Gemini 从提示到生产的最快路径'],
     ['You have no Paid Project. Please view the Projects Page to choose a Project and Upgrade.', '您没有付费项目。请访问项目页面以选择项目并进行升级。'],['Upload files', '上传文件'],
     ['Always show regardless of probability of being harmful', '无论有害的可能性如何，始终表现出来'],['Share', '分享'],['Rename', '重命名'],['Choose a paid API key', '选择付费 API 密钥'],
+    ['Start building with Gemini', '开始使用 Gemini 进行构建'],
+    ['Our top picks including Gemini 3 Pro and Nano Banana Pro.', '我们的精选推荐，包括 Gemini 3 Pro 和 Nano Banana Pro。'],
+    ['Chat and Reasoning', '聊天与推理'],
+    ['Build chatbots, agents, and code with Gemini 3 Pro and Gemini 3 Flash.', '使用 Gemini 3 Pro 和 Gemini 3 Flash 构建聊天机器人、智能体和代码。'],
+    ['Image Generation', '图像生成'],
+    ['Create and edit images with Nano Banana and Imagen.', '使用 Nano Banana 和 Imagen 创建和编辑图像。'],
+    ['Video Generation', '视频生成'],
+    ['Generate videos with Veo models, our state of the art video generation models.', '使用 Veo 模型（我们最先进的视频生成模型）生成视频。'],
+    ['Text to Speech', '文字转语音'],
+    ['Convert text to speech with likelike realism using Gemini TTS.', '使用 Gemini TTS 将文本转换为具有逼真效果的语音。'],
+    ['Real-time', '实时'],
+    ['Real-time voice and video with Gemini Live.', '通过 Gemini Live 实现实时语音和视频。'],
     ['Get API key', '获取 API 密钥'], ['Help', '帮助'], ['Settings', '设置'], ['Create new', '新建'],['Build your ideas with Gemini', '与Gemini一起构建您的想法'],['Send prompt (Ctrl + Enter)', '发送提示 (Ctrl + Enter)'],
     ['Switch to a paid API key to unlock higher quota and more features.', '切换到付费API密钥以解锁更高配额和更多功能。'],['Stream, Imagen and Veo have moved to the model picker in chat!', 'Stream、Imagen和Veo都有移动到这里的实验区聊天！'],
     ['Model', '模型'], ['Run', '运行'], ['Run settings', '运行设置'], ['Untitled prompt', '无标题提示'],['Set the thinking level', '设置思考等级'],['Let it snow', '下雪特效'],[' Remove Code execution', '移除代码执行'],

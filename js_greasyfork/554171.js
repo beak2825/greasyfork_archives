@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Modo catálogo en elamigos.site con portadas limpias y títulos ordenados
-// @author       Shu2Ouma
+// @author       Moebius
 // @match        https://elamigos.site/*
 // @grant        GM_xmlhttpRequest
 // @connect      elamigos.site

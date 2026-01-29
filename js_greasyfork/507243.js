@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         ERISTA Redump+
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Filtrar, organizar y gestionar juegos Redump con herramientas esenciales
-// @author       Shu2Ouma
+// @author       Moebius
 // @icon         https://myrient.erista.me/favicon.ico
 // @match        https://myrient.erista.me/files/Redump/*/*
 // @grant        GM_setValue
@@ -42,7 +42,7 @@
         paginationEnabled: false
     };
 
-    // ==================== STORAGE ====================
+    // ==================== STORAGE MEJORADO ====================
     const storage = {
         save: function(key, data) {
             const allData = GM_getValue(CONFIG.STORAGE_KEY, {});
@@ -178,7 +178,7 @@
         }
     };
 
-    // ==================== ESTILOS GLOBALES - TEMA OSCURO ====================
+    // ==================== ESTILOS GLOBALES - TEMA OSCURO MEJORADO ====================
     GM_addStyle(`
         /* Animaciones */
         @keyframes slideIn {
@@ -211,7 +211,6 @@
         }
 
         td.link a {
-            color: #4CAF50;
             text-decoration: none;
         }
 

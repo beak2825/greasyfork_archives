@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         三叉戟-发版管理-表格增强
 // @namespace    http://tampermonkey.net/
-// @version      1.8.6
-// @description  发版管理页面，相关功能的增强实现 (v1.8.6: 导出完成后延迟下载)
+// @version      1.8.17
+// @description  发版管理页面，相关功能的增强实现 (v1.8.17: 移除ID列避免显示错乱)
 // @author       shrek_maxi
 // @match        https://poseidon.cisdigital.cn/app/devops*
 // @match        https://poseidon.cisdigital.cn/devops*
@@ -21,7 +21,7 @@
     "use strict";
 
     // 脚本版本信息
-    const SCRIPT_VERSION = "1.8.6";
+    const SCRIPT_VERSION = "1.8.17";
     const SCRIPT_NAME = "三叉戟-发版管理-表格增强";
     
     // 可能的 releases API 路径 (/api 在前)
@@ -500,7 +500,7 @@
     function proceedWithProjectProduct() {
         console.log(`[${SCRIPT_NAME}] project=${projectName}, product=${productName}`);
         addVersionBadge();
-        addIdColumn();
+        // addIdColumn(); // v1.8.17: 移除ID列功能，避免显示错乱
         removeColumn('新建时间');
         removeColumn('ID');
         removeEditButtons();
@@ -2106,8 +2106,8 @@
                     accept: "application/json, text/plain, */*",
                     "accept-language": "zh-CN,zh;q=0.9",
                     authorization: getAuthorizationHeader(),
-                    "x-poseidon-product": `${productName}`,
-                    "x-poseidon-project": `${projectName}`,
+                    "x-poseidon-product": getProductHeaderValue(),  // v1.8.8
+                    "x-poseidon-project": getProjectHeaderValue(),  // v1.8.8
                 },
                 onload: function (response) {
                     try {
@@ -2463,6 +2463,22 @@
         return window.location.origin;
     }
 
+    // v1.8.8: 获取 API 请求头中使用的 project/product 值
+    // 优先使用名称，如果未定义则使用 URL 参数中的数字 ID
+    function getProjectHeaderValue() {
+        if (projectName) return projectName;
+        if (projectId) return String(projectId);
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('project') || '';
+    }
+    
+    function getProductHeaderValue() {
+        if (productName) return productName;
+        if (productId) return String(productId);
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('product') || '';
+    }
+
     function fetchProjectList() {
         return new Promise((resolve, reject) => {
             const apiUrl = `${getApiBaseUrl()}/api/projects/`;
@@ -2528,8 +2544,8 @@
                     accept: "application/json, text/plain, */*",
                     "accept-language": "zh-CN,zh;q=0.9",
                     authorization: getAuthorizationHeader(),
-                    "x-poseidon-product": `${productName}`,
-                    "x-poseidon-project": `${projectName}`,
+                    "x-poseidon-product": getProductHeaderValue(),  // v1.8.8
+                    "x-poseidon-project": getProjectHeaderValue(),  // v1.8.8
                 },
                 onload: function (response) {
                     try {
@@ -2577,7 +2593,7 @@
     
     function fetchReleaseList(archived = 0) {
         return new Promise(async (resolve, reject) => {
-            console.log(`[三叉戟] 请求版本列表: project=${projectName}, product=${productName}`);
+            console.log(`[三叉戟] 请求版本列表: project=${getProjectHeaderValue()}, product=${getProductHeaderValue()}`);
             
             // 如果已有工作路径，优先使用
             if (workingReleasesPath) {
@@ -2629,8 +2645,8 @@
                     "accept-language": "zh-CN,zh;q=0.9",
                     authorization: getAuthorizationHeader(),
                     referer: window.location.href,
-                    "x-poseidon-product": `${productName}`,
-                    "x-poseidon-project": `${projectName}`,
+                    "x-poseidon-product": getProductHeaderValue(),  // v1.8.8
+                    "x-poseidon-project": getProjectHeaderValue(),  // v1.8.8
                 },
                 onload: function (response) {
                     try {
@@ -2735,8 +2751,8 @@
                     "accept-language": "zh-CN,zh;q=0.9",
                     authorization: getAuthorizationHeader(),
                     referer: window.location.href,
-                    "x-poseidon-product": `${productName}`,
-                    "x-poseidon-project": `${projectName}`,
+                    "x-poseidon-product": getProductHeaderValue(),  // v1.8.8
+                    "x-poseidon-project": getProjectHeaderValue(),  // v1.8.8
                 },
                 onload: function (response) {
                     try {
@@ -2856,10 +2872,16 @@
         }
 
         .close {
-            color: #aaaaaa;
+            color: #666;
+            position: sticky;
+            top: 0;
+            right: 0;
             float: right;
             font-size: 28px;
             font-weight: bold;
+            background: transparent;
+            padding: 0 5px;
+            z-index: 100;
         }
 
         .close:hover,
@@ -3255,8 +3277,9 @@
     function buildModalContent(releaseDetail, taskList, checkResults) {
         // 生成任务列表HTML
         const bodyMap = new Map();
-        const exportButtonHtml = '<button class="el-button el-button--primary" id="batch-export-button" style="margin-right: 10px;">全部导出</button>';
-        const selectedExportHtml = '<button class="el-button el-button--success" id="selected-export-button" style="margin-right: 10px;" disabled>选中导出</button>';
+        // v1.8.7: 移除"全部导出"按钮，只保留"选中导出"
+        const exportButtonHtml = '';  // 不再显示全部导出按钮
+        const selectedExportHtml = '<button class="el-button el-button--success" id="selected-export-button" style="margin-right: 10px;">导出选中镜像</button>';
         const exportExcelHtml = '<button class="el-button el-button--primary" id="export-excel-button" style="margin-right: 10px;">导出Excel</button>';
         const copyAppHtml = '<button class="el-button el-button--primary" id="copy-app-button" style="margin-right: 10px;">复制应用信息</button>';
 
@@ -3457,6 +3480,8 @@
     }
 
     // v1.8.5: 通过列表 API 轮询导出状态，等待下载完成
+    // v1.8.13: 修正状态码含义（通过 Chrome DevTools MCP 调查 UI 显示确认）
+    //   状态 3 = 已完成（成功），状态 4 = 失败
     function pollExportListForDownload(exportId, filename, maxAttempts = 30, interval = 2000) {
         const baseUrl = getApiBaseUrl();
         let attempts = 0;
@@ -3485,32 +3510,65 @@
                             
                             if (exportRecord) {
                                 const status = exportRecord.status;
-                                console.log(`[三叉戟] 导出状态: ${status} (1=处理中, 2=已完成, 3=失败)`);
+                                // v1.8.13: 修正状态码含义（通过 Chrome DevTools MCP 调查确认）
+                                // 状态 1 = 处理中
+                                // 状态 2 = 处理中/排队
+                                // 状态 3 = 已完成（成功），可下载
+                                // 状态 4 = 失败
+                                console.log(`[三叉戟] 导出状态: ${status} (1=处理中, 2=排队, 3=已完成, 4=失败)`);
 
-                                if (status === 2) {
-                                    // 已完成，等待 3 秒后下载（给文件上传时间）
+                                if (status === 3) {
+                                    // 状态 3 = 已完成（成功），可下载
+                                    // v1.8.14: 等待文件在 S3 上就绪后再下载
                                     if (exportRecord.download_url) {
                                         const downloadUrl = exportRecord.download_url.startsWith('//')
                                             ? 'https:' + exportRecord.download_url
                                             : exportRecord.download_url;
-                                        console.log(`[三叉戟] 导出完成，等待 3 秒后下载...`);
+                                        console.log(`[三叉戟] 导出成功，等待文件就绪...`);
+                                        
+                                        // 使用 HEAD 请求检查文件是否存在，最多重试 5 次
+                                        let fileCheckAttempts = 0;
+                                        const maxFileCheckAttempts = 5;
+                                        const fileCheckInterval = 2000; // 2秒
+                                        
+                                        // v1.8.16: 直接等待固定时间后下载，避免弹窗被拦截
+                                        // window.open 在异步回调中会被浏览器拦截
+                                        // 改用 location.href 直接导航下载
+                                        console.log(`[三叉戟] 等待 5 秒后开始下载...`);
                                         setTimeout(() => {
                                             console.log(`[三叉戟] 开始下载: ${downloadUrl}`);
-                                            // 使用 window.open 下载
-                                            window.open(downloadUrl, '_blank');
-                                        }, 3000);
+                                            // 使用 location.href 触发下载，不会被弹窗拦截
+                                            window.location.href = downloadUrl;
+                                        }, 5000);
                                     } else {
-                                        window.alert('[三叉戟] 导出完成但没有下载链接');
+                                        window.alert('[三叉戟] 导出完成但没有下载链接，请到导出记录页检查');
+                                        const url = `${baseUrl}/app/devops/import-export?project=${projectId}&product=${productId}`;
+                                        window.open(url, '_blank');
                                     }
-                                } else if (status === 3) {
-                                    window.alert('[三叉戟] 导出失败，请检查导出记录');
-                                } else if (status === 1) {
-                                    // 处理中，继续轮询
+                                } else if (status === 4) {
+                                    // 状态 4 = 失败
+                                    console.error('[三叉戟] 导出失败 (状态=4)');
+                                    window.alert('[三叉戟] 导出失败！后端处理镜像时出错。\n\n请到导出记录页查看详情或联系运维。');
+                                    const url = `${baseUrl}/app/devops/import-export?project=${projectId}&product=${productId}`;
+                                    window.open(url, '_blank');
+                                } else if (status === 1 || status === 2) {
+                                    // 状态 1 或 2 = 处理中/排队
+                                    console.log(`[三叉戟] 状态 ${status === 1 ? '处理中' : '排队中'}，继续轮询... (${attempts}/${maxAttempts})`);
                                     if (attempts < maxAttempts) {
                                         setTimeout(checkStatus, interval);
                                     } else {
-                                        console.log('[三叉戟] 轮询超时');
-                                        window.alert('[三叉戟] 导出处理时间较长，请到导出记录页手动下载');
+                                        console.warn('[三叉戟] 轮询超时');
+                                        window.alert('[三叉戟] 导出处理时间较长，请到导出记录页查看状态。');
+                                        const url = `${baseUrl}/app/devops/import-export?project=${projectId}&product=${productId}`;
+                                        window.open(url, '_blank');
+                                    }
+                                } else {
+                                    // 未知状态，继续轮询
+                                    console.log(`[三叉戟] 未知状态 ${status}，继续轮询...`);
+                                    if (attempts < maxAttempts) {
+                                        setTimeout(checkStatus, interval);
+                                    } else {
+                                        window.alert(`[三叉戟] 导出状态异常 (${status})，请到导出记录页检查`);
                                         const url = `${baseUrl}/app/devops/import-export?project=${projectId}&product=${productId}`;
                                         window.open(url, '_blank');
                                     }
@@ -3523,6 +3581,12 @@
                             }
                         } else {
                             console.error('[三叉戟] 获取导出列表失败:', result);
+                            // v1.8.15: 检测 401 错误（Token 过期）
+                            if (result.code === 401 || result.message?.includes('token')) {
+                                console.error('[三叉戟] Token 已过期，请刷新页面重新登录');
+                                window.alert('[三叉戟] 登录已过期，请刷新页面后重试。');
+                                return; // 停止轮询
+                            }
                             if (attempts < maxAttempts) {
                                 setTimeout(checkStatus, interval);
                             }
@@ -3536,6 +3600,12 @@
                 },
                 onerror: function (error) {
                     console.error('[三叉戟] 轮询请求失败:', error);
+                    // v1.8.15: 检测网络错误中的 401
+                    if (error.status === 401) {
+                        console.error('[三叉戟] Token 已过期，请刷新页面重新登录');
+                        window.alert('[三叉戟] 登录已过期，请刷新页面后重试。');
+                        return; // 停止轮询
+                    }
                     if (attempts < maxAttempts) {
                         setTimeout(checkStatus, interval);
                     }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Biliwiki跳转VSCode
 // @namespace    https://github.com/haihe8177
-// @description  想要使用VSCode编辑Biliwiki，苦于站点未添加启动插件
+// @description  为 Biliwiki 提供一键跳转至 Visual Studio Code 编辑页面的功能。配合Wikitext编辑器扩展使用。
 // @version      1.3
 // @license      MIT
 // @author       Haihe

@@ -1,16 +1,26 @@
 // ==UserScript==
 // @name         WME House Numbers to RPP
-// @version      2022.05.24.02
-// @description  Converts HN to RPP
-// @author       davidakachaos
+// @version      2026.01.29.01
+// @description  Converts WME House Numbers to Residential Place Points
+// @author       davidakachaos, ressurected by LihtsaltMats
 // @include      /^https:\/\/(www|beta)\.waze\.com(\/\w{2,3}|\/\w{2,3}-\w{2,3}|\/\w{2,3}-\w{2,3}-\w{2,3})?\/editor\b/
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @require      https://greasyfork.org/scripts/38421-wme-utils-navigationpoint/code/WME%20Utils%20-%20NavigationPoint.js?version=251065
+// @require      https://update.greasyfork.org/scripts/509664/WME%20Utils%20-%20Bootstrap.js
 // @grant        none
-// @namespace WME
+// @namespace    WME
 // @downloadURL https://update.greasyfork.org/scripts/423319/WME%20House%20Numbers%20to%20RPP.user.js
 // @updateURL https://update.greasyfork.org/scripts/423319/WME%20House%20Numbers%20to%20RPP.meta.js
 // ==/UserScript==
+
+// 2026-01-29 Move basic functionality to WME SDK. New rules allow all kinds of RPP house numbers so convert HN data directly.
+// 2022-05-24 HNs including a slash ('/') are turned into POIs, because RPPs do not support those. New RPP will have a lowercase letter.
+// 2021-12-12 HN delete button is back. Navigation Points are added to every segment no matter the type. Improved readability.
+// 2021-10-04 Add navigation points when nearest segment is PLR, PR or off-road
+// 2021-09-28 Fix house numbers for RPPs
+// Update 2020-10-18: Added option to use the alt city name when no city found initial
+// Update 2020-10-18: Added option to set a default lock level in the settings
+
 /* global W */
 /* global WazeWrap */
 /* global NavigationPoint */
@@ -18,478 +28,230 @@
 /* global OpenLayers */
 /* global require */
 /* global $ */
-
-// 2022-05-24 HNs includid a slash ('/') are turned into POIs, because RPPs do not support those. New RPP will have a lowercase letter.
-// 2021-12-12 HN delete button is back. Navigation Points are added to every segment no matter the type. Improved readability.
-// 2021-10-04 Add navigation points when nearest segment is PLR, PR or off-road
-// 2021-09-28 Fix house numbers for RPPs
-// Update 2020-10-18: Added option to use the alt city name when no city found initial
-// Update 2020-10-18: Added option to set a default lock level in the settings
+/* global bootstrap */
 
 (function () {
+    "use strict";
 
-  function log(m) {
-    console.log('%cWME HN2RPP:%c ' + m, 'color: darkcyan; font-weight: bold', 'color: dimgray; font-weight: normal');
-  }
+    const updateMessage = `
+    <h5>HN to RPP Conversion Restored</h5>
+    <p>A new button is now available in the <strong>House Number section</strong>. Clicking it will:</p>
+    <ul style="padding-left: 20px;">
+      <li>Add new RPPs and delete converted HNs from <strong>selected segments</strong>.</li>
+      <li>Set RPP entry point at the old HN's navigation point.</li>
+      <li>Apply a configurable distance to RPP's entry point so it wouldn't overvlap with the segment.</li>
+    </ul>
+`;
+    const downloadUrl = 'https://greasyfork.org/scripts/423319-wme-house-numbers-to-rpp/code/WME%20House%20Numbers%20to%20RPP.user.js';
 
-  function warn(m) {
-    console.warn('WME HN2RPP: ' + m);
-  }
+    let settings = {};
+    let sdk;
 
-  function err(m) {
-    console.error('WME HN2RPP: ' + m);
-  }
-
-
-  const d = window.document;
-  const q = d.querySelector.bind(d);
-  let sm = null; // Waze Selection Manager
-  let settings = {};
-  let lastDownloadTime = Date.now();
-  const oldSegmentsId = [];
-  const locales = {
-    en: {
-      makeRppButtonText: 'HN → RPP',
-      delHNButtonText: 'Delete HN',
-      noDuplicatesLabel: 'No RPP duplicates',
-      displayDeleteButtonLabel: 'Display House Number clearing button \n (BUTTON WILL CLEAR THE WHOLE STREET!)',
-      defaultLockLevel: 'Default lock level'
-    },
-    nl: {
-      makeRppButtonText: 'HN → RPP',
-      delHNButtonText: 'Удалить HN',
-      noDuplicatesLabel: 'Geen duplicaten',
-      defaultLockLevel: 'Standaard lock level'
-    },
-    ru: {
-      makeRppButtonText: 'HN → RPP',
-      delHNButtonText: 'Видалити HN',
-      noDuplicatesLabel: 'Без дубликатов RPP',
-      defaultLockLevel: 'Default lock level'
-    }
-  };
-
-  function txt(id) {
-    return locales[I18n.locale] === undefined ? locales['en'][id] : locales[I18n.locale][id];
-  }
-
-  // Helper to create dom element with attributes
-  function newEl(name, attrs) {
-    const el = d.createElement(name);
-    for (const attr in attrs) {
-      if (el[attr] !== undefined) {
-        el[attr] = attrs[attr];
-      }
-    }
-    return el;
-  }
-
-  function wait() {
-    if (!W || !W.map || !W.model) {
-      setTimeout(wait, 1000);
-      log('Waiting Waze...');
-      return;
-    }
-    log('Ready...');
-    init();
-  }
-
-  function initUI() {
-    const tabs = q('.nav-tabs'), tabContent = q('#user-info .tab-content');
-
-    if (!tabs || !tabContent) {
-      log('Waze UI not ready...');
-      setTimeout(initUI, 500);
-      return;
-    }
-
-    const tabPaneContent = [
-      '<h4>WME HN2RPP</h4>',
-      `<div class="controls"><div class="controls-container"><label for="hn2rpp-default-lock-level">${txt('defaultLockLevel')}</label><select class="form-control" id="hn2rpp-default-lock-level"><option value="1">1</option>`,
-      `<option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>`,
-      `<div class="controls-container"><input type="checkbox" id="hn2rpp-no-duplicates" /><label for="hn2rpp-no-duplicates">${txt('noDuplicatesLabel')}</label></div>`,
-      `<div class="controls-container"><input type="checkbox" id="hn2rpp-delete-button" /><label for="hn2rpp-delete-button" style="white-space:pre;">${txt('displayDeleteButtonLabel')}</label></div></div>`,
-    ].join('');
-
-    const tabPane = newEl('div', {id: 'sidepanel-hn2rpp', className: 'tab-pane', innerHTML: tabPaneContent});
-
-    tabs.appendChild(newEl('li', {innerHTML: '<a href="#sidepanel-hn2rpp" data-toggle="tab">HN2RPP</a>'}));
-    tabContent.appendChild(tabPane);
-
-    const s = localStorage['hn2rpp'];
-    settings = s ? JSON.parse(s) : {noDuplicates: true, defaultLockLevel: 1, displayDeleteButton: false};
-
-    const noDuplicatesInput = q('#hn2rpp-no-duplicates');
-    const defaultLockLevelInput = q('#hn2rpp-default-lock-level');
-    const displayDeleteButtonInput = q('#hn2rpp-delete-button');
-
-    noDuplicatesInput.checked = settings.noDuplicates;
-    noDuplicatesInput.addEventListener('change', updateSettings);
-
-    defaultLockLevelInput.value = settings.defaultLockLevel;
-    defaultLockLevelInput.addEventListener('change', updateSettings);
-
-    displayDeleteButtonInput.checked = settings.displayDeleteButton;
-    displayDeleteButtonInput.addEventListener('change', showAlert);
-
-    log('UI initialized...');
-    const updateMessage = "HNs including a slash will convert into a POI, because RPPs do not support it. HNs converted to RPPs will have lowercase letter."
-    WazeWrap.Interface.ShowScriptUpdate("HN to RPP", GM_info.script.version, updateMessage, "", "");
-  }
-
-  function init() {
-    sm = W.selectionManager;
-    sm.events.register('selectionchanged', null, onSelect);
-    W.editingMediator.on('change:editingHouseNumbers', onEditingHN);
-
-    const scriptName = 'hn2rpp';
-
-    RegisterKeyboardShortcut(scriptName, 'HN2RPP', 'hn-to-rpp', txt('makeRppButtonText'), makeRPP, '-1');
-    RegisterKeyboardShortcut(scriptName, 'HN2RPP', 'delete-hn', txt('delHNButtonText'), delHN, '-1');
-    LoadKeyboardShortcuts(scriptName);
-
-    window.addEventListener('beforeunload', () => {
-      SaveKeyboardShortcuts(scriptName);
-    }, false);
-
-    initUI();
-  }
-
-    function showAlert() {
-        window.confirm('This button will remove house numbers on the WHOLE street!');
-        updateSettings();
-    }
-
-  function updateSettings() {
-    settings.noDuplicates = q('#hn2rpp-no-duplicates').checked;
-    settings.defaultLockLevel = parseInt(q('#hn2rpp-default-lock-level').value);
-    settings.displayDeleteButton = q('#hn2rpp-delete-button').checked;
-    localStorage['hn2rpp'] = JSON.stringify(settings);
-  }
-
-  function onSelect() {
-    const fts = sm.getSelectedFeatures();
-
-    if (!fts || fts.length === 0 || fts[0].model.type !== 'segment' || !fts.some(f => f.model.attributes.hasHNs)) {
-      return;
-    }
-
-    const pane = newEl('div', {className: 'form-group'});
-    const makeRppBtn = newEl('button', {
-      className: 'waze-btn waze-btn-white action-button',
-      style: 'display: inline-block',
-      innerText: txt('makeRppButtonText')
-    });
-
-    makeRppBtn.addEventListener('click', makeRPP);
-
-    pane.appendChild(makeRppBtn);
-
-    q('#edit-panel .tab-pane').insertBefore(pane, q('#edit-panel .tab-pane .more-actions'));
-  }
-
-  function hasDuplicates(rpp, addr) {
-    const venues = W.model.venues.objects;
-    for (const k in venues) {
-      if (venues.hasOwnProperty(k)) {
-        const otherRPP = venues[k];
-        const otherAddr = otherRPP.getAddress().attributes;
-        if (
-          rpp.attributes.name == otherRPP.attributes.name
-          && rpp.attributes.houseNumber == otherRPP.attributes.houseNumber
-          && rpp.attributes.residential == otherRPP.attributes.residential
-          && addr.street.name == otherAddr.street.name
-          && addr.city.attributes.name == otherAddr.city.attributes.name
-          && addr.country.name == otherAddr.country.name
-        ) {
-          return true;
-        } // This is duplicate
-      }
-    }
-    return false;
-  }
-
-  function makeRPP() {
-    log('Creating RPPs from HouseNumbers');
-    const fts = sm.getSelectedFeatures();
-
-    if (!fts || fts.length === 0 || fts[0].model.type !== 'segment' || !fts.some(f => f.model.attributes.hasHNs)) {
-      return;
-    }
-    const segs = [];
-
-    // collect all segments ids with HN
-    fts.forEach(f => {
-      if (!f.model.attributes.hasHNs) {
-        return;
-      }
-      segs.push(f.model.attributes.id);
-    });
-    // check the currently loaded housenumber objects
-    const objHNs = W.model.segmentHouseNumbers.objects;
-    const loadedSegmentsId = segs.filter(function (key) {
-      if (Object.keys(objHNs).indexOf(key) >= 0) {
-        return false;
-      } else {
-        return oldSegmentsId.indexOf(key) < 0 || lastDownloadTime < objHNs[key].attributes.updatedOn;
-      }
-    });
-    // Now we must load the housenumbers from the server which have not been loaded in
-    if (loadedSegmentsId.length > 0) {
-      lastDownloadTime = Date.now();
-      $.ajax({
-        dataType: 'json',
-        url: getDownloadURL(),
-        data: {ids: loadedSegmentsId.join(',')},
-        success: function (json) {
-          if (json.error !== undefined) {
-          } else {
-            const ids = [];
-            if ('undefined' !== typeof (json.segmentHouseNumbers.objects)) {
-              for (let k = 0; k < json.segmentHouseNumbers.objects.length; k++) {
-                // drawHNLine("JSON", json.segmentHouseNumbers.objects[k]);
-                addRppForHN(json.segmentHouseNumbers.objects[k], 'JSON');
-              }
-            }
-          }
+    const locales = {
+        en: {
+            makeRppButtonLabel: 'HN → RPP',
+            noDuplicatesLabel: 'No RPP duplicates',
+            entryPointDistanceLabel: 'Entry Point distance from segment (in pseudo metres)',
+            defaultLockLevelLabel: 'Default lock level'
+        },
+        nl: {
+            makeRppButtonLabel: 'HN → RPP',
+            noDuplicatesLabel: 'Geen duplicaten',
+            entryPointDistanceLabel: 'Entry Point distance from segment (in pseudo metres)',
+            defaultLockLevelLabel: 'Standaard lock level'
+        },
+        ru: {
+            makeRppButtonLabel: 'HN → RPP',
+            noDuplicatesLabel: 'Без дубликатов RPP',
+            entryPointDistanceLabel: 'Entry Point distance from segment (in pseudo metres)',
+            defaultLockLevelLabel: 'Default lock level'
         }
-      });
-    }
-    W.model.segmentHouseNumbers.getByIds(segs).forEach(num => {
-      addRppForHN(num, 'OBJECT');
-    });
-  }
-
-  function onEditingHN() {
-    if (!settings.displayDeleteButton){
-        return;
-    }
-
-    const delHNbtn = newEl('div', {
-      className: 'toolbar-button',
-      style: 'float: left',
-      innerText: txt('delHNButtonText')
-    });
-    delHNbtn.addEventListener('click', delHN);
-    setTimeout(() => {
-      $('#primary-toolbar').find('.add-house-number').after(delHNbtn);
-    }, 500);
-  }
-
-  function delHN() {
-    selectEntireStreet();
-
-    const fts = sm.getSelectedFeatures();
-
-    if (!fts || fts.length === 0 || fts[0].model.type !== 'segment' || !fts.some(f => f.model.attributes.hasHNs)) {
-      return;
-    }
-
-    const DeleteHouseNumberAction = require('Waze/Actions/DeleteHouseNumber');
-    const segs = [];
-    const houseNumbers = W.model.segmentHouseNumbers.getObjectArray();
-
-    fts.forEach(f => {
-      if (!f.model.attributes.hasHNs) {
-        return;
-      }
-      segs.push(f.model.attributes.id);
-    });
-
-    segs.forEach(segID => {
-      houseNumbers.forEach(hn => {
-        if (hn.getSegmentId() == segID) {
-          W.model.actionManager.add(new DeleteHouseNumberAction(hn));
-        }
-      });
-    });
-  }
-
-  function selectEntireStreet() {
-    const selectedFeature = sm.getSelectedFeatures()[0];
-    if (selectedFeature) {
-      const featureStreetId = selectedFeature.model.attributes.primaryStreetID;
-      const sameStreetSegments = W.model.segments.getByAttributes({primaryStreetID: featureStreetId});
-
-      W.selectionManager.unselectAll();
-      W.selectionManager.setSelectedModels(sameStreetSegments);
-    }
-  }
-
-  function addRppForHN(num, source) {
-    const epsg900913 = new OpenLayers.Projection('EPSG:900913');
-    const epsg4326 = new OpenLayers.Projection('EPSG:4326');
-    const Landmark = require('Waze/Feature/Vector/Landmark');
-    const AddLandmark = require('Waze/Action/AddLandmark');
-    const UpdateFeatureAddress = require('Waze/Action/UpdateFeatureAddress');
-    const seg = W.model.segments.getObjectById(num.segID);
-    const addr = seg.getAddress().attributes;
-    const houseNumber = num.number.toLocaleLowerCase();
-    const streetName = addr.street.name;
-
-    const newAddr = {
-      countryID: addr.country.id,
-      stateID: addr.state.id,
-      cityName: addr.city.attributes.name,
-      emptyCity: addr.city.attributes.name ? null : true,
-      streetName: streetName,
-      houseNumber: houseNumber,
-      streetEmpty: !1,
     };
 
-
-    const res = new Landmark();
-
-    if (source === 'JSON') {
-      res.geometry = new OpenLayers.Geometry.Point(num.geometry.coordinates[0], num.geometry.coordinates[1]).transform(epsg4326, epsg900913);
-    } else {
-      res.geometry = num.geometry.clone();
+    function txt(id) {
+        return locales[I18n.locale] === undefined ? locales['en'][id] : locales[I18n.locale][id];
     }
-    // res.geometry.x += 10;
-    res.attributes.houseNumber = houseNumber;
-    if(houseNumber.includes('/')){
-        res.attributes.name = `${streetName} ${houseNumber}`;
-        res.attributes.categories = ['OTHER'];
-    } else {
-        res.attributes.residential = true;
+
+    async function wait() {
+        sdk = await bootstrap({scriptUpdateMonitor: {downloadUrl}});
+        init();
     }
-    // set default lock level
-    res.attributes.lockRank = settings.defaultLockLevel - 1;
 
-    if (newAddr.emptyCity === true) {
-      let cityName = '';
-      // If we haven't found a city name, search for a alt city name and use that
-      if (addr.altStreets.length > 0) { // segment has alt names
-        for (let j = 0; j < seg.attributes.streetIDs.length; j++) {
-          const altCity = W.model.cities.getObjectById(W.model.streets.getObjectById(seg.attributes.streetIDs[j]).cityID).attributes;
+    async function init() {
+        W.selectionManager.events.register('selectionchanged', null, injectIntoSidePanel);
 
-          if (altCity.name !== null && altCity.englishName !== '') {
-            cityName = altCity.name;
-            break;
-          }
+        const s = localStorage['hn2rpp'];
+        settings = s ? JSON.parse(s) : {noDuplicates: true, entryPointDistance: 5, defaultLockLevel: 1};
+
+        initSettingsTab();
+
+        WazeWrap.Interface.ShowScriptUpdate("HN to RPP", GM_info.script.version, updateMessage, "", "");
+    }
+
+    async function injectIntoSidePanel() {
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const $targetContainer = $("div#segment-edit-general > div:has(wz-button i.w-icon-home)");
+
+        if ($targetContainer.length > 0 && $('#hn2rpp-side-container').length === 0) {
+            const $btnContainer = $(`
+        <div id="hn2rpp-side-container" style="display: flex; flex-direction: row; gap: 8px; margin-top: 10px; align-items: center;">
+            <wz-button color="secondary" id="hn2rpp-make-side" title="Convert HNs to RPP" size="sm">
+                ${txt('makeRppButtonLabel')}
+            </wz-button>
+        </div>
+      `);
+
+            $targetContainer.append($btnContainer);
+
+            $('#hn2rpp-make-side').on('click', replaceHouseNumber);
         }
-      }
-      if (cityName !== '') {
-        newAddr.emptyCity = null;
-        newAddr.cityName = cityName;
-      }
     }
 
-    if (settings.noDuplicates && hasDuplicates(res, addr)) {
-      return;
-    }
+    async function replaceHouseNumber() {
+        const segmentIds = getSelectedSegments();
+        const houseNumbers = await sdk.DataModel.HouseNumbers.fetchHouseNumbers({segmentIds});
+        const existingResidentialPlaceStreetIds = getExistingResidentialAddresses();
 
-    const closestSeg = WazeWrap.Geometry.findClosestSegment(res.geometry);
+        for (const houseNumber of houseNumbers) {
+            const finalCoords = getInterpolatedPoint(
+                houseNumber.fractionPoint.coordinates,
+                houseNumber.geometry.coordinates,
+                settings.entryPointDistance ?? 5
+            );
+            const streetId = sdk.DataModel.Segments.getAddress({segmentId: houseNumber.segmentId}).street.id;
 
-    if (closestSeg){
-      const distanceToSegment = res.geometry.distanceTo(closestSeg.geometry, {details: true});
-      const closestPoint = new OpenLayers.Geometry.Point(1 * distanceToSegment.x1 / 2 + distanceToSegment.x0 / 2, 1 * distanceToSegment.y1 / 2 + distanceToSegment.y0 / 2);
-      if (closestPoint) {
-        const eep = new NavigationPoint(closestPoint);
-        res.attributes.entryExitPoints.push(eep);
-      }
-    }
+            const isDuplicate = existingResidentialPlaceStreetIds.some(existing =>
+                existing.houseNumber === houseNumber.number &&
+                existing.streetId === streetId
+            );
 
-    W.model.actionManager.add(new AddLandmark(res));
-    W.model.actionManager.add(new UpdateFeatureAddress(res, newAddr));
-  }
+            if (isDuplicate) {
+                sdk.DataModel.HouseNumbers.deleteHouseNumber({houseNumberId: houseNumber.id});
+                continue;
+            }
 
-  function getDownloadURL() {
-    let downloadURL = 'https://www.waze.com';
-    if (~document.URL.indexOf('https://beta.waze.com')) {
-      downloadURL = 'https://beta.waze.com';
-    }
-    downloadURL += getServer();
-    return downloadURL;
-  }
+            const venueId = sdk.DataModel.Venues.addVenue({
+                category: 'RESIDENTIAL',
+                geometry: houseNumber.geometry
+            }).toString();
 
-  function getServer() {
-    return W.Config.api_base + '/HouseNumbers';
-  }
+            sdk.DataModel.Venues.updateAddress({
+                houseNumber: houseNumber.number,
+                streetId,
+                venueId
+            });
 
-  // setup keyboard shortcut's header and add a keyboard shortcuts
-  function RegisterKeyboardShortcut(ScriptName, ShortcutsHeader, NewShortcut, ShortcutDescription, FunctionToCall, ShortcutKeysObj) {
-    // Figure out what language we are using
-    const language = I18n.currentLocale();
-    // check for and add keyboard shourt group to WME
-    try {
-      const x = I18n.translations[language].keyboard_shortcuts.groups[ScriptName].members.length;
-    } catch (e) {
-      // setup keyboard shortcut's header
-      W.accelerators.Groups[ScriptName] = []; // setup your shortcut group
-      W.accelerators.Groups[ScriptName].members = []; // set up the members of your group
-      I18n.translations[language].keyboard_shortcuts.groups[ScriptName] = []; // setup the shortcuts text
-      I18n.translations[language].keyboard_shortcuts.groups[ScriptName].description = ShortcutsHeader; // Scripts header
-      I18n.translations[language].keyboard_shortcuts.groups[ScriptName].members = []; // setup the shortcuts text
-    }
-    // check if the function we plan on calling exists
-    if (FunctionToCall && (typeof FunctionToCall == 'function')) {
-      I18n.translations[language].keyboard_shortcuts.groups[ScriptName].members[NewShortcut] = ShortcutDescription; // shortcut's text
-      W.accelerators.addAction(NewShortcut, {
-        group: ScriptName
-      }); // add shortcut one to the group
-      // clear the short cut other wise the previous shortcut will be reset MWE seems to keep it stored
-      const ClearShortcut = '-1';
-      let ShortcutRegisterObj = {};
-      ShortcutRegisterObj[ClearShortcut] = NewShortcut;
-      W.accelerators._registerShortcuts(ShortcutRegisterObj);
-      if (ShortcutKeysObj !== null) {
-        // add the new shortcut
-        ShortcutRegisterObj = {};
-        ShortcutRegisterObj[ShortcutKeysObj] = NewShortcut;
-        W.accelerators._registerShortcuts(ShortcutRegisterObj);
-      }
-      // listen for the shortcut to happen and run a function
-      W.accelerators.events.register(NewShortcut, null, function () {
-        FunctionToCall();
-      });
-    } else {
-      alert('The function ' + FunctionToCall + ' has not been declared');
-    }
+            sdk.DataModel.Venues.updateVenue({
+                lockRank: settings.defaultLockLevel ?? 1,
+                venueId
+            });
 
-  }
+            sdk.DataModel.Venues.replaceNavigationPoints({
+                venueId,
+                navigationPoints: [{
+                    point: {
+                        type: 'Point',
+                        coordinates: finalCoords,
+                    },
+                    isPrimary: true
+                }]
+            });
 
-  // if saved load and set the shortcuts
-  function LoadKeyboardShortcuts(ScriptName) {
-    if (localStorage[ScriptName + 'KBS']) {
-      const LoadedKBS = JSON.parse(localStorage[ScriptName + 'KBS']); // JSON.parse(localStorage['WMEAwesomeKBS']);
-      for (let i = 0; i < LoadedKBS.length; i++) {
-        W.accelerators._registerShortcuts(LoadedKBS[i]);
-      }
-    }
-  }
-
-  function SaveKeyboardShortcuts(ScriptName) {
-    const TempToSave = [];
-    for (const name in W.accelerators.Actions) {
-      let TempKeys = '';
-      if (W.accelerators.Actions[name].group == ScriptName) {
-        if (W.accelerators.Actions[name].shortcut) {
-          if (W.accelerators.Actions[name].shortcut.altKey === true) {
-            TempKeys += 'A';
-          }
-          if (W.accelerators.Actions[name].shortcut.shiftKey === true) {
-            TempKeys += 'S';
-          }
-          if (W.accelerators.Actions[name].shortcut.ctrlKey === true) {
-            TempKeys += 'C';
-          }
-          if (TempKeys !== '') {
-            TempKeys += '+';
-          }
-          if (W.accelerators.Actions[name].shortcut.keyCode) {
-            TempKeys += W.accelerators.Actions[name].shortcut.keyCode;
-          }
-        } else {
-          TempKeys = '-1';
+            sdk.DataModel.HouseNumbers.deleteHouseNumber({houseNumberId: houseNumber.id});
         }
-        const ShortcutRegisterObj = {};
-        ShortcutRegisterObj[TempKeys] = W.accelerators.Actions[name].id;
-        TempToSave[TempToSave.length] = ShortcutRegisterObj;
-      }
     }
-    localStorage[ScriptName + 'KBS'] = JSON.stringify(TempToSave);
-  }
 
-  wait();
+    function getExistingResidentialAddresses() {
+        if (!settings.noDuplicates) {
+            return [];
+        }
+        return sdk.DataModel.Venues.getAll()
+            .filter(venue => venue.isResidential)
+            .map(venue => {
+                const address = sdk.DataModel.Venues.getAddress({venueId: venue.id});
+                return {
+                    houseNumber: address.houseNumber,
+                    streetId: address.street.id
+                };
+            });
+    }
+
+    function getSelectedSegments() {
+        const selection = sdk.Editing.getSelection();
+        if (selection?.objectType !== 'segment') {
+            return;
+        }
+        return selection.ids;
+    }
+
+    function getInterpolatedPoint(start, target, distanceMeters) {
+        const [startLon, startLat] = start;
+        const [targetLon, targetLat] = target;
+
+        const latMid = (startLat + targetLat) / 2;
+        const mPerDegLat = 111111;
+        const mPerDegLon = 111111 * Math.cos(latMid * Math.PI / 180);
+
+        const dLon = (targetLon - startLon) * mPerDegLon;
+        const dLat = (targetLat - startLat) * mPerDegLat;
+        const totalDist = Math.sqrt(dLon * dLon + dLat * dLat);
+
+        if (totalDist <= distanceMeters) {
+            return target;
+        }
+
+        const t = distanceMeters / totalDist;
+        return [
+            startLon + t * (targetLon - startLon),
+            startLat + t * (targetLat - startLat)
+        ];
+    }
+
+    function initSettingsTab() {
+        const tabs = document.querySelector('.nav-tabs'),
+            tabContent = document.querySelector('#user-info .tab-content');
+        if (!tabs || !tabContent) return;
+        const content = `
+      <div id="sidepanel-hn2rpp" class="tab-pane">
+        <h4>WME HN2RPP</h4>
+        <label><input type="checkbox" id="hn2rpp-dup"> ${txt('noDuplicatesLabel')}</label>
+        <br>
+        <br>
+        <label>${txt('entryPointDistanceLabel')}</label>
+        <br>
+        <input type="number" id="hn2rpp-eep-distance" min="0" size="2">
+        <br>
+        <br>
+        <label>${txt('defaultLockLevelLabel')}</label>
+        <select id="hn2rpp-lock" class="form-control">
+          <option value="0">1</option>
+          <option value="1">2</option>
+          <option value="2">3</option>
+          <option value="3">4</option>
+          <option value="4">5</option>
+          <option value="5">6</option>
+        </select>
+      </div>`;
+        $(tabContent).append(content);
+        $(tabs).append('<li><a href="#sidepanel-hn2rpp" data-toggle="tab">HN2RPP</a></li>');
+        $('#hn2rpp-dup').prop('checked', settings.noDuplicates).on('change', function () {
+            settings.noDuplicates = this.checked;
+            save();
+        });
+        $('#hn2rpp-eep-distance').val(settings.entryPointDistance).on('change', function () {
+            settings.entryPointDistance = parseInt(this.value);
+            save();
+        });
+        $('#hn2rpp-lock').val(settings.defaultLockLevel).on('change', function () {
+            settings.defaultLockLevel = parseInt(this.value);
+            save();
+        });
+    }
+
+    function save() {
+        localStorage['hn2rpp'] = JSON.stringify(settings);
+    }
+
+    wait();
 })();

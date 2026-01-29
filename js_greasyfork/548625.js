@@ -92,13 +92,13 @@ function isCart() {
   return currentURL === targetURL;
 }
 
-function isDelivery() {
+function isOrderPayment() {
   const currentURL = window.location.href;
   const targetURL = "https://www.tokyokawaiilife.jp/fs/lizlisaadmin/DeliveryEdit.html";
   return currentURL === targetURL;
 }
 
-function isSettle() {
+function isConfirm() {
   const currentURL = window.location.href;
   const targetURL = "https://www.tokyokawaiilife.jp/fs/lizlisaadmin/SettleEdit.html";
   return currentURL === targetURL;
@@ -133,12 +133,12 @@ function blockThreadForSeconds(seconds) {
     }
   }
 
-  if (isDelivery()) {
+  if (isOrderPayment()) {
     document.getElementById("settleEdit").click();
     console.log("settleEdit clicked");
   }
 
-  if (isSettle()) {
+  if (isConfirm()) {
     document.getElementById("fs2_settle-cod").click();
     console.log("fs2_settle-cod clicked");
     document.getElementById("submit").click();

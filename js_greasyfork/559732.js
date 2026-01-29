@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Juxtaposition Pretendo Enhancer
 // @namespace    https://github.com/ItsFuntum/Juxtaposition-Enhancer
-// @version      2026-01-26
+// @version      2026-01-28
 // @description  Userscript that improves Pretendo's Juxtaposition on the web.
 // @author       Funtum
 // @match        *://juxt.pretendo.network/*
@@ -14,6 +14,9 @@
 
 (function () {
   "use strict";
+
+  let undoStack = [];
+  const MAX_UNDO = 20;
 
   const communityPage = window.location.pathname.match(/^\/titles\/(\d+)/);
   const postsPage = window.location.pathname.match(/posts/);
@@ -68,39 +71,149 @@
     );
   }
 
-  function lockPaintingScroll(wrapper) {
-    if (!isPaintingVisible(wrapper)) {
-      return;
-    }
+  let paintingBlockHandler = null;
 
-    const block = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
+  function lockPaintingScroll(wrapper) {
+    if (!isPaintingVisible(wrapper)) return;
+
+    const canvas = wrapper.querySelector("#painting");
+
+    paintingBlockHandler = (e) => {
+      // Allow all events that start on the canvas
+      if (canvas && canvas.contains(e.target)) return;
+
+      // Block page scroll gestures
+      if (e.type === "touchmove" || e.type === "wheel") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     };
 
-    // Lock page scroll
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
 
-    // Block ALL scroll-related events
-    ["touchstart", "touchmove", "touchend", "wheel", "pointermove"].forEach(
-      (evt) => {
-        wrapper.addEventListener(evt, block, {
-          passive: false,
-          capture: true,
-        });
-      },
-    );
+    ["touchmove", "wheel"].forEach((evt) => {
+      wrapper.addEventListener(evt, paintingBlockHandler, {
+        passive: false,
+        capture: true,
+      });
+    });
   }
 
   function unlockPaintingScroll() {
+    const wrapper = document.getElementById("painting-wrapper");
+
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
     document.body.style.position = "";
     document.body.style.width = "";
+
+    if (wrapper && paintingBlockHandler) {
+      ["touchmove", "wheel"].forEach((evt) => {
+        wrapper.removeEventListener(evt, paintingBlockHandler, {
+          capture: true,
+        });
+      });
+    }
+
+    paintingBlockHandler = null;
+  }
+
+  function pushUndoState(canvas) {
+    const ctx = canvas.getContext("2d");
+    try {
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      undoStack.push(data);
+
+      // Cap memory usage
+      if (undoStack.length > MAX_UNDO) {
+        undoStack.shift();
+      }
+    } catch (e) {
+      console.warn("Undo snapshot failed", e);
+    }
+  }
+
+  function hookUndoTracking(wrapper) {
+    const canvas = wrapper.querySelector("#painting");
+    if (!canvas) return;
+
+    let drawing = false;
+
+    const start = () => {
+      drawing = true;
+    };
+
+    const end = () => {
+      if (!drawing) return;
+      drawing = false;
+      pushUndoState(canvas);
+    };
+
+    canvas.addEventListener("pointerdown", start);
+    canvas.addEventListener("pointerup", end);
+    canvas.addEventListener("pointercancel", end);
+    canvas.addEventListener("pointerleave", end);
+
+    // Initial blank state
+    pushUndoState(canvas);
+  }
+
+  function undoCanvas(wrapper) {
+    const canvas = wrapper.querySelector("#painting");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+
+    // Need at least 2 states (current + previous)
+    if (undoStack.length < 2) return;
+
+    // Drop current state
+    undoStack.pop();
+
+    // Restore previous
+    const prev = undoStack[undoStack.length - 1];
+    ctx.putImageData(prev, 0, 0);
+  }
+
+  function clearCanvas(wrapper) {
+    const canvas = wrapper.querySelector("#painting");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    // Reset undo stack
+    undoStack = [];
+    pushUndoState(canvas);
+  }
+
+  function hookPaintingButtons(wrapper) {
+    const clearBtn = wrapper.querySelector("button.clear");
+    const undoBtn = wrapper.querySelector(".tools button.undo");
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearCanvas(wrapper);
+      });
+    }
+    if (undoBtn) {
+      undoBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        undoCanvas(wrapper);
+      });
+    }
   }
 
   function override_closePainting() {
@@ -398,7 +511,7 @@
 <div id="painting-content">
   <div class="tools">
     <div>
-      <button class="clear" onclick="clearCanvas()"></button>
+      <button class="clear"></button>
       <button class="undo"></button>
     </div>
     <div>
@@ -419,6 +532,9 @@
 
       document.querySelector(".community-top").appendChild(postPage);
       document.querySelector(".community-top").appendChild(paintingWrapper);
+
+      hookUndoTracking(paintingWrapper);
+      hookPaintingButtons(paintingWrapper);
 
       const canvas = paintingWrapper.querySelector("#painting");
       if (canvas) {
@@ -554,7 +670,7 @@
 <div id="painting-content">
   <div class="tools">
     <div>
-      <button class="clear" onclick="clearCanvas()"></button>
+      <button class="clear"></button>
       <button class="undo"></button>
     </div>
     <div>
@@ -575,6 +691,9 @@
 
     postsWrapper.appendChild(postPage);
     postsWrapper.appendChild(paintingWrapper);
+
+    hookUndoTracking(paintingWrapper);
+    hookPaintingButtons(paintingWrapper);
 
     const canvas = paintingWrapper.querySelector("#painting");
     if (canvas) {

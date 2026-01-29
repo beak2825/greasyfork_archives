@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Vinted Country & City Filter (client-side)
 // @namespace    https://greasyfork.org/en/users/1550823-nigel1992
-// @version      1.4.2
+// @version      1.4.5
 // @description  Adds a country and city indicator to Vinted items and allows client-side visual filtering by including/excluding selected countries. The script uses Vinted’s public item API to retrieve country and city information. It does not perform purchases, send messages, or modify anything on Vinted servers.
 // @author       Nigel1992
 // @license      MIT
@@ -12,13 +12,66 @@
 // @match        https://www.vinted.es/*
 // @match        https://www.vinted.de/*
 // @match        https://www.vinted.se/*
+// @match        https://www.vinted.lt/*
+// @match        https://www.vinted.pl/*
+// @match        https://www.vinted.cz/*
+// @match        https://www.vinted.hu/*
+// @match        https://www.vinted.sk/*
+// @match        https://www.vinted.pt/*
+// @match        https://www.vinted.lu/*
+// @match        https://www.vinted.ro/*
+// @match        https://www.vinted.gr/*
+// @match        https://www.vinted.bg/*
+// @match        https://www.vinted.si/*
+// @match        https://www.vinted.hr/*
+// @match        https://www.vinted.ie/*
+// @match        https://www.vinted.com/*
+// @match        https://www.vinted.at/*
+// @match        https://www.vinted.dk/*
+// @match        https://www.vinted.fi/*
+// @match        https://www.vinted.co.uk/*
 // @grant        none
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/559753/Vinted%20Country%20%20City%20Filter%20%28client-side%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/559753/Vinted%20Country%20%20City%20Filter%20%28client-side%29.meta.js
 // ==/UserScript==
 
+
 (function () {
+    // Check if user is logged in to Vinted
+
+    function isUserLoggedIn() {
+        // Check for the presence of <figure class="header-avatar">, which only appears when logged in
+        return !!document.querySelector('figure.header-avatar');
+    }
+
+    // Skip login check if captcha is being shown (isPausedForCaptcha or captcha warning visible)
+    const captchaWarning = document.getElementById('vinted-captcha-warning');
+    if (!isUserLoggedIn() && !(window.isPausedForCaptcha || (captchaWarning && captchaWarning.style.display === 'block'))) {
+        const msg = '⚠️ [Vinted Country & City Filter] You must be logged in to Vinted for this script to work. Please log in and refresh the page.';
+        const banner = document.createElement('div');
+        banner.textContent = msg;
+        banner.style.position = 'fixed';
+        banner.style.top = '0';
+        banner.style.left = '0';
+        banner.style.width = '100vw';
+        banner.style.background = '#ffefc1';
+        banner.style.color = '#a00';
+        banner.style.fontSize = '18px';
+        banner.style.textAlign = 'center';
+        banner.style.zIndex = '2147483647';
+        banner.style.padding = '16px 0';
+        banner.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+        banner.style.fontFamily = 'inherit';
+        banner.style.fontWeight = 'bold';
+        banner.style.letterSpacing = '0.5px';
+        banner.style.userSelect = 'none';
+        // Add margin to body so banner doesn't cover top nav
+        document.body.style.marginTop = '56px';
+        document.body.appendChild(banner);
+        return;
+    }
+
     'use strict';
 
     /* =========================
@@ -116,13 +169,13 @@
         
         // Check if popup was blocked
         if (!captchaPopup || captchaPopup.closed || typeof captchaPopup.closed === 'undefined') {
-            console.warn('[Vinted Filter] Popup was blocked by browser. Please allow popups.');
-            updateStatusMessage('⚠️ Popup blocked! Please allow popups and refresh the page');
+            console.warn('[Vinted Filter] Popup was blocked by browser. Please allow popups for this site and refresh the page.');
+            updateStatusMessage('⚠️ Popup blocked! Please allow popups for this site in your browser settings, then refresh the page and try again.');
+            alert('Vinted Filter: Popup was blocked! Please allow popups for this site in your browser settings, then refresh the page and try again.');
             return false;
+        } else {
+            updateStatusMessage('A popup window has been opened to automatically solve the captcha. Please complete the captcha in the popup window. The script will automatically detect when it\'s solved and continue processing. If you do not see a popup, check your browser\'s popup settings.');
         }
-        
-        updateStatusMessage('🔓 Auto-solving captcha... please complete it in the popup');
-        
         // Start checking if captcha is solved
         startCaptchaCheck();
         return true;
@@ -705,7 +758,7 @@
                     padding-top: 8px;
                     border-top: 1px solid ${darkMode ? '#444' : '#eee'};
                 ">
-                    v1.4.2 • Jan 17, 2026
+                    v1.4.5 • Jan 28, 2026
                 </div>
             </div>
         `;

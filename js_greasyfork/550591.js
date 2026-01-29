@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Universal Educational Tool Suite
 // @namespace    http://tampermonkey.net/
-// @version      1.4.5
+// @version      1.5.0
 // @description  A unified tool for cheating on online test sites
 // @author       Nyx
 // @license      GPL-3.0
@@ -40,14 +40,17 @@
     timerBonusPoints: 270,
     enableSpoofFullscreen: true,
     serverUrl: "https://uets.meowery.eu",
+    aiProvider: "gemini", // "gemini" or "openrouter"
     geminiApiKey: "",
+    openrouterApiKey: "",
+    openrouterModel: "x-ai/grok-4.1-fast",
     thinkingBudget: 512,
     maxOutputTokens: 1024,
     temperature: 0.2,
     topP: 0.95,
     topK: 64,
     includeImages: true,
-    enableReactionSpam: true,
+    enableReactionSpam: false,
     reactionSpamCount: 1,
     reactionSpamDelay: 2000,
     enableSiteOptimizations: false
@@ -126,1018 +129,7 @@
 
   // === SHARED STYLES ===
   GM_addStyle(`
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
-  @import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
-
-  :root {
-    --md-primary: #6750A4;
-    --md-primary-container: #EADDFF;
-    --md-on-primary: #FFFFFF;
-    --md-on-primary-container: #21005D;
-    --md-secondary: #625B71;
-    --md-secondary-container: #E8DEF8;
-    --md-on-secondary: #FFFFFF;
-    --md-on-secondary-container: #1D192B;
-    --md-tertiary: #7D5260;
-    --md-tertiary-container: #FFD8E4;
-    --md-on-tertiary: #FFFFFF;
-    --md-on-tertiary-container: #31111D;
-    --md-surface: #FEF7FF;
-    --md-surface-dim: #DED8E1;
-    --md-surface-bright: #FEF7FF;
-    --md-surface-container-lowest: #FFFFFF;
-    --md-surface-container-low: #F7F2FA;
-    --md-surface-container: #F1ECF4;
-    --md-surface-container-high: #ECE6F0;
-    --md-surface-container-highest: #E6E0E9;
-    --md-on-surface: #1C1B1F;
-    --md-on-surface-variant: #49454F;
-    --md-outline: #79747E;
-    --md-outline-variant: #CAC4D0;
-    --md-error: #B3261E;
-    --md-error-container: #F9DEDC;
-    --md-on-error: #FFFFFF;
-    --md-on-error-container: #410E0B;
-    --md-shadow: #000000;
-  }
-
-  .uets-card {
-    background: var(--md-surface-container);
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    overflow: hidden;
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-
-  .uets-elevated-card {
-    background: var(--md-surface-container-low);
-    border-radius: 12px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    overflow: hidden;
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-
-  .uets-filled-button {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    border: none;
-    border-radius: 20px;
-    padding: 10px 24px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    text-decoration: none;
-    min-height: 40px;
-    justify-content: center;
-  }
-
-  .uets-filled-button:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    transform: translateY(-1px);
-  }
-
-  .uets-filled-button:active {
-    transform: translateY(0px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
-  }
-
-  .uets-outlined-button {
-    background: transparent;
-    color: var(--md-primary);
-    border: 1px solid var(--md-outline);
-    border-radius: 20px;
-    padding: 10px 24px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    text-decoration: none;
-    min-height: 40px;
-    justify-content: center;
-  }
-
-  .uets-outlined-button:hover {
-    background: rgba(103, 80, 164, 0.08);
-    border-color: var(--md-primary);
-  }
-
-  .uets-text-button {
-    background: transparent;
-    color: var(--md-primary);
-    border: none;
-    border-radius: 20px;
-    padding: 10px 12px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    text-decoration: none;
-    min-height: 40px;
-    justify-content: center;
-  }
-
-  .uets-text-button:hover {
-    background: rgba(103, 80, 164, 0.08);
-  }
-
-  .uets-fab {
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    border: none;
-    border-radius: 16px;
-    width: 56px;
-    height: 56px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.14), 0 1px 18px rgba(0,0,0,0.12);
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    font-size: 24px;
-  }
-
-  .uets-fab:hover {
-    box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 9px 18px rgba(0,0,0,0.14), 0 3px 14px rgba(0,0,0,0.12);
-    transform: scale(1.05);
-  }
-
-  .uets-fab.uets-mods-hidden-state {
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .uets-fab.uets-mods-hidden-state:hover {
-    background: rgba(103, 80, 164, 0.08);
-    box-shadow: none;
-    transform: scale(1.05);
-  }
-
-  .uets-success-button {
-    background: #a6e3a1;
-    color: white;
-  }
-
-  .uets-warning-button {
-    background: #fab387;
-    color: white;
-  }
-
-  .uets-purple-button {
-    background: #cba6f7;
-    color: white;
-  }
-
-  .uets-ddg-link, .uets-gemini-button, .uets-copy-prompt-button, .uets-ai-button, .uets-ddg-button, .uets-get-answer-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 8px;
-    color: var(--md-on-primary);
-    text-decoration: none;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: center;
-    vertical-align: middle;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    border: none;
-    font-family: 'Roboto', sans-serif;
-    min-height: 40px;
-    margin: 1px;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-  }
-
-  .uets-ddg-link:hover, .uets-gemini-button:hover, .uets-copy-prompt-button:hover,
-  .uets-ai-button:hover, .uets-ddg-button:hover, .uets-get-answer-button:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-  }
-
-  .uets-ddg-link, .uets-ddg-button { 
-    background: #a6e3a1 !important;
-    color: white !important;
-  }
-
-  .uets-gemini-button, .uets-ai-button { 
-    background: #74c7ec !important;
-    color: white !important;
-  }
-
-  .uets-copy-prompt-button { 
-    background: #fab387 !important;
-    color: white !important;
-  }
-
-  .uets-get-answer-button { 
-    background: #cba6f7 !important;
-    color: white !important;
-  }
-
-  .uets-ddg-link::before, .uets-ddg-button::before {
-    content: 'search';
-    font-family: 'Material Icons Outlined';
-    font-size: 18px;
-  }
-
-  .uets-gemini-button::before, .uets-ai-button::before {
-    content: 'psychology';
-    font-family: 'Material Icons Outlined';
-    font-size: 18px;
-  }
-
-  .uets-copy-prompt-button::before {
-    content: 'content_copy';
-    font-family: 'Material Icons Outlined';
-    font-size: 18px;
-  }
-
-  .uets-get-answer-button::before {
-    content: 'lightbulb';
-    font-family: 'Material Icons Outlined';
-    font-size: 18px;
-  }
-
-  .uets-option-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: space-between;
-    height: 100%;
-  }
-
-  .uets-option-wrapper > button.option {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    min-height: 0;
-    width: 100%;
-  }
-
-  .uets-ddg-link-option-item {
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 12px;
-    padding: 8px 0;
-    border-radius: 0 0 12px 12px;
-    flex-shrink: 0;
-  }
-
-  .uets-main-question-buttons-container {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    background: #313244;
-    border-radius: 12px;
-    margin: 1px;
-    flex-wrap: wrap;
-    padding: 2px;
-  }
-
-  .uets-response-popup {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--md-surface-container-high);
-    color: var(--md-on-surface);
-    border-radius: 12px;
-    padding: 16px 20px;
-    z-index: 10004;
-    max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-    animation: slideInRight 0.3s ease-out;
-    cursor: pointer;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  @keyframes slideInRight {
-    from {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideOutRight {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-  }
-
-  .uets-response-popup.uets-toast-dismiss {
-    animation: slideOutRight 0.3s ease-in forwards;
-  }
-
-  .uets-response-popup-header {
-    display: none;
-  }
-
-  .uets-response-popup-content {
-    white-space: normal;
-    font-size: 14px;
-    line-height: 20px;
-    color: var(--md-on-surface);
-    padding: 0;
-    max-height: none;
-    overflow: visible;
-    flex: 1;
-  }
-
-  .uets-response-popup-close {
-    background: none;
-    border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 12px;
-    cursor: pointer;
-    color: var(--md-on-surface-variant);
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Material Icons Outlined';
-    font-size: 20px;
-    padding: 0;
-    flex-shrink: 0;
-  }
-
-  .uets-response-popup-close::before {
-    content: 'close';
-  }
-
-  .uets-response-popup-close:hover {
-    background: rgba(103, 80, 164, 0.08);
-    color: var(--md-primary);
-  }
-
-  .uets-response-popup-loading {
-    text-align: center;
-    font-style: normal;
-    color: var(--md-on-surface-variant);
-    padding: 0;
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .uets-welcome-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--md-surface-container-high);
-    color: var(--md-on-surface);
-    border-radius: 28px;
-    padding: 0;
-    z-index: 10004;
-    min-width: 320px;
-    max-width: 90vh;
-    max-height: 80vh;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.35), 0 6px 10px rgba(0,0,0,0.25);
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
-    font-size: 18px;
-  }
-
-  .uets-response-popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 24px 0 24px;
-    margin-bottom: 16px;
-  }
-
-  .uets-response-popup-title {
-    font-weight: 600;
-    font-size: 22px;
-    color: var(--md-on-surface);
-    line-height: 28px;
-  }
-
-  .uets-response-popup-close {
-    background: none;
-    border: none;
-    width: 48px;
-    height: 48px;
-    border-radius: 24px;
-    cursor: pointer;
-    color: var(--md-on-surface-variant);
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Material Icons Outlined';
-    font-size: 24px;
-  }
-
-  .uets-response-popup-close::before {
-    content: 'close';
-  }
-
-  .uets-response-popup-close:hover {
-    background: rgba(103, 80, 164, 0.08);
-    color: var(--md-primary);
-  }
-
-  .uets-response-popup-content {
-    white-space: pre-wrap;
-    font-size: 14px;
-    line-height: 20px;
-    color: var(--md-on-surface);
-    padding: 0 24px 24px 24px;
-    max-height: calc(80vh - 120px);
-    overflow-y: auto;
-  }
-
-  .uets-response-popup-content strong,
-  .uets-response-popup-content b {
-    color: var(--md-primary);
-    font-weight: 600;
-  }
-
-  .uets-response-popup-loading {
-    text-align: center;
-    font-style: normal;
-    color: var(--md-on-surface-variant);
-    padding: 40px 24px;
-    font-size: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .uets-loading-spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--md-outline-variant);
-    border-top: 3px solid var(--md-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  #uets-toggle-ui-button {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 10002;
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    border: none;
-    border-radius: 16px;
-    width: 56px;
-    height: 56px;
-    cursor: pointer;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.14), 0 1px 18px rgba(0,0,0,0.12);
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Material Icons Outlined';
-    font-size: 24px;
-  }
-
-  #uets-toggle-ui-button:hover {
-    box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 9px 18px rgba(0,0,0,0.14), 0 3px 14px rgba(0,0,0,0.12);
-    transform: scale(1.05);
-  }
-
-  #uets-toggle-ui-button.uets-mods-hidden-state {
-    background: transparent;
-    box-shadow: none;
-  }
-
-  #uets-toggle-ui-button.uets-mods-hidden-state:hover {
-    background: rgba(103, 80, 164, 0.08);
-    box-shadow: none;
-  }
-
-  .uets-correct-answer {
-    background: rgba(76, 175, 80, 0.2) !important;
-    border: 3px solid #4CAF50 !important;
-    border-radius: 12px !important;
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.5), inset 0 0 8px rgba(76, 175, 80, 0.15) !important;
-    animation: uets-correct-pulse 2s ease-in-out infinite !important;
-  }
-
-  @keyframes uets-correct-pulse {
-    0%, 100% {
-      box-shadow: 0 0 12px rgba(76, 175, 80, 0.5), inset 0 0 8px rgba(76, 175, 80, 0.15);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(76, 175, 80, 0.7), inset 0 0 12px rgba(76, 175, 80, 0.25);
-    }
-  }
-
-  .uets-answer-indicator {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-    padding: 6px 10px;
-    border-radius: 16px;
-    font-size: 14px;
-    font-weight: 700;
-    z-index: 1000;
-    font-family: 'Material Icons Outlined';
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
-  }
-
-  .uets-answer-indicator::before {
-    content: 'star';
-    font-size: 18px;
-  }
-
-  .uets-answer-indicator::after {
-    content: 'Correct';
-    font-family: 'Roboto', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .uets-streak-bonus {
-    margin-left: 8px;
-    color: #FFD700;
-    font-weight: 600;
-    font-size: 14px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    font-family: 'Roboto', sans-serif;
-  }
-
-  .uets-config-gui {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--md-surface);
-    color: var(--md-on-surface);
-    border-radius: 28px;
-    padding: 0;
-    z-index: 10003;
-    width: 640px;
-    max-width: 90vw;
-    max-height: 90vh;
-    overflow: hidden;
-    box-shadow: 0 24px 38px rgba(0,0,0,0.14), 0 9px 46px rgba(0,0,0,0.12), 0 11px 15px rgba(0,0,0,0.20);
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-
-  .uets-config-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 24px 12px 24px;
-    border-bottom: 1px solid var(--md-outline-variant);
-  }
-
-  .uets-config-title {
-    font-size: 24px;
-    font-weight: 400;
-    color: var(--md-on-surface);
-    line-height: 32px;
-    letter-spacing: 0px;
-  }
-
-  .uets-config-close {
-    background: none;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    cursor: pointer;
-    color: var(--md-on-surface-variant);
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Material Icons Outlined';
-    font-size: 20px;
-  }
-
-  .uets-config-close::before {
-    content: 'close';
-  }
-
-  .uets-config-close:hover {
-    background: var(--md-surface-container-highest);
-    color: var(--md-on-surface);
-  }
-
-  .uets-config-content {
-    max-height: calc(90vh - 200px);
-    overflow-y: auto;
-  }
-
-  .uets-config-section {
-    margin-bottom: 8px;
-    padding: 16px 24px;
-  }
-
-  .uets-config-section-title {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 16px;
-    color: var(--md-primary);
-    line-height: 24px;
-    letter-spacing: 0.1px;
-  }
-
-  .uets-config-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    min-height: 56px;
-  }
-
-  .uets-config-label-container {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    margin-right: 16px;
-  }
-
-  .uets-config-label {
-    font-size: 16px;
-    font-weight: 400;
-    color: var(--md-on-surface);
-    margin-left: 12px;
-    line-height: 24px;
-    letter-spacing: 0.5px;
-  }
-
-  .uets-config-input, .uets-config-select {
-    background: var(--md-surface-container-highest);
-    border: 1px solid var(--md-outline);
-    border-radius: 4px;
-    padding: 16px;
-    color: var(--md-on-surface);
-    font-size: 16px;
-    font-family: 'Roboto', sans-serif;
-    width: 200px;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    box-sizing: border-box;
-  }
-
-  .uets-config-input:focus, .uets-config-select:focus {
-    outline: none;
-    border-color: var(--md-primary);
-    border-width: 2px;
-    padding: 15px;
-  }
-
-  .uets-config-input:disabled {
-    background: var(--md-surface-variant);
-    color: var(--md-on-surface-variant);
-    border-color: var(--md-outline-variant);
-  }
-
-  .uets-switch {
-    position: relative;
-    display: inline-block;
-    width: 52px;
-    height: 32px;
-    cursor: pointer;
-  }
-
-  .uets-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .uets-switch-slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--md-outline);
-    border-radius: 16px;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    border: 2px solid var(--md-outline);
-  }
-
-  .uets-switch-slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 4px;
-    background: var(--md-surface-container-highest);
-    border-radius: 50%;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-  }
-
-  .uets-switch input:checked + .uets-switch-slider {
-    background: var(--md-primary);
-    border-color: var(--md-primary);
-  }
-
-  .uets-switch input:checked + .uets-switch-slider:before {
-    transform: translateX(20px);
-    background: var(--md-on-primary);
-  }
-
-  .uets-switch:hover .uets-switch-slider {
-    box-shadow: 0 0 0 8px rgba(103, 80, 164, 0.04);
-  }
-
-  .uets-switch input:checked:hover + .uets-switch-slider {
-    box-shadow: 0 0 0 8px rgba(103, 80, 164, 0.08);
-  }
-
-  .uets-config-info {
-    background: var(--md-secondary-container);
-    color: var(--md-on-secondary-container);
-    border: none;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Material Icons Outlined';
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    font-weight: 500;
-  }
-
-  .uets-config-info::before {
-    content: 'help';
-    font-size: 20px;
-  }
-
-  .uets-config-info:hover {
-    background: var(--md-secondary);
-    color: var(--md-on-secondary);
-    transform: scale(1.1);
-  }
-
-  .uets-config-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    padding: 16px 24px 24px 24px;
-    border-top: 1px solid var(--md-outline-variant);
-    background: var(--md-surface-container-low);
-  }
-
-  .uets-config-button {
-    padding: 10px 24px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: 'Roboto', sans-serif;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 40px;
-    justify-content: center;
-    letter-spacing: 0.1px;
-  }
-
-  .uets-config-save {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-  }
-
-  .uets-config-save::before {
-    content: 'save';
-    font-family: 'Material Icons Outlined';
-    font-size: 18px;
-  }
-
-  .uets-config-save:hover {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    background: #5a4089;
-  }
-
-  .uets-config-reset {
-    background: var(--md-error);
-    color: var(--md-on-error);
-  }
-
-  .uets-config-reset::before {
-    content: 'refresh';
-    font-family: 'Material Icons Outlined';
-    font-size: 18px;
-  }
-
-  .uets-config-reset:hover {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    background: #a02117;
-  }
-
-  .uets-config-cancel {
-    background: transparent;
-    color: var(--md-primary);
-    border: 1px solid var(--md-outline);
-  }
-
-  .uets-config-cancel::before {
-    content: 'cancel';
-    font-family: 'Material Icons Outlined';
-    font-size: 18px;
-  }
-
-  .uets-config-cancel:hover {
-    background: var(--md-surface-container-highest);
-    border-color: var(--md-primary);
-  }
-
-  .uets-config-content::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .uets-config-content::-webkit-scrollbar-track {
-    background: var(--md-surface-container-low);
-  }
-
-  .uets-config-content::-webkit-scrollbar-thumb {
-    background: var(--md-outline-variant);
-    border-radius: 4px;
-  }
-
-  .uets-config-content::-webkit-scrollbar-thumb:hover {
-    background: var(--md-outline);
-  }
-
-  .uets-profile-selector {
-    margin: 4px 4px 4px 4px;
-    padding: 16px;
-    background: var(--md-surface-container-low);
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-  }
-
-  .uets-profile-list {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--md-outline-variant) transparent;
-  }
-
-  .uets-profile-list::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .uets-profile-list::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .uets-profile-list::-webkit-scrollbar-thumb {
-    background: var(--md-outline-variant);
-    border-radius: 3px;
-  }
-
-  .uets-profile-list::-webkit-scrollbar-thumb:hover {
-    background: var(--md-outline);
-  }
-
-  .uets-profile-button {
-    background: var(--md-surface-container-highest);
-    color: var(--md-on-surface);
-    border: 1px solid var(--md-outline);
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    flex-shrink: 0;
-  }
-
-  .uets-profile-button:hover {
-    background: var(--md-surface-container);
-    border-color: var(--md-primary);
-  }
-
-  .uets-profile-button.active {
-    background: var(--md-primary);
-    color: var(--md-on-primary);
-    border-color: var(--md-primary);
-  }
-
-  .uets-profile-button.active:hover {
-    background: #5a4089;
-  }
-
-  /* Dark mode overrides */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --md-primary: #D0BCFF;
-      --md-primary-container: #4F378B;
-      --md-on-primary: #371E73;
-      --md-on-primary-container: #EADDFF;
-      --md-secondary: #CCC2DC;
-      --md-secondary-container: #4A4458;
-      --md-on-secondary: #332D41;
-      --md-on-secondary-container: #E8DEF8;
-      --md-tertiary: #EFB8C8;
-      --md-tertiary-container: #633B48;
-      --md-on-tertiary: #492532;
-      --md-on-tertiary-container: #FFD8E4;
-      --md-surface: #141218;
-      --md-surface-dim: #141218;
-      --md-surface-bright: #3B383E;
-      --md-surface-container-lowest: #0F0D13;
-      --md-surface-container-low: #1D1B20;
-      --md-surface-container: #211F26;
-      --md-surface-container-high: #2B2930;
-      --md-surface-container-highest: #36343B;
-      --md-on-surface: #E6E0E9;
-      --md-on-surface-variant: #CAC4D0;
-      --md-outline: #938F99;
-      --md-outline-variant: #49454F;
-      --md-error: #F2B8B5;
-      --md-error-container: #8C1D18;
-      --md-on-error: #601410;
-      --md-on-error-container: #F9DEDC;
-      --md-shadow: #000000;
-    }
-  }
-
-  /* Add Kahoot-specific styles */
-  .kahoot-answer-indicator {
-    position: absolute;
-    top: 12px;
-    right: 18px;
-    min-width: 24px;
-    height: 24px;
-    background: linear-gradient(135deg, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0.7) 100%);
-    color: #fff;
-    padding: 0 8px;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #fff2;
-    z-index: 1000;
-    pointer-events: none;
-    user-select: none;
-    transition: transform 0.15s;
-  }
-  .kahoot-answer-button {
-    position: relative;
-  }
-
-  .uets-testportal-invisible {
-    opacity: 0 !important;
-    pointer-events: auto !important;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');:root{--md-primary:#6750A4;--md-primary-container:#EADDFF;--md-on-primary:#FFFFFF;--md-on-primary-container:#21005D;--md-secondary:#625B71;--md-secondary-container:#E8DEF8;--md-on-secondary:#FFFFFF;--md-on-secondary-container:#1D192B;--md-tertiary:#7D5260;--md-tertiary-container:#FFD8E4;--md-on-tertiary:#FFFFFF;--md-on-tertiary-container:#31111D;--md-surface:#FEF7FF;--md-surface-dim:#DED8E1;--md-surface-bright:#FEF7FF;--md-surface-container-lowest:#FFFFFF;--md-surface-container-low:#F7F2FA;--md-surface-container:#F1ECF4;--md-surface-container-high:#ECE6F0;--md-surface-container-highest:#E6E0E9;--md-on-surface:#1C1B1F;--md-on-surface-variant:#49454F;--md-outline:#79747E;--md-outline-variant:#CAC4D0;--md-error:#B3261E;--md-error-container:#F9DEDC;--md-on-error:#FFFFFF;--md-on-error-container:#410E0B;--md-shadow:#000000}.uets-card{background:var(--md-surface-container);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);overflow:hidden;font-family:'Roboto', -apple-system, BlinkMacSystemFont, sans-serif}.uets-elevated-card{background:var(--md-surface-container-low);border-radius:12px;box-shadow:0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);overflow:hidden;font-family:'Roboto', -apple-system, BlinkMacSystemFont, sans-serif}.uets-filled-button{background:var(--md-primary);color:var(--md-on-primary);border:none;border-radius:20px;padding:10px 24px;font-family:'Roboto', sans-serif;font-weight:500;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);text-decoration:none;min-height:40px;justify-content:center}.uets-filled-button:hover{box-shadow:0 2px 4px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);transform:translateY(-1px)}.uets-filled-button:active{transform:translateY(0px);box-shadow:0 1px 2px rgba(0,0,0,0.12)}.uets-outlined-button{background:transparent;color:var(--md-primary);border:1px solid var(--md-outline);border-radius:20px;padding:10px 24px;font-family:'Roboto', sans-serif;font-weight:500;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);text-decoration:none;min-height:40px;justify-content:center}.uets-outlined-button:hover{background:rgba(103, 80, 164, 0.08);border-color:var(--md-primary)}.uets-text-button{background:transparent;color:var(--md-primary);border:none;border-radius:20px;padding:10px 12px;font-family:'Roboto', sans-serif;font-weight:500;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);text-decoration:none;min-height:40px;justify-content:center}.uets-text-button:hover{background:rgba(103, 80, 164, 0.08)}.uets-fab{background:var(--md-primary-container);color:var(--md-on-primary-container);border:none;border-radius:16px;width:56px;height:56px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 5px rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.14), 0 1px 18px rgba(0,0,0,0.12);transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);font-size:24px}.uets-fab:hover{box-shadow:0 5px 5px rgba(0,0,0,0.2), 0 9px 18px rgba(0,0,0,0.14), 0 3px 14px rgba(0,0,0,0.12);transform:scale(1.05)}.uets-fab.uets-mods-hidden-state{background:transparent;box-shadow:none}.uets-fab.uets-mods-hidden-state:hover{background:rgba(103, 80, 164, 0.08);box-shadow:none;transform:scale(1.05)}.uets-success-button{background:#a6e3a1;color:white}.uets-warning-button{background:#fab387;color:white}.uets-purple-button{background:#cba6f7;color:white}.uets-ai-button,.uets-copy-prompt-button,.uets-ddg-button,.uets-ddg-link,.uets-gemini-button,.uets-get-answer-button{display:inline-flex;align-items:center;gap:8px;padding:4px 8px;color:var(--md-on-primary);text-decoration:none;border-radius:20px;font-size:14px;font-weight:500;cursor:pointer;text-align:center;vertical-align:middle;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);border:none;font-family:'Roboto', sans-serif;min-height:40px;margin:1px;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)}.uets-ai-button:hover,.uets-copy-prompt-button:hover,.uets-ddg-button:hover,.uets-ddg-link:hover,.uets-gemini-button:hover,.uets-get-answer-button:hover{box-shadow:0 4px 8px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);transform:translateY(-2px)}.uets-ddg-button,.uets-ddg-link{background:#a6e3a1 !important;color:white !important}.uets-ai-button,.uets-gemini-button{background:#74c7ec !important;color:white !important}.uets-copy-prompt-button{background:#fab387 !important;color:white !important}.uets-get-answer-button{background:#cba6f7 !important;color:white !important}.uets-ddg-button::before,.uets-ddg-link::before{content:'search';font-family:'Material Icons Outlined';font-size:18px}.uets-ai-button::before,.uets-gemini-button::before{content:'psychology';font-family:'Material Icons Outlined';font-size:18px}.uets-copy-prompt-button::before{content:'content_copy';font-family:'Material Icons Outlined';font-size:18px}.uets-get-answer-button::before{content:'lightbulb';font-family:'Material Icons Outlined';font-size:18px}.uets-option-wrapper{display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;height:100%}.uets-option-wrapper > button.option{display:flex;flex-direction:column;flex-grow:1;min-height:0;width:100%}.uets-ddg-link-option-item{width:100%;box-sizing:border-box;margin-top:12px;padding:8px 0;border-radius:0 0 12px 12px;flex-shrink:0}.uets-main-question-buttons-container{display:flex;justify-content:center;gap:4px;background:#313244;border-radius:12px;margin:1px;flex-wrap:wrap;padding:2px}.uets-response-popup{position:fixed;top:20px;right:20px;background:var(--md-surface-container-high);color:var(--md-on-surface);border-radius:12px;padding:16px 20px;z-index:10004;max-width:400px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-family:'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;font-size:14px;line-height:20px;animation:slideInRight 0.3s ease-out;cursor:pointer;display:flex;align-items:flex-start;gap:12px}@keyframes slideInRight{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes slideOutRight{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}.uets-response-popup.uets-toast-dismiss{animation:slideOutRight 0.3s ease-in forwards}.uets-response-popup-header{display:none}.uets-response-popup-content{white-space:normal;font-size:14px;line-height:20px;color:var(--md-on-surface);padding:0;max-height:none;overflow:visible;flex:1}.uets-response-popup-close{background:none;border:none;width:24px;height:24px;border-radius:12px;cursor:pointer;color:var(--md-on-surface-variant);transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);display:flex;align-items:center;justify-content:center;font-family:'Material Icons Outlined';font-size:20px;padding:0;flex-shrink:0}.uets-response-popup-close::before{content:'close'}.uets-response-popup-close:hover{background:rgba(103, 80, 164, 0.08);color:var(--md-primary)}.uets-response-popup-loading{text-align:center;font-style:normal;color:var(--md-on-surface-variant);padding:0;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:8px}.uets-welcome-popup{position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background:var(--md-surface-container-high);color:var(--md-on-surface);border-radius:28px;padding:0;z-index:10004;min-width:320px;max-width:90vh;max-height:80vh;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.35), 0 6px 10px rgba(0,0,0,0.25);font-family:'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;font-size:18px}.uets-response-popup-header{display:flex;justify-content:space-between;align-items:center;padding:24px 24px 0;margin-bottom:16px}.uets-response-popup-title{font-weight:600;font-size:22px;color:var(--md-on-surface);line-height:28px}.uets-response-popup-close{background:none;border:none;width:48px;height:48px;border-radius:24px;cursor:pointer;color:var(--md-on-surface-variant);transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);display:flex;align-items:center;justify-content:center;font-family:'Material Icons Outlined';font-size:24px}.uets-response-popup-close::before{content:'close'}.uets-response-popup-close:hover{background:rgba(103, 80, 164, 0.08);color:var(--md-primary)}.uets-response-popup-content{white-space:pre-wrap;font-size:14px;line-height:20px;color:var(--md-on-surface);padding:0 24px 24px;max-height:calc(80vh - 120px);overflow-y:auto}.uets-response-popup-content b,.uets-response-popup-content strong{color:var(--md-primary);font-weight:600}.uets-response-popup-loading{text-align:center;font-style:normal;color:var(--md-on-surface-variant);padding:40px 24px;font-size:16px;display:flex;flex-direction:column;align-items:center;gap:16px}.uets-loading-spinner{width:32px;height:32px;border:3px solid var(--md-outline-variant);border-top:3px solid var(--md-primary);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}#uets-toggle-ui-button{position:fixed;bottom:20px;left:20px;z-index:10002;background:var(--md-primary-container);color:var(--md-on-primary-container);border:none;border-radius:16px;width:56px;height:56px;cursor:pointer;box-shadow:0 3px 5px rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.14), 0 1px 18px rgba(0,0,0,0.12);transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);user-select:none;display:flex;align-items:center;justify-content:center;font-family:'Material Icons Outlined';font-size:24px}#uets-toggle-ui-button:hover{box-shadow:0 5px 5px rgba(0,0,0,0.2), 0 9px 18px rgba(0,0,0,0.14), 0 3px 14px rgba(0,0,0,0.12);transform:scale(1.05)}#uets-toggle-ui-button.uets-mods-hidden-state{background:transparent;box-shadow:none}#uets-toggle-ui-button.uets-mods-hidden-state:hover{background:rgba(103, 80, 164, 0.08);box-shadow:none}.uets-correct-answer{background:rgba(76, 175, 80, 0.2) !important;border:3px solid #4CAF50 !important;border-radius:12px !important;box-shadow:0 0 12px rgba(76, 175, 80, 0.5), inset 0 0 8px rgba(76, 175, 80, 0.15) !important;animation:uets-correct-pulse 2s ease-in-out infinite !important}@keyframes uets-correct-pulse{0%,100%{box-shadow:0 0 12px rgba(76, 175, 80, 0.5), inset 0 0 8px rgba(76, 175, 80, 0.15)}50%{box-shadow:0 0 20px rgba(76, 175, 80, 0.7), inset 0 0 12px rgba(76, 175, 80, 0.25)}}.uets-answer-indicator{position:absolute;top:8px;right:8px;background:linear-gradient(135deg, #4CAF50, #45a049);color:white;padding:6px 10px;border-radius:16px;font-size:14px;font-weight:700;z-index:1000;font-family:'Material Icons Outlined';display:flex;align-items:center;justify-content:center;gap:4px;box-shadow:0 2px 8px rgba(76, 175, 80, 0.4)}.uets-answer-indicator::before{content:'star';font-size:18px}.uets-answer-indicator::after{content:'Correct';font-family:'Roboto', sans-serif;font-size:12px;font-weight:600}.uets-streak-bonus{margin-left:8px;color:#FFD700;font-weight:600;font-size:14px;text-shadow:1px 1px 2px rgba(0,0,0,0.3);font-family:'Roboto', sans-serif}.uets-config-gui{position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background:var(--md-surface);color:var(--md-on-surface);border-radius:28px;padding:0;z-index:10003;width:640px;max-width:90vw;max-height:90vh;overflow:hidden;box-shadow:0 24px 38px rgba(0,0,0,0.14), 0 9px 46px rgba(0,0,0,0.12), 0 11px 15px rgba(0,0,0,0.20);font-family:'Roboto', -apple-system, BlinkMacSystemFont, sans-serif}.uets-config-header{display:flex;justify-content:space-between;align-items:center;padding:24px 24px 12px;border-bottom:1px solid var(--md-outline-variant)}.uets-config-title{font-size:24px;font-weight:400;color:var(--md-on-surface);line-height:32px;letter-spacing:0}.uets-config-close{background:none;border:none;width:40px;height:40px;border-radius:20px;cursor:pointer;color:var(--md-on-surface-variant);transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);display:flex;align-items:center;justify-content:center;font-family:'Material Icons Outlined';font-size:20px}.uets-config-close::before{content:'close'}.uets-config-close:hover{background:var(--md-surface-container-highest);color:var(--md-on-surface)}.uets-config-content{max-height:calc(90vh - 200px);overflow-y:auto}.uets-config-section{margin-bottom:8px;padding:16px 24px}.uets-config-section-title{font-size:16px;font-weight:500;margin-bottom:16px;color:var(--md-primary);line-height:24px;letter-spacing:0.1px}.uets-config-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;min-height:56px}.uets-config-label-container{display:flex;align-items:center;flex:1;margin-right:16px}.uets-config-label{font-size:16px;font-weight:400;color:var(--md-on-surface);margin-left:12px;line-height:24px;letter-spacing:0.5px}.uets-config-input,.uets-config-select{background:var(--md-surface-container-highest);border:1px solid var(--md-outline);border-radius:4px;padding:16px;color:var(--md-on-surface);font-size:16px;font-family:'Roboto', sans-serif;width:200px;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);box-sizing:border-box}.uets-config-input:focus,.uets-config-select:focus{outline:none;border-color:var(--md-primary);border-width:2px;padding:15px}.uets-config-input:disabled{background:var(--md-surface-variant);color:var(--md-on-surface-variant);border-color:var(--md-outline-variant)}.uets-switch{position:relative;display:inline-block;width:52px;height:32px;cursor:pointer}.uets-switch input{opacity:0;width:0;height:0}.uets-switch-slider{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--md-outline);border-radius:16px;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);border:2px solid var(--md-outline)}.uets-switch-slider:before{position:absolute;content:"";height:20px;width:20px;left:4px;bottom:4px;background:var(--md-surface-container-highest);border-radius:50%;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);box-shadow:0 1px 3px rgba(0,0,0,0.4)}.uets-switch input:checked + .uets-switch-slider{background:var(--md-primary);border-color:var(--md-primary)}.uets-switch input:checked + .uets-switch-slider:before{transform:translateX(20px);background:var(--md-on-primary)}.uets-switch:hover .uets-switch-slider{box-shadow:0 0 0 8px rgba(103, 80, 164, 0.04)}.uets-switch input:checked:hover + .uets-switch-slider{box-shadow:0 0 0 8px rgba(103, 80, 164, 0.08)}.uets-config-info{background:var(--md-secondary-container);color:var(--md-on-secondary-container);border:none;border-radius:50%;width:22px;height:22px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Material Icons Outlined';transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);font-weight:500}.uets-config-info::before{content:'help';font-size:20px}.uets-config-info:hover{background:var(--md-secondary);color:var(--md-on-secondary);transform:scale(1.1)}.uets-config-buttons{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px 24px;border-top:1px solid var(--md-outline-variant);background:var(--md-surface-container-low)}.uets-config-button{padding:10px 24px;border:none;border-radius:20px;cursor:pointer;font-size:14px;font-weight:500;font-family:'Roboto', sans-serif;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);display:inline-flex;align-items:center;gap:8px;min-height:40px;justify-content:center;letter-spacing:0.1px}.uets-config-save{background:var(--md-primary);color:var(--md-on-primary)}.uets-config-save::before{content:'save';font-family:'Material Icons Outlined';font-size:18px}.uets-config-save:hover{box-shadow:0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);background:#5a4089}.uets-config-reset{background:var(--md-error);color:var(--md-on-error)}.uets-config-reset::before{content:'refresh';font-family:'Material Icons Outlined';font-size:18px}.uets-config-reset:hover{box-shadow:0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);background:#a02117}.uets-config-cancel{background:transparent;color:var(--md-primary);border:1px solid var(--md-outline)}.uets-config-cancel::before{content:'cancel';font-family:'Material Icons Outlined';font-size:18px}.uets-config-cancel:hover{background:var(--md-surface-container-highest);border-color:var(--md-primary)}.uets-config-content::-webkit-scrollbar{width:8px}.uets-config-content::-webkit-scrollbar-track{background:var(--md-surface-container-low)}.uets-config-content::-webkit-scrollbar-thumb{background:var(--md-outline-variant);border-radius:4px}.uets-config-content::-webkit-scrollbar-thumb:hover{background:var(--md-outline)}.uets-profile-selector{margin:4px;padding:16px;background:var(--md-surface-container-low);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.12)}.uets-profile-list{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--md-outline-variant) transparent}.uets-profile-list::-webkit-scrollbar{height:6px}.uets-profile-list::-webkit-scrollbar-track{background:transparent}.uets-profile-list::-webkit-scrollbar-thumb{background:var(--md-outline-variant);border-radius:3px}.uets-profile-list::-webkit-scrollbar-thumb:hover{background:var(--md-outline)}.uets-profile-button{background:var(--md-surface-container-highest);color:var(--md-on-surface);border:1px solid var(--md-outline);border-radius:20px;padding:8px 16px;font-family:'Roboto', sans-serif;font-weight:500;font-size:14px;cursor:pointer;white-space:nowrap;transition:all 0.2s cubic-bezier(0.2, 0, 0, 1);flex-shrink:0}.uets-profile-button:hover{background:var(--md-surface-container);border-color:var(--md-primary)}.uets-profile-button.active{background:var(--md-primary);color:var(--md-on-primary);border-color:var(--md-primary)}.uets-profile-button.active:hover{background:#5a4089}@media (prefers-color-scheme: dark){:root{--md-primary:#D0BCFF;--md-primary-container:#4F378B;--md-on-primary:#371E73;--md-on-primary-container:#EADDFF;--md-secondary:#CCC2DC;--md-secondary-container:#4A4458;--md-on-secondary:#332D41;--md-on-secondary-container:#E8DEF8;--md-tertiary:#EFB8C8;--md-tertiary-container:#633B48;--md-on-tertiary:#492532;--md-on-tertiary-container:#FFD8E4;--md-surface:#141218;--md-surface-dim:#141218;--md-surface-bright:#3B383E;--md-surface-container-lowest:#0F0D13;--md-surface-container-low:#1D1B20;--md-surface-container:#211F26;--md-surface-container-high:#2B2930;--md-surface-container-highest:#36343B;--md-on-surface:#E6E0E9;--md-on-surface-variant:#CAC4D0;--md-outline:#938F99;--md-outline-variant:#49454F;--md-error:#F2B8B5;--md-error-container:#8C1D18;--md-on-error:#601410;--md-on-error-container:#F9DEDC;--md-shadow:#000000}}.kahoot-answer-indicator{position:absolute;top:12px;right:18px;min-width:24px;height:24px;background:linear-gradient(135deg, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0.7) 100%);color:#fff;padding:0 8px;border-radius:12px;font-size:15px;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;border:2px solid #fff2;z-index:1000;pointer-events:none;user-select:none;transition:transform 0.15s}.kahoot-answer-button{position:relative}.uets-testportal-invisible{opacity:0 !important;pointer-events:auto !important}
   `)
 
   // === WELCOME POPUP FOR NEW USERS ===
@@ -1172,25 +164,21 @@
   };
 
   // === SHARED UTILITIES ===
-  const createButton = (text, className, onClick) => {
-    const button = document.createElement("button");
-    button.textContent = text;
-    button.classList.add(...className.split(" "));
-    button.type = "button";
-    button.onclick = onClick;
-    return button;
-  };
+  const createButton = (text, className, onClick) => Object.assign(document.createElement("button"), {
+    textContent: text,
+    type: "button",
+    onclick: onClick,
+    className
+  });
 
-  const createLink = (text, href, className, onClick) => {
-    const link = document.createElement("a");
-    link.textContent = text;
-    link.href = href;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.classList.add(...className.split(" "));
-    if (onClick) link.onclick = onClick;
-    return link;
-  };
+  const createLink = (text, href, className, onClick) => Object.assign(document.createElement("a"), {
+    textContent: text,
+    href,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    className,
+    onclick: onClick || null
+  });
 
   const addQuestionButtons = (
     container,
@@ -1255,12 +243,24 @@
             );
           }
         }
-        askGemini(
-          questionText || "(See attached image)",
-          options,
-          imageData,
-          platform,
-        );
+
+        // Route to the appropriate AI provider
+        const provider = sharedState.config.aiProvider || 'gemini';
+        if (provider === 'openrouter') {
+          askOpenRouter(
+            questionText || "(See attached image)",
+            options,
+            imageData,
+            platform,
+          );
+        } else {
+          askGemini(
+            questionText || "(See attached image)",
+            options,
+            imageData,
+            platform,
+          );
+        }
       },
     );
     geminiButton.type = "button"; // Explicitly set button type
@@ -1324,25 +324,20 @@
   };
 
   const processProceedGameResponse = (data) => {
-    try {
-      var questionId = data.response.questionId;
-      var correctAnswer = data.question.structure.answer;
-      var questionType = data.question.type;
-      if (correctAnswer == 0 && data.question.structure.options !== undefined) {
-        correctAnswer = data.question.structure.options[0].text;
-      }
+    const responseData = data?.response || data?.data?.response;
+    const questionData = data?.question || data?.data?.question;
+    if (!responseData || !questionData) {
+      GM_log("[!] Could not extract response/question data");
+      return;
     }
-    catch (e) {
-      var questionId = data.data.response.questionId;
-      var correctAnswer = data.data.question.structure.answer;
-      var questionType = data.data.question.type;
-      if (correctAnswer == 0 && data.data.question.structure.options !== undefined) {
-        correctAnswer = data.data.question.structure.options[0].text;
-      }
+    const questionId = responseData.questionId;
+    const questionType = questionData.type;
+    let correctAnswer = questionData.structure?.answer;
+    if (correctAnswer === 0 && questionData.structure?.options?.[0]) {
+      correctAnswer = questionData.structure.options[0].text;
     }
     GM_log(`[*] Sending correct answer (${questionId} <${correctAnswer}>) to server`);
     sendAnswerToServer(questionId, correctAnswer, questionType);
-
   };
 
   // === SPOOF FULLSCREEN AND FOCUS ===
@@ -1365,10 +360,7 @@
     });
 
     // Override window.focus to do nothing
-    const originalFocus = window.focus;
-    window.focus = () => {
-      // Simulate focus without actually focusing
-    };
+    window.focus = () => { };
 
     // Spoof visibility state
     Object.defineProperty(document, "visibilityState", {
@@ -1405,33 +397,25 @@
   };
 
   // === SERVER COMMUNICATION ===
-  const sendQuestionToServer = async (questionId, questionType, answerIds) => {
+  const postToServer = async (endpoint, data) => {
     try {
-      const response = await fetch(`${sharedState.config.serverUrl}/api/question`, {
+      const response = await fetch(`${sharedState.config.serverUrl}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ questionId, questionType, answerIds }),
+        body: JSON.stringify(data),
       });
       return await response.json();
     } catch (error) {
-      GM_log("[!] Error sending question to server:", error);
+      GM_log(`[!] Error posting to ${endpoint}:`, error);
       return null;
     }
   };
 
-  const sendAnswerToServer = async (questionId, correctAnswers, answerType = null) => {
-    try {
-      const response = await fetch(`${sharedState.config.serverUrl}/api/answer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ questionId, correctAnswers, answerType }),
-      });
-      return await response.json();
-    } catch (error) {
-      GM_log("[!] Error sending answer to server:", error);
-      return null;
-    }
-  };
+  const sendQuestionToServer = (questionId, questionType, answerIds) =>
+    postToServer("/api/question", { questionId, questionType, answerIds });
+
+  const sendAnswerToServer = (questionId, correctAnswers, answerType = null) =>
+    postToServer("/api/answer", { questionId, correctAnswers, answerType });
 
   // === ANSWER HIGHLIGHTING ===
   const highlightCorrectAnswers = (correctAnswers, questionType) => {
@@ -1440,28 +424,14 @@
     const optionButtons = document.querySelectorAll("button.option");
     optionButtons.forEach((button) => {
       button.classList.remove("uets-correct-answer");
-      const indicator = button.querySelector(".uets-answer-indicator");
-      if (indicator) indicator.remove();
+      button.querySelector(".uets-answer-indicator")?.remove();
     });
 
-    if (questionType === "BLANK") {
-      showCorrectAnswersModal(correctAnswers, questionType);
-      return;
-    }
-
-    // Get the current question data to match answer IDs to text
-    const currentQuestion =
-      sharedState.questionsPool[sharedState.currentQuestionId];
-    if (!currentQuestion) {
-      showCorrectAnswersModal(correctAnswers, questionType);
-      return;
-    }
-
-    // Display the correct answers in a modal
+    const currentQuestion = sharedState.questionsPool[sharedState.currentQuestionId];
     showCorrectAnswersModal(correctAnswers, questionType, currentQuestion);
 
-    // Still highlight the buttons if possible
-    // Convert correctAnswers to array if it's a single value
+    if (questionType === "BLANK" || !currentQuestion) return;
+
     const correctIndices = Array.isArray(correctAnswers) ? correctAnswers : [correctAnswers];
 
     optionButtons.forEach((button, buttonIndex) => {
@@ -1569,6 +539,7 @@
   const saveConfig = () => {
     GM_setValue(CONFIG_STORAGE_KEY, sharedState.config);
     GM_setValue(GEMINI_API_KEY_STORAGE, sharedState.config.geminiApiKey);
+    // OpenRouter API key is stored in the main config, no separate storage needed
   };
 
   const resetConfig = () => {
@@ -1707,13 +678,16 @@
 
     <div class="uets-card" style="margin-top: 6px; margin-left: 4px; margin-right: 4px;">
       <div class="uets-config-section">
-        <div class="uets-config-section-title">Gemini AI Settings</div>
+        <div class="uets-config-section-title">AI Settings</div>
         <div class="uets-config-item">
           <div class="uets-config-label-container">
-            <button class="uets-config-info" data-info="Your Gemini API key for AI assistance. You can get it on https://aistudio.google.com/apikey." title="Info"></button>
-            <label class="uets-config-label">API Key</label>
+            <button class="uets-config-info" data-info="Choose between Gemini or OpenRouter as your AI provider." title="Info"></button>
+            <label class="uets-config-label">AI Provider</label>
           </div>
-          <input type="password" class="uets-config-input" id="geminiApiKey" style="width: 200px;">
+          <select class="uets-config-input" id="aiProvider" style="width: 200px;">
+            <option value="gemini">Gemini</option>
+            <option value="openrouter">OpenRouter</option>
+          </select>
         </div>
         <div class="uets-config-item">
           <div class="uets-config-label-container">
@@ -1725,40 +699,88 @@
             <span class="uets-switch-slider"></span>
           </label>
         </div>
-        <div class="uets-config-item">
-          <div class="uets-config-label-container">
-            <button class="uets-config-info" data-info="Budget for thinking in the AI model (0 disables thinking). Can increase output response quality, but increases the waiting time for the answer. I recommend 256 or 512 tokens." title="Info"></button>
-            <label class="uets-config-label">Thinking budget</label>
+        <div class="uets-config-subsection" id="geminiSettings">
+          <div class="uets-config-section-title" style="font-size: 14px; margin-top: 8px;">Gemini Settings</div>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Your Gemini API key for AI assistance. You can get it on https://aistudio.google.com/apikey." title="Info"></button>
+              <label class="uets-config-label">API Key</label>
+            </div>
+            <input type="password" class="uets-config-input" id="geminiApiKey" style="width: 200px;">
           </div>
-          <input type="number" class="uets-config-input" id="thinkingBudget" min="512" max="4096">
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Budget for thinking in the AI model (0 disables thinking). Can increase output response quality, but increases the waiting time for the answer. I recommend 256 or 512 tokens." title="Info"></button>
+              <label class="uets-config-label">Thinking budget</label>
+            </div>
+            <input type="number" class="uets-config-input" id="thinkingBudget" min="512" max="4096">
+          </div>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Maximum number of tokens in AI responses (1-8192). A token is roughly equal to a word, or a punctuation mark." title="Info"></button>
+              <label class="uets-config-label">Max output tokens</label>
+            </div>
+            <input type="number" class="uets-config-input" id="maxOutputTokens" min="1" max="8192">
+          </div>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Controls randomness (or creativity) in AI responses (0-2). Lower values will be coherant and predictable, while larger values will be more creating. A value between 0.2 and 0.5 is recommended." title="Info"></button>
+              <label class="uets-config-label">Temperature</label>
+            </div>
+            <input type="number" class="uets-config-input" id="temperature" min="0" max="2" step="0.1">
+          </div>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Computes the cumulative probability distribution, and cut off as soon as that distribution exceeds the value of topP. Basically how many words can be computed and considered. I recommend a value between 0.90 and 1.00 for a better quality output." title="Info"></button>
+              <label class="uets-config-label">Top P</label>
+            </div>
+            <input type="number" class="uets-config-input" id="topP" min="0" max="1" step="0.05">
+          </div>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Helps balance creativity and coherence in generated text by introducing controlled randomness while avoiding less likely or nonsensical words. Basically avoids obscure words, I recommend a value between 40 and 64." title="Info"></button>
+              <label class="uets-config-label">Top K</label>
+            </div>
+            <input type="number" class="uets-config-input" id="topK" min="1" max="100">
+          </div>
         </div>
-        <div class="uets-config-item">
-          <div class="uets-config-label-container">
-            <button class="uets-config-info" data-info="Maximum number of tokens in AI responses (1-8192). A token is roughly equal to a word, or a punctuation mark." title="Info"></button>
-            <label class="uets-config-label">Max output tokens</label>
+        <div class="uets-config-subsection" id="openrouterSettings" style="display: none;">
+          <div class="uets-config-section-title" style="font-size: 14px; margin-top: 8px;">OpenRouter Settings</div>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Your OpenRouter API key for AI assistance. You can get it on https://openrouter.ai/keys." title="Info"></button>
+              <label class="uets-config-label">API Key</label>
+            </div>
+            <input type="password" class="uets-config-input" id="openrouterApiKey" style="width: 200px;">
           </div>
-          <input type="number" class="uets-config-input" id="maxOutputTokens" min="1" max="8192">
-        </div>
-        <div class="uets-config-item">
-          <div class="uets-config-label-container">
-            <button class="uets-config-info" data-info="Controls randomness (or creativity) in AI responses (0-2). Lower values will be coherant and predictable, while larger values will be more creating. A value between 0.2 and 0.5 is recommended." title="Info"></button>
-            <label class="uets-config-label">Temperature</label>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="The OpenRouter model to use. Popular options: anthropic/claude-3.5-sonnet, openai/gpt-4-turbo, google/gemini-pro-1.5." title="Info"></button>
+              <label class="uets-config-label">Model</label>
+            </div>
+            <input type="text" class="uets-config-input" id="openrouterModel" style="width: 200px;">
           </div>
-          <input type="number" class="uets-config-input" id="temperature" min="0" max="2" step="0.1">
-        </div>
-        <div class="uets-config-item">
-          <div class="uets-config-label-container">
-            <button class="uets-config-info" data-info="Computes the cumulative probability distribution, and cut off as soon as that distribution exceeds the value of topP. Basically how many words can be computed and considered. I recommend a value between 0.90 and 1.00 for a better quality output." title="Info"></button>
-            <label class="uets-config-label">Top P</label>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Maximum number of tokens in AI responses (1-8192). A token is roughly equal to a word, or a punctuation mark." title="Info"></button>
+              <label class="uets-config-label">Max output tokens</label>
+            </div>
+            <input type="number" class="uets-config-input" id="openrouterMaxTokens" min="1" max="8192">
           </div>
-          <input type="number" class="uets-config-input" id="topP" min="0" max="1" step="0.05">
-        </div>
-        <div class="uets-config-item">
-          <div class="uets-config-label-container">
-            <button class="uets-config-info" data-info="Helps balance creativity and coherence in generated text by introducing controlled randomness while avoiding less likely or nonsensical words. Basically avoids obscure words, I recommend a value between 40 and 64." title="Info"></button>
-            <label class="uets-config-label">Top K</label>
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Controls randomness (or creativity) in AI responses (0-2). Lower values will be coherant and predictable, while larger values will be more creating. A value between 0.2 and 0.5 is recommended." title="Info"></button>
+              <label class="uets-config-label">Temperature</label>
+            </div>
+            <input type="number" class="uets-config-input" id="openrouterTemperature" min="0" max="2" step="0.1">
           </div>
-          <input type="number" class="uets-config-input" id="topK" min="1" max="100">
+          <div class="uets-config-item">
+            <div class="uets-config-label-container">
+              <button class="uets-config-info" data-info="Computes the cumulative probability distribution, and cut off as soon as that distribution exceeds the value of topP. Basically how many words can be computed and considered. I recommend a value between 0.90 and 1.00 for a better quality output." title="Info"></button>
+              <label class="uets-config-label">Top P</label>
+            </div>
+            <input type="number" class="uets-config-input" id="openrouterTopP" min="0" max="1" step="0.05">
+          </div>
         </div>
       </div>
     </div>
@@ -1781,13 +803,19 @@
       document.getElementById('enableSpoofFullscreen').checked = sharedState.config.enableSpoofFullscreen;
       document.getElementById('enableSiteOptimizations').checked = sharedState.config.enableSiteOptimizations;
       document.getElementById('serverUrl').value = sharedState.config.serverUrl;
+      document.getElementById('aiProvider').value = sharedState.config.aiProvider || 'gemini';
       document.getElementById('geminiApiKey').value = sharedState.config.geminiApiKey;
+      document.getElementById('openrouterApiKey').value = sharedState.config.openrouterApiKey || '';
+      document.getElementById('openrouterModel').value = sharedState.config.openrouterModel || 'anthropic/claude-3.5-sonnet';
       document.getElementById('includeImages').checked = sharedState.config.includeImages;
       document.getElementById('thinkingBudget').value = sharedState.config.thinkingBudget;
       document.getElementById('maxOutputTokens').value = sharedState.config.maxOutputTokens;
       document.getElementById('temperature').value = sharedState.config.temperature;
       document.getElementById('topP').value = sharedState.config.topP;
       document.getElementById('topK').value = sharedState.config.topK;
+      document.getElementById('openrouterMaxTokens').value = sharedState.config.maxOutputTokens;
+      document.getElementById('openrouterTemperature').value = sharedState.config.temperature;
+      document.getElementById('openrouterTopP').value = sharedState.config.topP;
       document.getElementById('enableReactionSpam').checked = sharedState.config.enableReactionSpam;
       document.getElementById('reactionSpamCount').value = sharedState.config.reactionSpamCount;
       document.getElementById('reactionSpamDelay').value = sharedState.config.reactionSpamDelay;
@@ -1796,11 +824,34 @@
       profileButtons.forEach(btn => btn.classList.remove('active'));
       const customBtn = gui.querySelector('.uets-profile-button[data-profile="Custom"]');
       if (customBtn) customBtn.classList.add('active');
+      // Toggle provider settings visibility
+      toggleProviderSettings();
+    };
+
+    // Toggle provider settings visibility
+    const toggleProviderSettings = () => {
+      const provider = document.getElementById('aiProvider').value;
+      const geminiSettings = document.getElementById('geminiSettings');
+      const openrouterSettings = document.getElementById('openrouterSettings');
+
+      if (provider === 'gemini') {
+        geminiSettings.style.display = 'block';
+        openrouterSettings.style.display = 'none';
+      } else {
+        geminiSettings.style.display = 'none';
+        openrouterSettings.style.display = 'block';
+      }
     };
 
     // Event handlers
     gui.querySelector('.uets-config-close').onclick = () => closeConfigGui();
     gui.querySelector('.uets-config-cancel').onclick = () => closeConfigGui();
+
+    // AI Provider change handler
+    const aiProviderSelect = gui.querySelector('#aiProvider');
+    if (aiProviderSelect) {
+      aiProviderSelect.addEventListener('change', toggleProviderSettings);
+    }
 
     gui.querySelector('.uets-config-save').onclick = () => {
       // Collect values
@@ -1812,13 +863,26 @@
       sharedState.config.enableSpoofFullscreen = document.getElementById('enableSpoofFullscreen').checked;
       sharedState.config.enableSiteOptimizations = document.getElementById('enableSiteOptimizations').checked;
       sharedState.config.serverUrl = document.getElementById('serverUrl').value;
+      sharedState.config.aiProvider = document.getElementById('aiProvider').value;
       sharedState.config.geminiApiKey = document.getElementById('geminiApiKey').value;
+      sharedState.config.openrouterApiKey = document.getElementById('openrouterApiKey').value;
+      sharedState.config.openrouterModel = document.getElementById('openrouterModel').value;
       sharedState.config.includeImages = document.getElementById('includeImages').checked;
       sharedState.config.thinkingBudget = parseInt(document.getElementById('thinkingBudget').value);
-      sharedState.config.maxOutputTokens = parseInt(document.getElementById('maxOutputTokens').value);
-      sharedState.config.temperature = parseFloat(document.getElementById('temperature').value);
-      sharedState.config.topP = parseFloat(document.getElementById('topP').value);
-      sharedState.config.topK = parseInt(document.getElementById('topK').value);
+
+      // Use provider-specific values
+      const provider = document.getElementById('aiProvider').value;
+      if (provider === 'gemini') {
+        sharedState.config.maxOutputTokens = parseInt(document.getElementById('maxOutputTokens').value);
+        sharedState.config.temperature = parseFloat(document.getElementById('temperature').value);
+        sharedState.config.topP = parseFloat(document.getElementById('topP').value);
+        sharedState.config.topK = parseInt(document.getElementById('topK').value);
+      } else {
+        sharedState.config.maxOutputTokens = parseInt(document.getElementById('openrouterMaxTokens').value);
+        sharedState.config.temperature = parseFloat(document.getElementById('openrouterTemperature').value);
+        sharedState.config.topP = parseFloat(document.getElementById('openrouterTopP').value);
+      }
+
       sharedState.config.enableReactionSpam = document.getElementById('enableReactionSpam').checked;
       sharedState.config.reactionSpamCount = parseInt(document.getElementById('reactionSpamCount').value);
       sharedState.config.reactionSpamDelay = parseInt(document.getElementById('reactionSpamDelay').value);
@@ -1891,20 +955,39 @@
   });
 
   const getApiKey = async () => {
-    let apiKey = sharedState.config.geminiApiKey || GM_getValue(GEMINI_API_KEY_STORAGE, null);
-    if (!apiKey || apiKey.trim() === "") {
-      apiKey = prompt("Gemini API Key not set. Please enter your API Key:");
-      if (apiKey && apiKey.trim() !== "") {
-        sharedState.config.geminiApiKey = apiKey.trim();
-        GM_setValue(GEMINI_API_KEY_STORAGE, apiKey.trim());
-        saveConfig();
-        return apiKey.trim();
-      } else {
-        alert("Gemini API Key is required. Set it via the configuration or Tampermonkey menu.");
-        return null;
+    const provider = sharedState.config.aiProvider || 'gemini';
+
+    if (provider === 'gemini') {
+      let apiKey = sharedState.config.geminiApiKey || GM_getValue(GEMINI_API_KEY_STORAGE, null);
+      if (!apiKey || apiKey.trim() === "") {
+        apiKey = prompt("Gemini API Key not set. Please enter your API Key:");
+        if (apiKey && apiKey.trim() !== "") {
+          sharedState.config.geminiApiKey = apiKey.trim();
+          GM_setValue(GEMINI_API_KEY_STORAGE, apiKey.trim());
+          saveConfig();
+          return apiKey.trim();
+        } else {
+          alert("Gemini API Key is required. Set it via the configuration or Tampermonkey menu.");
+          return null;
+        }
       }
+      return apiKey.trim();
+    } else {
+      // OpenRouter
+      let apiKey = sharedState.config.openrouterApiKey;
+      if (!apiKey || apiKey.trim() === "") {
+        apiKey = prompt("OpenRouter API Key not set. Please enter your API Key:");
+        if (apiKey && apiKey.trim() !== "") {
+          sharedState.config.openrouterApiKey = apiKey.trim();
+          saveConfig();
+          return apiKey.trim();
+        } else {
+          alert("OpenRouter API Key is required. Set it via the configuration.");
+          return null;
+        }
+      }
+      return apiKey.trim();
     }
-    return apiKey.trim();
   };
 
   // === SHARED IMAGE FETCHING ===
@@ -2026,8 +1109,6 @@ Please perform the following:
 
     showResponsePopup("Loading AI insights...", true, "AI Assistant");
 
-    console.log(JSON.stringify(apiPayload));
-
     GM_xmlhttpRequest({
       method: "POST",
       url: apiUrl,
@@ -2078,6 +1159,109 @@ Please perform the following:
       ontimeout: () =>
         showResponsePopup(
           "Gemini API Error: Request timed out.",
+          false,
+          "AI Assistant",
+        ),
+    });
+  };
+
+  const askOpenRouter = async (question, options, imageData, platform = "quiz") => {
+    const apiKey = sharedState.config.openrouterApiKey;
+    if (!apiKey || apiKey.trim() === "") {
+      alert("OpenRouter API Key is required. Please set it in the configuration.");
+      return;
+    }
+
+    const promptText = buildGeminiPrompt(
+      question,
+      options,
+      !!imageData,
+      platform,
+    );
+    const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
+
+    const messages = [
+      {
+        role: "user",
+        content: []
+      }
+    ];
+
+    // Add text content
+    messages[0].content.push({
+      type: "text",
+      text: promptText
+    });
+
+    // Add image if available
+    if (sharedState.config.includeImages && imageData && imageData.base64Data && imageData.mimeType) {
+      messages[0].content.push({
+        type: "image_url",
+        image_url: {
+          url: `data:${imageData.mimeType};base64,${imageData.base64Data}`
+        }
+      });
+    }
+
+    const apiPayload = {
+      model: sharedState.config.openrouterModel || "anthropic/claude-3.5-sonnet",
+      messages: messages,
+      temperature: sharedState.config.temperature,
+      top_p: sharedState.config.topP,
+      max_tokens: sharedState.config.maxOutputTokens,
+    };
+
+    showResponsePopup("Loading AI insights...", true, "AI Assistant");
+
+    GM_xmlhttpRequest({
+      method: "POST",
+      url: apiUrl,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": window.location.href,
+        "X-Title": "UETS - Universal Educational Tool Suite"
+      },
+      data: JSON.stringify(apiPayload),
+      onload: (response) => {
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.choices && result.choices.length > 0 && result.choices[0].message) {
+            const aiText = result.choices[0].message.content;
+            GM_log("[+] OpenRouter API Response:", aiText);
+            showResponsePopup(aiText, false, "AI Assistant");
+          } else if (result.error) {
+            GM_log("[!] OpenRouter API Error:", result.error.message || result.error);
+            showResponsePopup(
+              `OpenRouter API Error: ${result.error.message || result.error}`,
+              false,
+              "AI Assistant",
+            );
+          } else {
+            showResponsePopup(
+              "OpenRouter API Error: Could not parse a valid response.",
+              false,
+              "AI Assistant",
+            );
+          }
+        } catch (e) {
+          showResponsePopup(
+            "OpenRouter API Error: Failed to parse response.\n" + e.message,
+            false,
+            "AI Assistant",
+          );
+        }
+      },
+      onerror: (response) => {
+        showResponsePopup(
+          `OpenRouter API Error: Request failed. Status: ${response.status}`,
+          false,
+          "AI Assistant",
+        );
+      },
+      ontimeout: () =>
+        showResponsePopup(
+          "OpenRouter API Error: Request timed out.",
           false,
           "AI Assistant",
         ),
@@ -2439,29 +1623,18 @@ Please perform the following:
     CONTROLLER_CHANNEL: '/service/controller',
     COLORS: ['red', 'blue', 'yellow', 'green'],
 
-    loadSocketIO: () => {
-      return new Promise((resolve, reject) => {
-        if (window.io) {
-          resolve();
-          return;
-        }
-        const script = document.createElement('script');
-        script.src = 'https://cdn.socket.io/4.8.1/socket.io.min.js';
-        script.onload = () => resolve();
-        script.onerror = () => reject(new Error('Failed to load Socket.IO'));
-        document.head.appendChild(script);
-      });
-    },
+    loadSocketIO: () => new Promise((resolve, reject) => {
+      if (window.io) return resolve();
+      const script = document.createElement('script');
+      script.src = 'https://cdn.socket.io/4.8.1/socket.io.min.js';
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('Failed to load Socket.IO'));
+      document.head.appendChild(script);
+    }),
 
     isCometDEndpoint: url => url.includes('/cometd/') && url.includes('kahoot.it'),
 
-    parseJSON: data => {
-      try {
-        return typeof data === 'string' ? JSON.parse(data) : data;
-      } catch {
-        return null;
-      }
-    },
+    parseJSON: data => { try { return typeof data === 'string' ? JSON.parse(data) : data; } catch { return null; } },
 
     extractQuizData: content => {
       const parsed = kahootModule.parseJSON(content);
@@ -3463,36 +2636,16 @@ Please perform the following:
 
   const processQuizData = (data) => {
     GM_log("[*] Trying to get all questions...");
-    try {
-      var questionKeys = Object.keys(data.data.room.questions);
-    } catch (e) {
-      try {
-        var questionKeys = Object.keys(data.room.questions);
-      } catch (e) {
-        try {
-          var questionKeys = Object.keys(data.quiz.info.questions);
-        } catch (e) {
-          var questionKeys = Object.keys(data.data.quiz.info.questions);
-        }
-      }
+    const questions = data?.data?.room?.questions || data?.room?.questions || data?.quiz?.info?.questions || data?.data?.quiz?.info?.questions;
+    if (!questions) {
+      GM_log("[!] Could not find questions in data");
+      return;
     }
+    const questionKeys = Object.keys(questions);
 
     for (const questionKey of questionKeys) {
       GM_log("[*] ----------------");
-      try {
-        var questionData = data.data.room.questions[questionKey];
-      } catch (e) {
-        try {
-          var questionData = data.room.questions[questionKey];
-        } catch (e) {
-          try {
-            var questionData = data.quiz.info.questions[questionKey];
-          } catch (e) {
-            var questionData = data.data.quiz.info.questions[questionKey];
-          }
-        }
-      }
-      console.log(questionData);
+      const questionData = questions[questionKey];
       sharedState.quizData[questionKey] = questionData;
 
       // Store the complete question data in questionsPool
@@ -3501,20 +2654,12 @@ Please perform the following:
       GM_log(`[+] Question ID: ${questionKey}`);
       GM_log(`[+] Question Type: ${questionData.type}`);
       GM_log(`[+] Question Text: ${questionData.structure.query.text}`);
-      if (questionData.structure.query.media) {
-        for (const media of questionData.structure.query.media) {
-          GM_log(`[+] Media URL: ${media.url} (Type: ${media.type})`);
-        }
-      }
-      const options = questionData.structure.options || [];
-      for (const option of options) {
+      questionData.structure.query.media?.forEach(media => GM_log(`[+] Media URL: ${media.url} (Type: ${media.type})`));
+      const options = questionData.structure?.options || [];
+      options.forEach(option => {
         GM_log(`[+] Option: ${option.text} (${option.id})`);
-        if (option.media) {
-          for (const media of option.media) {
-            GM_log(`[+] Media URL: ${media.url} (Type: ${media.type})`);
-          }
-        }
-      }
+        option.media?.forEach(media => GM_log(`[+] Media URL: ${media.url} (Type: ${media.type})`));
+      });
 
       // Enhanced answer detection and storage
       if (questionData.structure && questionData.structure.answer !== undefined) {
@@ -3615,46 +2760,31 @@ Please perform the following:
       return originalXMLHttpRequestOpen.call(this, method, newUrl, ...args);
     }
 
-    if (
-      typeof url === "string" &&
-      (url.includes("play-api/createTestGameActivity") && (url.includes("wayground.com") || url.includes("quizizz.com")))
-    ) {
+    const isWaygroundOrQuizizz = url => url.includes("wayground.com") || url.includes("quizizz.com");
+
+    if (typeof url === "string" && url.includes("play-api/createTestGameActivity") && isWaygroundOrQuizizz(url)) {
       this._blocked = true;
       GM_log("[+] Blocked cheating detection request to createTestGameActivity");
     }
 
-    if (
-      typeof url === "string" &&
-      (((url.includes("play-api") &&
-        (url.includes("soloJoin") || url.includes("rejoinGame") || url.includes("join"))) || (url.includes("_quizserver/main/v2/quiz"))) &&
-        (url.includes("wayground.com") || url.includes("quizizz.com")))
-    ) {
+    const isQuizJoinUrl = url => (url.includes("play-api") && /soloJoin|rejoinGame|join/.test(url)) || url.includes("_quizserver/main/v2/quiz");
+
+    if (typeof url === "string" && isQuizJoinUrl(url) && isWaygroundOrQuizizz(url)) {
       this.addEventListener("load", function () {
         if (this.status === 200) {
-          try {
-            const data = JSON.parse(this.responseText);
-            processQuizData(data);
-          } catch (e) {
-            GM_log("[!] Failed to parse response:", e);
-          }
+          try { processQuizData(JSON.parse(this.responseText)); }
+          catch (e) { GM_log("[!] Failed to parse response:", e); }
         }
       });
     }
 
-    if (
-      typeof url === "string" &&
-      (url.includes("play-api") &&
-        (url.includes("proceedGame") || url.includes("soloProceed")) &&
-        (url.includes("wayground.com") || url.includes("quizizz.com")))
-    ) {
+    const isProceedUrl = url => url.includes("play-api") && /proceedGame|soloProceed/.test(url);
+
+    if (typeof url === "string" && isProceedUrl(url) && isWaygroundOrQuizizz(url)) {
       this.addEventListener("load", function () {
         if (this.status === 200) {
-          try {
-            const data = JSON.parse(this.responseText);
-            processProceedGameResponse(data);
-          } catch (e) {
-            GM_log("[!] Failed to parse proceedGame response:", e);
-          }
+          try { processProceedGameResponse(JSON.parse(this.responseText)); }
+          catch (e) { GM_log("[!] Failed to parse proceedGame response:", e); }
         }
       });
     }
@@ -3666,66 +2796,16 @@ Please perform the following:
     // Handle site optimization blocks
     if (this._shouldBlock) {
       GM_log(`[+] Blocked XHR send: ${this._url}`);
-
-      // Create a proper mock response
       const xhr = this;
-
-      // Set response properties before triggering events
-      Object.defineProperty(xhr, 'readyState', {
-        get: () => 4,
-        configurable: true
-      });
-      Object.defineProperty(xhr, 'status', {
-        get: () => 200,
-        configurable: true
-      });
-      Object.defineProperty(xhr, 'statusText', {
-        get: () => 'OK',
-        configurable: true
-      });
-      Object.defineProperty(xhr, 'response', {
-        get: () => '',
-        configurable: true
-      });
-      Object.defineProperty(xhr, 'responseText', {
-        get: () => '',
-        configurable: true
-      });
-      Object.defineProperty(xhr, 'responseType', {
-        get: () => '',
-        configurable: true
-      });
-      Object.defineProperty(xhr, 'responseXML', {
-        get: () => null,
-        configurable: true
-      });
-
-      // Trigger events asynchronously to simulate real behavior
+      const mockProps = { readyState: 4, status: 200, statusText: 'OK', response: '', responseText: '', responseType: '', responseXML: null };
+      Object.entries(mockProps).forEach(([k, v]) => Object.defineProperty(xhr, k, { get: () => v, configurable: true }));
       setTimeout(() => {
-        // Dispatch events in proper order
-        if (xhr.onloadstart) {
-          xhr.onloadstart.call(xhr, new ProgressEvent('loadstart'));
-        }
-
-        if (xhr.onreadystatechange) {
-          xhr.onreadystatechange.call(xhr);
-        }
-
-        if (xhr.onload) {
-          xhr.onload.call(xhr, new ProgressEvent('load'));
-        }
-
-        if (xhr.onloadend) {
-          xhr.onloadend.call(xhr, new ProgressEvent('loadend'));
-        }
-
-        // Dispatch events to event listeners
-        xhr.dispatchEvent(new ProgressEvent('loadstart'));
-        xhr.dispatchEvent(new Event('readystatechange'));
-        xhr.dispatchEvent(new ProgressEvent('load'));
-        xhr.dispatchEvent(new ProgressEvent('loadend'));
+        ['loadstart', 'readystatechange', 'load', 'loadend'].forEach(evt => {
+          const handler = xhr[`on${evt}`];
+          if (handler) handler.call(xhr, evt === 'readystatechange' ? new Event(evt) : new ProgressEvent(evt));
+          xhr.dispatchEvent(evt === 'readystatechange' ? new Event(evt) : new ProgressEvent(evt));
+        });
       }, 0);
-
       return;
     }
 
@@ -3736,22 +2816,14 @@ Please perform the following:
     }
 
     // Intercept TestPortal requests and force wb=0
-    if (
-      this._method === "POST" &&
-      this._url &&
-      (this._url.includes("testportal.net") || this._url.includes("testportal.pl")) &&
-      this._url.includes("DoTestQuestion.html") &&
-      data &&
-      typeof data === "string"
-    ) {
+    const isTestPortal = this._url?.includes("testportal.net") || this._url?.includes("testportal.pl");
+    if (this._method === "POST" && isTestPortal && this._url.includes("DoTestQuestion.html") && typeof data === "string") {
       try {
         const urlParams = new URLSearchParams(data);
         if (urlParams.has('wb')) {
-          const originalWb = urlParams.get('wb');
           urlParams.set('wb', '0');
-          const modifiedData = urlParams.toString();
-          GM_log(`[+] Modified TestPortal wb parameter from ${originalWb} to 0`);
-          return originalXMLHttpRequestSend.call(this, modifiedData);
+          GM_log(`[+] Modified TestPortal wb parameter to 0`);
+          return originalXMLHttpRequestSend.call(this, urlParams.toString());
         }
       } catch (e) {
         GM_log("[!] Failed to modify TestPortal request:", e);
@@ -3759,48 +2831,26 @@ Please perform the following:
     }
 
     // Intercept POST requests to proceedGame and modify timeTaken
-    if (
-      this._method === "POST" &&
-      this._url &&
-      (this._url.includes("play-api") &&
-        (this._url.includes("proceedGame") || this._url.includes("soloProceed")) &&
-        (this._url.includes("wayground.com") || this._url.includes("quizizz.com")))
-    ) {
-      if (data) {
-        try {
-          let requestData = JSON.parse(data);
-
-          requestData = processProceedGameRequest(requestData);
-
-          const modifiedData = JSON.stringify(requestData);
-
-          return originalXMLHttpRequestSend.call(this, modifiedData);
-        } catch (e) {
-          GM_log("[!] Failed to parse/modify proceedGame request:", e);
-          return originalXMLHttpRequestSend.call(this, data);
-        }
+    const isProceed = this._url?.includes("play-api") && /proceedGame|soloProceed/.test(this._url);
+    const isWaygroundQuizizz = this._url?.includes("wayground.com") || this._url?.includes("quizizz.com");
+    if (this._method === "POST" && isProceed && isWaygroundQuizizz && data) {
+      try {
+        return originalXMLHttpRequestSend.call(this, JSON.stringify(processProceedGameRequest(JSON.parse(data))));
+      } catch (e) {
+        GM_log("[!] Failed to parse/modify proceedGame request:", e);
       }
     }
 
-    // Intercept requests to reaction-update and resend twice
-    if (
-      this._method === "POST" &&
-      this._url &&
-      (this._url.includes("wayground.com") || this._url.includes("quizizz.com")) &&
-      this._url.includes("_gameapi/main/public/v1/games/",) &&
-      this._url.includes("/reaction-update")
-    ) {
-      // Send original request
+    // Intercept requests to reaction-update and resend
+    const isReactionUpdate = isWaygroundQuizizz && this._url?.includes("_gameapi/main/public/v1/games/") && this._url?.includes("/reaction-update");
+    if (this._method === "POST" && isReactionUpdate && sharedState.config.enableReactionSpam) {
       const result = originalXMLHttpRequestSend.call(this, data);
-      // Resend based on config
-      if (sharedState.config.enableReactionSpam) {
-        for (let i = 1; i <= sharedState.config.reactionSpamCount; i++) {
-          setTimeout(() => {
-            const xhr = new XMLHttpRequest();
-            xhr.open(this._method, this._url);
-            xhr.send(data);
-          }, sharedState.config.reactionSpamDelay * i);
-        }
+      for (let i = 1; i <= sharedState.config.reactionSpamCount; i++) {
+        setTimeout(() => {
+          const xhr = new XMLHttpRequest();
+          xhr.open(this._method, this._url);
+          xhr.send(data);
+        }, sharedState.config.reactionSpamDelay * i);
       }
       return result;
     }
@@ -3810,60 +2860,36 @@ Please perform the following:
 
   const originalFetch = window.fetch;
   window.fetch = function (url, options) {
-    const urlString = typeof url === 'string' ? url : url.url || url.href;
+    const urlString = typeof url === 'string' ? url : url?.url || url?.href || '';
+    const isWaygroundQuizizz = urlString.includes("wayground.com") || urlString.includes("quizizz.com");
+    const isTestPortal = urlString.includes("testportal.net") || urlString.includes("testportal.pl");
 
     // Block site optimization URLs
     if (siteOptimizations.shouldBlockUrl(urlString)) {
       GM_log(`[+] Blocked fetch: ${urlString}`);
-      // Return a proper Response with all necessary properties
-      return Promise.resolve(new Response(null, {
-        status: 200,
-        statusText: 'OK',
-        headers: new Headers({
-          'Content-Type': 'application/octet-stream'
-        })
-      }));
+      return Promise.resolve(new Response(null, { status: 200, statusText: 'OK', headers: new Headers({ 'Content-Type': 'application/octet-stream' }) }));
     }
 
     // Replace theme URLs
     if (siteOptimizations.shouldReplaceUrl(urlString)) {
-      const newUrl = siteOptimizations.getReplacementUrl(urlString);
       GM_log(`[+] Replacing fetch URL: ${urlString} -> dark purple image`);
-      return originalFetch.call(this, newUrl, options);
+      return originalFetch.call(this, siteOptimizations.getReplacementUrl(urlString), options);
     }
 
     // Block cheating detection requests
-    if (
-      typeof url === "string" &&
-      (url.includes("play-api/createTestGameActivity") && (url.includes("wayground.com") || url.includes("quizizz.com")))
-    ) {
+    if (urlString.includes("play-api/createTestGameActivity") && isWaygroundQuizizz) {
       GM_log("[+] Blocked cheating detection request to createTestGameActivity");
-      return Promise.resolve(
-        new Response(JSON.stringify({}), { status: 200, statusText: "OK" }),
-      );
+      return Promise.resolve(new Response(JSON.stringify({}), { status: 200, statusText: "OK" }));
     }
 
     // Intercept TestPortal requests via fetch and force wb=0
-    if (
-      typeof url === "string" &&
-      (url.includes("testportal.net") || url.includes("testportal.pl")) &&
-      url.includes("DoTestQuestion.html") &&
-      options &&
-      options.method === "POST" &&
-      options.body &&
-      typeof options.body === "string"
-    ) {
+    if (isTestPortal && urlString.includes("DoTestQuestion.html") && options?.method === "POST" && typeof options.body === "string") {
       try {
         const urlParams = new URLSearchParams(options.body);
         if (urlParams.has('wb')) {
-          const originalWb = urlParams.get('wb');
           urlParams.set('wb', '0');
-          const modifiedOptions = {
-            ...options,
-            body: urlParams.toString(),
-          };
-          GM_log(`[+] Modified TestPortal wb parameter from ${originalWb} to 0`);
-          return originalFetch.call(this, url, modifiedOptions);
+          GM_log(`[+] Modified TestPortal wb parameter to 0`);
+          return originalFetch.call(this, url, { ...options, body: urlParams.toString() });
         }
       } catch (e) {
         GM_log("[!] Failed to modify TestPortal fetch request:", e);
@@ -3871,91 +2897,36 @@ Please perform the following:
     }
 
     // Intercept POST requests to proceedGame via fetch
-    if (
-      typeof url === "string" &&
-      (url.includes("play-api") &&
-        (url.includes("proceedGame") || url.includes("soloProceed")) &&
-        (url.includes("wayground.com") || url.includes("quizizz.com"))) &&
-      options &&
-      options.method === "POST" &&
-      options.body
-    ) {
+    const isProceedUrl = urlString.includes("play-api") && /proceedGame|soloProceed/.test(urlString);
+    if (isProceedUrl && isWaygroundQuizizz && options?.method === "POST" && options.body) {
       try {
-        let requestData = JSON.parse(options.body);
-
-        requestData = processProceedGameRequest(requestData);
-
-        const modifiedOptions = {
-          ...options,
-          body: JSON.stringify(requestData),
-        };
-
-        return originalFetch.call(this, url, modifiedOptions);
+        return originalFetch.call(this, url, { ...options, body: JSON.stringify(processProceedGameRequest(JSON.parse(options.body))) });
       } catch (e) {
         GM_log("[!] Failed to parse/modify proceedGame fetch request:", e);
       }
     }
 
     // Intercept requests to reaction-update via fetch
-    if (
-      typeof url === "string" &&
-      (url.includes("wayground.com") || url.includes("quizizz.com")) &&
-      url.includes("_gameapi/main/public/v1/games/") &&
-      url.includes("/reaction-update") &&
-      options &&
-      options.method === "POST" &&
-      options.body &&
-      sharedState.config.enableReactionSpam
-    ) {
-      // Send original request
+    const isReactionUpdate = isWaygroundQuizizz && urlString.includes("_gameapi/main/public/v1/games/") && urlString.includes("/reaction-update");
+    if (isReactionUpdate && options?.method === "POST" && options.body && sharedState.config.enableReactionSpam) {
       const result = originalFetch.call(this, url, options);
-      // Resend based on config
       for (let i = 1; i <= sharedState.config.reactionSpamCount; i++) {
-        setTimeout(() => {
-          originalFetch.call(this, url, options);
-        }, sharedState.config.reactionSpamDelay * i);
+        setTimeout(() => originalFetch.call(this, url, options), sharedState.config.reactionSpamDelay * i);
       }
       return result;
     }
 
-    if (
-      typeof url === "string" &&
-      (((url.includes("play-api") &&
-        (url.includes("soloJoin") || url.includes("rejoinGame") || url.includes("join"))) || (url.includes("_quizserver/main/v2/quiz"))) &&
-        (url.includes("wayground.com") || url.includes("quizizz.com")))
-    ) {
-      return originalFetch.call(this, url, options).then((response) => {
-        if (response.ok) {
-          return response
-            .clone()
-            .json()
-            .then((data) => {
-              processQuizData(data);
-              return response;
-            })
-            .catch(() => response);
-        }
+    const isQuizJoinUrl = (urlString.includes("play-api") && /soloJoin|rejoinGame|join/.test(urlString)) || urlString.includes("_quizserver/main/v2/quiz");
+    if (isQuizJoinUrl && isWaygroundQuizizz) {
+      return originalFetch.call(this, url, options).then(response => {
+        if (response.ok) return response.clone().json().then(data => { processQuizData(data); return response; }).catch(() => response);
         return response;
       });
     }
 
-    if (
-      typeof url === "string" &&
-      (url.includes("play-api") &&
-        (url.includes("proceedGame") || url.includes("soloProceed")) &&
-        (url.includes("wayground.com") || url.includes("quizizz.com")))
-    ) {
-      return originalFetch.call(this, url, options).then((response) => {
-        if (response.ok) {
-          return response
-            .clone()
-            .json()
-            .then((data) => {
-              processProceedGameResponse(data);
-              return response;
-            })
-            .catch(() => response);
-        }
+    if (isProceedUrl && isWaygroundQuizizz) {
+      return originalFetch.call(this, url, options).then(response => {
+        if (response.ok) return response.clone().json().then(data => { processProceedGameResponse(data); return response; }).catch(() => response);
         return response;
       });
     }

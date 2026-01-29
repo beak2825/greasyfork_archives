@@ -10,7 +10,7 @@
 // @name:de      Advanced Search for X (Twitter) 🔍
 // @name:pt-BR   Advanced Search for X (Twitter) 🔍
 // @name:ru      Advanced Search for X (Twitter) 🔍
-// @version      7.0.1
+// @version      7.0.2
 // @description      No need to memorize search commands anymore. Adds a feature-rich floating window to X.com (Twitter) that combines an easy-to-use advanced search UI, search history, saved searches, local post (tweet) bookmarks with tags, regex-based muting, and folder-based account and list management.
 // @description:ja   検索コマンドはもう覚える必要なし。誰にでも使いやすい高度な検索UI、検索履歴、検索条件の保存、投稿（ツイート）をタグで管理できるローカルお気に入り機能、正規表現対応のミュート、フォルダー分け対応のアカウント／リスト管理機能などを統合した超多機能フローティングウィンドウを X.com（Twitter）に追加します。
 // @description:en   No need to memorize search commands anymore. Adds a feature-rich floating window to X.com (Twitter) that combines an easy-to-use advanced search UI, search history, saved searches, local post (tweet) bookmarks with tags, regex-based muting, and folder-based account and list management.
@@ -145,6 +145,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "Clear dates",
                 tooltipSince: "From this date",
                 tooltipUntil: "Until this date",
+                labelWithinTime: "Recent (within_time)",
+                unitDay: "Days (d)",
+                unitHour: "Hours (h)",
+                unitMin: "Minutes (m)",
+                unitSec: "Seconds (s)",
                 labelFromUser: "From these accounts (from:)",
                 placeholderFromUser: "e.g., @X",
                 labelToUser: "To these accounts (to:)",
@@ -412,6 +417,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "日付クリア",
                 tooltipSince: "この日以降",
                 tooltipUntil: "この日以前",
+                labelWithinTime: "直近指定 (within_time)",
+                unitDay: "日 (d)",
+                unitHour: "時間 (h)",
+                unitMin: "分 (m)",
+                unitSec: "秒 (s)",
                 labelFromUser: "このアカウントから (from:)",
                 placeholderFromUser: "例: @X",
                 labelToUser: "このアカウントへ (to:)",
@@ -677,6 +687,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "清除日期",
                 tooltipSince: "起始日期",
                 tooltipUntil: "结束日期",
+                labelWithinTime: "最近 (within_time)",
+                unitDay: "天 (d)",
+                unitHour: "小时 (h)",
+                unitMin: "分钟 (m)",
+                unitSec: "秒 (s)",
                 labelFromUser: "来自这些账号 (from:)",
                 placeholderFromUser: "例如：@X",
                 labelToUser: "发送给这些账号 (to:)",
@@ -941,6 +956,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "清除日期",
                 tooltipSince: "開始日期",
                 tooltipUntil: "結束日期",
+                labelWithinTime: "最近 (within_time)",
+                unitDay: "天 (d)",
+                unitHour: "小時 (h)",
+                unitMin: "分鐘 (m)",
+                unitSec: "秒 (s)",
                 labelFromUser: "來自這些帳號 (from:)",
                 placeholderFromUser: "例如：@X",
                 labelToUser: "發送給這些帳號 (to:)",
@@ -1205,6 +1225,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "날짜 초기화",
                 tooltipSince: "시작일",
                 tooltipUntil: "종료일",
+                labelWithinTime: "최근 (within_time)",
+                unitDay: "일 (d)",
+                unitHour: "시간 (h)",
+                unitMin: "분 (m)",
+                unitSec: "초 (s)",
                 labelFromUser: "다음 계정에서 (from:)",
                 placeholderFromUser: "예: @X",
                 labelToUser: "다음 계정으로 (to:)",
@@ -1472,6 +1497,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "Effacer les dates",
                 tooltipSince: "Depuis cette date",
                 tooltipUntil: "Jusqu'à cette date",
+                labelWithinTime: "Récemment (within_time)",
+                unitDay: "Jours (d)",
+                unitHour: "Heures (h)",
+                unitMin: "Minutes (m)",
+                unitSec: "Secondes (s)",
                 labelFromUser: "De ces comptes (from:)",
                 placeholderFromUser: "ex: @X",
                 labelToUser: "À ces comptes (to:)",
@@ -1736,6 +1766,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "Borrar fechas",
                 tooltipSince: "Desde esta fecha",
                 tooltipUntil: "Hasta esta fecha",
+                labelWithinTime: "Reciente (within_time)",
+                unitDay: "Días (d)",
+                unitHour: "Horas (h)",
+                unitMin: "Minutos (m)",
+                unitSec: "Segundos (s)",
                 labelFromUser: "De estas cuentas (from:)",
                 placeholderFromUser: "ej. @X",
                 labelToUser: "Para estas cuentas (to:)",
@@ -2000,6 +2035,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "Datum löschen",
                 tooltipSince: "Seit diesem Datum",
                 tooltipUntil: "Bis zu diesem Datum",
+                labelWithinTime: "Aktuell (within_time)",
+                unitDay: "Tage (d)",
+                unitHour: "Std. (h)",
+                unitMin: "Min. (m)",
+                unitSec: "Sek. (s)",
                 labelFromUser: "Von diesen Konten (from:)",
                 placeholderFromUser: "z.B. @X",
                 labelToUser: "An diese Konten (to:)",
@@ -2264,6 +2304,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "Limpar datas",
                 tooltipSince: "A partir desta data",
                 tooltipUntil: "Até esta data",
+                labelWithinTime: "Recente (within_time)",
+                unitDay: "Dias (d)",
+                unitHour: "Horas (h)",
+                unitMin: "Minutos (m)",
+                unitSec: "Segundos (s)",
                 labelFromUser: "Destas contas (from:)",
                 placeholderFromUser: "ex: @X",
                 labelToUser: "Para estas contas (to:)",
@@ -2528,6 +2573,11 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 optDateClear: "Очистить даты",
                 tooltipSince: "С этой даты",
                 tooltipUntil: "По эту дату",
+                labelWithinTime: "Недавнее (within_time)",
+                unitDay: "Дней (d)",
+                unitHour: "Часов (h)",
+                unitMin: "Минут (m)",
+                unitSec: "Секунд (s)",
                 labelFromUser: "От этих аккаунтов (from:)",
                 placeholderFromUser: "напр., @X",
                 labelToUser: "Этим аккаунтам (to:)",
@@ -5044,6 +5094,19 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                                 <input type="date" id="adv-since" data-i18n-title="tooltipSince">
                                 <span class="adv-date-separator">~</span>
                                 <input type="date" id="adv-until" data-i18n-title="tooltipUntil">
+                            </div>
+                        </div>
+
+                        <div class="adv-form-group">
+                            <label data-i18n="labelWithinTime"></label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="number" id="adv-within-time-val" min="1" placeholder="1" style="flex:1;">
+                                <select id="adv-within-time-unit" style="flex:1;">
+                                    <option value="d" data-i18n="unitDay">d</option>
+                                    <option value="h" data-i18n="unitHour">h</option>
+                                    <option value="m" data-i18n="unitMin">m</option>
+                                    <option value="s" data-i18n="unitSec">s</option>
+                                </select>
                             </div>
                         </div>
                         <hr class="adv-separator">
@@ -8643,6 +8706,8 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
                 min_retweets: document.getElementById('adv-min-retweets').value,
                 since: document.getElementById('adv-since').value,
                 until: document.getElementById('adv-until').value,
+                within_val: document.getElementById('adv-within-time-val').value,
+                within_unit: document.getElementById('adv-within-time-unit').value,
             };
             if (fields.all) q.push(fields.all);
             if (fields.exact) q.push(`"${fields.exact.replace(/"/g,'')}"`);
@@ -8680,6 +8745,9 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
             if (fields.min_retweets) q.push(`min_retweets:${fields.min_retweets}`);
             if (fields.since) q.push(`since:${fields.since}`);
             if (fields.until) q.push(`until:${fields.until}`);
+            if (fields.within_val && fields.within_unit) {
+                q.push(`within_time:${fields.within_val}${fields.within_unit}`);
+            }
 
             const addFilter = (type, mapping) => {
                 const include = document.getElementById(`adv-filter-${type}-include`).checked;
@@ -8789,7 +8857,12 @@ const __X_ADV_SEARCH_MAIN_LOGIC__ = function() {
             extract(/\bmin_retweets:(\d+)\b/gi,v => document.getElementById('adv-min-retweets').value= v);
             extract(/\bsince:(\d{4}-\d{2}-\d{2})\b/gi, v => document.getElementById('adv-since').value = v);
             extract(/\buntil:(\d{4}-\d{2}-\d{2})\b/gi, v => document.getElementById('adv-until').value = v);
-
+            // extractを使わず、直接 replace で値の抽出とクエリからの除去を行う
+            q = q.replace(/\bwithin_time:(\d+)([dhms])\b/gi, (m, val, unit) => {
+                document.getElementById('adv-within-time-val').value = val;
+                document.getElementById('adv-within-time-unit').value = unit;
+                return ' ';
+            });
             // フィルタ
             const filterMap = { 'is:verified':'verified', 'filter:links':'links', 'filter:images':'images', 'filter:videos':'videos' };
             Object.entries(filterMap).forEach(([op,id])=>{

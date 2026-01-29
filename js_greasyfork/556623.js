@@ -24,7 +24,7 @@
 // @match               https://financemonk.*/*
 // @grant               GM.addStyle
 // @run-at              document-start
-// @version             3.1.0
+// @version             3.1.1
 // @description         Removes unnecessary bloat from multiple file hosting and download sites to make download links more accessible
 // @license             GPL-3.0-only
 // @downloadURL https://update.greasyfork.org/scripts/556623/Mobilism%20Download%20Links%20Clean%20Bloat.user.js
@@ -130,7 +130,6 @@
             #app-header,
             .list-group,
             .compare_table,
-            .btn-success,
             .app-footer {
                 display: none !important;
             }

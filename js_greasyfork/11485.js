@@ -8,7 +8,7 @@
 // @include     https://youtube.com*
 // @include     https://youtube.googleapis.com/embed*
 // @include     https://www.youtube-nocookie.com/embed*
-// @version     2.4.16
+// @version     2.4.18
 // @grant       none
 // @license     MIT
 // @downloadURL https://update.greasyfork.org/scripts/11485/Youtube%20UI%20Fix.user.js
@@ -91,7 +91,26 @@ var YtNewUIFix = /** @class */ (function () {
                     for (var i = 0; i < progressBarWidthsCollection_1.length; i++) {
                         totalProgressBarWidth += progressBarWidthsCollection_1[i].offsetWidth;
                     }
-                    var durationWidthRatio_1 = video.duration / totalProgressBarWidth;
+                    var duration = video.duration;
+                    var updateBuffer = true;
+                    var infoField = document.querySelector("#info.ytd-watch-info-text > span");
+                    if (infoField) {
+                        var myRegexp = /Started streaming (\d+) minutes ago/g;
+                        var matches = myRegexp.exec(infoField.textContent);
+                        if (matches && matches.length > 0) {
+                            duration = Number(matches[1]) * 60;
+                            updateBuffer = false;
+                        }
+                        else {
+                            myRegexp = /Started streaming (\d+) hours ago/g;
+                            matches = myRegexp.exec(infoField.textContent);
+                            if (matches && matches.length > 0) {
+                                duration = Number(matches[1]) * 60 * 60;
+                                updateBuffer = false;
+                            }
+                        }
+                    }
+                    var durationWidthRatio_1 = duration / totalProgressBarWidth;
                     var updateProgress = function (progressBarChaptersCollection, progress) {
                         if (progressBarChaptersCollection) {
                             // loop inside chapters
@@ -113,11 +132,13 @@ var YtNewUIFix = /** @class */ (function () {
                     };
                     var buff = video.buffered;
                     updateProgress(this.moviePlayer.querySelectorAll(".ytp-play-progress"), video.currentTime);
-                    if (buff.length > 0) {
-                        updateProgress(this.moviePlayer.querySelectorAll(".ytp-load-progress"), buff.end(buff.length - 1));
-                    }
-                    else {
-                        updateProgress(this.moviePlayer.querySelectorAll(".ytp-load-progress"), 0);
+                    if (updateBuffer) {
+                        if (buff.length > 0) {
+                            updateProgress(this.moviePlayer.querySelectorAll(".ytp-load-progress"), buff.end(buff.length - 1));
+                        }
+                        else {
+                            updateProgress(this.moviePlayer.querySelectorAll(".ytp-load-progress"), 0);
+                        }
                     }
                     var currentTime = this.moviePlayer.querySelector(".ytp-time-current");
                     if (currentTime) {
@@ -188,8 +209,8 @@ var YtNewUIFix = /** @class */ (function () {
         css += "body:not(.ytwp-window-player) #page.watch-stage-mode #watch-appbar-playlist { margin-top: 35px; }\n";
         css += ".html5-main-video { top: 0!important; }\n";
         //  move content below video down in the material layout
-        css += "ytd-watch-flexy[theater] #columns { margin-top: 35px!important; }";
-        css += "ytd-watch-flexy:not([theater]) #below { margin-top: 35px!important; }";
+        css += "ytd-watch-flexy[theater] #columns { margin-top: 40px!important; }";
+        css += "ytd-watch-flexy:not([theater]) #below { margin-top: 40px!important; }";
         // remove stupid border rounding
         css += "ytd-player { overflow: visible!important; border-radius: 0!important; }";
         // width correction of the controls in the material layout
@@ -206,14 +227,27 @@ var YtNewUIFix = /** @class */ (function () {
         css += ".ytp-progress-bar-container:not(.ytp-pulling) { height: 5px!important; bottom: 30px!important;  }\n";
         css += ".ytp-progress-list { transform-origin: center top; }\n\n";
         css += ".ytp-big-mode .ytp-progress-list { transform: scaleY(0.6); }\n\n";
+		css += ".ytp-progress-bar-container .ytp-scrubber-button { width: 0!important; height: 0!important; }\n";
+		css += ".ytp-progress-bar-container:hover:not([aria-disabled=\"true\"]) .ytp-scrubber-button { width: 8px!important; height: 8px!important; }\n";
         // scale down
+		css += ".ytp-right-controls-left .ytp-button svg { padding: 4px !important; }\n";
+		css += ".ytp-right-controls-right .ytp-button svg { padding: 4px !important; }\n";
+		css += ".ytp-right-controls-left button { width: 38px !important; }\n";
+		css += ".ytp-right-controls-right button { width: 38px !important; }\n";
+		css += ".ytp-chrome-controls button { background: #1B1B1B!important; }\n";
         css += ".ytp-chrome-bottom { height: 35px!important; padding: 0!important; }\n";
-        css += ".ytp-chrome-controls .ytp-button:not(.ytp-chapter-title):not(.ytp-watch-later-button) { width: 33px!important; }\n";
+        css += ".ytp-chrome-controls .ytp-button:not(.ytp-chapter-title):not(.ytp-watch-later-button) { margin: -3px 0 0 0 !important; }\n";
+        css += ".ytp-chrome-controls .ytp-volume-area { margin: 0 5px 0 10px!important; }\n";
+        css += ".ytp-chrome-controls .ytp-time-display { padding: 0 5px!important; }\n";
         css += ".ytp-chrome-controls .ytp-watch-later-icon { width: 24px!important; height: 24px!important; }\n";
         css += ".ytp-chrome-controls .ytp-watch-later-button { opacity: 1!important; width: 24px!important; display: inline-block!important; }\n";
+		css += ".ytp-autohide .ytp-chrome-bottom .ytp-autohide-fade-transition { opacity: 1!important; }\n";
         css += ".ytp-left-controls { margin-left: 5px }\n";
         css += ".ytp-time-display { height: 31px; line-height: 32px!important; font-size: 12px!important; }\n";
-        css += ".ytp-left-controls, .ytp-right-controls { height: 32px!important; margin-top: 3px; line-height: 36px; }\n\n";
+        css += ".ytp-left-controls, .ytp-right-controls { height: 32px!important; margin-top: 3px; line-height: 36px; }\n";
+		css += ".ytp-right-controls-left, .ytp-right-controls-right { margin-top: -3px; }\n";
+		css += ".ytp-chapter-container { padding-top: 0!important; margin-top: -4px!important; }\n";
+		css += ".ytp-right-controls { padding: 0 4px 0 0!important; }\n\n";
         // badges
         css += ".ytp-settings-button.ytp-hd-quality-badge::after,.ytp-settings-button.ytp-4k-quality-badge::after,.ytp-settings-button.ytp-5k-quality-badge::after,.ytp-settings-button.ytp-8k-quality-badge::after { content:''!important; top:6px!important; right:4px!important; height:9px!important; width:13px!important; padding: 0!important; }\n";
         css += ".ytp-settings-button.ytp-hd-quality-badge:after { background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMTAwJSIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgMTMgOSIgd2lkdGg9IjEwMCUiPjxwYXRoIGQ9Ik01LDcgTDYsNyBMNiw4IEw1LDggTDUsNyBaIE0xMCwzIEwxMCw0IEw4LDQgTDgsMyBMMTAsMyBaIE0zLDYgTDMsNSBMNSw1IEw1LDYgTDMsNiBaIE0yLDcgTDMsNyBMMyw4IEwyLDggTDIsNyBaIE03LDcgTDEwLDcgTDEwLDggTDcsOCBMNyw3IFogTTEwLDYgTDExLDYgTDExLDcgTDEwLDcgTDEwLDYgWiIgZmlsbD0iIzAwMCIgZmlsbC1vcGFjaXR5PSIwLjY0NzEiIGZpbGwtcnVsZT0iZXZlbm9kZCIgLz48cGF0aCBkPSJNNSw3IEw1LDYgTDUsNSBMMyw1IEwzLDYgTDMsNyBMMiw3IEwyLDIgTDMsMiBMMyw0IEw1LDQgTDUsMiBMNiwyIEw2LDcgTDUsNyBaIE0xMSw2IEwxMCw2IEwxMCw3IEw3LDcgTDcsMiBMMTAsMiBMMTAsMyBMMTEsMyBMMTEsNiBaIE0xMCw0IEwxMCwzIEw4LDMgTDgsNCBMOCw2IEwxMCw2IEwxMCw0IFoiIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgLz48L3N2Zz4=)!important; }";

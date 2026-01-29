@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         RR Mug Helper
-// @version      5.7
+// @version      5.9
 // @description  Mug Everyone!!!
 // @author       dingus [3188789]
 // @match        https://www.torn.com/page.php?sid=russianRoulette*
@@ -39,7 +39,6 @@
             accent-color: #93c47d;
             cursor: pointer;
         }
-        /* Perfect centering on X and Y */
         .rr-btn-shared {
             display: inline-flex !important;
             align-items: center !important;
@@ -334,7 +333,6 @@
             localStorage.setItem('rr_autoWatch', criteria.autoWatch);
             localStorage.setItem('rr_newTabs', criteria.newTabs);
 
-            // Re-update the target attributes on current buttons immediately
             const targetVal = criteria.newTabs ? '_blank' : '';
             document.querySelectorAll('.rr-deposit-btn, .rr-mug-btn').forEach(a => a.target = targetVal);
 
@@ -468,7 +466,9 @@
     };
 
     const processLobby = () => {
-        if (isProcessing) return;
+        // STRICT CHECK: Stop everything if not visible or already processing
+        if (document.hidden || isProcessing) return;
+
         isProcessing = true;
         injectCriteriaPanel();
 
@@ -488,6 +488,9 @@
 
         for (const [id, userData] of watchedUsers.entries()) {
             if (!currentIds.has(id)) {
+                // This logic triggers the alert.
+                // Because of the 'document.hidden' check above,
+                // this won't even be reached if you're tabbed out.
                 addTargetToMenu(id, userData);
                 watchedUsers.delete(id);
             }
@@ -497,6 +500,7 @@
 
     const init = () => {
         const target = document.querySelector('.content-wrapper') || document.body;
+        // Mutation observer will only trigger processLobby which now checks focus
         new MutationObserver(processLobby).observe(target, { childList: true, subtree: true });
         setInterval(processLobby, 3000);
         processLobby();

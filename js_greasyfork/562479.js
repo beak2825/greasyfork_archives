@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TornDarkWiki
 // @namespace    TornDarkWiki
-// @version      1.0.2
+// @version      1.0.3
 // @description  Dark mode for the Torn Wiki
 // @author       AfricanChild [3157295]
 // @license      MIT
@@ -100,3 +100,8 @@ document.querySelectorAll("#catlinks li").forEach(li=>li.style.color="#a2a9b1");
 document.querySelectorAll(".new-infobox").forEach(el => { el.style.backgroundColor="#292929"; el.style.boxShadow = "4px 4px 4px #222222";});
 //Yellow Alert
 document.querySelectorAll(".mbox").forEach(el => { el.style.color = "#8a6d3b";});
+
+//Honors Column - https://wiki.torn.com/wiki/Award_List
+document.querySelectorAll('th[rowspan="228"]').forEach(th => {
+  th.style.setProperty("background-color", "#333333", "important");
+});

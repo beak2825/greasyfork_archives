@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Outlook Pinned Email Highlighter
-// @namespace    http://tampermonkey.net/
+// @namespace    https://greasyfork.org/zh-TW/scripts/564302-outlook-pinned-email-highlighter
 // @version      2026-01-28
 // @description  Highlights pinned emails in Outlook with automatic light/dark mode support.
 // @author       avan

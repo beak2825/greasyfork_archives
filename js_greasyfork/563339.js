@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         百度新版贴吧优化
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  1.侧栏当前页打开 2.隐藏头图开关 3.开启沉浸模式(隐藏侧栏+宽屏) 4.帖子页默认热门或最新开关；5、帖子内回复默认热门/正序/倒序开关
+// @version      1.3
+// @description  1.侧栏当前页打开 2.隐藏头图开关 3.开启沉浸模式(隐藏侧栏+宽屏) 4.帖子页默认热门或最新开关；5、帖子内回复默认热门/正序/倒序开关；6、帖子列表中限制带图帖高度
 // @author       User
 // @match        https://tieba.baidu.com/*
 // @grant        GM_addStyle
@@ -31,8 +31,6 @@
     GM_addStyle(`
         /* --- 1. 沉浸宽屏模式 (V13.0 侧栏父容器清理版) --- */
 
-        /* A. 核心：将侧栏的所有层级容器彻底归零 */
-        /* 新增 .left-content (最外层容器) */
         body.opt-full-width .left-content,
         body.opt-full-width .left-nav-wrapper,
         body.opt-full-width .drawer-body,
@@ -43,10 +41,9 @@
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
-            overflow: hidden !important; /* 强制裁剪，不留任何余地 */
+            overflow: hidden !important;
         }
 
-        /* B. 隐藏侧栏内的所有具体内容 */
         body.opt-full-width .left-nav-wrapper .main,
         body.opt-full-width .left-nav-wrapper .list-container-wrapper,
         body.opt-full-width .tb-home,
@@ -55,8 +52,6 @@
             display: none !important;
         }
 
-        /* C. 菜单键容器 (.home-left) 处理 */
-        /* 强制固定在左上角，从文档流中脱离 */
         body.opt-full-width .home-left {
             position: fixed !important;
             top: 65px !important;
@@ -71,7 +66,6 @@
             justify-content: center;
         }
 
-        /* D. 强制显示"三道杠"图标 */
         body.opt-full-width .home-left .left-bar {
             display: block !important;
             width: 24px !important;
@@ -79,7 +73,6 @@
             cursor: pointer !important;
         }
 
-        /* --- 布局调整：主容器填满屏幕 --- */
         body.opt-full-width .frs-container,
         body.opt-full-width .frs-page-container,
         body.opt-full-width .content-wrapper {
@@ -88,7 +81,6 @@
             display: flex !important;
         }
 
-        /* 右侧栏收缩贴边 */
         body.opt-full-width .frs-right-sidebar {
             width: 240px !important;
             min-width: 240px !important;
@@ -108,7 +100,27 @@
             overflow: hidden !important;
         }
 
-        /* --- 3. 悬浮按钮组样式 --- */
+        /* --- 3. 帖子列表预览图高度限制 (V14.0 新增) --- */
+        /* 针对 .thread-image 容器内的 lazy-img-wrapper */
+        /* 使用 vh 单位，限制为屏幕高度的 35% (约1/3) */
+
+        .thread-image .lazy-img-wrapper,
+        .thread-image img {
+            max-height: 35vh !important; /* 限制最大高度 */
+            width: auto !important;      /* 宽度自动，防止拉伸 */
+            max-width: 100% !important;  /* 宽度不能超父容器 */
+            object-fit: contain !important; /* 保持比例，显示全图 */
+            margin: 0 auto !important;   /* 居中显示 */
+            display: block !important;
+        }
+
+        /* 针对多图的情况，如果有 Grid 布局，也稍微限制一下 */
+        .thread-card-wrapper .media-grid {
+            max-height: 40vh !important;
+            overflow: hidden !important;
+        }
+
+        /* --- 4. 悬浮按钮组样式 --- */
         .tieba-opt-btns {
             position: fixed;
             bottom: 100px;

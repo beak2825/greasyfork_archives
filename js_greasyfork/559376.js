@@ -1,13 +1,14 @@
 // ==UserScript==
-// @name         Claude/Grok/LMArena | Conversation/Chat Markdown Export/Download
+// @name         Claude/Grok/Arena | Conversation/Chat Markdown Export/Download
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      10.0
+// @version      10.1
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
-// @description  Export AI chat conversations to Markdown. Supports Claude.ai, Grok.com, and LMArena.ai
+// @description  Export AI chat conversations to Markdown. Supports Claude.ai, Grok.com, and Arena.ai
 // @match        *://claude.ai/*
 // @match        *://grok.com/*
 // @match        *://lmarena.ai/*
+// @match        *://arena.ai/*
 // @icon         data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2'><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/><polyline points='7 10 12 15 17 10'/><line x1='12' y1='15' x2='12' y2='3'/></svg>
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -15,11 +16,18 @@
 // @grant        GM_xmlhttpRequest
 // @connect      claude.ai
 // @connect      grok.com
-// @connect      lmarena.ai
+// @connect      arena.ai
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/559376/ClaudeGrokLMArena%20%7C%20ConversationChat%20Markdown%20ExportDownload.user.js
-// @updateURL https://update.greasyfork.org/scripts/559376/ClaudeGrokLMArena%20%7C%20ConversationChat%20Markdown%20ExportDownload.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559376/ClaudeGrokArena%20%7C%20ConversationChat%20Markdown%20ExportDownload.user.js
+// @updateURL https://update.greasyfork.org/scripts/559376/ClaudeGrokArena%20%7C%20ConversationChat%20Markdown%20ExportDownload.meta.js
 // ==/UserScript==
+
+// ═══════════════════════════════════════════════════════════════════════
+// CHANGELOG
+// ═══════════════════════════════════════════════════════════════════════
+//
+// v10.1
+// - LMArena renamed to Arena
 
 (function() {
     'use strict';
@@ -38,7 +46,7 @@
     // PROVIDER SUPPORT MATRIX
     // ───────────────────────────────────────────────────────────────────────────
     //
-    // Legend:  C = Claude    G = Grok    L = LMArena
+    // Legend:  C = Claude    G = Grok    L = Arena
     //          ✓ = Supported            · = Not applicable / No effect
     //
     // MESSAGE CONTENT                              C   G   L   Notes
@@ -88,7 +96,7 @@
     //
     // [1] THINKING
     //     Claude:  "thinking" content blocks in API response
-    //     LMArena: "reasoning" field on assistant messages
+    //     Arena: "reasoning" field on assistant messages
     //     Grok:    No thinking content; use INCLUDE_THINKING_DURATION instead
     //
     // [2] SEARCH QUERIES & RESULTS (Claude only)
@@ -98,13 +106,13 @@
     //
     // [3] INLINE CITATIONS (INCLUDE_SOURCES)
     //     Claude:  [[Title]](url) superscripts at end_index positions
-    //     LMArena: [1], [2], [3] numeric superscripts at charLocation positions
+    //     Arena: [1], [2], [3] numeric superscripts at charLocation positions
     //     Grok:    No position data; inline citations not possible (list only)
     //
     // [4] MODEL INFO
     //     Claude:  Model name not reliably exposed in API
     //     Grok:    Available in response.model field
-    //     LMArena: Scraped from DOM (API only provides UUIDs)
+    //     Arena: Scraped from DOM (API only provides UUIDs)
     //              - Direct mode: Sequential assistant index mapping
     //              - Battle mode: participantPosition 'a'/'b' mapping
     //              - DOM uses flex-col-reverse; reversed for direct mode
@@ -112,7 +120,7 @@
     // [5] ACTIVE LEAF INFO
     //     Claude:  current_leaf_message_uuid (conversation tree position)
     //     Grok:    Active rid from URL parameter (?rid=...)
-    //     LMArena: Linear conversation structure, no branching concept
+    //     Arena: Linear conversation structure, no branching concept
     //
     // ───────────────────────────────────────────────────────────────────────────
     // ADDING A NEW PROVIDER — CHECKLIST
@@ -306,7 +314,7 @@
             'INCLUDE_ACTIVE_LEAF_INFO',
             'GROK_EXPORT_ALL_REGENERATIONS'
         ],
-        LMArena: [
+        Arena: [
             'INCLUDE_USER_MESSAGES',
             'INCLUDE_ASSISTANT_MESSAGES',
             'INCLUDE_TURN_NUMBERS',
@@ -371,12 +379,12 @@
         INCLUDE_SOURCES: {
             label: {
                 Claude: 'Include Inline Citations',
-                LMArena: 'Include Inline Citations'
+                Arena: 'Include Inline Citations'
             },
             group: 'Web Search',
             tooltip: {
                 Claude: 'Insert superscript citation markers into the message text.\nFormat: [[Title]](url) at each citation position.',
-                LMArena: 'Insert numbered superscript markers into the message text.\nFormat: [1], [2], etc. linking to the source URL.'
+                Arena: 'Insert numbered superscript markers into the message text.\nFormat: [1], [2], etc. linking to the source URL.'
             }
         },
         INCLUDE_SOURCES_LIST: {
@@ -384,7 +392,7 @@
             group: 'Web Search',
             tooltip: {
                 Claude: 'Append a numbered bibliography at the end of the message.\nLists all cited sources for easy reference.',
-                LMArena: 'Append a numbered bibliography at the end of the message.\nLists all cited sources for easy reference.',
+                Arena: 'Append a numbered bibliography at the end of the message.\nLists all cited sources for easy reference.',
                 Grok: 'Append the list of web sources at the end of the message.\n(Grok does not support inline citations.)'
             }
         },
@@ -429,7 +437,7 @@
     const Settings = {
         /**
          * Load provider-specific settings and merge with base CONFIG.
-         * @param {string} providerName - e.g., 'Claude', 'Grok', 'LMArena'
+         * @param {string} providerName - e.g., 'Claude', 'Grok', 'Arena'
          * @returns {object} - Merged settings object
          */
         load(providerName) {
@@ -567,7 +575,7 @@
 
         /**
          * Format a thinking/reasoning block as markdown.
-         * Used by Claude (thinking blocks) and LMArena (reasoning field).
+         * Used by Claude (thinking blocks) and Arena (reasoning field).
          * @param {string} thinking - Raw thinking/reasoning text
          * @returns {string} - Formatted markdown string
          */
@@ -1566,9 +1574,9 @@
     // ═══════════════════════════════════════════════════════════════════════════
     // PROVIDER: LMARENA
     // ═══════════════════════════════════════════════════════════════════════════
-    const LMArenaProvider = {
-        name: 'LMArena',
-        hostPattern: /lmarena\.ai/,
+    const ArenaProvider = {
+        name: 'Arena',
+        hostPattern: /arena\.ai/,
 
         matches(url) {
             return this.hostPattern.test(url);
@@ -1631,12 +1639,12 @@
         generateMarkdown(data, settings = null) {
             // Use provider-specific settings if provided, otherwise fall back to CONFIG
             const cfg = settings || CONFIG;
-            console.log('[Chat Exporter] LMArenaProvider.generateMarkdown() using cfg.INCLUDE_USER_MESSAGES:', cfg.INCLUDE_USER_MESSAGES, 'cfg.INCLUDE_ASSISTANT_MESSAGES:', cfg.INCLUDE_ASSISTANT_MESSAGES);
+            console.log('[Chat Exporter] ArenaProvider.generateMarkdown() using cfg.INCLUDE_USER_MESSAGES:', cfg.INCLUDE_USER_MESSAGES, 'cfg.INCLUDE_ASSISTANT_MESSAGES:', cfg.INCLUDE_ASSISTANT_MESSAGES);
 
-            // Use first user message as fallback title (like old LMArena script)
+            // Use first user message as fallback title (like old Arena script)
             const firstUserMsg = data.messages?.find(m => m.role === 'user');
-            const titleSource = data.title || firstUserMsg?.content?.substring(0, 60) || 'LMArena_Export';
-            const title = Utils.sanitize(titleSource, 'LMArena_Export');
+            const titleSource = data.title || firstUserMsg?.content?.substring(0, 60) || 'Arena_Export';
+            const title = Utils.sanitize(titleSource, 'Arena_Export');
             const chatId = data.id || 'unknown';
             const createdAt = data.createdAt
                 ? new Date(data.createdAt).toLocaleString()
@@ -1645,10 +1653,10 @@
             let md = `# ${title}\n\n`;
 
             if (cfg.INCLUDE_HEADER) {
-                md += `> **Provider:** LMArena  \n`;
+                md += `> **Provider:** Arena  \n`;
                 md += `> **Date:** ${createdAt}  \n`;
                 md += `> **Chat ID:** \`${chatId}\`  \n`;
-                md += `> **Source:** [LMArena](${location.href})  \n`;
+                md += `> **Source:** [Arena](${location.href})  \n`;
                 md += `\n---\n\n`;
             }
 
@@ -1786,7 +1794,7 @@
                     md += `\`ID: ${msg.id}\`\n\n`;
                 }
 
-                // Reasoning/thinking block (LMArena uses "reasoning" field)
+                // Reasoning/thinking block (Arena uses "reasoning" field)
                 if (cfg.INCLUDE_THINKING && msg.reasoning) {
                     md += Utils.formatThinkingBlock(msg.reasoning, cfg);
                 }
@@ -1863,7 +1871,7 @@
 
             return {
                 content: md,
-                filename: `${Utils.sanitizeFilename(title, 'LMArena_Export')}.md`,
+                filename: `${Utils.sanitizeFilename(title, 'Arena_Export')}.md`,
                 stats: {
                     total: data.messages.length,
                     exported: exportedCount,
@@ -1878,7 +1886,7 @@
     // PROVIDER REGISTRY
     // ═══════════════════════════════════════════════════════════════════════════
     const Providers = {
-        list: [ClaudeProvider, GrokProvider, LMArenaProvider],
+        list: [ClaudeProvider, GrokProvider, ArenaProvider],
 
         detect() {
             const url = location.href;
@@ -2711,7 +2719,7 @@
             providers: [
                 { id: 'claude', name: 'Claude.ai', favicon: 'https://claude.ai/favicon.ico', fallbackText: 'C' },
                 { id: 'grok', name: 'Grok.com', favicon: 'https://grok.com/favicon.ico', fallbackText: 'G' },
-                { id: 'lmarena', name: 'LMArena.ai', favicon: 'https://lmarena.ai/favicon.ico', fallbackText: 'L' }
+                { id: 'arena', name: 'Arena.ai', favicon: 'https://arena.ai/favicon.ico', fallbackText: 'L' }
             ],
             features: [
                 'User & Assistant Messages',

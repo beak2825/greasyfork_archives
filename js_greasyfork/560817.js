@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         n-Nurbo client
 // @namespace    http://youtube.com
-// @version      1.6.1.1
+// @version      1.6.1.2
 // @description  Bot =  P    Shift=Insta, AutoBiomehat Autoheal, F=Trap, V=Spike, C=4Spikes, B=4Traps, N=Mill. Glotus AutoBreak for traps.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
@@ -1048,7 +1048,7 @@ let waitForGameName = setInterval(() => {
                     }
                 } else {
                     // Player is moving - wear hat 6
-                    setHatSafely(12);
+                    setHatSafely(6);
                     if (hatCycleInterval) {
                         clearInterval(hatCycleInterval);
                         hatCycleInterval = null;

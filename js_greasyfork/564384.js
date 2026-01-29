@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Chess.com Custom Pieces
 // @namespace    https://greasyfork.org/en/users/1376827-dezywezzy
-// @version      1.0
+// @version      1.1
 // @license         MIT
 // @description  Random images/GIFs I found funny to use as chess pieces
 // @author       Dezywezzy
 // @match        https://*.chess.com/*
-// @grant        none
+// @grant        GM_addStyle
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/564384/Chesscom%20Custom%20Pieces.user.js
 // @updateURL https://update.greasyfork.org/scripts/564384/Chesscom%20Custom%20Pieces.meta.js

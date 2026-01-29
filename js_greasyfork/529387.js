@@ -1,17 +1,19 @@
 // ==UserScript==
-// @name         Web性能综合优化工具箱 
+// @name         Web性能综合优化工具箱 (WebGPU重构版)
 // @namespace    http://tampermonkey.net/
-// @version      3.7.3-compatibility-optimized
+// @version      3.7.6-compatibility-optimized
 // @description  Web浏览提速80%；DOM渲染及GPU加速；集成Core Web Vitals实时监控面板
 // @author       KiwiFruit
 // @match        *://*/*
-// @exclude      *://weibo.com/*
 // @exclude      *://*.weibo.com/*
+// @exclude      *://*.x.com/*
+// @exclude      *://*.chat.z.ai*
+// @exclude      *://*.doubao.com*
 // @grant        none
 // @license      MIT
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js
-// @updateURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1%20%28WebGPU%E9%87%8D%E6%9E%84%E7%89%88%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1%20%28WebGPU%E9%87%8D%E6%9E%84%E7%89%88%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -45,17 +47,17 @@
             enabled: true,
             position: 'bottom-right',
             zIndex: 9999,
-            autoHideDelay: 3000,
+            autoHideDelay: 1800,
             hoverDelay: 300,
             hideOffset: { bottom: 20, right: -50 },
             showOffset: { bottom: 20, right: 20 },
-            statsUpdateTimeout: 2000,
+            statsUpdateTimeout: 3000,
             sampleSize: 200
         },
         lazyLoad: {
             enabled: true,
             selector: 'img[data-src], img[data-original], img.lazy, iframe[data-src], .js-lazy-load',
-            preloadDistance: 150
+            preloadDistance: 120
         },
         hardwareAcceleration: {
             enabled: true,
@@ -77,7 +79,7 @@
             enabled: true,
             domains: ['cdn.jsdelivr.net', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com']
         },
-        blacklistedDomains: ['weibo.com', 'weibo.cn']
+        blacklistedDomains: ['weibo.com', 'weibo.cn', 'x.com','chat.z.ai','doubao.com','kimi.com','qianwen.com']
     };
 
     const Logger = {

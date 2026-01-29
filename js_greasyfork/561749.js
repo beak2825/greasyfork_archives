@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              新版百度贴吧增强 - 夜间模式/精简/屏蔽/签到
 // @namespace         https://greasyfork.org/zh-CN/users/1069880-l-l
-// @version           2.2
+// @version           2.4
 // @description       新版网页版百度贴吧增强脚本，旧版不可用。
 // @author            Li
 // @license           MIT
@@ -38,7 +38,8 @@
         blockedForumNames: [],
         autoSign: false,
         autoSignOnLoad: false,
-        signOncePerDay: false
+        signOncePerDay: false,
+        openInCurrentPage: true
     };
 
     // 读取配置，兼容旧版
@@ -360,6 +361,13 @@
         processHomeCards();
     }
 
+    function stopHomeCardsObserver() {
+        if (hideHomeCardsObserver) {
+            hideHomeCardsObserver.disconnect();
+            hideHomeCardsObserver = null;
+        }
+    }
+
     function toggleHomeCard(configKey, hide) {
         currentConfig[configKey] = hide;
         saveConfig(currentConfig);
@@ -381,9 +389,8 @@
             });
 
             const hasAnyEnabled = Object.keys(hideHomeCardsConfig).some(key => currentConfig[key]);
-            if (!hasAnyEnabled && hideHomeCardsObserver) {
-                hideHomeCardsObserver.disconnect();
-                hideHomeCardsObserver = null;
+            if (!hasAnyEnabled) {
+                stopHomeCardsObserver();
             }
         }
     }
@@ -561,6 +568,61 @@
         }
     }
 
+    let forumLinkHandler = null;
+
+    function setupForumLinkHandler() {
+        if (!currentConfig.openInCurrentPage) return;
+
+        if (forumLinkHandler) return;
+
+        forumLinkHandler = function(e) {
+            if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
+
+            const forumCard = e.target.closest('.forum-card-wrapper');
+            if (!forumCard) return;
+
+            const nameElement = forumCard.querySelector('.forum-name');
+            if (!nameElement) return;
+
+            const forumName = nameElement.textContent.trim();
+            if (!forumName) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+
+            const targetUrl = `https://tieba.baidu.com/f?kw=${encodeURIComponent(forumName)}`;
+            const currentPath = window.location.pathname;
+            
+            if (currentPath === '/') {
+                history.pushState(null, '', targetUrl);
+                window.dispatchEvent(new PopStateEvent('popstate'));
+            } else {
+                window.location.href = targetUrl;
+            }
+        };
+
+        document.addEventListener('click', forumLinkHandler, true);
+    }
+
+    function removeForumLinkHandler() {
+        if (forumLinkHandler) {
+            document.removeEventListener('click', forumLinkHandler, true);
+            forumLinkHandler = null;
+        }
+    }
+
+    function toggleOpenInCurrentPage(enabled) {
+        currentConfig.openInCurrentPage = enabled;
+        saveConfig(currentConfig);
+
+        if (enabled) {
+            setupForumLinkHandler();
+        } else {
+            removeForumLinkHandler();
+        }
+    }
+
     function toggleVideoPosts(hide) {
         currentConfig.hideVideoPosts = hide;
         saveConfig(currentConfig);
@@ -698,30 +760,44 @@
         const hasAnyEnabled = Object.keys(hideHomeCardsConfig).some(key => currentConfig[key]);
         if (hasAnyEnabled) {
             startHomeCardsObserver();
+        } else {
+            stopHomeCardsObserver();
         }
     }
 
     function applyVideoPostsSetting() {
         if (currentConfig.hideVideoPosts) {
             hideVideoPosts();
+        } else if (hideVideoObserver) {
+            hideVideoObserver.disconnect();
+            hideVideoObserver = null;
         }
     }
 
     function applyBlockForumsSetting() {
         if (currentConfig.blockForums) {
             blockForumPosts();
+        } else if (blockForumObserver) {
+            blockForumObserver.disconnect();
+            blockForumObserver = null;
         }
     }
 
     function applyHelpPostsSetting() {
         if (currentConfig.hideHelpPosts) {
             hideHelpPosts();
+        } else if (hideHelpPostsObserver) {
+            hideHelpPostsObserver.disconnect();
+            hideHelpPostsObserver = null;
         }
     }
 
     function applyMenuItemsSetting() {
         if (currentConfig.hideMenuItems) {
             hideMenuItems();
+        } else if (hideMenuItemsObserver) {
+            hideMenuItemsObserver.disconnect();
+            hideMenuItemsObserver = null;
         }
     }
 
@@ -814,6 +890,10 @@
                     <input type="checkbox" id="hide-menu-items-toggle" ${currentConfig.hideMenuItems ? 'checked' : ''}>
                     <span>隐藏 | 菜单无用组件</span>
                 </label>
+                <label title="启用后点击侧栏的吧会在当前页打开">
+                    <input type="checkbox" id="open-in-current-page-toggle" ${currentConfig.openInCurrentPage ? 'checked' : ''}>
+                    <span>增强 | 在当前页打开</span>
+                </label>
                 <label title="启用后会在菜单栏右上角添加一键签到按钮">
                     <input type="checkbox" id="auto-sign-toggle" ${currentConfig.autoSign ? 'checked' : ''}>
                     <span>增强 | 一键签到按钮</span>
@@ -858,6 +938,7 @@
         const hideVideoPostsToggle = dialog.querySelector('#hide-video-posts-toggle');
         const hideHelpPostsToggle = dialog.querySelector('#hide-help-posts-toggle');
         const hideMenuItemsToggle = dialog.querySelector('#hide-menu-items-toggle');
+        const openInCurrentPageToggle = dialog.querySelector('#open-in-current-page-toggle');
         const autoSignToggle = dialog.querySelector('#auto-sign-toggle');
         const autoSignOnLoadToggle = dialog.querySelector('#auto-sign-on-load-toggle');
         const signOncePerDayToggle = dialog.querySelector('#sign-once-per-day-toggle');
@@ -897,6 +978,10 @@
 
         hideMenuItemsToggle.addEventListener('change', (e) => {
             toggleMenuItems(e.target.checked);
+        });
+
+        openInCurrentPageToggle.addEventListener('change', (e) => {
+            toggleOpenInCurrentPage(e.target.checked);
         });
 
         autoSignToggle.addEventListener('change', (e) => {
@@ -1318,6 +1403,38 @@
     GM_registerMenuCommand('查看签到结果', showSignList);
 
     let headObserver = null;
+    let isInitialized = false;
+
+    function reapplyFeatures() {
+        applyHomeCardSettings();
+        applyVideoPostsSetting();
+        applyHelpPostsSetting();
+        applyMenuItemsSetting();
+        applyBlockForumsSetting();
+
+        if (currentConfig.autoSign) {
+            createSignButton();
+        }
+    }
+
+    function setupSPAListener() {
+        const originalPushState = history.pushState;
+        const originalReplaceState = history.replaceState;
+
+        history.pushState = function(...args) {
+            originalPushState.apply(this, args);
+            setTimeout(reapplyFeatures, 300);
+        };
+
+        history.replaceState = function(...args) {
+            originalReplaceState.apply(this, args);
+            setTimeout(reapplyFeatures, 300);
+        };
+
+        window.addEventListener('popstate', () => {
+            setTimeout(reapplyFeatures, 300);
+        });
+    }
 
     /**
      * 初始化脚本
@@ -1325,6 +1442,9 @@
      * 如果启用了自动签到，延迟 2 秒后执行一次（检查每日只签一次的限制）
      */
     function init() {
+        if (isInitialized) return;
+        isInitialized = true;
+
         if (document.head) {
             enableDarkMode();
             applyHomeCardSettings();
@@ -1333,6 +1453,9 @@
             applyMenuItemsSetting();
             applyBlockForumsSetting();
         }
+
+        setupForumLinkHandler();
+        setupSPAListener();
 
         if (currentConfig.autoSign) {
             createSignButton();

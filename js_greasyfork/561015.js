@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频倍速器
 // @namespace    https://github.com/codertesla/bilibili-video-speed-controller-userscript
-// @version      1.4.0
+// @version      1.4.1
 // @description  自由设定 Bilibili 视频的默认播放速度。支持记住设置、自动应用、手动倍速检测、键盘快捷键控制。
 // @author       codertesla
 // @match        *://*.bilibili.com/video/*
@@ -598,21 +598,22 @@
         injectStyles() {
             GM_addStyle(`
                 .speed-toast {
-                    position: fixed;
-                    top: 80px;
+                    position: absolute;
+                    top: 10%;
                     left: 50%;
                     transform: translateX(-50%);
-                    z-index: 1000000;
+                    z-index: 2147483647;
                     background: rgba(28, 28, 28, 0.9);
                     border-radius: 4px;
-                    padding: 10px 20px;
+                    padding: 8px 16px;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     color: #fff;
-                    font-size: 16px;
+                    font-size: 14px;
                     font-weight: 500;
                     opacity: 0;
                     transition: opacity 0.15s ease;
                     pointer-events: none;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
                 }
                 .speed-toast.visible {
                     opacity: 1;
@@ -620,22 +621,54 @@
             `);
         }
 
-        createContainer() {
-            if (this.container) return;
+        createContainer(parent = document.body) {
+            if (this.container && this.container.parentElement === parent) return;
+
+            // 如果容器存在但父元素不同，先移除
+            if (this.container) {
+                this.container.remove();
+            }
+
             this.container = document.createElement('div');
             this.container.className = 'speed-toast';
-            document.body.appendChild(this.container);
+            parent.appendChild(this.container);
         }
 
-        show(message, speed) {
-            this.createContainer();
+        show(message, speed, referenceElement = null) {
+            let targetParent = document.body;
+            let isFixed = true;
+
+            // 1. 优先检查全屏元素
+            if (document.fullscreenElement) {
+                targetParent = document.fullscreenElement;
+                isFixed = false;
+            }
+            // 2. 如果有参考视频元素，尝试挂载到其容器
+            else if (referenceElement) {
+                const videoContainer = DOMUtils.getVideoContainer(referenceElement);
+                if (videoContainer && videoContainer !== document.body) {
+                    targetParent = videoContainer;
+                    isFixed = false;
+                }
+            }
+
+            this.createContainer(targetParent);
+
+            if (isFixed) {
+                this.container.style.position = 'fixed';
+                this.container.style.top = '80px';
+            } else {
+                this.container.style.position = 'absolute';
+                this.container.style.top = '10%';
+            }
 
             if (this.hideTimer) {
                 clearTimeout(this.hideTimer);
             }
 
             // 简化显示，只显示倍速数值
-            this.container.textContent = `${speed.toFixed(2)}x`;
+            const text = message ? message : `${speed.toFixed(2)}x`;
+            this.container.textContent = text;
 
             // Force reflow for animation
             this.container.offsetHeight;
@@ -699,6 +732,21 @@
             }
         }
 
+        getCurrentVideo() {
+            // 尝试寻找全屏元素下的视频
+            if (document.fullscreenElement) {
+                const videoInFs = document.fullscreenElement.querySelector('video');
+                if (videoInFs) return videoInFs;
+            }
+            // 否则返回第一个被发现的视频，或者正在播放的视频
+            const videos = DOMUtils.findVideoElements();
+            if (videos.length === 0) return null;
+
+            // 优先返回正在播放的
+            const playing = videos.find(v => !v.paused);
+            return playing || videos[0];
+        }
+
         increaseSpeed() {
             const newSpeed = Math.min(
                 SPEED_SETTINGS.MAX,
@@ -707,7 +755,7 @@
             if (newSpeed !== this.controller.currentSpeed) {
                 this.controller.setSpeed(newSpeed);
             }
-            this.toast.show(null, newSpeed);
+            this.toast.show(null, newSpeed, this.getCurrentVideo());
         }
 
         decreaseSpeed() {
@@ -718,7 +766,7 @@
             if (newSpeed !== this.controller.currentSpeed) {
                 this.controller.setSpeed(newSpeed);
             }
-            this.toast.show(null, newSpeed);
+            this.toast.show(null, newSpeed, this.getCurrentVideo());
         }
 
         resetSpeed() {
@@ -726,7 +774,7 @@
             if (this.controller.currentSpeed !== defaultSpeed) {
                 this.controller.setSpeed(defaultSpeed);
             }
-            this.toast.show(null, defaultSpeed);
+            this.toast.show(null, defaultSpeed, this.getCurrentVideo());
         }
 
         destroy() {

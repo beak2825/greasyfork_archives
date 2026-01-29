@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Facebook remove suggested sponsored ads blocks
-// @version 1.20.15
+// @version 1.21.0
 // @description Remove suggested/sponsored blocks from Facebook
 // @author Sly_North
 // @match https://www.facebook.com/*
@@ -26,6 +26,8 @@
 
 console.log('Start RemoveAllSponsored Facebook');
 
+const debugMode = false;  // True to highlight instead of removing ads.
+const divDisplayMode =  debugMode ? "block" : "none";
 const maxPostHeight = 800;
 const maxMessageLog = 300;
 
@@ -80,16 +82,19 @@ function getWholePost(e, maxParentHeightDiff = 150) {
 }
 
 function removeElement(type, e, parent) {
-  const height = parent.getBoundingClientRect().height;
+  const br = parent.getBoundingClientRect();
+  const height = br.height;
+  const y = e.getBoundingClientRect().top - br.top;
   if (height === 0 || height > maxPostHeight) {
-    console.log('- Fb ads - could not find parent for ', type, ' tag= ', parent.tagName, ' H=', height, ' ', e.innerText.substring(0, maxMessageLog).replaceAll('\n',''));
+    console.log('- Fb ads - could not find parent for ', type, ' tag= ', parent.tagName, ' Y=', y,' H=', height, ' ', e.innerText.substring(0, maxMessageLog).replaceAll('\n',''));
     return;
   }
-  console.log('- Fb ads removed: ', type, ' tag=', parent.tagName, ' H=', height, ' ',
+  console.log('- Fb ads removed: ', type, '[', e.innerText.replaceAll('\n', ''), '] tag=', parent.tagName, ' H=', Math.round(height), ' ',
               parent.innerText.replaceAll("\n"," ").replaceAll(/Facebook  *Facebook  */g, ""), ' from ', e.innerText.substring(0, maxMessageLog).replaceAll('\n',''));
-  e.style.display = "none";
-  parent.style.display = "none";
-  // e.style.display = "block"; parent.style.display = "block"; parent.style.background = "red"; // Debug - in red instead of hidden
+  e.style.display = divDisplayMode;
+  parent.style.display = divDisplayMode;
+  e.style.background = "orange";
+  parent.style.background = "red";
 }
 
 function RemoveAllSponsored()
@@ -112,6 +117,7 @@ function RemoveAllSponsored()
 
   // Remove the "suggestion" posts
   if (document.URL.match(/facebook.com\/*(\?.*)*/) && !document.URL.match(/\/posts\//)) {
+    /* Disabled - too many false-positives.
     for (tag of ['a', 'use']) {
       const maybeAds = Array.from(document.getElementsByTagName(tag)).filter(e => {
         const br = e.getBoundingClientRect();
@@ -128,6 +134,7 @@ function RemoveAllSponsored()
         removeElement('sponsored post', e, parent);
       }
     }
+    /**/
 
     // "Learn more" suggestions
     const maybeAds = Array.from(document.getElementsByTagName('span')).filter(e => e.textContent === 'Learn more');
@@ -180,8 +187,10 @@ function RemoveAllSponsored()
       if (intext.match(k)) {
         let parent = e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
             .parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-        parent.style.display = "none";
-        e.style.display = "none";
+        e.style.display = divDisplayMode;
+        parent.style.display = divDisplayMode;
+        e.style.background = "orange";
+        parent.style.background = "red";
         ++nbrRemovedAds;
         console.log('- Removing Sponsored ads span', i, '[', parent.innerText.replaceAll("\n", "  ").substring(0, 200), '] matching ', k, ' at ', intext);
         break;
